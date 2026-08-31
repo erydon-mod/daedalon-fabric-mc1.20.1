@@ -149,8 +149,9 @@ bake per family rather than one per material variant.
 
 - One immutable statue profile and one geometry bake per family.
 - Texture density remains constant across the one-, two-, and three-block sizes.
-- Every statue inherits the urn-style offset and slight lift. Offset does not
-  change the selected one-, two-, or three-block size.
+- Every statue inherits the urn-style horizontal offset and remains flush with
+  the block floor. Offset does not change the selected one-, two-, or
+  three-block size.
 - High-detail families share one full-geometry GUI raster template. Each
   material icon is filled lazily from the active resource-pack texture into a
   bounded 160-pixel atlas cell, so Creative-inventory and recipe-browser views submit one quad

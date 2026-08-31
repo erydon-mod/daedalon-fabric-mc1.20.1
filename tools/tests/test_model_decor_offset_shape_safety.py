@@ -133,6 +133,7 @@ class DecorOffsetShapeContractTests(unittest.TestCase):
             self.constant(self.baked, "OFFSET_BASE_Y"),
             self.constant(self.transform, "OFFSET_BASE_Y"),
         )
+        self.assertEqual(0.0, self.constant(self.transform, "OFFSET_BASE_Y"))
         self.assertIn("0.5 + (minX - 0.5) * scale", self.transform)
         self.assertIn("minY * scale + baseY", self.transform)
         self.assertIn(
@@ -261,7 +262,7 @@ class DecorOffsetShapeContractTests(unittest.TestCase):
             ],
         )
 
-    def test_statues_share_urn_offset_and_lift_without_resizing(self) -> None:
+    def test_statues_share_urn_offset_without_resizing(self) -> None:
         self.assertIn('BooleanProperty.of("offset")', self.statue)
         self.assertIn(".with(OFFSET, false)", self.statue)
         self.assertIn("builder.add(SIZE, OFFSET, FACING)", self.statue)

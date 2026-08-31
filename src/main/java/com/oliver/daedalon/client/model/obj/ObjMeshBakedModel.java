@@ -801,11 +801,11 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     }
 
     private static final class UrnTransform implements RenderContext.QuadTransform {
-        // The offset translation and lift match the authored oil-burner offset model. Size is a
+        // The offset translation matches the authored oil-burner offset model. Size is a
         // separate state: SMALL preserves the previous 61.56% offset urn, while MEDIUM is the
         // original one-block urn and the equally spaced LARGE size is 138.44%.
         private static final float OFFSET_DISTANCE = 0.8003375F;
-        private static final float OFFSET_BASE_Y = 0.04335284F;
+        private static final float OFFSET_BASE_Y = 0.0F;
         private static final UrnTransform[][][] CACHE = createCache();
 
         private final float scale;
