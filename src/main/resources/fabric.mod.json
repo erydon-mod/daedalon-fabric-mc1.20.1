@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "daedalon",
+  "version": "${version}",
+  "name": "ERYDON DEADALON",
+  "description": "Freestanding classical decor and sculpture for Fabric.",
+  "authors": [
+    "Oliver"
+  ],
+  "license": "LicenseRef-Oliver-Restricted-1.0",
+  "environment": "*",
+  "icon": "assets/daedalon/icon.png",
+  "entrypoints": {
+    "main": [
+      "com.oliver.daedalon.Daedalon"
+    ],
+    "client": [
+      "com.oliver.daedalon.DaedalonClient"
+    ]
+  },
+  "mixins": [
+    "daedalon.mixins.json",
+    {
+      "config": "daedalon-texture-alias.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": ">=0.89.0",
+    "minecraft": "1.20.1",
+    "java": ">=17"
+  },
+  "recommends": {
+    "sodium": "*",
+    "indium": "*",
+    "iris": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "erydon:texture_alias_resolver": 1,
+    "erydon:family_compatibility_generation": 2,
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/qgrK3AGA8T"
+      }
+    }
+  }
+}

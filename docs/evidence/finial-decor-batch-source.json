@@ -1,0 +1,101 @@
+{
+  "recorded": "2026-08-12",
+  "source": "Oliver-supplied Meshy AI Blender batches",
+  "source_root": "External Oliver-authored Meshy batch; source Blender files are not distributed in this repository.",
+  "source_file_count": 9,
+  "source_files_modified": false,
+  "name_mapping_basis": "Oliver-provided reference PNGs; every supplied Blender scene used generic Meshy names.",
+  "preparation": {
+    "tool": "tools/prepare_decor_mesh.py",
+    "blender_version": "5.2.0 LTS",
+    "blender_build_hash": "fbe6228777e7",
+    "modifier": "Blender Collapse Decimate",
+    "target_faces": 6000,
+    "uv_policy": "One bounded runtime projection: cylindrical for rotational decor and axis-stabilized box for Krene and Obeliskos.",
+    "authored_uv_search": false
+  },
+  "placement": {
+    "finials_louterion_pege": "Fixed one-block decor without redundant state properties.",
+    "krene": "One-block fountain with four horizontal facings; supplied front is south.",
+    "obeliskos": "Ground-anchored monument with one-, two-, and three-block sizes; default size is two."
+  },
+  "models": [
+    {
+      "name": "finial_sphaira",
+      "source_blend": "Finials/Meshy_AI_assets_20260812_131928/019ff61a-5bfa-7f76-9e53-4b756980c6bd/Meshy_AI_model.blend",
+      "source_sha256": "0eca6664502acebf46e5abfa101ff773d5ad6304039f58e00a5d48c19ed6b930",
+      "runtime_obj_sha256": "26703cfa4369a6c113a568884ab980e28d350a4dca99df20eb2cce92b6e775d0",
+      "runtime_faces": 6000,
+      "normalised_span": [0.661462481, 1.0, 0.662851611]
+    },
+    {
+      "name": "finial_phlox",
+      "source_blend": "Finials/Meshy_AI_assets_20260812_131928/019ff61a-853c-7f7c-be3a-71d54afba313/Meshy_AI_model.blend",
+      "source_sha256": "b6b12ef36b36e91c13098346b352f91fde487d2c2fd7c3dd2fa4875f2846a228",
+      "runtime_obj_sha256": "4fb4d5616a4f4829a9dea84e1e4ad4d09ca2a4621497a00c291d640a14907250",
+      "runtime_faces": 6000,
+      "normalised_span": [0.535196576, 1.0, 0.531525611]
+    },
+    {
+      "name": "finial_kynara",
+      "source_blend": "Finials/Meshy_AI_assets_20260812_131928/019ff61a-a92d-7f86-9a6c-a452cf3c75a8/Meshy_AI_model.blend",
+      "source_sha256": "2846c02cd56eaa8fc2ae5670ef4e241508706494745204c43b9a03190c422d04",
+      "runtime_obj_sha256": "bc871e48c1d3f99aea154792d5696fdd42507439efafb20ad728eeb95488afc8",
+      "runtime_faces": 6000,
+      "normalised_span": [0.521664875, 1.0, 0.58003878]
+    },
+    {
+      "name": "finial_balanos",
+      "source_blend": "Finials/Meshy_AI_assets_20260812_131928/019ff61a-cc82-7f8d-b753-90b6307d0d5b/Meshy_AI_model.blend",
+      "source_sha256": "4819be08b3ca13a0f6cc418ecdf6dc7bb45946fdc1186cf879cf441321a72a80",
+      "runtime_obj_sha256": "5d2eb9ee0bcc05a465fdaede5bbc52cc019be410a54e7986c65dcfb3a109b52c",
+      "runtime_faces": 6000,
+      "normalised_span": [0.494869746, 1.0, 0.494972038]
+    },
+    {
+      "name": "finial_strobilos",
+      "source_blend": "Finials/Meshy_AI_assets_20260812_131928/019ff61b-695a-78ce-90d2-a3af3aa7f150/Meshy_AI_model.blend",
+      "source_sha256": "efcbe4d862b832dbf9248975b8632346c1e566b81619c59c572dcfc3a25a912d",
+      "runtime_obj_sha256": "8de7cdde89f8801876d7558c7245c76c52fc61157877cfc3afb8e15c2f510032",
+      "runtime_faces": 5999,
+      "normalised_span": [0.510813963, 1.0, 0.513596362]
+    },
+    {
+      "name": "monument_obeliskos",
+      "source_blend": "furniture-decor/Meshy_AI_assets_20260812_140039/019ff638-1bd0-7feb-8739-0c56a1bf9b25/Meshy_AI_model.blend",
+      "source_sha256": "59e75eecf7c823173e21f4da74b5f8a3991a892f9432b110e1f614384a888ce3",
+      "runtime_obj_sha256": "1c28aefbd5f9aea30981c6ed185baf50d572f85c8e42ba4c749754c711f18da2",
+      "runtime_faces": 6000,
+      "normalised_span": [0.252994822, 1.0, 0.252985904]
+    },
+    {
+      "name": "basin_louterion",
+      "source_blend": "furniture-decor/Meshy_AI_assets_20260812_140039/019ff638-3d91-7649-bcb3-ea4201feb09d/Meshy_AI_model.blend",
+      "source_sha256": "0845a365b2ad92ea6a0a7ab850239c2ad54eacd60b228633bb183b5c7f0ebfdf",
+      "runtime_obj_sha256": "5aeb049ff2827a053cb4e9491da60d5c6d7b60e496d609a5eab64f626a37d0d9",
+      "runtime_faces": 6000,
+      "normalised_span": [1.0, 0.95878979, 0.999205574]
+    },
+    {
+      "name": "fountain_krene",
+      "source_blend": "furniture-decor/Meshy_AI_assets_20260812_140039/019ff638-5d22-7a05-a31c-24fadfb11c1c/Meshy_AI_model.blend",
+      "source_sha256": "ee51b0348598a259afd0f0cd3562e115ec0753e00b10b8611698287cdeb86b03",
+      "runtime_obj_sha256": "746624bd8a541b56d0594b1dbce883d0bc5a89f8d2d372a60ee8d798b0bc2016",
+      "runtime_faces": 5999,
+      "normalised_span": [0.529312499, 1.0, 0.391846425]
+    },
+    {
+      "name": "fountain_pege",
+      "source_blend": "furniture-decor/Meshy_AI_assets_20260812_140039/019ff63e-147e-7775-834f-2e674ec4a82a/Meshy_AI_model.blend",
+      "source_sha256": "26c411e3d2f624461a7e46755b6bf6afffa13879e423c698b09da91ed290cac3",
+      "runtime_obj_sha256": "c77bd3bb0fd4ae31e02dee40ba61386224209a4f1e013b69a8aa893ea6bdc1b1",
+      "runtime_faces": 6000,
+      "normalised_span": [1.0, 0.974990921, 0.994125107]
+    }
+  ],
+  "reference_only_concepts": ["anthophoros", "exedra", "hedra", "heliotropion", "kallirrhoe", "skaphe"],
+  "reference_only_reason": "No matching Blender source was present in the supplied Meshy export.",
+  "deferred_blockbench_sources": ["bowl.bbmodel", "modern_table.bbmodel", "oval_table.bbmodel", "round_table.bbmodel"],
+  "deferred_blockbench_reason": "These are older Blockbench authoring files rather than members of the supplied Meshy OBJ batch and need their own mapping and texture review.",
+  "distribution_rights_status": "Oliver confirms authorship and authorizes public redistribution of the included runtime assets under the repository licence (2026-08-31)."
+}

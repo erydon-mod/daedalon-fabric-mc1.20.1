@@ -1,0 +1,18 @@
+{
+  "obj": "daedalon:models/mesh/finial_sphaira.obj",
+  "mtl": "daedalon:models/mesh/finial_sphaira.mtl",
+  "flip_v": true,
+  "repair_degenerate_uvs": true,
+  "force_uv_projection": true,
+  "uv_projection": "cylindrical",
+  "cylindrical_u_repeats": 2.0,
+  "texture_u_tiles": 4,
+  "face_oriented_uvs": true,
+  "smooth_normals": true,
+  "smooth_angle_degrees": 80.0,
+  "fit_to_block": true,
+  "scale": [2.0, 2.0, 2.0],
+  "translate": [0.0, 0.0, 0.0],
+  "particle": "daedalon:block/statue_spartan_promachos_aganite",
+  "materials": {"none": "daedalon:block/statue_spartan_promachos_aganite"}
+}

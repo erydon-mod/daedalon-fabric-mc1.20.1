@@ -1,0 +1,16 @@
+{
+  "obj": "daedalon:models/mesh/spartan_siplified.obj",
+  "mtl": "daedalon:models/mesh/spartan_siplified.mtl",
+  "flip_v": true,
+  "repair_degenerate_uvs": true,
+  "uv_projection": "planar_with_box_fallback",
+  "smooth_normals": true,
+  "smooth_angle_degrees": 80.0,
+  "fit_to_block": true,
+  "scale": [3.0, 3.0, 3.0],
+  "translate": [0.0, 0.0, 0.0],
+  "particle": "daedalon:block/statue_spartan_promachos_aganite",
+  "materials": {
+    "none": "daedalon:block/statue_spartan_promachos_aganite"
+  }
+}

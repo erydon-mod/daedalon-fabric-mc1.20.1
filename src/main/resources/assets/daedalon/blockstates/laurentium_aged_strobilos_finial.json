@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/laurentium_aged_strobilos_finial"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/laurentium_aged_strobilos_finial"
+    }
+  }
+}

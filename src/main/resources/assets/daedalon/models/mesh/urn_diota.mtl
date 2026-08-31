@@ -1,0 +1,6 @@
+# Made in Blockbench 5.1.5
+newmtl none
+
+newmtl bronze_handles
+Kd 0.898039 0.627451 0.113725
+map_Kd ../../textures/block/urn_diota_bronze_handles.png

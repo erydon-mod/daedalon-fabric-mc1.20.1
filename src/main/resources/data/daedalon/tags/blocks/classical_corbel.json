@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "#daedalon:ionic_corbel",
+    "#daedalon:georgian_corbel",
+    "#daedalon:corinthian_corbel",
+    "#daedalon:renaissance_corbel"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/imperium_aged_balanos_finial"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/imperium_aged_balanos_finial"
+    }
+  }
+}

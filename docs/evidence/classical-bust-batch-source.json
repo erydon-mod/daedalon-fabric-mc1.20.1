@@ -1,0 +1,154 @@
+﻿{
+    "source_root":  "External Oliver-authored Meshy batch; source Blender files are not distributed in this repository.",
+    "source_file_count":  12,
+    "reference_image_count":  12,
+    "source_files_modified":  false,
+    "preparation":  {
+                        "tool":  "tools/prepare_bust_mesh.py",
+                        "blender_version":  "5.2.0 LTS",
+                        "blender_build_hash":  "fbe6228777e7",
+                        "target_faces":  6000,
+                        "runtime_uv_projection":  "axis_stabilized_box",
+                        "authored_uv_attempts":  0
+                    },
+    "models":  [
+                   {
+                       "subject":  "aphrodite",
+                       "reference_image":  "Busts/bust_aphrodite.png",
+                       "source_id":  "019ff167-7a3b-7776-ae4f-7bb87993da2d",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff167-7a3b-7776-ae4f-7bb87993da2d/Meshy_AI_model.blend",
+                       "source_sha256":  "b5b86827b287e178fce0f0a07afa378cfc5d6bd535deca3573dc4807f0cef638",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_aphrodite.obj",
+                       "runtime_vertices":  3002,
+                       "runtime_faces":  6000,
+                       "runtime_obj_sha256":  "1e7fe0f624aa3c6899611c941f5594d803076d7275042c5d368e296bb8d0cd29"
+                   },
+                   {
+                       "subject":  "apollo",
+                       "reference_image":  "Busts/bust_apollo.png",
+                       "source_id":  "019ff170-1e1e-7d54-a6e5-708e4582bb36",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff170-1e1e-7d54-a6e5-708e4582bb36/Meshy_AI_model.blend",
+                       "source_sha256":  "cd36c4100fc12eba5d95778bd85aaf96b1f9f596f8cbcc5b81029fd5b6f1a856",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_apollo.obj",
+                       "runtime_vertices":  2975,
+                       "runtime_faces":  6000,
+                       "runtime_obj_sha256":  "2a34f269622f259b3492a2be089a54338ae704904abbb2cc3caf6ca0d0af64e7"
+                   },
+                   {
+                       "subject":  "artemis",
+                       "reference_image":  "Busts/bust_artemis.png",
+                       "source_id":  "019ff188-5643-7216-8504-faaa2a7e48c0",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff188-5643-7216-8504-faaa2a7e48c0/Meshy_AI_model.blend",
+                       "source_sha256":  "f040d4ec338f282fefb1e4a9f7c92a92e76eb54aa75700d9e1149f588eeb8ffe",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_artemis.obj",
+                       "runtime_vertices":  3002,
+                       "runtime_faces":  6000,
+                       "runtime_obj_sha256":  "0dd97fde0d76e09cd5d2f78ae7532b6e730fc1fa1b18388335f5ac546fb4a115"
+                   },
+                   {
+                       "subject":  "athena",
+                       "reference_image":  "Busts/bust_athena.png",
+                       "source_id":  "019ff188-8bfb-7225-a976-1c4b6bac29a7",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff188-8bfb-7225-a976-1c4b6bac29a7/Meshy_AI_model.blend",
+                       "source_sha256":  "95ae5dfe1b79bbe5e0a09c0ef83bf79d733e96c20296453b89ac3ebafcceb5a2",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_athena.obj",
+                       "runtime_vertices":  2998,
+                       "runtime_faces":  6000,
+                       "runtime_obj_sha256":  "7d0c52ade1219c93c2d907c41cccccaf2b8fb4891cce6583fd7fb2ecbbd86767"
+                   },
+                   {
+                       "subject":  "demeter",
+                       "reference_image":  "Busts/bust_demeter.png",
+                       "source_id":  "019ff188-b9fc-7232-903b-9acb1c268fdc",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff188-b9fc-7232-903b-9acb1c268fdc/Meshy_AI_model.blend",
+                       "source_sha256":  "92b8c7ecdcadf6267f10e765b55910dffda5ded82dee438ce54676803d116dd3",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_demeter.obj",
+                       "runtime_vertices":  2933,
+                       "runtime_faces":  6000,
+                       "runtime_obj_sha256":  "59e3f35e518c392a0ba791c8313e63bb747355e8e5a125012cc396e490dff826"
+                   },
+                   {
+                       "subject":  "ares",
+                       "reference_image":  "Busts/bust_ares.png",
+                       "source_id":  "019ff189-6b2d-7390-9472-dce7a1f62167",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff189-6b2d-7390-9472-dce7a1f62167/Meshy_AI_model.blend",
+                       "source_sha256":  "45e7c26df223572ccbbf23905a682e9fb9ef93fbc8bdc400a5ba8494e8b46286",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_ares.obj",
+                       "runtime_vertices":  2993,
+                       "runtime_faces":  5999,
+                       "runtime_obj_sha256":  "6e36a1a6086e7795bc1928be2a967826a227e788e53803419ccee688edcb75d7"
+                   },
+                   {
+                       "subject":  "dionysus",
+                       "reference_image":  "Busts/bust_dionysus.png",
+                       "source_id":  "019ff612-2867-7d7e-bf00-6adaea49d9bf",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff612-2867-7d7e-bf00-6adaea49d9bf/Meshy_AI_model.blend",
+                       "source_sha256":  "504b6ab2c38027c0b779dea901c8c5bdb23e875b8054940c2f0481f947da7fe9",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_dionysus.obj",
+                       "runtime_vertices":  2747,
+                       "runtime_faces":  5999,
+                       "runtime_obj_sha256":  "c011890a5d09dec6cd097fa4f07d5f346ad8248b683fe5dd16e3bb129ae36bbc"
+                   },
+                   {
+                       "subject":  "hephaestus",
+                       "reference_image":  "Busts/bust_hephaestus.png",
+                       "source_id":  "019ff612-45cf-76b8-873d-798bdaf13b2e",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff612-45cf-76b8-873d-798bdaf13b2e/Meshy_AI_model.blend",
+                       "source_sha256":  "cd9a8c1fd9ec41719c1d8a4212c8a7a469f8170e8e55bd837cb6ac270d6031f3",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_hephaestus.obj",
+                       "runtime_vertices":  2996,
+                       "runtime_faces":  6000,
+                       "runtime_obj_sha256":  "a6bec87214262238b69cf17cdba981eb9e2555a6c4c0ddfeab96ddd638935fa1"
+                   },
+                   {
+                       "subject":  "hera",
+                       "reference_image":  "Busts/bust_hera.png",
+                       "source_id":  "019ff612-7641-708e-a8fd-2e7e9ae745e7",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff612-7641-708e-a8fd-2e7e9ae745e7/Meshy_AI_model.blend",
+                       "source_sha256":  "e4797fd75260397391f098a150da2240b377d51b24e9f7ebb0f0abcb7c1e1146",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_hera.obj",
+                       "runtime_vertices":  2999,
+                       "runtime_faces":  5999,
+                       "runtime_obj_sha256":  "ab81048c96367f5c3e18a1fd267f7934d05d20bc91a1e419d8a4a0219f4d24cf"
+                   },
+                   {
+                       "subject":  "hermes",
+                       "reference_image":  "Busts/bust_hermes.png",
+                       "source_id":  "019ff612-9834-7ada-8926-896f62f27e63",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff612-9834-7ada-8926-896f62f27e63/Meshy_AI_model.blend",
+                       "source_sha256":  "313761ef1c4e178113202b4a64f4bb2e0f06fb1ffb7cfa60eff305117dfbe868",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_hermes.obj",
+                       "runtime_vertices":  2994,
+                       "runtime_faces":  6000,
+                       "runtime_obj_sha256":  "1b7ebf5011e169c3973d32ba4a00bbbe76a91e4dbe4269ad76ef99422e6d2c42"
+                   },
+                   {
+                       "subject":  "poseidon",
+                       "reference_image":  "Busts/bust_poseidon.png",
+                       "source_id":  "019ff612-c2e5-70a7-ba1c-61aafcd6ae6e",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff612-c2e5-70a7-ba1c-61aafcd6ae6e/Meshy_AI_model.blend",
+                       "source_sha256":  "72d8ae99c328633c006f89ab06e95641bb5fbe2d7bf848eaa028de9b676f4623",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_poseidon.obj",
+                       "runtime_vertices":  3001,
+                       "runtime_faces":  5999,
+                       "runtime_obj_sha256":  "f279c7e4b138706b361b184408a7baf7cac3446c38adf5a9b5f2ae3b70fe14b9"
+                   },
+                   {
+                       "subject":  "zeus",
+                       "reference_image":  "Busts/bust_zeus.png",
+                       "source_id":  "019ff612-f0e5-70b5-b5cd-326a142a6d37",
+                       "source_file":  "Busts/Meshy_AI_assets_20260812_130813/019ff612-f0e5-70b5-b5cd-326a142a6d37/Meshy_AI_model.blend",
+                       "source_sha256":  "6e55e7351496cd2a082219188097b3a7a7b2587d670cf1c43d10121a87557437",
+                       "runtime_obj":  "assets/daedalon/models/mesh/bust_zeus.obj",
+                       "runtime_vertices":  2917,
+                       "runtime_faces":  6000,
+                       "runtime_obj_sha256":  "83f3c3b5cf6f2ab248277477523f9f964fce70b51cd38363af7f0c890899e508"
+                   }
+               ],
+    "naming":  {
+                   "canonical_normal":  "\u003cmaterial\u003e_\u003csubject\u003e_bust",
+                   "canonical_aged":  "\u003cmaterial\u003e_aged_\u003csubject\u003e_bust",
+                   "publication_status":  "unpublished source assets; no aliases required"
+               },
+    "distribution_rights_status":  "Oliver confirms authorship and authorizes public redistribution of the included runtime assets under the repository licence (2026-08-31)."
+}

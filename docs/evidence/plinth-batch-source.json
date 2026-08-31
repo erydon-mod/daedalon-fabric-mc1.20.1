@@ -1,0 +1,72 @@
+{
+  "source_root": "External Oliver-authored Meshy batch; source Blender files are not distributed in this repository.",
+  "source_file_count": 5,
+  "source_files_modified": false,
+  "preparation": {
+    "tool": "tools/prepare_decor_mesh.py",
+    "blender_version": "5.2.0 LTS",
+    "blender_build_hash": "fbe6228777e7",
+    "method": "triangulate, bounded collapse decimation, smooth normals, Y-up OBJ export",
+    "target_faces": 6000,
+    "authored_uv_search": false,
+    "runtime_uv_projection": "axis_stabilized_box"
+  },
+  "naming": {
+    "source_blends_named": false,
+    "reference_images_used_for_identification": true,
+    "canonical_id_pattern": "<material>[_aged]_<style>_plinth"
+  },
+  "models": [
+    {
+      "style": "astragalos",
+      "source_uuid": "019ff635-649f-7296-a61b-7a4cf1039abe",
+      "source_sha256": "19c2f16926a9b25ae151f9d13186fb6850f1ffdc07f8c9e2cc762e7484ef5c7c",
+      "reference_png_sha256": "ce09a2698e8b208c7c9ff12db0f89f546317ef384a6c6ab95db4daacc3a668b4",
+      "runtime_vertices": 3000,
+      "runtime_faces": 6000,
+      "runtime_obj_sha256": "4a705d84abd3704f9248f2e051255841a82c26f1603411205fc38afd7ff360c5"
+    },
+    {
+      "style": "bathron",
+      "source_uuid": "019ff635-49b7-7947-a439-55487531c93f",
+      "source_sha256": "89554bb41b077b37c6f58a5675c2a2a1fbb6ea5cea7f6cb28d4d63e2a18504a2",
+      "reference_png_sha256": "839cd82d0e5e4bca4dec38f382a87ae64c7ad0ac8789e904801c6df24c1b659c",
+      "runtime_vertices": 3002,
+      "runtime_faces": 6000,
+      "runtime_obj_sha256": "2543b6f83228c87f69bb106a86441813dc2e76d5910468baa8bea025d9c3824e"
+    },
+    {
+      "style": "kion",
+      "source_uuid": "019ff635-2eeb-75b0-9f0a-d82912319224",
+      "source_sha256": "626c5313e045b18cfb5dc9e68ec917dacaa73340d4e5f2485042490265695d0b",
+      "reference_png_sha256": "673f89143a22d92e338c74265626e0ccae4364bdb47f8b9cd84a5e6c82954e6a",
+      "runtime_vertices": 3002,
+      "runtime_faces": 6000,
+      "runtime_obj_sha256": "04f426f5a9d161eaf78f6aa35eb6babd7c284620047f39aa35f337e4196bd6a8"
+    },
+    {
+      "style": "stephanos",
+      "source_uuid": "019ff635-09e0-793e-87d0-f8a5996a2f7c",
+      "source_sha256": "2109f446a760a2f66b53dc080ccfd1e29ca667a868ff64ad72b725d9286e4435",
+      "reference_png_sha256": "837b6ef573aaf88c1811d5e6b50764ba2fa59e5462bde032830449fedeaf60d7",
+      "runtime_vertices": 2937,
+      "runtime_faces": 6000,
+      "runtime_obj_sha256": "d21862cd4d56b3809737d1b8dc6b5426acc1e33714ecc94aa70617e5abc9fc14"
+    },
+    {
+      "style": "triphyllon",
+      "source_uuid": "019ff657-1127-76a5-a80d-c09b9c06b8b2",
+      "source_sha256": "fdc7f3cebfd78338c6dd044c6a7d6b78eb53253b060360b68b766cb1ba1624fc",
+      "reference_png_sha256": "a0bf9bc8a66890e257435d0dbb74787d7c91a617e37c768d4b6402f5a7a20a92",
+      "runtime_vertices": 2986,
+      "runtime_faces": 6000,
+      "runtime_obj_sha256": "9f18250c28fcb761de10d529f03b25bc5d598a4d5c6f970b53a99cf3c7cd160c"
+    }
+  ],
+  "retired_unpublished_family": {
+    "name": "Georgian Plinth",
+    "runtime_mesh": "urn_plinthos.obj",
+    "aliases_required": false
+  },
+  "distribution_rights_status": "Oliver confirms authorship and authorizes public redistribution of the included runtime assets under the repository licence (2026-08-31)."
+}

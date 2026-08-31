@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/solistra_aged_obeliskos_monument"
+    },
+    "size=medium": {
+      "model": "daedalon:mesh/solistra_aged_obeliskos_monument"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/solistra_aged_obeliskos_monument"
+    }
+  }
+}

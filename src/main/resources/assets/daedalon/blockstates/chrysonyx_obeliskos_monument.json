@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/chrysonyx_obeliskos_monument"
+    },
+    "size=medium": {
+      "model": "daedalon:mesh/chrysonyx_obeliskos_monument"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/chrysonyx_obeliskos_monument"
+    }
+  }
+}

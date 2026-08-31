@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "size=small,offset=false,facing=north": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=small,offset=false,facing=east": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=small,offset=false,facing=south": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=small,offset=false,facing=west": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=small,offset=true,facing=north": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=small,offset=true,facing=east": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=small,offset=true,facing=south": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=small,offset=true,facing=west": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=large,offset=false,facing=north": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=large,offset=false,facing=east": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=large,offset=false,facing=south": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=large,offset=false,facing=west": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=large,offset=true,facing=north": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=large,offset=true,facing=east": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=large,offset=true,facing=south": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    },
+    "size=large,offset=true,facing=west": {
+      "model": "daedalon:mesh/kelastrion_kion_plinth"
+    }
+  }
+}

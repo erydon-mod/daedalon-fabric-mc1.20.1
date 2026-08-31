@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/porphyros_aged_sphaira_finial"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/porphyros_aged_sphaira_finial"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/nerium_aged_sphaira_finial"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/nerium_aged_sphaira_finial"
+    }
+  }
+}

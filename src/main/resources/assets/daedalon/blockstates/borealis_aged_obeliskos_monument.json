@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/borealis_aged_obeliskos_monument"
+    },
+    "size=medium": {
+      "model": "daedalon:mesh/borealis_aged_obeliskos_monument"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/borealis_aged_obeliskos_monument"
+    }
+  }
+}

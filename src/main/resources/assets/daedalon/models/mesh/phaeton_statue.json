@@ -1,0 +1,14 @@
+{
+  "obj": "daedalon:models/mesh/phaeton.obj",
+  "flip_v": true,
+  "repair_degenerate_uvs": false,
+  "force_uv_projection": false,
+  "uv_projection": "axis_stabilized_box",
+  "face_oriented_uvs": true,
+  "smooth_normals": true,
+  "smooth_angle_degrees": 80.0,
+  "fit_to_block": true,
+  "scale": [3.0, 3.0, 3.0],
+  "translate": [0.0, 0.0, 0.0],
+  "particle": "daedalon:block/statue_spartan_promachos_aganite"
+}

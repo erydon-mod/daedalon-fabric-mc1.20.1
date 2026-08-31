@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/brectite_obeliskos_monument"
+    },
+    "size=medium": {
+      "model": "daedalon:mesh/brectite_obeliskos_monument"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/brectite_obeliskos_monument"
+    }
+  }
+}

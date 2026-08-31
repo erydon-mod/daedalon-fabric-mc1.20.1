@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#daedalon:bellerophon_statue",
+    "#daedalon:heracles_statue",
+    "#daedalon:orpheus_statue",
+    "#daedalon:perseus_statue",
+    "#daedalon:theseus_statue"
+  ]
+}

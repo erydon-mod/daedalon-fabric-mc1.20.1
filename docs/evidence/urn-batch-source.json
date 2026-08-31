@@ -1,0 +1,113 @@
+{
+  "recorded": "2026-08-12",
+  "source": "Oliver-supplied Meshy AI Blender batch",
+  "source_root": "External Oliver-authored Meshy batch; source Blender files are not distributed in this repository.",
+  "source_file_count": 10,
+  "name_mapping_basis": "Oliver-provided Meshy library screenshots; every source Blender scene, object, mesh and material name was generic.",
+  "retained_existing_models": [
+    "diota"
+  ],
+  "preparation": {
+    "tool": "tools/prepare_urn_mesh.py",
+    "blender_version": "5.2.0 LTS",
+    "blender_build_hash": "fbe6228777e7",
+    "modifier": "Collapse Decimate",
+    "target_faces": 3200,
+    "output_faces": 3200,
+    "runtime_uvs": "Daedalon cylindrical projection; no authored UV layer",
+    "source_files_modified": false
+  },
+  "models": [
+    {
+      "shape": "amphora",
+      "source_folder": "019ff110-b7fc-776f-8141-68f4fd127f3e",
+      "source_sha256": "e614334f4d11789d4dc6d4a51a4a4ec606fa14d9e167de9789a3fec31726de28",
+      "source_vertices": 957283,
+      "source_faces": 1914570,
+      "runtime_vertices": 1598,
+      "runtime_obj_sha256": "bcddf999f98c153eb62592ea27dff23391f34244e5d3cc417d225b41dca8819a"
+    },
+    {
+      "shape": "kalyx",
+      "source_folder": "019ff113-a4af-7188-ac62-ddc2b85a1668",
+      "source_sha256": "031e6c4eaee45a87bc7f9a74107f26a23a27a9176c6a1142e91b0136c266b27f",
+      "source_vertices": 1556499,
+      "source_faces": 3112994,
+      "runtime_vertices": 1602,
+      "runtime_obj_sha256": "4de2bcf636bb142dd03907085b7558cc8f50811553170af1b477fab2148dff1f"
+    },
+    {
+      "shape": "konche",
+      "source_folder": "019ff11b-1362-771b-a946-265c02e1c3d6",
+      "source_sha256": "5db422b246e2467ec3fdc6b97262421008b069865a3cdd137b0b06a7fdad13d7",
+      "source_vertices": 1565715,
+      "source_faces": 3131426,
+      "runtime_vertices": 1602,
+      "runtime_obj_sha256": "7b8188c31c160981f251898e43e56a22a5747191ecbe714b429517e99e298de7"
+    },
+    {
+      "shape": "kylix",
+      "source_folder": "019ff11d-987d-7a4e-8677-0be281251ab7",
+      "source_sha256": "9ff8c8a2fc69d17d13aeb34fa118d32a40a6efef11dc62d1c1a62e5ed73598f4",
+      "source_vertices": 986557,
+      "source_faces": 1973114,
+      "runtime_vertices": 1600,
+      "runtime_obj_sha256": "27c94f8102022124bd629847f286973f4c43565494b38b914287b18625c4ec92"
+    },
+    {
+      "shape": "lekythos",
+      "source_folder": "019ff12c-0197-76e9-a89e-644d4cfd2575",
+      "source_sha256": "04690644b0b0b067649f7c8f2739563e980c3f1c1fcff5c08437b9b98f63e484",
+      "source_vertices": 960976,
+      "source_faces": 1921952,
+      "runtime_vertices": 1600,
+      "runtime_obj_sha256": "f2144cd41250da57f76fab036b2219de30c79b45ff2f2454c4db9cbaa2a2dab9"
+    },
+    {
+      "shape": "pelike",
+      "source_folder": "019ff12e-4316-7e42-b268-8cedc6a2844a",
+      "source_sha256": "1e02de8cc1c6c7e0493a6221babf0dc6d7526526c8bd987a5c73bdc8264d6be7",
+      "source_vertices": 996253,
+      "source_faces": 1992510,
+      "runtime_vertices": 1598,
+      "runtime_obj_sha256": "db65061de3ae1729c2b308197bcd2894f93fe3c66f1af071ce7eee762b9d8743"
+    },
+    {
+      "shape": "pithos",
+      "source_folder": "019ff13b-aff2-7f57-99e8-1337557359e0",
+      "source_sha256": "d9e7445a4e74d1eadd468497071eb4ef5b8449526b36e4d06d18e0f682b8529c",
+      "source_vertices": 997640,
+      "source_faces": 1995276,
+      "runtime_vertices": 1602,
+      "runtime_obj_sha256": "6cbd8067609ae1a7ed93498d810e7072aa647db46638028e0f4eed427a98e627"
+    },
+    {
+      "shape": "rhabdos",
+      "source_folder": "019ff14a-f23b-7f86-bdba-7fbb354cbf37",
+      "source_sha256": "634869a063da9c8f72d1735944ace18266db4f563a3e7136bf72b085d45cdbba",
+      "source_vertices": 993991,
+      "source_faces": 1988070,
+      "runtime_vertices": 1556,
+      "runtime_obj_sha256": "f8261a5e36cded729609b3fa500c995e9f1d5f35a1983e4c4e9b89beb95797bc"
+    },
+    {
+      "shape": "salpinx",
+      "source_folder": "019ff14b-9a2f-7fdc-8f4e-ea96b15c6ac0",
+      "source_sha256": "e58e191883ae886c56294e08b6533d20a37bd42b409ccdce94305430e81b9c7c",
+      "source_vertices": 960914,
+      "source_faces": 1921824,
+      "runtime_vertices": 1602,
+      "runtime_obj_sha256": "ed83f60d7b1a8c99fd3de3e4f1f6e2f66fcb77a531f5fb80bd27d19d0845d559"
+    },
+    {
+      "shape": "stamnos",
+      "source_folder": "019ff14b-c022-7fe0-96c5-473b2d490043",
+      "source_sha256": "14cec061a3ca7b0dbf3aed1c26bda92b927b507376e58415f00326d8f0645db3",
+      "source_vertices": 989391,
+      "source_faces": 1978786,
+      "runtime_vertices": 1598,
+      "runtime_obj_sha256": "59653359311e684c11c378defedcf9194e240e7cbb0f896202b83c56822c6d80"
+    }
+  ],
+  "distribution_rights_status": "Oliver confirms authorship and authorizes public redistribution of the included runtime assets under the repository licence (2026-08-31)."
+}

@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "size=small,facing=north": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=small,facing=east": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=small,facing=south": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=small,facing=west": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=medium,facing=north": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=medium,facing=east": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=medium,facing=south": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=medium,facing=west": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=large,facing=north": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=large,facing=east": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=large,facing=south": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    },
+    "size=large,facing=west": {
+      "model": "daedalon:mesh/statue_spartan_promachos_solistra_aged"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+# Keep ordinary text byte-stable across Windows, macOS, and Linux checkouts.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.jar binary
+*.zip binary
+*.gz binary
+*.dat binary
+*.mca binary
+
+# OBJ/MTL assets are byte-hash locked by the model safety and JAR audits.
+*.obj text eol=lf
+*.mtl text eol=lf
+
+# Continuity/OptiFine property files are byte-sensitive.
+/src/main/resources/**/*.properties binary

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "measured_on": "2026-07-27",
+  "minecraft": "1.20.1",
+  "mod_version": "0.1.0-beta",
+  "physical": {
+    "bytes": 3331551,
+    "sha256": "56860ef98bee6ff8c716e7477f70e29424879167fa0dbd051f667c7316d430fe"
+  },
+  "deduplicated": {
+    "bytes": 3299848,
+    "sha256": "67eda97b56be47e18489c248f7c49cdf58e51580e7479b9b72a3f14bcc4f665c",
+    "aliases": 140,
+    "canonical_blobs": 22
+  },
+  "saving": {
+    "bytes": 31703,
+    "percent": 0.9516
+  },
+  "gates": {
+    "strictly_smaller": true,
+    "logical_resources_equal": true,
+    "properties_equal": true,
+    "classes_equal": true,
+    "fabric_mod_json_equal": true
+  },
+  "decision": "deduplicated_release_default",
+  "fallback": "-PtextureDedupe=false"
+}

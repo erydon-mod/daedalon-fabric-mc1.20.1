@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "size=small,facing=north": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=small,facing=east": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=small,facing=south": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=small,facing=west": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=medium,facing=north": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=medium,facing=east": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=medium,facing=south": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=medium,facing=west": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=large,facing=north": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=large,facing=east": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=large,facing=south": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    },
+    "size=large,facing=west": {
+      "model": "daedalon:mesh/statue_spartan_promachos_brectite"
+    }
+  }
+}

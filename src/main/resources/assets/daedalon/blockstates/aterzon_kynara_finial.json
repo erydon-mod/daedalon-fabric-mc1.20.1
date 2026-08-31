@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/aterzon_kynara_finial"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/aterzon_kynara_finial"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "size=small,facing=north": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=small,facing=east": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=small,facing=south": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=small,facing=west": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=medium,facing=north": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=medium,facing=east": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=medium,facing=south": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=medium,facing=west": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=large,facing=north": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=large,facing=east": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=large,facing=south": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    },
+    "size=large,facing=west": {
+      "model": "daedalon:mesh/aganite_aged_lion_statant_statue"
+    }
+  }
+}

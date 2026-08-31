@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/hesperion_strobilos_finial"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/hesperion_strobilos_finial"
+    }
+  }
+}

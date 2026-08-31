@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/latmion_obeliskos_monument"
+    },
+    "size=medium": {
+      "model": "daedalon:mesh/latmion_obeliskos_monument"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/latmion_obeliskos_monument"
+    }
+  }
+}

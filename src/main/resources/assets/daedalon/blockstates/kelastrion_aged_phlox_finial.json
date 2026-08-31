@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/kelastrion_aged_phlox_finial"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/kelastrion_aged_phlox_finial"
+    }
+  }
+}

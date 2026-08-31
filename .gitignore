@@ -1,0 +1,103 @@
+########################################
+# Gradle / build
+########################################
+.gradle/
+build/
+out/
+
+# Keep the wrapper jar checked in (good practice)
+!gradle/wrapper/gradle-wrapper.jar
+
+########################################
+# Fabric/Loom dev runtime (IMPORTANT)
+########################################
+run/
+run-dev/.fabric/
+run-dev/config/
+run-dev/crash-reports/
+run-dev/data/
+run-dev/logs/
+run-dev/mods/
+run-dev/resourcepacks/
+run-dev/saves/
+run-dev/screenshots/
+run-dev/shaderpacks/
+run-dev/irisUpdateInfo.json
+run-dev/options.txt
+run-dev/usercache.json
+run-server/
+logs/
+crash-reports/
+*.log
+hs_err_pid*
+
+########################################
+# IntelliJ IDEA (simple + reliable)
+########################################
+.idea/
+run/
+logs/
+crash-reports/
+*.log
+hs_err_pid*
+
+
+########################################
+# OS junk
+########################################
+.DS_Store
+*.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.DS_Store
+**/*.DS_Store
+._*
+
+
+########################################
+# Optional: other IDEs (safe to keep)
+########################################
+.vscode/
+
+########################################
+# Local scratch / experiments
+########################################
+tmp/
+_save_quarantine/
+_disabled_wall_georgian/
+parked/
+nul
+client_launch.log
+*.javap.txt
+__pycache__/
+
+########################################
+# Local benchmark runs and evidence
+########################################
+/.gradle-benchmark/
+/benchmark-results/
+/benchmark-rerun-results/
+/benchmark-archive/
+/run-benchmark-*/
+/benchmark-profile-*/
+/CLIENT_BENCHMARK_RERUN_REPORT.md
+*.jfr
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/

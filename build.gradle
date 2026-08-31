@@ -1,0 +1,268 @@
+plugins {
+    id 'fabric-loom' version '1.6.12'
+}
+
+group = maven_group
+version = mod_version
+def familyCompatibilityGeneration = providers
+        .gradleProperty('family_compatibility_generation')
+        .map { it.toInteger() }
+        .get()
+if (familyCompatibilityGeneration < 1) {
+    throw new GradleException('family_compatibility_generation must be positive')
+}
+base { archivesName = "${archives_base_name}-compat${familyCompatibilityGeneration}" }
+
+def textureDedupeEnabled = providers.gradleProperty('textureDedupe')
+        .map { it.toBoolean() }
+        .getOrElse(true)
+def textureDedupePython = providers.gradleProperty('textureDedupePython')
+        .getOrElse('python')
+def textureDedupeTool = file('tools/texture_dedupe.py')
+def textureDedupeTest = file('tools/test_texture_dedupe.py')
+def textureDedupeInventoryConfig = file('config/texture-dedupe-native.json')
+def textureDedupeSourceId = 'daedalon-native-mc1.20.1'
+def textureDedupeReportDirectory =
+        layout.buildDirectory.dir('reports/texture-dedupe')
+def textureDedupeInventoryJson =
+        textureDedupeReportDirectory.map { it.file('inventory.json') }
+def textureDedupeInventoryCsv =
+        textureDedupeReportDirectory.map { it.file('inventory.csv') }
+def textureDedupePlan =
+        textureDedupeReportDirectory.map { it.file('plan.json') }
+
+repositories {
+    maven { url = 'https://maven.fabricmc.net/' }
+    maven { url = 'https://api.modrinth.com/maven' }
+    mavenCentral()
+}
+
+// Keep Minecraft 1.20.1's LWJGL version when optional Sodium/Iris are present.
+configurations.configureEach {
+    resolutionStrategy.eachDependency { dependency ->
+        if (dependency.requested.group == 'org.lwjgl') {
+            dependency.useVersion '3.3.1'
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+
+    // Optional rendering integrations used by the migrated OBJ renderer.
+    modCompileOnly "maven.modrinth:sodium:mc1.20.1-0.5.13-fabric"
+    modCompileOnly "maven.modrinth:indium:1.0.36+mc1.20.1"
+    modCompileOnly "maven.modrinth:iris:1.7.6+1.20.1"
+    modRuntimeOnly "maven.modrinth:sodium:mc1.20.1-0.5.13-fabric"
+    modRuntimeOnly "maven.modrinth:indium:1.0.36+mc1.20.1"
+    modRuntimeOnly "maven.modrinth:iris:1.7.6+1.20.1"
+
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
+
+    // Iris runtime parser dependencies.
+    runtimeOnly "org.anarres:jcpp:1.4.14"
+    runtimeOnly "org.antlr:antlr4-runtime:4.13.1"
+    runtimeOnly "io.github.douira:glsl-transformer:2.0.1"
+}
+
+loom {
+    runs {
+        client {
+            programArgs '--gameDir', file('run-dev').absolutePath
+        }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
+tasks.withType(ProcessResources).configureEach {
+    filteringCharset = 'UTF-8'
+    inputs.property('familyCompatibilityGeneration', familyCompatibilityGeneration)
+    inputs.property('textureDedupeEnabled', textureDedupeEnabled)
+    if (textureDedupeEnabled) {
+        dependsOn 'prepareTextureDedupePlan'
+        inputs.file(textureDedupeTool)
+        inputs.file(textureDedupePlan)
+    }
+    filesMatching('fabric.mod.json') {
+        expand('version': project.version)
+    }
+    doFirst {
+        project.delete(fileTree(destinationDir) {
+            include 'assets/*/texture_aliases/**'
+            include 'assets/*/texture_blobs/**'
+        })
+    }
+    doLast {
+        if (!textureDedupeEnabled) {
+            return
+        }
+        def reportDirectory = textureDedupeReportDirectory.get().asFile
+        reportDirectory.mkdirs()
+        project.exec {
+            commandLine(
+                    textureDedupePython,
+                    textureDedupeTool,
+                    'apply',
+                    '--config', textureDedupePlan.get().asFile,
+                    '--stage-root', destinationDir,
+                    '--report-out', new File(reportDirectory, 'apply.json')
+            )
+        }.assertNormalExitValue()
+        project.exec {
+            commandLine(
+                    textureDedupePython,
+                    textureDedupeTool,
+                    'validate',
+                    '--config', textureDedupePlan.get().asFile,
+                    '--stage-root', destinationDir,
+                    '--report-out', new File(reportDirectory, 'validate.json')
+            )
+        }.assertNormalExitValue()
+    }
+}
+
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+    from('LICENSE') {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
+
+def pythonCommand = providers.environmentVariable('PYTHON')
+        .orElse('python')
+
+tasks.register('verifyDaedalonAssets', Exec) {
+    group = 'verification'
+    description = 'Runs Daedalon OBJ, generated-resource, texture, state, and shape safety tests.'
+    workingDir projectDir
+    inputs.files(
+            fileTree('tools') {
+                include 'generate_daedalon_assets.py'
+                include 'generate_obj_display_models.py'
+                include 'extend_repeat_surface_textures.py'
+                include 'tests/**/*.py'
+            },
+            fileTree('src/main/java'),
+            fileTree('src/main/resources')
+    )
+    commandLine(
+            pythonCommand.get(),
+            '-m',
+            'unittest',
+            'discover',
+            '-s',
+            'tools/tests',
+            '-p',
+            'test_*.py',
+            '-v'
+    )
+}
+
+tasks.register('inventoryDaedalonTextures', Exec) {
+    group = 'texture deduplication'
+    description = 'Inventories Daedalon PNGs without modifying source resources.'
+    inputs.files(textureDedupeTool, textureDedupeInventoryConfig)
+    inputs.files(fileTree('src/main/resources') {
+        include '**/*.json'
+        include '**/*.png'
+        include '**/*.png.mcmeta'
+        include '**/*.properties'
+        include '**/*.mtl'
+        include '**/*.obj'
+    })
+    outputs.files(textureDedupeInventoryJson, textureDedupeInventoryCsv)
+    doFirst {
+        textureDedupeReportDirectory.get().asFile.mkdirs()
+        commandLine(
+                textureDedupePython,
+                textureDedupeTool,
+                'inventory',
+                '--config', textureDedupeInventoryConfig,
+                '--json-out', textureDedupeInventoryJson.get().asFile,
+                '--csv-out', textureDedupeInventoryCsv.get().asFile
+        )
+    }
+}
+
+tasks.register('prepareTextureDedupePlan', Exec) {
+    group = 'texture deduplication'
+    description = 'Creates the deterministic exact-byte Daedalon alias plan.'
+    dependsOn tasks.named('inventoryDaedalonTextures')
+    inputs.files(textureDedupeTool, textureDedupeInventoryConfig)
+    inputs.file(textureDedupeInventoryJson)
+    outputs.file(textureDedupePlan)
+    doFirst {
+        commandLine(
+                textureDedupePython,
+                textureDedupeTool,
+                'plan',
+                '--config', textureDedupeInventoryConfig,
+                '--inventory', textureDedupeInventoryJson.get().asFile,
+                '--source', textureDedupeSourceId,
+                '--output', textureDedupePlan.get().asFile
+        )
+    }
+}
+
+tasks.register('testTextureDedupeTool', Exec) {
+    group = 'verification'
+    description = 'Runs the vendored exact-texture deduplication tool tests.'
+    inputs.files(textureDedupeTool, textureDedupeTest)
+    commandLine(
+            textureDedupePython,
+            '-m',
+            'unittest',
+            'tools/test_texture_dedupe.py',
+            '-v'
+    )
+}
+
+tasks.register('auditDaedalonJar', Exec) {
+    group = 'verification'
+    description = 'Audits the final standalone Daedalon JAR and writes a JSON report.'
+    dependsOn tasks.named('remapJar')
+    dependsOn tasks.named('verifyDaedalonAssets')
+
+    def remappedJar = tasks.named('remapJar').flatMap { it.archiveFile }
+    inputs.file(remappedJar)
+    inputs.file('tools/audit_daedalon_jar.py')
+    outputs.file(layout.buildDirectory.file('reports/daedalon-jar-audit.json'))
+    workingDir projectDir
+
+    doFirst {
+        commandLine(
+                pythonCommand.get(),
+                file('tools/audit_daedalon_jar.py').absolutePath,
+                remappedJar.get().asFile.absolutePath,
+                '--report',
+                layout.buildDirectory.file('reports/daedalon-jar-audit.json')
+                        .get().asFile.absolutePath
+        )
+    }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('verifyDaedalonAssets')
+    dependsOn tasks.named('testTextureDedupeTool')
+}
+
+tasks.named('build') {
+    dependsOn tasks.named('auditDaedalonJar')
+}

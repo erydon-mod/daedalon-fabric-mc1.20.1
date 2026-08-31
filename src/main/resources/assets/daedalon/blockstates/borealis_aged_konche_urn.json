@@ -1,0 +1,76 @@
+{
+  "variants": {
+    "size=small,offset=false,facing=north": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=small,offset=false,facing=east": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=small,offset=false,facing=south": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=small,offset=false,facing=west": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=small,offset=true,facing=north": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=small,offset=true,facing=east": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=small,offset=true,facing=south": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=small,offset=true,facing=west": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=medium,offset=false,facing=north": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=medium,offset=false,facing=east": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=medium,offset=false,facing=south": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=medium,offset=false,facing=west": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=medium,offset=true,facing=north": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=medium,offset=true,facing=east": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=medium,offset=true,facing=south": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=medium,offset=true,facing=west": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=large,offset=false,facing=north": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=large,offset=false,facing=east": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=large,offset=false,facing=south": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=large,offset=false,facing=west": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=large,offset=true,facing=north": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=large,offset=true,facing=east": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=large,offset=true,facing=south": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    },
+    "size=large,offset=true,facing=west": {
+      "model": "daedalon:mesh/borealis_aged_konche_urn"
+    }
+  }
+}

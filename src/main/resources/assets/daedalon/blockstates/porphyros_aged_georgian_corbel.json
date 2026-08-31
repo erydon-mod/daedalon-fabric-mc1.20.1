@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "size=small,facing=north": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=small,facing=east": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=small,facing=south": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=small,facing=west": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=medium,facing=north": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=medium,facing=east": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=medium,facing=south": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=medium,facing=west": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=large,facing=north": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=large,facing=east": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=large,facing=south": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    },
+    "size=large,facing=west": {
+      "model": "daedalon:mesh/porphyros_aged_georgian_corbel"
+    }
+  }
+}

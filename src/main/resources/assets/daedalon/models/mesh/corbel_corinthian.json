@@ -1,0 +1,16 @@
+{
+  "obj": "daedalon:models/mesh/corbel_corinthian.obj",
+  "mtl": "daedalon:models/mesh/corbel_corinthian.mtl",
+  "flip_v": true,
+  "repair_degenerate_uvs": true,
+  "force_uv_projection": true,
+  "uv_projection": "axis_stabilized_box",
+  "face_oriented_uvs": true,
+  "smooth_normals": true,
+  "smooth_angle_degrees": 80.0,
+  "fit_to_block": true,
+  "scale": [3.0, 3.0, 3.0],
+  "translate": [0.0, 0.0, 0.0],
+  "particle": "daedalon:block/aganite_block",
+  "materials": {"none": "daedalon:block/aganite_block"}
+}

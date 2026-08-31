@@ -1,0 +1,21 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.oliver.daedalon.mixin",
+  "plugin": "com.oliver.daedalon.mixin.DaedalonMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BlockItemMixin",
+    "DebugStickItemMixin",
+    "ServerPlayNetworkHandlerMixin"
+  ],
+  "client": [
+    "client.ItemRendererMixin",
+    "client.axiom.BlockRenderCacheMixin",
+    "client.indium.TerrainRenderContextMixin",
+    "client.iris.XHFPTerrainVertexMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

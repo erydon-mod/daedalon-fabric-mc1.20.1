@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "size=small,facing=north": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=small,facing=east": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=small,facing=south": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=small,facing=west": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=medium,facing=north": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=medium,facing=east": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=medium,facing=south": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=medium,facing=west": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=large,facing=north": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=large,facing=east": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=large,facing=south": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    },
+    "size=large,facing=west": {
+      "model": "daedalon:mesh/noxoplis_hephaestus_bust"
+    }
+  }
+}

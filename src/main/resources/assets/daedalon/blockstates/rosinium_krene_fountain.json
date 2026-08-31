@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "daedalon:mesh/rosinium_krene_fountain"
+    },
+    "facing=east": {
+      "model": "daedalon:mesh/rosinium_krene_fountain"
+    },
+    "facing=south": {
+      "model": "daedalon:mesh/rosinium_krene_fountain"
+    },
+    "facing=west": {
+      "model": "daedalon:mesh/rosinium_krene_fountain"
+    }
+  }
+}

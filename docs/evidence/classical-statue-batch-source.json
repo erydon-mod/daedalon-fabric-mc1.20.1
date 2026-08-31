@@ -1,0 +1,156 @@
+{
+  "recorded": "2026-08-10",
+  "source": "Oliver-supplied Google Drive models.zip",
+  "source_archive_sha256": "98c658285fcc1ae3a17f23422c979ec70728aa9da176dbe4aea976f4b21d3fb2",
+  "source_obj_count": 19,
+  "approved_pilot": "Zeus.obj",
+  "batch_obj_count": 18,
+  "batch_subjects": {
+    "olympian": [
+      "Aphrodite",
+      "Apollo",
+      "Ares",
+      "Artemis",
+      "Athena",
+      "Demeter",
+      "Dionysus",
+      "Helios",
+      "Hera",
+      "Phaeton",
+      "Poseidon"
+    ],
+    "hero": [
+      "Bellerophon",
+      "Heracles",
+      "Orpheus",
+      "Perseus",
+      "Theseus"
+    ],
+    "animal": [
+      "Lion Couchant",
+      "Lion Statant"
+    ]
+  },
+  "source_contract": {
+    "format": "Blender OBJ",
+    "source_uvs": "none",
+    "faces": "triangles",
+    "runtime_uvs": "Locked topology-aware authored UVs for 17 supplied statues; Bellerophon and Lion Statant deliberately retain the axis-stabilized box projection fallback because no authored candidate passed the fixed-density safety gates.",
+    "runtime_normals": "80-degree smooth reconstruction"
+  },
+  "runtime_repairs": [
+    {
+      "subject": "Aphrodite",
+      "change": "Added deterministic topology-aware authored UV coordinates with a rear-spine seam layout, without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "e59266d10000b25b6da162ef45d990c22f905f5cf575f91444109917694ed6b6",
+      "runtime_obj_sha256": "3a464219fa5d2b5972df0d4f5d40c54e9c938c9cb52e6cd07f0b6f9feb794b2f"
+    },
+    {
+      "subject": "Apollo",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "07d9aeb8610de68f6e5104fdf2fb38758201b0b98e02cc021f0a8f5b9c6eba7c",
+      "runtime_obj_sha256": "c3bd3c0ef29c25a5870f898fbf5351bc4c35d3a75006c44ca009b25e8d4e97e2"
+    },
+    {
+      "subject": "Ares",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "73826e76f0e2c9508fb25759d7199f3c15872d32f603086a217442306fe2d59d",
+      "runtime_obj_sha256": "e6bb7f514f35e4a3085868dbbb6ae8b56399b188943514567beb2834f6b2b1fa"
+    },
+    {
+      "subject": "Artemis",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "f090130dc17b203bb412ec01d1c12f05644ed42327b8ce494c9836fbea0c61e4",
+      "runtime_obj_sha256": "77e02ff29ee593853c6c66587692fc3304b1d4448c830e74101bec4f18f88e84"
+    },
+    {
+      "subject": "Athena",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "9a698faf5a2d5daee49c90553acbd2a75f7dd4250b085ed2461918596c613097",
+      "runtime_obj_sha256": "d8604dc7237b5ae50c86b903c73e65d7508d12d680e7bd49c2a512e14b3eecb3"
+    },
+    {
+      "subject": "Demeter",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "eb9ecae30038cbc754273091c1d714566b4277820268a4ef73227308faa8803e",
+      "runtime_obj_sha256": "d4e025c1c380e7e45e7f43e03a22ffec75411b73ace20fb3e58342d2a7256dda"
+    },
+    {
+      "subject": "Dionysus",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "c5f9c891b1d9c476c8c1376faf7151bd1041ff4941233a06e71b1d75c653abc0",
+      "runtime_obj_sha256": "5e23445fca7cf66ecc4e090a45cf171686a001d34bfe5af23ed55edb24ac8825"
+    },
+    {
+      "subject": "Helios",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "46a6173489f5f2c126479fb153359fc052adc4dc504c711d153571f93135a23a",
+      "runtime_obj_sha256": "bdfcfab9b25a10da36be6208e4a3f8f7715b5dcac9eb8e17455b0ff61a08d000"
+    },
+    {
+      "subject": "Hera",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "73fab4a0abc3f5c6ff578d204e2948c70081b886043d00ba5f3a8768c357f28a",
+      "runtime_obj_sha256": "2062e2c46bd205460a6b7508de418c93797fcd5b09d57d57d48850e34acdbcf0"
+    },
+    {
+      "subject": "Heracles",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "92f160c621bac83c02f0c46d19b8603c64a193c4d757fc00fc74b800a339b0ce",
+      "runtime_obj_sha256": "06d91d387367586c02c46a424c5f5afb92176083d5a38f6b7f299c8feab27436"
+    },
+    {
+      "subject": "Lion Couchant",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "16f77f4bf70c5b0a94e774351aa9fd6f7537ba23d0f95b28c0079abdc4448054",
+      "runtime_obj_sha256": "f906dc612fef7ae056d3a3a6604e3369320ec8ecc31460c36ce78e6e1dd89a92"
+    },
+    {
+      "subject": "Orpheus",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "ce00a7ef2dd86d595bb712b71046c12c26847d013d0e18f3a02a135abb1c252e",
+      "runtime_obj_sha256": "08f84e990bb343dc3ac4ff8e3f35e3e0a5771334d1f2b957f687ec5623f2823d"
+    },
+    {
+      "subject": "Perseus",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "76e8a590f2ab9a41fb1bb1b511ef774c816ecaca2f583c5a8deb74ccac216f13",
+      "runtime_obj_sha256": "9f1053c4eecda2d2133728c25b65e08d5c9a0118cdc60a46c1e6bc667ebf24a1"
+    },
+    {
+      "subject": "Phaeton",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "071cee11d08fbb2903bcf7e133f9c76e4887ea6ff94cb972dcc9518f04905466",
+      "runtime_obj_sha256": "503f782384e579171344298c6e60d820ef0c9c633453556ee09808547c4eb73f"
+    },
+    {
+      "subject": "Poseidon",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "294576886bc8431046fdeb2c7f6ea6eb71115d8b707af6afd1c6e82a7b4a6065",
+      "runtime_obj_sha256": "4480a09093eedacb1db8d058b89daa4675779012867dd2d8f796abcc0e3a5361"
+    },
+    {
+      "subject": "Theseus",
+      "change": "Added deterministic topology-aware authored UV coordinates, normalised the stale mtllib reference to lowercase theseus.mtl, and supplied a no-texture placeholder without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "7c21559e1238557cb113e05cbf1d8d4105d29093ece2b3c285e0a6024297d9db",
+      "runtime_obj_sha256": "f89d1bb990c41c0a4cecfcb88e1cf844ad6f76c56aec92ad4570578574242a6f"
+    },
+    {
+      "subject": "Zeus",
+      "change": "Added deterministic topology-aware authored UV coordinates without changing the source vertex or face-position stream.",
+      "source_obj_sha256": "ae01b1f64707416709998bb46bcdc070b2382b6c7da6242a1c99b3dedb517a0d",
+      "runtime_obj_sha256": "65c89a0567c73d38641965b9b1b17bf1f5387ed27e9f1f2e9dfa0bfed1571064"
+    }
+  ],
+  "mesh_quality": {
+    "degenerate_triangle_count": 0,
+    "localized_non_manifold_subjects": [
+      "Athena",
+      "Dionysus",
+      "Phaeton",
+      "Theseus"
+    ],
+    "note": "The four listed meshes each have one localized non-manifold edge incidence; Dionysus also has one exact duplicate triangle. The remaining fourteen batch meshes are closed two-manifold surfaces."
+  },
+  "distribution_rights_status": "Oliver confirms authorship and authorizes public redistribution of the included runtime assets under the repository licence (2026-08-31)."
+}

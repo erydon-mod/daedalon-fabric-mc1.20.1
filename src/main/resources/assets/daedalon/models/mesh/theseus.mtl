@@ -1,0 +1,2 @@
+# The supplied position-only mesh retained an MTL reference but defines no
+# material groups. Daedalon supplies the selected stone variant at bake time.

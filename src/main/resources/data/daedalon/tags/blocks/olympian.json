@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "#daedalon:zeus_statue",
+    "#daedalon:aphrodite_statue",
+    "#daedalon:apollo_statue",
+    "#daedalon:ares_statue",
+    "#daedalon:artemis_statue",
+    "#daedalon:athena_statue",
+    "#daedalon:demeter_statue",
+    "#daedalon:dionysus_statue",
+    "#daedalon:helios_statue",
+    "#daedalon:hera_statue",
+    "#daedalon:phaeton_statue",
+    "#daedalon:poseidon_statue",
+    "#daedalon:aphrodite_bust",
+    "#daedalon:apollo_bust",
+    "#daedalon:ares_bust",
+    "#daedalon:artemis_bust",
+    "#daedalon:athena_bust",
+    "#daedalon:demeter_bust",
+    "#daedalon:dionysus_bust",
+    "#daedalon:hephaestus_bust",
+    "#daedalon:hera_bust",
+    "#daedalon:hermes_bust",
+    "#daedalon:poseidon_bust",
+    "#daedalon:zeus_bust"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/sanguenite_obeliskos_monument"
+    },
+    "size=medium": {
+      "model": "daedalon:mesh/sanguenite_obeliskos_monument"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/sanguenite_obeliskos_monument"
+    }
+  }
+}

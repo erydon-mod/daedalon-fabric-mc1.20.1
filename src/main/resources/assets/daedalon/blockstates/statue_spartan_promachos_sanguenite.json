@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "size=small,facing=north": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=small,facing=east": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=small,facing=south": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=small,facing=west": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=medium,facing=north": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=medium,facing=east": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=medium,facing=south": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=medium,facing=west": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=large,facing=north": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=large,facing=east": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=large,facing=south": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    },
+    "size=large,facing=west": {
+      "model": "daedalon:mesh/statue_spartan_promachos_sanguenite"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "size=small": {
+      "model": "daedalon:mesh/solistra_aged_balanos_finial"
+    },
+    "size=large": {
+      "model": "daedalon:mesh/solistra_aged_balanos_finial"
+    }
+  }
+}

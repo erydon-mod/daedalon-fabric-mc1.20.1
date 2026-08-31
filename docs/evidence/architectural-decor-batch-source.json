@@ -1,0 +1,40 @@
+{
+  "recorded": "2026-08-12",
+  "source": "Oliver-supplied Meshy AI Blender batches",
+  "source_root": "External Oliver-authored Meshy batch; source Blender files are not distributed in this repository.",
+  "source_file_count": 11,
+  "source_files_modified": false,
+  "name_mapping_basis": "Oliver-provided reference PNGs; the supplied Blender scenes used generic object names.",
+  "preparation": {
+    "tool": "tools/prepare_architectural_mesh.py",
+    "blender_version": "5.2.0 LTS",
+    "blender_build_hash": "fbe6228777e7",
+    "modifier": "Blender Collapse Decimate",
+    "target_faces": "6000 for the approved baseline; refined capitals use 12000, with Byzantine at 18000 for its denser openwork.",
+    "output_faces": "Approximately 6000 triangles per baseline model, 12000 for Corinthian and Roman Composite, and 18000 for Byzantine.",
+    "capital_top_policy": "The broad source top plane is detected by projected upward-facing area, then its thin deck band is flattened after decimation.",
+    "uv_policy": "bounded runtime axis-stabilized box projection"
+  },
+  "placement": {
+    "corbels": "three sizes and four facings; every large style is exactly one block (16 units) wide, with proportional height; all sizes end at Minecraft Y=16 and grow downwards",
+    "capitals": "fixed state; lower rim targets an 11.5-pixel circular join over the ERYDON circular column shaft"
+  },
+  "models": [
+    {"name": "corbel_baroque", "source_blend": "Corbels/Meshy_AI_assets_20260812_123037/019ff160-f4f5-758d-9bd1-82aa52e968c6/Meshy_AI_model.blend", "source_sha256": "b5f6402ef765c81a749cfcf55ff242035c0f69fe1abff2af246abd78d4725250", "runtime_obj_sha256": "4abe249a782b62cf324edf4d4e048a70f50e8f71804eaddd576ce406d39907de", "runtime_faces": 6000},
+    {"name": "corbel_corinthian", "source_blend": "Corbels/Meshy_AI_assets_20260812_123037/019ff161-1f92-78ab-b3de-49dee39f3322/Meshy_AI_model.blend", "source_sha256": "ab3be7dce6459c6cdb1d2308c30e576a02ae633fe5c88507e8de46737772fd1d", "runtime_obj_sha256": "215d986a2d1ee9eda1553a1800a5164d17eb9fe683371dd4594730757e2177ea", "runtime_faces": 6000},
+    {"name": "corbel_georgian", "source_blend": "Corbels/Meshy_AI_assets_20260812_123037/019ff161-4025-75a9-98bf-507014249901/Meshy_AI_model.blend", "source_sha256": "7571577cafb0d666b40f42a7473e40da861aba072f8c4e410e47fcdd38399ca9", "runtime_obj_sha256": "0d2462f882bf6955e202d9ebf50ad9c01cc9b292b82104cfac1ce4132dc894f0", "runtime_faces": 6000},
+    {"name": "corbel_ionic", "source_blend": "Corbels/Meshy_AI_assets_20260812_123037/019ff161-62e7-75ad-89f8-c37bde4aeb6b/Meshy_AI_model.blend", "source_sha256": "dd49dea50778301cf8bd177bad93b38e9d68f5d8f2e7e0ab3f61063e103fade5", "runtime_obj_sha256": "77d3e65bfa8c9aa223e7988edb868e4de712cdb58c6fc42011b7c800f33a8bc5", "runtime_faces": 6000},
+    {"name": "corbel_renaissance", "source_blend": "Corbels/Meshy_AI_assets_20260812_123037/019ff161-8604-75b6-bcdb-cdc223ef4e96/Meshy_AI_model.blend", "source_sha256": "07e058c01a4126badc1a813736751b655b8ce16c766b3b7defb31ae2ced16a4e", "runtime_obj_sha256": "f9b2126ee3f46f94b02504cb4737c363cc9194c7474ef9ea230f87956f4d34f1", "runtime_faces": 6000},
+    {"name": "capital_byzantine", "source_blend": "Capitals/blend/019ff628-157c-7f83-86ec-5d716d5ad71b/Meshy_AI_model.blend", "source_sha256": "ec54ea4ee79659df4c08e1fd1885e7757b5365403f0477a834a42e915cca90c5", "runtime_obj_sha256": "a0e565b4a6d0f71b3798b63eb0842a8597f0021df26b25767ccfcea267c7e943", "runtime_faces": 17999, "top_correction": {"plane_z": 0.946851945, "flattened_vertices": 4, "post_flatten_range": 0.0}},
+    {"name": "capital_corinthian", "source_blend": "Capitals/blend/019ff627-eecd-7bf0-b936-e22530e2fd4a/Meshy_AI_model.blend", "source_sha256": "f357cb32a764bbac89a0c690c12bf09b96d965d9d4a5d2e231da6f71c359ae32", "runtime_obj_sha256": "a654a67e3589a393afd67f67bd4a4f7a0d8a67fc6fb493595d2f075382759386", "runtime_faces": 12000, "top_correction": {"plane_z": 0.950030996, "flattened_vertices": 16, "post_flatten_range": 0.0}},
+    {"name": "capital_gothic", "source_blend": "Capitals/blend/019ff627-c9f7-7be3-81fc-8e39a8cd9754/Meshy_AI_model.blend", "source_sha256": "47a0d4b17dfff23f4fecef8f4878370dfde505e3d05c315fadc5e88e8119970b", "runtime_obj_sha256": "0d19a83fe836db5993efe5ee4c903ad0a1e4d7c181fa1680a5a232339f971f9f", "runtime_faces": 5999},
+    {"name": "capital_greek_ionic", "source_blend": "Capitals/blend/019ff627-a080-7256-8866-53c950122157/Meshy_AI_model.blend", "source_sha256": "be33dc2a1f83520830660f9ddb76d15e2bc2b858e213cec7b3a3008381973400", "runtime_obj_sha256": "aeb6a3385165b57adacc2de6a494746e6b51ac7e2aaa332e8bde0d532ccdf9a7", "runtime_faces": 5999},
+    {"name": "capital_roman_composite", "source_blend": "Capitals/blend/019ff627-8024-7bd6-a940-4f0141070af5/Meshy_AI_model.blend", "source_sha256": "c1b66b184478d0752acfcc6f440a710eec8038f45bbae1c17e96a246551654c4", "runtime_obj_sha256": "39e7b39528fdd3d2373ce7bf4006d212fd2bd6ee51316fbe534419e540a4716f", "runtime_faces": 11999, "top_correction": {"plane_z": 0.946814331, "flattened_vertices": 5, "post_flatten_range": 0.0}},
+    {"name": "capital_tuscan", "source_blend": "Capitals/blend/019ff631-363f-7877-a821-9e5156186cd7/Meshy_AI_model.blend", "source_sha256": "f9d41b3d1e91c293adce40f7c03a3f7378a0571c3083f8129f40566539300a03", "runtime_obj_sha256": "29e9ace4c2b6391a32350d638710c63baee33187426138d5cf8868d0ccdb0fa0", "runtime_faces": 6000}
+  ],
+  "missing_source": {
+    "reference_image": "Capitals/capital_greek_doric.png",
+    "reason": "no matching Blender source was present in the supplied blend folder"
+  },
+  "distribution_rights_status": "Oliver confirms authorship and authorizes public redistribution of the included runtime assets under the repository licence (2026-08-31)."
+}
