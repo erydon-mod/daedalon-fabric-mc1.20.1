@@ -18,5 +18,6 @@ Daedalon requires Java 17 and Python 3.13. Run the complete compilation, test,
 and source-asset safety suite without producing a release JAR:
 
 ```text
+python -m pip install -r requirements.txt
 ./gradlew --no-daemon check
 ```
