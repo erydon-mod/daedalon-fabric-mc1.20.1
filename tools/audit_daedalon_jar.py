@@ -289,16 +289,22 @@ def audit(
         items = direct_json_names("assets/daedalon/models/item/")
         loot = direct_json_names("data/daedalon/loot_tables/blocks/")
         require(
-            blockstates == expected_json_names,
-            f"JAR must contain exactly {expected_block_count} Daedalon blockstates",
+            blockstates == expected_json_names | {"fountain_basin_part.json"},
+            f"JAR must contain exactly {expected_block_count} public Daedalon blockstates and the internal fountain part",
         )
         require(
             items == expected_json_names | {"emblem.json"},
             f"JAR must contain exactly {expected_block_count} Daedalon block item models and the emblem",
         )
+        no_drop_names = {
+            f"{block_id}.json"
+            for family in GENERATOR.NO_DROP_FAMILIES
+            for block_id in GENERATOR.family_block_ids(family)
+        }
+        expected_loot_names = expected_json_names - no_drop_names
         require(
-            loot == expected_json_names,
-            f"JAR must contain exactly {expected_block_count} Daedalon self-drop loot tables",
+            loot == expected_loot_names,
+            f"JAR must contain exactly {len(expected_loot_names)} Daedalon self-drop loot tables; creative-only fountains must not drop",
         )
 
         expected_mesh_entries: set[str] = set()
