@@ -114,6 +114,7 @@ tasks.withType(Test).configureEach {
 
 tasks.named('processResources', ProcessResources) {
     filteringCharset = 'UTF-8'
+    inputs.property('version', project.version)
     inputs.property('familyCompatibilityGeneration', familyCompatibilityGeneration)
     inputs.property('textureDedupeEnabled', textureDedupeEnabled)
     if (textureDedupeEnabled) {
