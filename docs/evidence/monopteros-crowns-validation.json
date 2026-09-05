@@ -1,0 +1,53 @@
+{
+  "scope": "Monopteros flat crowns and all five bronze finials",
+  "diameter_to_height_m": {
+    "4": 3,
+    "6": 4,
+    "8": 5
+  },
+  "world_triangles_per_size": 15204,
+  "item_triangles": 2000,
+  "source_original_unchanged": true,
+  "bronze_finials": [
+    "balanos",
+    "kynara",
+    "phlox",
+    "sphaira",
+    "strobilos"
+  ],
+  "asset_tests": 110,
+  "texture_tests": 10,
+  "junit_tests": 84,
+  "gametests_passed": [
+    "fountaingametests.rimhitpassesvanillareachwithoutmovinghittoanchor",
+    "fountaingametests.repeatedcontrolskeepeveryfountaineditable",
+    "exedragametests.widthsfacingsanddebugstickuseonlytheownerblock",
+    "hedragametests.widthsfacingsanddebugstickuseonlytheownerblock",
+    "monopterosgametests.flushcrownsacceptblocksandeverybronzefinial",
+    "monopterosgametests.diametershollowinteriorremoterimanddebugstick",
+    "decorassemblyselectiongametests.selectinganypartincludesonlyitscompleteobject"
+  ],
+  "placement_cases": 36,
+  "placement_proof": "Vanilla outline ray hits integer-height crown; normal ItemStack.useOnBlock places stone and both sizes of every bronze finial, replacing saved old ornament cells; removing owner clears all old cells.",
+  "runtime_visuals": {
+    "renderer": "Sodium 0.5.13, Indium 1.0.36, Iris 1.7.6",
+    "shader": "ComplementaryUnbound_r5.9_dev2.zip",
+    "packs": [
+      "native",
+      "ERYDON-Collection-32x-compat2-v1.5.14.zip",
+      "ERYDON-Collection-64x-compat2-v1.5.14.zip"
+    ],
+    "completed": "All crowns and five bronze finials rendered with native, 32x and 64x packs; client closed automatically.",
+    "screenshots": {
+      "32x-overview.png": "842196641623821e7d14460313c74c3dfdf7ebd7184d832665cdf1c930030f62",
+      "4m-crown.png": "018c2a13f8138fad65c387eb6fd893a341dfb91af6734c30b8287f9bfb9b7b6b",
+      "64x-crown.png": "782931d84146941c259f2ca8e540fb2c7fb8fcedfc9a19848ee288c0cf9d9090",
+      "64x-overview.png": "bf072229b4e20ecb1bbefdd99f701fd1ed3ca029a9b611efe83461a80b546677",
+      "6m-crown.png": "20dc11c6dcea1e432bd5f655e5514589e190337f9f71f4829fcebf1a3acf5975",
+      "8m-crown.png": "63c07a154801f26072f0dd53777c8124017ac5c0f9da0d8bc4e76bcd19ec1253",
+      "five-bronze-finials.png": "9741f9c4162b544c7699c52538f887d4fa0ec7715e470a3b2d82bdd1e12dbb95",
+      "native-overview.png": "f27b2f7451e857ccee4aae0f8c76414a9bc76f579ba537bef6a2dc38c2b8af55"
+    }
+  },
+  "performance_design": "Existing shared geometry and textures; no block entities, ticks or frame-time world scans added."
+}

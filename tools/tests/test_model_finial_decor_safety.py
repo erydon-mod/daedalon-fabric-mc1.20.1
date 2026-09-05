@@ -37,13 +37,16 @@ class FinialDecorSafetyTests(unittest.TestCase):
             for family in self.FAMILIES
             for block_id in GENERATOR.family_block_ids(family)
         ]
-        self.assertEqual(487, len(ids))
-        self.assertEqual(487, len(set(ids)))
+        self.assertEqual(492, len(ids))
+        self.assertEqual(492, len(set(ids)))
         self.assertTrue(set(ids).issubset(all_block_ids()))
         self.assertIn("aganite_balanos_finial", ids)
         self.assertIn("aganite_aged_balanos_finial", ids)
         self.assertIn("aganite_obeliskos_monument", ids)
         self.assertIn("bronze_obeliskos_monument", ids)
+        for family in GENERATOR.FINIAL_FAMILIES:
+            self.assertIn("bronze_" + family, ids)
+            self.assertEqual(55, len(GENERATOR.family_block_ids(family)))
         self.assertNotIn("balanos_finial_aganite", ids)
         self.assertNotIn("aganite_balanos_finial_aged", ids)
 
@@ -169,7 +172,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
         self.assertIn("FixedDecorBlock.Style.values()", mod_blocks)
         self.assertIn("registerKreneFountains()", mod_blocks)
         self.assertIn("registerObeliskosMonuments()", mod_blocks)
-        self.assertIn("exactly 4041 decor blocks and items", mod_blocks)
+        self.assertIn("exactly 4046 decor blocks and items", mod_blocks)
         self.assertIn("new FinialBlock(decorSettings(), style)", mod_blocks)
         self.assertIn("createDetailedVariants(style.idSuffix())", plugin)
         self.assertIn('createDetailedVariants("krene_fountain")', plugin)

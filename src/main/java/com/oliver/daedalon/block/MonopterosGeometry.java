@@ -18,7 +18,7 @@ final class MonopterosGeometry {
         for (MonopterosBlock.Diameter size : MonopterosBlock.Diameter.values()) {
             VoxelShape[] parts = PARTS[size.ordinal()];
             Arrays.fill(parts, VoxelShapes.empty());
-            double height = MonopterosProfile.HEIGHT * size.metres;
+            double height = size.height;
             int halfCells = size.metres * 2;
             for (int y = 0; y < Math.ceil(height*4); y++) {
                 double y0=y/4.0, y1=Math.min(height,(y+1)/4.0);

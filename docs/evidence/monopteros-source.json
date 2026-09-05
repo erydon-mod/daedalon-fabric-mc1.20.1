@@ -30,13 +30,22 @@
       8
     ],
     "default_diameter_meters": 6,
-    "scaling": "uniform in all axes",
+    "scaling": "width/depth proportional; height independently aligned to whole blocks",
     "target_faces": 15386,
     "decimation": false,
     "item_target_faces": 2000,
     "material_variants": 55,
     "box_projection_span": 8,
-    "authored_uv_search": false
+    "authored_uv_search": false,
+    "height_meters": [
+      3,
+      4,
+      5
+    ],
+    "flat_crown_source_y": 0.5,
+    "ornament_removed": true,
+    "crown_cap_sealed": true,
+    "additional_argument": "--monopteros-flat-crown"
   },
   "models": [
     {
@@ -44,10 +53,10 @@
       "obj": "monopteros_4m.obj",
       "mtl": "monopteros_4m.mtl",
       "display": "monopteros_display.json",
-      "vertices": 7693,
+      "vertices": 7602,
       "uvs": 0,
-      "normals": 20234,
-      "faces": 15386,
+      "normals": 20199,
+      "faces": 15204,
       "bounds": [
         [
           -2.0,
@@ -56,11 +65,11 @@
         ],
         [
           2.0,
-          2.805307,
+          3.0,
           1.999553
         ]
       ],
-      "obj_sha256": "ffb55007bcaf6966124b7b4b0e51066fe5bb8c72e43fa681795e85765a1accc1",
+      "obj_sha256": "a5cb26d0d7e860578fa4d9ebb676103b8dc152c637e726fd5d916870e7a46f75",
       "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894"
     },
     {
@@ -68,10 +77,10 @@
       "obj": "monopteros_6m.obj",
       "mtl": "monopteros_6m.mtl",
       "display": "monopteros_display.json",
-      "vertices": 7693,
+      "vertices": 7602,
       "uvs": 0,
-      "normals": 20247,
-      "faces": 15386,
+      "normals": 20187,
+      "faces": 15204,
       "bounds": [
         [
           -3.0,
@@ -80,11 +89,11 @@
         ],
         [
           3.0,
-          4.20796,
+          4.0,
           2.99933
         ]
       ],
-      "obj_sha256": "506dc7edae645f15c0c1259513b7c6c29efcb56cf57f2afbfaa982c1d2236de5",
+      "obj_sha256": "4c5ea04bea5e71078e527a52a08e5ea4f22875a0c5113ba4eba7823561ef86a4",
       "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894"
     },
     {
@@ -92,10 +101,10 @@
       "obj": "monopteros_8m.obj",
       "mtl": "monopteros_8m.mtl",
       "display": "monopteros_display.json",
-      "vertices": 7693,
+      "vertices": 7602,
       "uvs": 0,
-      "normals": 20234,
-      "faces": 15386,
+      "normals": 20174,
+      "faces": 15204,
       "bounds": [
         [
           -4.0,
@@ -104,11 +113,11 @@
         ],
         [
           4.0,
-          5.610613,
+          5.0,
           3.999106
         ]
       ],
-      "obj_sha256": "835a77f37ee8139d9995d29eada60c7127512b406a0a9c7b4649754ad0e4ba05",
+      "obj_sha256": "cfa7131c5813a48e6b0eb50a9db8f53ea114401c687a7c976adc574c217758fe",
       "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894"
     },
     {
@@ -118,21 +127,21 @@
       "display": "monopteros_display.json",
       "vertices": 1000,
       "uvs": 0,
-      "normals": 2420,
+      "normals": 2423,
       "faces": 2000,
       "bounds": [
         [
-          -3.010432,
-          0.002294,
-          -3.017889
+          -3.004723,
+          0.002431,
+          -3.017909
         ],
         [
-          2.980164,
-          4.22358,
-          2.996465
+          2.980528,
+          3.995438,
+          2.999981
         ]
       ],
-      "obj_sha256": "09822eaf1c48fa8478a53bdee27ce0e7d45b052ebff12672565bf3e51a546fcb",
+      "obj_sha256": "fdbbeb79474fcb55baa81425535ed79c6a8d9659c54f496fe01278944704d663",
       "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894"
     }
   ]

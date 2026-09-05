@@ -3,17 +3,20 @@ import unittest,sys
 from daedalon_test_support import (MESH_ROOT,MESH_EXPECTATIONS,DAEDALON_ASSETS,DAEDALON_DATA,REPO_ROOT,GENERATOR,load_json,parse_obj,sha256)
 
 class MonopterosSafetyTests(unittest.TestCase):
-    def test_all_diameters_preserve_source_geometry_and_proportions(self):
+    def test_all_diameters_have_flat_whole_block_crowns_and_proportional_footprints(self):
         baseline=None
-        for diameter in (4,6,8):
+        for diameter,height in ((4,3),(6,4),(8,5)):
             name=f'monopteros_{diameter}m';path=MESH_ROOT/(name+'.obj');actual=parse_obj(path)
-            self.assertEqual((7693,15386),(actual['vertices'],actual['faces']))
+            self.assertLess(actual['faces'],15386)
+            self.assertEqual(MESH_EXPECTATIONS[name]['faces'],actual['faces'])
             self.assertEqual(MESH_EXPECTATIONS[name]['obj_sha256'],sha256(path))
             lo,hi=actual['bounds'];self.assertAlmostEqual(diameter,hi[0]-lo[0],places=5)
             self.assertAlmostEqual(0,lo[1],places=6)
-            self.assertAlmostEqual(.701326625,(hi[1]-lo[1])/diameter,places=6)
+            self.assertAlmostEqual(height,hi[1]-lo[1],places=6)
             lines=path.read_text().splitlines()
-            vertices=[tuple(float(v)/diameter for v in line.split()[1:]) for line in lines if line.startswith('v ')]
+            vertices=[tuple(float(v)/(height if i==1 else diameter) for i,v in enumerate(line.split()[1:])) for line in lines if line.startswith('v ')]
+            top_faces=[face for face in lines if face.startswith('f ') and all(abs(vertices[int(v.split('/')[0])-1][1]-1)<1e-6 for v in face.split()[1:])]
+            self.assertTrue(top_faces, 'Crown must have a sealed flat placement surface')
             topology=[[int(v.split('/')[0]) for v in line.split()[1:]] for line in lines if line.startswith('f ')]
             if baseline:
                 self.assertEqual(baseline[1],topology)
@@ -47,7 +50,7 @@ class MonopterosSafetyTests(unittest.TestCase):
         sys.path.insert(0,str(REPO_ROOT/'tools'));import generate_monopteros_shape as shape
         self.assertEqual(shape.content(),shape.TARGET.read_text())
         height,rings=shape.profile();self.assertGreater(rings[0][0],.3)
-        self.assertLess(rings[0][0],rings[0][1]);self.assertGreater(height,.7)
+        self.assertLess(rings[0][0],rings[0][1]);self.assertAlmostEqual(.625,height)
         evidence=load_json(REPO_ROOT/'docs/evidence/monopteros-source.json')
         self.assertFalse(evidence['source_files_modified']);self.assertFalse(evidence['preparation']['decimation'])
         self.assertEqual('6183f64cee6b67a59ff972bcac32c579827363d20f663f8f29fbfa5759932948',evidence['source_sha256'])

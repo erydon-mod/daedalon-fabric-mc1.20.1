@@ -306,6 +306,7 @@ HERO_STATUE_FAMILIES = (
 )
 LION_STATUE_FAMILIES = ("lion_couchant", "lion_statant")
 BRONZE_FAMILIES = (
+    *FINIAL_FAMILIES,
     "spartan",
     *CANONICAL_STATUE_FAMILIES,
     *URN_FAMILIES,
@@ -362,7 +363,7 @@ def bronze_block_id(family: str) -> str:
         return f"bronze_{family}_urn"
     if family in BUST_FAMILIES:
         return f"bronze_{BUST_FAMILIES[family][0]}_bust"
-    if family in ("obeliskos_monument", "monopteros_dome"):
+    if family in FINIAL_FAMILIES or family in ("obeliskos_monument", "monopteros_dome"):
         return "bronze_" + family
     raise ValueError(f"Family does not support the Bronze finish: {family}")
 

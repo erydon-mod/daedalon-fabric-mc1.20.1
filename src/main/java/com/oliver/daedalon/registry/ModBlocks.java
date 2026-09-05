@@ -52,7 +52,8 @@ public final class ModBlocks {
     private static final int BRONZE_FAMILY_COUNT =
             2 + UrnBlock.UrnStyle.values().length
                     + ClassicalStatueBlock.Style.values().length
-                    + BustBlock.Style.values().length + 2;
+                    + BustBlock.Style.values().length + 2
+                    + (int) java.util.Arrays.stream(FixedDecorBlock.Style.values()).filter(FixedDecorBlock.Style::isFinial).count();
     private static final int EXPECTED_BLOCK_COUNT =
             STONE_VARIANTS_PER_FAMILY * FAMILY_COUNT + BRONZE_FAMILY_COUNT;
 
@@ -129,7 +130,7 @@ public final class ModBlocks {
                 || SPARTAN_PROMACHOS_STATUES.size() != BRONZE_FAMILY_VARIANTS
                 || ZEUS_STATUES.size() != BRONZE_FAMILY_VARIANTS) {
             throw new IllegalStateException(
-                    "Daedalon must register exactly 4041 decor blocks and items"
+                    "Daedalon must register exactly 4046 decor blocks and items"
             );
         }
         for (UrnBlock.UrnStyle style : UrnBlock.UrnStyle.values()) {
@@ -168,8 +169,8 @@ public final class ModBlocks {
             }
         }
         for (FixedDecorBlock.Style style : FixedDecorBlock.Style.values()) {
-            if (fixedDecor(style).size() != STONE_VARIANTS_PER_FAMILY) {
-                throw new IllegalStateException(style.idSuffix() + " must register exactly 54 variants");
+            if (fixedDecor(style).size() != STONE_VARIANTS_PER_FAMILY + (style.isFinial() ? 1 : 0)) {
+                throw new IllegalStateException(style.idSuffix() + " must register all stone finishes and bronze for finials");
             }
         }
         for (FountainBasinBlock.Style style : FountainBasinBlock.Style.values()) {
@@ -485,6 +486,10 @@ public final class ModBlocks {
                 );
                 FIXED_DECOR_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>()).add(block);
             }
+        }
+        if (style.isFinial()) {
+            Block bronze = registerBlock("bronze_" + style.idSuffix(), new FinialBlock(decorSettings(), style));
+            FIXED_DECOR_BY_STYLE.get(style).add(bronze);
         }
     }
 

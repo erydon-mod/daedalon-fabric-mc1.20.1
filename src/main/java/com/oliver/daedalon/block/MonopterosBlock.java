@@ -44,7 +44,7 @@ public final class MonopterosBlock extends Block {
     @Override public void onStateReplaced(BlockState state,World world,BlockPos pos,BlockState next,boolean moved) {
         if (!world.isClient) {
             if (next.isOf(this)) sync(world,pos,next);
-            else clear(world,pos,state.get(DIAMETER));
+            else clear(world,pos);
         }
         super.onStateReplaced(state,world,pos,next,moved);
     }
@@ -52,19 +52,19 @@ public final class MonopterosBlock extends Block {
         // Check once before any writes so a resize cannot overwrite neighbouring builds.
         if (!canOccupy(world,pos,state)) return;
         Diameter size=state.get(DIAMETER);
-        for (Diameter old:Diameter.values()) {
-            for (BlockPos offset:MonopterosGeometry.offsets(old)) {
-                if (!MonopterosGeometry.part(size,offset.getX(),offset.getY(),offset.getZ()).isEmpty()) continue;
-                BlockPos part=pos.add(offset);
-                if (MonopterosPartBlock.isOwnedBy(world.getBlockState(part),part,pos)) world.removeBlock(part,false);
-            }
+        // Include legacy cells from the removed ornament. This bounded cleanup only
+        // runs on edits, so existing roofs can refresh without ticking or load scans.
+        for (BlockPos offset:BlockPos.iterate(-4,0,-4,4,5,4)) {
+            if (!MonopterosGeometry.part(size,offset.getX(),offset.getY(),offset.getZ()).isEmpty()) continue;
+            BlockPos part=pos.add(offset);
+            if (MonopterosPartBlock.isOwnedBy(world.getBlockState(part),part,pos)) world.removeBlock(part,false);
         }
         for (BlockPos offset:MonopterosGeometry.offsets(size)) {
             world.setBlockState(pos.add(offset),ModBlocks.monopterosPart().stateForOffset(offset),Block.NOTIFY_ALL);
         }
     }
-    private static void clear(World world,BlockPos pos,Diameter size) {
-        for (BlockPos offset:MonopterosGeometry.offsets(size)) {
+    private static void clear(World world,BlockPos pos) {
+        for (BlockPos offset:BlockPos.iterate(-4,0,-4,4,5,4)) {
             BlockPos part=pos.add(offset);
             if (MonopterosPartBlock.isOwnedBy(world.getBlockState(part),part,pos)) world.removeBlock(part,false);
         }
@@ -77,9 +77,10 @@ public final class MonopterosBlock extends Block {
     }
     @Override public VoxelShape getCullingShape(BlockState state,BlockView world,BlockPos pos) { return VoxelShapes.empty(); }
     public enum Diameter implements StringIdentifiable {
-        FOUR(4),SIX(6),EIGHT(8);
+        FOUR(4,3),SIX(6,4),EIGHT(8,5);
         public final int metres;
-        Diameter(int metres) { this.metres=metres; }
+        public final int height;
+        Diameter(int metres,int height) { this.metres=metres; this.height=height; }
         @Override public String asString() { return Integer.toString(metres); }
         @Override public String toString() { return asString(); }
     }

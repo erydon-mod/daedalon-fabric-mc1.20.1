@@ -4,6 +4,7 @@ import com.oliver.daedalon.block.MonopterosBlock;
 import com.oliver.daedalon.block.MonopterosPartBlock;
 import com.oliver.daedalon.item.DaedalonDebugProperties;
 import com.oliver.daedalon.registry.DecorMaterial;
+import com.oliver.daedalon.registry.ModBlocks;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,6 +28,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class MonopterosGameTests {
+    @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=400)
+    public void flushCrownsAcceptBlocksAndEveryBronzeFinial(TestContext context) {
+        var world=context.getWorld();
+        BlockPos anchor=context.getAbsolutePos(new BlockPos(110,10,110));
+        var player=context.createMockCreativeServerPlayerInWorld();
+        player.setPosition(Vec3d.ofCenter(anchor.add(12,8,12)));
+        Block dome=Registries.BLOCK.get(new Identifier("daedalon","bronze_monopteros_dome"));
+        String[] crowns={"minecraft:stone","daedalon:bronze_balanos_finial","daedalon:bronze_kynara_finial",
+                "daedalon:bronze_phlox_finial","daedalon:bronze_sphaira_finial","daedalon:bronze_strobilos_finial"};
+        for (var size:MonopterosBlock.Diameter.values()) {
+            world.setBlockState(anchor,dome.getDefaultState().with(MonopterosBlock.DIAMETER,size),Block.NOTIFY_ALL);
+            BlockPos target=anchor.up(size.height);
+            Vec3d crown=Vec3d.of(target).add(.5,0,.5);
+            for (String id:crowns) for (String finialSize:new String[]{"small","large"}) {
+                // Emulate an existing save's now-empty built-in ornament cell.
+                world.setBlockState(target,ModBlocks.monopterosPart().stateForOffset(new BlockPos(0,size.height,0)),Block.NOTIFY_ALL);
+                BlockHitResult hit=world.raycast(new RaycastContext(crown.add(0,3,0),crown.add(0,-1,0),
+                        RaycastContext.ShapeType.OUTLINE,RaycastContext.FluidHandling.NONE,player));
+                context.assertTrue(hit.getSide()==Direction.UP && hit.getBlockPos().equals(target.down()),"Crown ray must hit the highest occupied block's top: "+size);
+                context.assertTrue(Math.abs(hit.getPos().y-crown.y)<1e-6,"Crown shape must end exactly at the integer mesh height");
+                Block block=Registries.BLOCK.get(new Identifier(id));
+                context.assertTrue(block!=Blocks.AIR,"Missing crown block: "+id);
+                ItemStack stack=block.asItem().getDefaultStack();
+                stack.getOrCreateSubNbt("BlockStateTag").putString("size",finialSize);
+                player.setStackInHand(Hand.MAIN_HAND,stack);
+                var result=stack.useOnBlock(new ItemUsageContext(player,Hand.MAIN_HAND,hit));
+                context.assertTrue(result.isAccepted() && world.getBlockState(target).isOf(block),"Normal placement must replace the old ornament cell with "+id);
+                context.assertTrue(world.getBlockState(anchor).isOf(dome),"Placing a crown must preserve its roof");
+                world.removeBlock(target,false);
+            }
+            // The old tallest 8m ornament occupied Y=5; edits/removal clean it too.
+            BlockPos legacy=anchor.up(5);
+            world.setBlockState(legacy,ModBlocks.monopterosPart().stateForOffset(new BlockPos(0,5,0)),Block.NOTIFY_ALL);
+            world.removeBlock(anchor,false);
+            context.assertTrue(parts(world,anchor).isEmpty(),"Removal must clear legacy ornament cells");
+        }
+        context.complete();
+    }
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=400)
     public void diametersHollowInteriorRemoteRimAndDebugStick(TestContext context) {
         var world=context.getWorld();

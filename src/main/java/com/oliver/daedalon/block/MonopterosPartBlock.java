@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.BlockMirror;
@@ -38,6 +39,11 @@ public final class MonopterosPartBlock extends Block {
         BlockState anchor=world.getBlockState(anchorPos(pos,state));
         if (!(anchor.getBlock() instanceof MonopterosBlock)) return VoxelShapes.empty();
         return MonopterosGeometry.part(anchor.get(MonopterosBlock.DIAMETER),state.get(X)-4,state.get(Y),state.get(Z)-4);
+    }
+    @Override public boolean canReplace(BlockState state,ItemPlacementContext context) {
+        // Saved ornament cells have no shape after the crown edit; allow a finial
+        // to replace them directly, without requiring a world migration.
+        return getOutlineShape(state,context.getWorld(),context.getBlockPos(),ShapeContext.absent()).isEmpty();
     }
     @Override public VoxelShape getCollisionShape(BlockState state,BlockView world,BlockPos pos,ShapeContext context) {
         return getOutlineShape(state,world,pos,context);

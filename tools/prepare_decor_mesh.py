@@ -51,6 +51,8 @@ def arguments(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--proportional-depth", action="store_true",
                         help="Scale depth with width, preserving the source footprint proportions")
     parser.add_argument("--save-blend", action="store_true")
+    parser.add_argument("--monopteros-flat-crown", action="store_true",
+                        help="Remove the approved Monopteros ornament at source Y=0.5 and seal the crown")
     parser.add_argument("--blender", type=Path, default=None)
     result = parser.parse_args(argv)
     if not MODEL_NAME.fullmatch(result.name):
@@ -59,6 +61,10 @@ def arguments(argv: Sequence[str]) -> argparse.Namespace:
         )
     if result.target_faces < 100:
         parser.error("--target-faces must be at least 100")
+    if result.monopteros_flat_crown and (
+        not result.name.startswith("monopteros_") or result.width_meters is None
+    ):
+        parser.error("--monopteros-flat-crown requires a Monopteros name and explicit dimensions")
     if (result.width_meters is None) != (result.height_meters is None):
         parser.error("--width-meters and --height-meters must be supplied together")
     if result.proportional_depth and result.width_meters is None:
@@ -182,17 +188,42 @@ def prepare(args: argparse.Namespace) -> int:
     obj = objects[0]
     original_minimum, original_maximum = bounds(mesh_points(obj))
     original_span = original_maximum - original_minimum
+    if args.monopteros_flat_crown:
+        if sha256(source) != "6183f64cee6b67a59ff972bcac32c579827363d20f663f8f29fbfa5759932948":
+            raise RuntimeError("Monopteros crown cut requires the approved original OBJ")
+        import bmesh
+        obj.data.transform(obj.matrix_world)
+        obj.matrix_world.identity()
+        mesh = bmesh.new()
+        mesh.from_mesh(obj.data)
+        bmesh.ops.bisect_plane(mesh, geom=list(mesh.verts)+list(mesh.edges)+list(mesh.faces),
+                              dist=1e-7, plane_co=(0, 0, .5), plane_no=(0, 0, 1),
+                              clear_outer=True, clear_inner=False)
+        boundary = [edge for edge in mesh.edges if edge.is_boundary
+                    and all(abs(vertex.co.z-.5) < 1e-6 for vertex in edge.verts)]
+        if not boundary:
+            raise RuntimeError("Monopteros crown cut did not produce a sealing boundary")
+        bmesh.ops.holes_fill(mesh, edges=boundary, sides=0)
+        bmesh.ops.recalc_face_normals(mesh, faces=list(mesh.faces))
+        # Triangulate before independent height sizing so all diameters share
+        # exactly the same crown topology.
+        bmesh.ops.triangulate(mesh, faces=list(mesh.faces))
+        mesh.to_mesh(obj.data)
+        mesh.free()
+        obj.data.update()
+    sizing_minimum, sizing_maximum = bounds(mesh_points(obj))
+    sizing_span = sizing_maximum - sizing_minimum
     if args.width_meters is not None:
         # Blender is Z-up. Optionally preserve the source X/Y footprint while
         # sizing height independently. Ground and centre the exported vertices.
-        height_scale = args.height_meters / original_span.z
-        width_scale = args.width_meters / original_span.x
+        height_scale = args.height_meters / sizing_span.z
+        width_scale = args.width_meters / sizing_span.x
         depth_scale = width_scale if args.proportional_depth else height_scale
         middle = args.stretch_middle_meters
         extra_width = args.width_meters - original_span.x * height_scale
         if middle is not None and not (0 < middle < original_span.x * height_scale and middle + extra_width > 0):
             raise RuntimeError("central stretch band must fit the sized source and retain positive width")
-        center = (original_minimum + original_maximum) * 0.5
+        center = (sizing_minimum + sizing_maximum) * 0.5
         points = mesh_points(obj)
         normal_matrix = obj.matrix_world.to_3x3().inverted().transposed()
         source_normals = [normal_matrix @ normal.vector for normal in obj.data.corner_normals]
@@ -205,7 +236,7 @@ def prepare(args: argparse.Namespace) -> int:
             vertex.co = (
                 x,
                 (point.y - center.y) * depth_scale,
-                (point.z - original_minimum.z) * height_scale,
+                (point.z - sizing_minimum.z) * height_scale,
             )
         obj.data.update()
         # Width changes are non-uniform: normals need the inverse transpose,
@@ -241,7 +272,9 @@ def prepare(args: argparse.Namespace) -> int:
         modifier.use_collapse_triangulate = True
         bpy.ops.object.modifier_apply(modifier=modifier.name)
     for polygon in obj.data.polygons:
-        polygon.use_smooth = True
+        polygon.use_smooth = not (args.monopteros_flat_crown and all(
+            abs(obj.data.vertices[index].co.z-args.height_meters) < 1e-5
+            for index in polygon.vertices))
     obj.name = args.name
     obj.data.name = args.name
     obj.data.materials.clear()
@@ -305,6 +338,7 @@ def prepare(args: argparse.Namespace) -> int:
         "output_vertices": len(obj.data.vertices),
         "target_faces": args.target_faces,
         "stretch_middle_meters": args.stretch_middle_meters,
+        "monopteros_flat_crown": args.monopteros_flat_crown,
         "preview": str(preview) if args.preview else None,
         "seconds": round(time.monotonic() - started, 3),
         "blender_version": bpy.app.version_string,

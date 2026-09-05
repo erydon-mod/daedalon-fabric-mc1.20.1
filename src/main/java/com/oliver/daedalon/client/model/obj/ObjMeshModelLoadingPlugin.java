@@ -277,7 +277,9 @@ public final class ObjMeshModelLoadingPlugin {
                     style.isFinial()
                             ? id("block/mesh/finial_display")
                             : id("block/mesh/decor_display"),
-                    createDetailedVariants(style.idSuffix())
+                    style.isFinial()
+                            ? withBronze(createDetailedVariants(style.idSuffix()), "bronze_" + style.idSuffix(), WorldTexturePhase.detailedSurface())
+                            : createDetailedVariants(style.idSuffix())
             ));
         }
         for (FountainBasinBlock.Style style : FountainBasinBlock.Style.values()) {
