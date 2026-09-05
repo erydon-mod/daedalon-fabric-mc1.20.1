@@ -67,6 +67,7 @@ public final class DaedalonDebugProperties {
     private static int priority(Property<?> property) {
         return switch (property.getName()) {
             case "size" -> 0;
+            case "width" -> 0;
             case "offset" -> 1;
             case "facing" -> 2;
             default -> 3;

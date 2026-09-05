@@ -22,6 +22,7 @@ record ObjMeshDefinition(Identifier definitionId,
                          boolean faceOrientedUvs,
                          boolean doubleSided,
                          UvProjection uvProjection,
+                         float boxProjectionSpan,
                          float cylindricalURepeats,
                          int textureUTiles,
                          Map<String, UvProjection> materialUvProjections,
@@ -61,6 +62,7 @@ record ObjMeshDefinition(Identifier definitionId,
                     definitionId
             );
             float cylindricalURepeats = optionalFloat(json, "cylindrical_u_repeats", 1.0F, definitionId);
+            float boxProjectionSpan = optionalFloat(json, "box_projection_span", 0.0F, definitionId);
             int textureUTiles = optionalInt(json, "texture_u_tiles", 1, definitionId);
             Map<String, UvProjection> materialUvProjections = materialUvProjections(json, definitionId);
             boolean smoothNormals = optionalBoolean(json, "smooth_normals", false, definitionId);
@@ -90,6 +92,9 @@ record ObjMeshDefinition(Identifier definitionId,
             }
 
             validateTransform(scale, translate, definitionId);
+            if (!Float.isFinite(boxProjectionSpan) || boxProjectionSpan < 0.0F) {
+                throw new IOException("OBJ mesh definition " + definitionId + " field 'box_projection_span' must be finite and non-negative");
+            }
             if (!Float.isFinite(smoothAngleDegrees) || smoothAngleDegrees <= 0.0F || smoothAngleDegrees > 180.0F) {
                 throw new IOException("OBJ mesh definition " + definitionId + " field 'smooth_angle_degrees' must be greater than 0 and at most 180");
             }
@@ -106,7 +111,7 @@ record ObjMeshDefinition(Identifier definitionId,
                         + " cylindrical projection needs at least one spare horizontal texture tile after 'cylindrical_u_repeats'");
             }
             return new ObjMeshDefinition(definitionId, objId, mtlId, flipV, repairDegenerateUvs,
-                    forceUvProjection, faceOrientedUvs, doubleSided, uvProjection, cylindricalURepeats,
+                    forceUvProjection, faceOrientedUvs, doubleSided, uvProjection, boxProjectionSpan, cylindricalURepeats,
                     textureUTiles, materialUvProjections, smoothNormals, repairFloorNormals,
                     smoothAngleDegrees, fitToBlock,
                     scale, translate, overrides, particle);

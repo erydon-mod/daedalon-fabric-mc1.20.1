@@ -2,6 +2,7 @@ package com.oliver.daedalon.client.model.obj;
 
 import com.oliver.daedalon.block.DecorShapeTransforms;
 import com.oliver.daedalon.block.CorbelBlock;
+import com.oliver.daedalon.block.ExedraBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
 import com.oliver.daedalon.block.FountainAssemblyLayout;
 import com.oliver.daedalon.block.FountainBasinBlock;
@@ -468,6 +469,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             positionTransform = UrnTransform.forState(state);
         } else if (state.getBlock() instanceof CorbelBlock) {
             positionTransform = CorbelTransform.forState(state);
+        } else if (state.getBlock() instanceof ExedraBlock) {
+            positionTransform = GroundScaleTransform.forExedraState(state);
         } else if (state.getBlock() instanceof FacingDecorBlock) {
             positionTransform = FacingDecorTransform.forState(state);
         } else if (state.getBlock() instanceof SizedDecorBlock) {
@@ -1561,6 +1564,20 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                         .map(size -> new GroundScaleTransform(size.scale(), 0.0F, 0.0F, 0))
                         .toArray(GroundScaleTransform[]::new);
         private static final GroundScaleTransform[][][] MOVABLE_CACHE = createMovableCache();
+        private static final GroundScaleTransform[] EXEDRA_CACHE = createExedraCache();
+
+        private static GroundScaleTransform forExedraState(BlockState state) {
+            return EXEDRA_CACHE[horizontalIndex(state.get(ExedraBlock.FACING))];
+        }
+
+        private static GroundScaleTransform[] createExedraCache() {
+            GroundScaleTransform[] cache = new GroundScaleTransform[4];
+            for (Direction facing : new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
+                cache[horizontalIndex(facing)] = new GroundScaleTransform(
+                        1.0F, 0.0F, 0.0F, ExedraBlock.rotationStepsFromSouth(facing));
+            }
+            return cache;
+        }
 
         private static GroundScaleTransform forState(BlockState state) {
             TwoSizeDecorBlock block = (TwoSizeDecorBlock) state.getBlock();
@@ -1823,7 +1840,10 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             }
             return new UvProjector(definition, bounds,
                     (minU + maxU) * 0.5F, (minV + maxV) * 0.5F,
-                    span, bounds.largestSpan());
+                    // Separately authored sizes may share a projection span to
+                    // retain material density. Never shrink below their bounds:
+                    // that would push UVs outside the stitched repeat sprite.
+                    span, Math.max(bounds.largestSpan(), definition.boxProjectionSpan()));
         }
 
         private ProjectionChoice chooseProjection(List<ObjMeshData.Vec3> positions,

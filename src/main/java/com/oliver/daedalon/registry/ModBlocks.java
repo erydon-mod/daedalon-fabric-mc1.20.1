@@ -4,6 +4,7 @@ import com.oliver.daedalon.block.ClassicalStatueBlock;
 import com.oliver.daedalon.block.BustBlock;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
+import com.oliver.daedalon.block.ExedraBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
 import com.oliver.daedalon.block.FinialBlock;
 import com.oliver.daedalon.block.FixedDecorBlock;
@@ -44,7 +45,7 @@ public final class ModBlocks {
                     + CapitalBlock.Style.values().length
                     + FixedDecorBlock.Style.values().length
                     + FountainBasinBlock.Style.values().length
-                    + PlinthBlock.Style.values().length + 2;
+                    + PlinthBlock.Style.values().length + 3;
     private static final int BRONZE_FAMILY_COUNT =
             2 + UrnBlock.UrnStyle.values().length
                     + ClassicalStatueBlock.Style.values().length
@@ -114,13 +115,14 @@ public final class ModBlocks {
         }
         registerKreneFountains();
         registerObeliskosMonuments();
+        registerExedras();
 
         if (BY_ID.size() != EXPECTED_BLOCK_COUNT
                 || ModItems.blockItems().size() != EXPECTED_BLOCK_COUNT
                 || SPARTAN_PROMACHOS_STATUES.size() != BRONZE_FAMILY_VARIANTS
                 || ZEUS_STATUES.size() != BRONZE_FAMILY_VARIANTS) {
             throw new IllegalStateException(
-                    "Daedalon must register exactly 3878 decor blocks and items"
+                    "Daedalon must register exactly 3932 decor blocks and items"
             );
         }
         for (UrnBlock.UrnStyle style : UrnBlock.UrnStyle.values()) {
@@ -500,6 +502,15 @@ public final class ModBlocks {
                         new PlinthBlock(decorSettings(), style, fountainMaterialKey)
                 );
                 PLINTHS_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>()).add(block);
+            }
+        }
+    }
+
+    private static void registerExedras() {
+        for (DecorMaterial material : DecorMaterial.values()) {
+            for (boolean aged : new boolean[]{false, true}) {
+                String path = material.id() + (aged ? "_aged" : "") + "_exedra";
+                registerBlock(path, new ExedraBlock(decorSettings()));
             }
         }
     }

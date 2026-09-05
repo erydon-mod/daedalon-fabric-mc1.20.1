@@ -1,0 +1,98 @@
+{
+  "model": "Exedra",
+  "source": "exedra.obj",
+  "source_sha256": "99527861da9611712a0a5e238c58eb2f51189ead2c48bbbb0ac119920f8a2ad7",
+  "provenance": "Oliver's own Meshy creation, approved for Daedalon inclusion under the repository's model-ownership policy.",
+  "source_files_modified": false,
+  "source_vertices": 7423,
+  "source_triangles": 14842,
+  "source_span": [
+    1.89977,
+    0.984778,
+    1.013337
+  ],
+  "source_facing": "south (+Z in exported Y-up OBJ)",
+  "source_width_at_one_meter_height": 1.9291352974985223,
+  "support_pivot": "horizontal bounds centre, lowest vertex at Y=0; block centre X/Z=0.5",
+  "preparation": {
+    "tool": "tools/prepare_decor_mesh.py",
+    "blender_version": "5.2.0 LTS",
+    "blender_build_hash": "fbe6228777e7",
+    "target_faces": 14842,
+    "decimation": false,
+    "authored_uv_search": false,
+    "width_meters": [
+      2,
+      3,
+      4
+    ],
+    "height_meters": 1,
+    "depth_meters": 1.029,
+    "geometry_change": "Normalize height/depth together to 1m high, then scale only X to exact width."
+  },
+  "models": [
+    {
+      "width_meters": 2,
+      "name": "exedra_2m",
+      "runtime_obj_sha256": "dd51a01e34bdf0c0a6290d4a02027117ce06b2ffb1a3b671773533ad16945161",
+      "runtime_mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+      "runtime_vertices": 7423,
+      "runtime_faces": 14842,
+      "runtime_normals": 15700,
+      "bounds": [
+        [
+          -1.0,
+          0.0,
+          -0.5145
+        ],
+        [
+          1.0,
+          1.0,
+          0.5145
+        ]
+      ]
+    },
+    {
+      "width_meters": 3,
+      "name": "exedra_3m",
+      "runtime_obj_sha256": "b443fb1dad5b2728ce3103d5b5cfe0a592c676c08f39ab77fcbc611b4d68e7f5",
+      "runtime_mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+      "runtime_vertices": 7423,
+      "runtime_faces": 14842,
+      "runtime_normals": 15700,
+      "bounds": [
+        [
+          -1.5,
+          0.0,
+          -0.5145
+        ],
+        [
+          1.5,
+          1.0,
+          0.5145
+        ]
+      ]
+    },
+    {
+      "width_meters": 4,
+      "name": "exedra_4m",
+      "runtime_obj_sha256": "34c53e42b341a621efbe0575804ac05580e70cf4328c57f9ed1ff0d86292d2fa",
+      "runtime_mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+      "runtime_vertices": 7423,
+      "runtime_faces": 14842,
+      "runtime_normals": 15700,
+      "bounds": [
+        [
+          -2.0,
+          0.0,
+          -0.5145
+        ],
+        [
+          2.0,
+          1.0,
+          0.5145
+        ]
+      ]
+    }
+  ]
+}

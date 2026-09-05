@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "width=2,facing=north": {
+      "model": "daedalon:mesh/internal/etruscus_aged_exedra_2m"
+    },
+    "width=2,facing=east": {
+      "model": "daedalon:mesh/internal/etruscus_aged_exedra_2m"
+    },
+    "width=2,facing=south": {
+      "model": "daedalon:mesh/internal/etruscus_aged_exedra_2m"
+    },
+    "width=2,facing=west": {
+      "model": "daedalon:mesh/internal/etruscus_aged_exedra_2m"
+    },
+    "width=3,facing=north": {
+      "model": "daedalon:mesh/etruscus_aged_exedra"
+    },
+    "width=3,facing=east": {
+      "model": "daedalon:mesh/etruscus_aged_exedra"
+    },
+    "width=3,facing=south": {
+      "model": "daedalon:mesh/etruscus_aged_exedra"
+    },
+    "width=3,facing=west": {
+      "model": "daedalon:mesh/etruscus_aged_exedra"
+    },
+    "width=4,facing=north": {
+      "model": "daedalon:mesh/internal/etruscus_aged_exedra_4m"
+    },
+    "width=4,facing=east": {
+      "model": "daedalon:mesh/internal/etruscus_aged_exedra_4m"
+    },
+    "width=4,facing=south": {
+      "model": "daedalon:mesh/internal/etruscus_aged_exedra_4m"
+    },
+    "width=4,facing=west": {
+      "model": "daedalon:mesh/internal/etruscus_aged_exedra_4m"
+    }
+  }
+}

@@ -33,7 +33,7 @@ DEFAULT_BLENDER = Path(r"C:\Program Files\Blender Foundation\Blender 5.2\blender
 REQUIRED_BLENDER_VERSION = (5, 2, 0)
 REQUIRED_BLENDER_BUILD_HASH = "fbe6228777e7"
 MODEL_NAME = re.compile(
-    r"(?:finial_[a-z0-9_]+|monument_[a-z0-9_]+|basin_[a-z0-9_]+|fountain_[a-z0-9_]+|plinth_[a-z0-9_]+)\Z"
+    r"(?:finial_[a-z0-9_]+|monument_[a-z0-9_]+|basin_[a-z0-9_]+|fountain_[a-z0-9_]+|plinth_[a-z0-9_]+|exedra_[234]m)\Z"
 )
 
 
@@ -44,14 +44,23 @@ def arguments(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--target-faces", type=int, default=15000)
     parser.add_argument("--preview", action="store_true")
+    parser.add_argument("--width-meters", type=float)
+    parser.add_argument("--height-meters", type=float)
+    parser.add_argument("--save-blend", action="store_true")
     parser.add_argument("--blender", type=Path, default=None)
     result = parser.parse_args(argv)
     if not MODEL_NAME.fullmatch(result.name):
         parser.error(
-            "--name must be finial_, monument_, basin_, fountain_, or plinth_ plus lowercase underscores"
+            "--name must be finial_, monument_, basin_, fountain_, plinth_, or exedra_2m/3m/4m"
         )
     if result.target_faces < 100:
         parser.error("--target-faces must be at least 100")
+    if (result.width_meters is None) != (result.height_meters is None):
+        parser.error("--width-meters and --height-meters must be supplied together")
+    if result.width_meters is not None and not (
+        0.0 < result.width_meters <= 16.0 and 0.0 < result.height_meters <= 16.0
+    ):
+        parser.error("dimensions must be positive and no greater than 16 metres")
     return result
 
 
@@ -74,6 +83,7 @@ def launch_blender(args: argparse.Namespace, argv: Sequence[str]) -> int:
             str(blender),
             "--background",
             "--factory-startup",
+            "--disable-autoexec",
             "--python-exit-code",
             "1",
             "--python",
@@ -160,6 +170,33 @@ def prepare(args: argparse.Namespace) -> int:
     if len(objects) != 1:
         raise RuntimeError(f"expected exactly one mesh object; found {len(objects)}")
     obj = objects[0]
+    original_minimum, original_maximum = bounds(mesh_points(obj))
+    original_span = original_maximum - original_minimum
+    if args.width_meters is not None:
+        # Blender is Z-up. Keep proportional depth at the requested height;
+        # only the horizontal width gets a separate scale. Ground and centre
+        # the vertices before export so Minecraft needs no resizing work.
+        height_scale = args.height_meters / original_span.z
+        center = (original_minimum + original_maximum) * 0.5
+        points = mesh_points(obj)
+        normal_matrix = obj.matrix_world.to_3x3().inverted().transposed()
+        source_normals = [normal_matrix @ normal.vector for normal in obj.data.corner_normals]
+        obj.matrix_world.identity()
+        for vertex, point in zip(obj.data.vertices, points):
+            vertex.co = (
+                (point.x - center.x) * args.width_meters / original_span.x,
+                (point.y - center.y) * height_scale,
+                (point.z - original_minimum.z) * height_scale,
+            )
+        obj.data.update()
+        # Width changes are non-uniform: normals need the inverse transpose,
+        # otherwise the imported custom shading still describes the old width.
+        corrected_normals = [Vector((
+            normal.x * original_span.x / args.width_meters,
+            normal.y / height_scale,
+            normal.z / height_scale,
+        )).normalized() for normal in source_normals]
+        obj.data.normals_split_custom_set(corrected_normals)
     source_faces = len(obj.data.polygons)
     source_vertices = len(obj.data.vertices)
     bpy.ops.object.select_all(action="DESELECT")
@@ -215,6 +252,11 @@ def prepare(args: argparse.Namespace) -> int:
         export_smooth_groups=False,
     )
     output_mtl = output_dir / f"{args.name}.mtl"
+    if args.save_blend:
+        bpy.context.preferences.filepaths.save_version = 0
+        bpy.context.scene.unit_settings.system = "METRIC"
+        bpy.context.scene.unit_settings.scale_length = 1.0
+        bpy.ops.wm.save_as_mainfile(filepath=str(output_dir / f"{args.name}.blend"))
     preview = output_dir / f"{args.name}_preview.png"
     if args.preview:
         render_preview(obj, preview)
@@ -225,6 +267,7 @@ def prepare(args: argparse.Namespace) -> int:
         "source_faces": source_faces,
         "source_triangles": source_triangles,
         "source_vertices": source_vertices,
+        "original_source_span": [round(original_span.x, 9), round(original_span.z, 9), round(original_span.y, 9)],
         "source_span": [round(span.x, 9), round(span.z, 9), round(span.y, 9)],
         "normalised_span": [
             round(span.x / largest_span, 9),

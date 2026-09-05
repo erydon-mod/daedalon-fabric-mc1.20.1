@@ -22,11 +22,27 @@ python -m pip install -r requirements.txt
 ./gradlew --no-daemon check
 ```
 
-For fountain interaction regressions, run `./gradlew --no-daemon runGameTest`.
+For fountain and Exedra interaction regressions, run `./gradlew --no-daemon runGameTest`.
 This loads the real server and mixins in an isolated `build/gametest` test world,
 checks repeated debug-stick and bucket edits, and writes
 `build/reports/gametest/fountains.xml`. It does not open player saves or package
 a JAR; the test mod is separate from production sources.
+
+## Exedra curved bench
+
+Exedra is available in all 27 standard and aged stone finishes. Place it at
+the default 3m width; the debug stick selects `width=2`, `width=3` or `width=4`,
+then `facing`. All widths stay 1m high and 1.029m deep. Search for Exedra,
+bench, seat or furniture.
+
+Each width uses a pre-sized Blender mesh shared across all materials, with
+consistent projected texture density. This is ordinary single-block decor:
+12 states, cached curved selection/collision shapes, no proxy blocks, no
+block entity and no ticking. As with other oversized single-block decor,
+placement and editing belong to its centre block rather than every outer cell.
+
+Source provenance and exact measurements are recorded in
+`docs/evidence/exedra-source.json`.
 
 ## Fountain particle prototype
 

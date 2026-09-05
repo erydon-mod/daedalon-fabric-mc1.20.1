@@ -252,6 +252,7 @@ PLINTH_FAMILIES = {
     "triphyllon_plinth": ("plinth_triphyllon", "Triphyllon", "Triphyllon", "Triphyllon"),
 }
 NEW_DECOR_FAMILIES = {
+    "exedra": ("exedra_3m", "Exedra", "Exedra", "Exedra"),
     **FIXED_DECOR_FAMILIES,
     **FACING_DECOR_FAMILIES,
     **FOUNTAIN_BASIN_FAMILIES,
@@ -580,6 +581,16 @@ def remove_creative_only_loot(
 
 def blockstate(family: str, block_id: str) -> dict[str, object]:
     model = f"{NAMESPACE}:mesh/{block_id}"
+    if family == "exedra":
+        return {
+            "variants": {
+                f"width={width},facing={facing}": {
+                    "model": model if width == 3 else f"{NAMESPACE}:mesh/internal/{block_id}_{width}m"
+                }
+                for width in (2, 3, 4)
+                for facing in ("north", "east", "south", "west")
+            }
+        }
     if family in BUST_FAMILIES:
         # Busts place at Small by default, but retain all three correctly
         # scaling options alongside their shared facing and offset controls.
@@ -651,6 +662,8 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
 
 
 def display_parent(family: str) -> str:
+    if family == "exedra":
+        return f"{NAMESPACE}:block/mesh/exedra_display"
     if family in STATUE_DISPLAY_MODELS:
         name = STATUE_DISPLAY_MODELS[family]
     elif family in BUST_FAMILIES:
@@ -1062,6 +1075,9 @@ def generate_tags(
         ornament_values.append(f"#{NAMESPACE}:plinth")
     new_decor_families = [family for family in families if family in NEW_DECOR_FAMILIES]
     if new_decor_families:
+        if "exedra" in families:
+            for synonym in ("bench", "seat", "seating", "furniture", "curved_bench"):
+                relation_tags[synonym] = [f"#{NAMESPACE}:exedra"]
         for family in new_decor_families:
             direct_tags[family] = [f"{NAMESPACE}:{block_id}" for block_id in ids_by_family[family]]
         finial_tags = [f"#{NAMESPACE}:{family}" for family in FIXED_DECOR_FAMILIES if family.endswith("_finial") and family in families]

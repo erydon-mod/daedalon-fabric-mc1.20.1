@@ -135,6 +135,29 @@ than inventing geometry from the preview.
 
 ## Verification
 
+### Width-selectable Exedra
+
+The Exedra pilot uses the decor preparation tool with
+`--name exedra_2m --width-meters 2 --height-meters 1 --target-faces 14842`.
+Repeat for `exedra_3m` and `exedra_4m`; `--save-blend --preview` produces
+editable metric Blender files and a preview. This preserves the supplied
+topology, scales height/depth together, changes only the remaining width,
+and transforms the imported custom normals with the inverse transpose.
+
+The three prepared meshes use `fit_to_block=false`, unit scale, and
+`translate=[0.5,0,0.5]`. All use `box_projection_span=4` to keep one material
+density across widths without escaping the repeat sprite. Its default value
+of zero preserves existing families; the renderer always bounds the selected
+span below by the actual model extent for atlas safety.
+
+One mesh family per prepared width shares the geometry across all materials.
+Only 3m owns the inventory model and public block aliases. The other widths
+resolve internal model IDs; only a cached facing rotation runs during chunk
+meshing. `python tools/generate_exedra_shape.py --check` verifies the shared
+curved shape against triangle-clipped width strips and height bands.
+
+### Build and runtime checks
+
 Run, in order:
 
 ```text

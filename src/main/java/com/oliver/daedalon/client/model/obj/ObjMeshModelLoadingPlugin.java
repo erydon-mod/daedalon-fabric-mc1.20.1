@@ -5,6 +5,7 @@ import com.oliver.daedalon.block.ClassicalStatueBlock;
 import com.oliver.daedalon.block.BustBlock;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
+import com.oliver.daedalon.block.ExedraBlock;
 import com.oliver.daedalon.block.FixedDecorBlock;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.FountainBowlModel;
@@ -312,7 +313,30 @@ public final class ObjMeshModelLoadingPlugin {
                     createDetailedVariants(style.styleId() + "_plinth")
             ));
         }
+        for (int width = 2; width <= 4; width++) {
+            families.add(new MeshFamily(
+                    "Exedra " + width + "m",
+                    id("models/mesh/exedra_" + width + "m.json"),
+                    id("block/mesh/exedra_display"),
+                    createExedraVariants(width)
+            ));
+        }
         return List.copyOf(families);
+    }
+
+    private static List<MeshVariant> createExedraVariants(int width) {
+        List<MeshVariant> variants = createDetailedVariants("exedra");
+        if (width == ExedraBlock.DEFAULT_WIDTH) {
+            return variants;
+        }
+        // Only the default width owns the item aliases and public block list.
+        // The other widths share their own geometry across the same materials.
+        return variants.stream().map(variant -> new MeshVariant(
+                id("mesh/internal/" + variant.sourceBlockId() + "_" + width + "m"),
+                null, null, null,
+                variant.textureId(), variant.particleTextureId(),
+                variant.worldTexturePhase(), variant.sourceBlockId(), false, false
+        )).toList();
     }
 
     private static List<MeshVariant> createClassicalStatueVariants(String subjectId) {

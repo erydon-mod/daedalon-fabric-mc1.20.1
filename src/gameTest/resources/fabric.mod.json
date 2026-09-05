@@ -5,7 +5,7 @@
   "name": "Daedalon fountain regression tests",
   "environment": "server",
   "entrypoints": {
-    "fabric-gametest": ["com.oliver.daedalon.gametest.FountainGameTests"]
+    "fabric-gametest": ["com.oliver.daedalon.gametest.FountainGameTests", "com.oliver.daedalon.gametest.ExedraGameTests"]
   },
   "depends": {
     "daedalon": "*",

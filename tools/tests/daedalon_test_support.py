@@ -661,6 +661,28 @@ for _stem, (_vertices, _normals, _faces, _bounds, _obj_sha256) in PLINTH_MESHES.
         "mtl_sha256": "bbaff126401a4c2f7497d513fedc67f945f37656d150536a869de512351b0378",
     }
 
+for _width, _obj_sha256 in (
+    (2, "dd51a01e34bdf0c0a6290d4a02027117ce06b2ffb1a3b671773533ad16945161"),
+    (3, "b443fb1dad5b2728ce3103d5b5cfe0a592c676c08f39ab77fcbc611b4d68e7f5"),
+    (4, "34c53e42b341a621efbe0575804ac05580e70cf4328c57f9ed1ff0d86292d2fa"),
+):
+    _name = f"exedra_{_width}m"
+    MESH_EXPECTATIONS[_name] = {
+        "definition": f"{_name}.json",
+        "obj": f"{_name}.obj",
+        "mtl": f"{_name}.mtl",
+        "display": "exedra_display.json",
+        "vertices": 7423,
+        "uvs": 0,
+        "normals": 15700,
+        "faces": 14842,
+        "face_sizes": {3},
+        "face_index_styles": {"v//vn"},
+        "bounds": ((-_width / 2, 0.0, -0.5145), (_width / 2, 1.0, 0.5145)),
+        "obj_sha256": _obj_sha256,
+        "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+    }
+
 
 def load_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8-sig"))
