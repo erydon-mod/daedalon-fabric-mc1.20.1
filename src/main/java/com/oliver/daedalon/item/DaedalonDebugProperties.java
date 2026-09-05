@@ -34,6 +34,25 @@ public final class DaedalonDebugProperties {
     }
 
     /**
+     * Cycles player-facing values by equality instead of object identity.
+     * Minecraft's Util.next helper never terminates when given an equal but
+     * separately allocated value, such as a control name read back from NBT.
+     */
+    public static <T> T cycle(List<T> values, T current, boolean backwards) {
+        if (values.isEmpty()) {
+            throw new IllegalArgumentException("Cannot cycle an empty value list");
+        }
+        int index = values.indexOf(current);
+        if (index < 0) {
+            return backwards ? values.get(values.size() - 1) : values.get(0);
+        }
+        int nextIndex = backwards
+                ? Math.floorMod(index - 1, values.size())
+                : (index + 1) % values.size();
+        return values.get(nextIndex);
+    }
+
+    /**
      * Gives every Daedalon model the same player-facing value cycle, independent of
      * Minecraft's internal property collection order.
      */

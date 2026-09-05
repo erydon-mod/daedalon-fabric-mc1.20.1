@@ -522,6 +522,120 @@ for _stem, (_vertices, _normals, _faces, _bounds, _obj_sha256, _display) in DECO
         "mtl_sha256": "bbaff126401a4c2f7497d513fedc67f945f37656d150536a869de512351b0378",
     }
 
+MESH_EXPECTATIONS["fountain_gothic_basin"] = {
+    "definition": "fountain_gothic_basin.json",
+    "obj": "fountain_gothic_basin.obj",
+    "mtl": "fountain_gothic_basin.mtl",
+    "display": "fountain_basin_display.json",
+    "vertices": 7927,
+    "uvs": 12204,
+    "normals": 18329,
+    "faces": 15850,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "bounds": (
+        (-0.950873, -0.253756, -0.95115),
+        (0.950516, 0.252507, 0.950069),
+    ),
+    "obj_sha256": "81f8e985c79b63611e46641359256213f6483f9158fbc6147fb734d72b2bc3b3",
+    "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+}
+
+MESH_EXPECTATIONS["fountain_gothic_bowl"] = {
+    "definition": "fountain_gothic_bowl.json",
+    "obj": "fountain_gothic_bowl.obj",
+    "mtl": "fountain_gothic_bowl.mtl",
+    "display": "fountain_bowl_display.json",
+    "vertices": 7904,
+    "uvs": 12349,
+    "normals": 8031,
+    "faces": 15804,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "bounds": (
+        (-0.95142, -0.838629, -0.913679),
+        (0.949885, 0.836823, 0.912648),
+    ),
+    "obj_sha256": "6cdb2ea453828aecea485d0166a0159496c345369464caba73fc80bdf88f3c36",
+    "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+}
+
+MESH_EXPECTATIONS["fountain_georgian_basin"] = {
+    "definition": "fountain_georgian_basin.json",
+    "obj": "fountain_georgian_basin.obj",
+    "mtl": "fountain_georgian_basin.mtl",
+    "display": "fountain_basin_display.json",
+    "vertices": 7623,
+    "uvs": 13120,
+    "normals": 23545,
+    "faces": 15242,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "bounds": (
+        (-0.950787, -0.202374, -0.950831),
+        (0.950683, 0.201888, 0.949689),
+    ),
+    "obj_sha256": "d66108d0e228ed69157969dbe3a39447b531b8b27ff30e3db02eee8592a50c8f",
+    "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+}
+
+MESH_EXPECTATIONS["fountain_georgian_bowl"] = {
+    "definition": "fountain_georgian_bowl.json",
+    "obj": "fountain_georgian_bowl.obj",
+    "mtl": "fountain_georgian_bowl.mtl",
+    "display": "fountain_bowl_display.json",
+    "vertices": 8031,
+    "uvs": 12343,
+    "normals": 16692,
+    "faces": 16062,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "bounds": (
+        (-0.950044, -0.553105, -0.949975),
+        (0.949686, 0.53247, 0.950644),
+    ),
+    "obj_sha256": "b1f521604cdbf4c9bc9b34102083948de3ff9d2501b15e216fca34d7576fe174",
+    "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+}
+
+MESH_EXPECTATIONS["fountain_greek_basin"] = {
+    "definition": "fountain_greek_basin.json",
+    "obj": "fountain_greek_basin.obj",
+    "mtl": "fountain_greek_basin.mtl",
+    "display": "fountain_basin_display.json",
+    "vertices": 9885,
+    "uvs": 15754,
+    "normals": 27323,
+    "faces": 19766,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "bounds": (
+        (-0.950888, -0.192367, -0.950504),
+        (0.949706, 0.188881, 0.950046),
+    ),
+    "obj_sha256": "f51508aeba4d8c3c7f4e826bf69b90d521d584f5e1274bda98454e3800f13c13",
+    "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+}
+
+MESH_EXPECTATIONS["fountain_greek_bowl"] = {
+    "definition": "fountain_greek_bowl.json",
+    "obj": "fountain_greek_bowl.obj",
+    "mtl": "fountain_greek_bowl.mtl",
+    "display": "fountain_bowl_display.json",
+    "vertices": 7950,
+    "uvs": 14315,
+    "normals": 8173,
+    "faces": 15900,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "bounds": (
+        (-0.950611, -0.615705, -0.950581),
+        (0.950259, 0.599393, 0.949977),
+    ),
+    "obj_sha256": "5fcdf157443dd143ecbc67ba479f4c2d8ed28a9bd590a9855b6bcc2090cae4e4",
+    "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+}
+
 PLINTH_MESHES = {
     "plinth_astragalos": (3000, 3000, 6000, ((-0.573742, -0.951135, -0.573777), (0.572926, 0.950127, 0.572588)), "4a705d84abd3704f9248f2e051255841a82c26f1603411205fc38afd7ff360c5"),
     "plinth_bathron": (3002, 2996, 6000, ((-0.772151, -0.951058, -0.772285), (0.771277, 0.950213, 0.771612)), "2543b6f83228c87f69bb106a86441813dc2e76d5910468baa8bea025d9c3824e"),
@@ -654,6 +768,101 @@ def parse_obj(path: Path) -> dict[str, object]:
         "material_faces": material_faces,
         "bounds": bounds,
     }
+
+
+def minimum_horizontal_mesh_clearance(
+    path: Path,
+    model_scale: float,
+    surface_y: float,
+    half_width: float,
+    bevel: float,
+) -> float:
+    """Measure an octagonal surface against the first mesh wall around it."""
+    vertices: list[tuple[float, float, float]] = []
+    faces: list[tuple[int, int, int]] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("v "):
+            _, x, y, z = line.split()[:4]
+            vertices.append((float(x), float(y), float(z)))
+        elif line.startswith("f "):
+            indices = tuple(int(value.split("/")[0]) - 1 for value in line.split()[1:])
+            if len(indices) != 3:
+                raise AssertionError(f"Expected a triangulated OBJ: {path}")
+            faces.append(indices)
+
+    minimum = tuple(min(vertex[axis] for vertex in vertices) for axis in range(3))
+    maximum = tuple(max(vertex[axis] for vertex in vertices) for axis in range(3))
+    fit_scale = 1.0 / max(maximum[axis] - minimum[axis] for axis in range(3))
+    center_x = (minimum[0] + maximum[0]) * 0.5
+    center_z = (minimum[2] + maximum[2]) * 0.5
+    placed = [
+        (
+            0.5 + (x - center_x) * fit_scale * model_scale,
+            (y - minimum[1]) * fit_scale * model_scale,
+            0.5 + (z - center_z) * fit_scale * model_scale,
+        )
+        for x, y, z in vertices
+    ]
+
+    sections: list[tuple[tuple[float, float], tuple[float, float]]] = []
+    for face in faces:
+        triangle = [placed[index] for index in face]
+        cuts: list[tuple[float, float]] = []
+        for start_index, end_index in ((0, 1), (1, 2), (2, 0)):
+            start = triangle[start_index]
+            end = triangle[end_index]
+            start_delta = start[1] - surface_y
+            end_delta = end[1] - surface_y
+            if start_delta * end_delta < 0.0:
+                fraction = (surface_y - start[1]) / (end[1] - start[1])
+                cuts.append(
+                    (
+                        start[0] - 0.5 + fraction * (end[0] - start[0]),
+                        start[2] - 0.5 + fraction * (end[2] - start[2]),
+                    )
+                )
+        if len(cuts) == 2:
+            sections.append((cuts[0], cuts[1]))
+
+    def cross(left: tuple[float, float], right: tuple[float, float]) -> float:
+        return left[0] * right[1] - left[1] * right[0]
+
+    def inner_wall_radius(x: float, z: float) -> float:
+        radius = math.hypot(x, z)
+        direction = (x / radius, z / radius)
+        intersections: list[float] = []
+        for start, end in sections:
+            edge = (end[0] - start[0], end[1] - start[1])
+            denominator = cross(direction, edge)
+            if abs(denominator) < 1.0e-8:
+                continue
+            distance = cross(start, edge) / denominator
+            fraction = cross(start, direction) / denominator
+            if distance >= 0.0 and -1.0e-6 <= fraction <= 1.0 + 1.0e-6:
+                intersections.append(distance)
+        if not intersections:
+            raise AssertionError(f"No mesh wall found from ({x}, {z}) in {path}")
+        return min(intersections)
+
+    outline = (
+        (-bevel, -half_width),
+        (bevel, -half_width),
+        (half_width, -bevel),
+        (half_width, bevel),
+        (bevel, half_width),
+        (-bevel, half_width),
+        (-half_width, bevel),
+        (-half_width, -bevel),
+    )
+    clearances: list[float] = []
+    for index, start in enumerate(outline):
+        end = outline[(index + 1) % len(outline)]
+        for step in range(33):
+            fraction = step / 32.0
+            x = start[0] + fraction * (end[0] - start[0])
+            z = start[1] + fraction * (end[1] - start[1])
+            clearances.append(inner_wall_radius(x, z) - math.hypot(x, z))
+    return min(clearances)
 
 
 def expected_material_texture_names(

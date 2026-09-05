@@ -68,10 +68,31 @@ dependencies {
     runtimeOnly "io.github.douira:glsl-transformer:2.0.1"
 }
 
+// A separate development-only mod exercises the real server/mixin lifecycle.
+// It is not part of the production JAR or the player's client run.
+sourceSets {
+    gameTest {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
+}
+
 loom {
+    mods {
+        daedalon { sourceSet sourceSets.main }
+        daedalon_gametest { sourceSet sourceSets.gameTest }
+    }
     runs {
         client {
             programArgs '--gameDir', file('run-dev').absolutePath
+        }
+        gameTest {
+            server()
+            name 'Fountain regression tests'
+            source sourceSets.gameTest
+            vmArg '-Dfabric-api.gametest'
+            vmArg "-Dfabric-api.gametest.report-file=${layout.buildDirectory.file('reports/gametest/fountains.xml').get().asFile}"
+            runDir 'build/gametest'
         }
     }
 }
@@ -91,7 +112,7 @@ tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
-tasks.withType(ProcessResources).configureEach {
+tasks.named('processResources', ProcessResources) {
     filteringCharset = 'UTF-8'
     inputs.property('familyCompatibilityGeneration', familyCompatibilityGeneration)
     inputs.property('textureDedupeEnabled', textureDedupeEnabled)

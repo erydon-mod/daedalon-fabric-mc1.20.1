@@ -6,11 +6,14 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Carries Fabric Renderer API per-vertex normals across Indium's compact terrain
- * vertex staging objects into Iris's extended shader vertex encoder.
+ * Carries Daedalon quad metadata across Indium's compact terrain vertex staging
+ * objects into Iris's extended shader vertex encoder. This preserves OBJ normals
+ * and lets deliberately contained basin surfaces use Iris's water classification
+ * without exposing a world fluid that could flow outside the model.
  */
 public final class ShaderTerrainNormalBridge {
     private static final int OBJ_TAG_SIGNATURE = 0x0DAE0000;
+    private static final int CONTAINED_WATER_TAG = 0x0DAF0000;
     private static final int OBJ_TAG_SIGNATURE_MASK = 0xFFFF0000;
     private static final int OBJ_MATERIAL_TAG_MASK = 0x0000FFFF;
     private static final Logger LOGGER = LoggerFactory.getLogger("Daedalon/ObjShaderNormals");
@@ -31,6 +34,14 @@ public final class ShaderTerrainNormalBridge {
         return (tag & OBJ_TAG_SIGNATURE_MASK) == OBJ_TAG_SIGNATURE;
     }
 
+    public static int containedWaterTag() {
+        return CONTAINED_WATER_TAG;
+    }
+
+    public static boolean isContainedWaterQuad(int tag) {
+        return tag == CONTAINED_WATER_TAG;
+    }
+
     public static int decodeObjMaterialTag(int tag) {
         if (!isObjQuad(tag)) {
             throw new IllegalArgumentException("Quad is not owned by Daedalon OBJ rendering: " + tag);
@@ -43,6 +54,31 @@ public final class ShaderTerrainNormalBridge {
                                float x1, float y1, float z1,
                                float x2, float y2, float z2,
                                float x3, float y3, float z3) {
+        publish(false, vertexArray,
+                x0, y0, z0,
+                x1, y1, z1,
+                x2, y2, z2,
+                x3, y3, z3);
+    }
+
+    public static void publishContainedWater(Object vertexArray,
+                                             float x0, float y0, float z0,
+                                             float x1, float y1, float z1,
+                                             float x2, float y2, float z2,
+                                             float x3, float y3, float z3) {
+        publish(true, vertexArray,
+                x0, y0, z0,
+                x1, y1, z1,
+                x2, y2, z2,
+                x3, y3, z3);
+    }
+
+    private static void publish(boolean containedWater,
+                                Object vertexArray,
+                                float x0, float y0, float z0,
+                                float x1, float y1, float z1,
+                                float x2, float y2, float z2,
+                                float x3, float y3, float z3) {
         PendingNormals pending = PENDING.get();
         pending.vertexArray = vertexArray;
         pending.packed[0] = pack(x0, y0, z0);
@@ -51,6 +87,8 @@ public final class ShaderTerrainNormalBridge {
         pending.packed[3] = pack(x3, y3, z3);
         pending.published = true;
         pending.claimed = false;
+        pending.containedWater = containedWater;
+        pending.claimedContainedWater = false;
         pending.nextIndex = 0;
     }
 
@@ -59,6 +97,8 @@ public final class ShaderTerrainNormalBridge {
         pending.vertexArray = null;
         pending.published = false;
         pending.claimed = false;
+        pending.containedWater = false;
+        pending.claimedContainedWater = false;
         pending.nextIndex = 0;
     }
 
@@ -68,11 +108,17 @@ public final class ShaderTerrainNormalBridge {
         pending.vertexArray = null;
         pending.published = false;
         pending.claimed = matches;
+        pending.claimedContainedWater = matches && pending.containedWater;
+        pending.containedWater = false;
         pending.nextIndex = 0;
-        if (matches && LOGGED_ACTIVE.compareAndSet(false, true)) {
+        if (matches && !LOGGED_ACTIVE.get() && LOGGED_ACTIVE.compareAndSet(false, true)) {
             LOGGER.info("Iris terrain normal bridge active; preserving Fabric per-vertex normals");
         }
         return matches;
+    }
+
+    public static boolean isClaimedContainedWater() {
+        return PENDING.get().claimedContainedWater;
     }
 
     public static int nextNormal(int fallback) {
@@ -84,7 +130,10 @@ public final class ShaderTerrainNormalBridge {
     }
 
     public static void release() {
-        PENDING.get().claimed = false;
+        PendingNormals pending = PENDING.get();
+        pending.claimed = false;
+        pending.claimedContainedWater = false;
+        pending.nextIndex = 0;
     }
 
     private static int pack(float x, float y, float z) {
@@ -98,6 +147,8 @@ public final class ShaderTerrainNormalBridge {
         private Object vertexArray;
         private boolean published;
         private boolean claimed;
+        private boolean containedWater;
+        private boolean claimedContainedWater;
         private int nextIndex;
     }
 }

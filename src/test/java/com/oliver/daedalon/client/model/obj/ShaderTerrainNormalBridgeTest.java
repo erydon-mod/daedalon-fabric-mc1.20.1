@@ -30,4 +30,45 @@ class ShaderTerrainNormalBridgeTest {
         assertThrows(IllegalArgumentException.class,
                 () -> ShaderTerrainNormalBridge.decodeObjMaterialTag(0));
     }
+
+    @Test
+    void containedWaterTagIsSeparateFromObjMaterials() {
+        int tag = ShaderTerrainNormalBridge.containedWaterTag();
+
+        assertTrue(ShaderTerrainNormalBridge.isContainedWaterQuad(tag));
+        assertFalse(ShaderTerrainNormalBridge.isObjQuad(tag));
+        assertFalse(ShaderTerrainNormalBridge.isContainedWaterQuad(0));
+        assertFalse(ShaderTerrainNormalBridge.isContainedWaterQuad(
+                ShaderTerrainNormalBridge.encodeObjTag(0)
+        ));
+    }
+
+    @Test
+    void containedWaterClassificationOnlySurvivesItsMatchingVertexWrite() {
+        Object vertices = new Object();
+        ShaderTerrainNormalBridge.publishContainedWater(
+                vertices,
+                0.0F, 1.0F, 0.0F,
+                0.0F, 1.0F, 0.0F,
+                0.0F, 1.0F, 0.0F,
+                0.0F, 1.0F, 0.0F
+        );
+
+        assertTrue(ShaderTerrainNormalBridge.claim(vertices));
+        assertTrue(ShaderTerrainNormalBridge.isClaimedContainedWater());
+
+        ShaderTerrainNormalBridge.release();
+        assertFalse(ShaderTerrainNormalBridge.isClaimedContainedWater());
+
+        ShaderTerrainNormalBridge.publish(
+                vertices,
+                0.0F, 1.0F, 0.0F,
+                0.0F, 1.0F, 0.0F,
+                0.0F, 1.0F, 0.0F,
+                0.0F, 1.0F, 0.0F
+        );
+        assertTrue(ShaderTerrainNormalBridge.claim(vertices));
+        assertFalse(ShaderTerrainNormalBridge.isClaimedContainedWater());
+        ShaderTerrainNormalBridge.release();
+    }
 }

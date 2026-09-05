@@ -24,6 +24,30 @@
     "size=small,offset=true,facing=west": {
       "model": "daedalon:mesh/chalstrom_aged_kion_plinth"
     },
+    "size=medium,offset=false,facing=north": {
+      "model": "daedalon:mesh/chalstrom_aged_kion_plinth"
+    },
+    "size=medium,offset=false,facing=east": {
+      "model": "daedalon:mesh/chalstrom_aged_kion_plinth"
+    },
+    "size=medium,offset=false,facing=south": {
+      "model": "daedalon:mesh/chalstrom_aged_kion_plinth"
+    },
+    "size=medium,offset=false,facing=west": {
+      "model": "daedalon:mesh/chalstrom_aged_kion_plinth"
+    },
+    "size=medium,offset=true,facing=north": {
+      "model": "daedalon:mesh/chalstrom_aged_kion_plinth"
+    },
+    "size=medium,offset=true,facing=east": {
+      "model": "daedalon:mesh/chalstrom_aged_kion_plinth"
+    },
+    "size=medium,offset=true,facing=south": {
+      "model": "daedalon:mesh/chalstrom_aged_kion_plinth"
+    },
+    "size=medium,offset=true,facing=west": {
+      "model": "daedalon:mesh/chalstrom_aged_kion_plinth"
+    },
     "size=large,offset=false,facing=north": {
       "model": "daedalon:mesh/chalstrom_aged_kion_plinth"
     },

@@ -25,6 +25,18 @@ STATIC_LANGUAGE_ENTRIES = {
         "message.erydon_family.resource_packs.open_curseforge": (
             "Open the ERYDON CurseForge projects page"
         ),
+        "message.daedalon.fountain_basin_size_blocked": (
+            "Not enough clear space for that fountain size"
+        ),
+        "message.daedalon.fountain_plinth_added": "Fountain plinth added",
+        "message.daedalon.fountain_bowl_added": "Fountain bowl added",
+        "message.daedalon.fountain_assembly_blocked": (
+            "Not enough clear space for that fountain piece"
+        ),
+        "message.daedalon.fountain_assembly_complete": "This fountain is complete",
+        "message.daedalon.fountain_plinth_mismatch": (
+            "Use the same plinth to continue this fountain"
+        ),
     },
     "de_de": {
         "itemGroup.daedalon": "Daedalon",
@@ -41,6 +53,18 @@ STATIC_LANGUAGE_ENTRIES = {
         "message.erydon_family.resource_packs.open_curseforge": (
             "Die ERYDON-Projektseite auf CurseForge öffnen"
         ),
+        "message.daedalon.fountain_basin_size_blocked": (
+            "Nicht genug freier Platz für diese Brunnengröße"
+        ),
+        "message.daedalon.fountain_plinth_added": "Brunnensockel hinzugefügt",
+        "message.daedalon.fountain_bowl_added": "Brunnenschale hinzugefügt",
+        "message.daedalon.fountain_assembly_blocked": (
+            "Nicht genug freier Platz für dieses Brunnenteil"
+        ),
+        "message.daedalon.fountain_assembly_complete": "Dieser Brunnen ist vollständig",
+        "message.daedalon.fountain_plinth_mismatch": (
+            "Verwende denselben Sockel, um diesen Brunnen weiterzubauen"
+        ),
     },
     "es_es": {
         "itemGroup.daedalon": "Daedalon",
@@ -56,6 +80,18 @@ STATIC_LANGUAGE_ENTRIES = {
         ),
         "message.erydon_family.resource_packs.open_curseforge": (
             "Abrir la página de proyectos de ERYDON en CurseForge"
+        ),
+        "message.daedalon.fountain_basin_size_blocked": (
+            "No hay suficiente espacio libre para ese tamaño de fuente"
+        ),
+        "message.daedalon.fountain_plinth_added": "Pedestal de fuente añadido",
+        "message.daedalon.fountain_bowl_added": "Cuenco de fuente añadido",
+        "message.daedalon.fountain_assembly_blocked": (
+            "No hay suficiente espacio libre para esa pieza de fuente"
+        ),
+        "message.daedalon.fountain_assembly_complete": "Esta fuente está completa",
+        "message.daedalon.fountain_plinth_mismatch": (
+            "Usa el mismo pedestal para continuar esta fuente"
         ),
     },
 }
@@ -90,6 +126,13 @@ MATERIALS = (
     "striatus",
 )
 BRONZE_MATERIAL = "bronze"
+NO_DROP_FAMILIES = frozenset(
+    {
+        "gothic_fountain_basin",
+        "georgian_fountain_basin",
+        "greek_fountain_basin",
+    }
+)
 
 MATERIAL_TAGS = {
     "aganite": ("gemstone", "agate"),
@@ -178,6 +221,26 @@ FINIAL_FAMILIES = tuple(
 FACING_DECOR_FAMILIES = {
     "krene_fountain": ("fountain_krene", "Krene Fountain", "Krene-Brunnen", "Fuente Krene"),
 }
+FOUNTAIN_BASIN_FAMILIES = {
+    "gothic_fountain_basin": (
+        "fountain_gothic_basin",
+        "Gothic Fountain Basin",
+        "Gotisches Brunnenbecken",
+        "Cuenca de Fuente Gótica",
+    ),
+    "georgian_fountain_basin": (
+        "fountain_georgian_basin",
+        "Georgian Fountain Basin",
+        "Georgisches Brunnenbecken",
+        "Cuenca de Fuente Georgiana",
+    ),
+    "greek_fountain_basin": (
+        "fountain_greek_basin",
+        "Greek Fountain Basin",
+        "Griechisches Brunnenbecken",
+        "Cuenca de Fuente Griega",
+    ),
+}
 SIZED_DECOR_FAMILIES = {
     "obeliskos_monument": ("monument_obeliskos", "Obeliskos Monument", "Obeliskos-Monument", "Monumento Obeliskos"),
 }
@@ -188,7 +251,12 @@ PLINTH_FAMILIES = {
     "stephanos_plinth": ("plinth_stephanos", "Stephanos", "Stephanos", "Stephanos"),
     "triphyllon_plinth": ("plinth_triphyllon", "Triphyllon", "Triphyllon", "Triphyllon"),
 }
-NEW_DECOR_FAMILIES = {**FIXED_DECOR_FAMILIES, **FACING_DECOR_FAMILIES, **SIZED_DECOR_FAMILIES}
+NEW_DECOR_FAMILIES = {
+    **FIXED_DECOR_FAMILIES,
+    **FACING_DECOR_FAMILIES,
+    **FOUNTAIN_BASIN_FAMILIES,
+    **SIZED_DECOR_FAMILIES,
+}
 LEGACY_UNPUBLISHED_URN_FAMILIES = ("konche", "diota", "kylix", "kalyx")
 CANONICAL_STATUE_FAMILIES = {
     "zeus": ("Zeus", "Zeus", "Zeus"),
@@ -451,6 +519,65 @@ def remove_obsolete_unpublished_georgian_plinth_assets(
         changed.append(path)
 
 
+def remove_obsolete_unpublished_fountain_bowl_ids(
+    check: bool, changed: list[Path]
+) -> None:
+    obsolete_paths: list[Path] = []
+    for material in MATERIALS:
+        for style in FOUNTAIN_BASIN_FAMILIES:
+            bowl_family = style.removesuffix("_basin") + "_bowl"
+            for block_id in (
+                f"{material}_{bowl_family}",
+                f"{material}_aged_{bowl_family}",
+            ):
+                obsolete_paths.extend(
+                    (
+                        RESOURCES / f"assets/{NAMESPACE}/blockstates/{block_id}.json",
+                        RESOURCES / f"assets/{NAMESPACE}/models/item/{block_id}.json",
+                        RESOURCES / f"data/{NAMESPACE}/loot_tables/blocks/{block_id}.json",
+                    )
+                )
+    for kind in ("blocks", "items"):
+        style_bowl_tags = tuple(
+            style.removesuffix("_basin") + "_bowl"
+            for style in FOUNTAIN_BASIN_FAMILIES
+        )
+        for tag in (*style_bowl_tags, "bowl", "fountain_tier"):
+            obsolete_paths.append(
+                RESOURCES / f"data/{NAMESPACE}/tags/{kind}/{tag}.json"
+            )
+
+    for path in obsolete_paths:
+        if not path.exists():
+            continue
+        if check:
+            raise ValueError(
+                "Retired unpublished fountain bowl ID asset remains: "
+                f"{path.relative_to(ROOT)}"
+            )
+        path.unlink()
+        changed.append(path)
+
+
+def remove_creative_only_loot(
+    families: tuple[str, ...], check: bool, changed: list[Path]
+) -> None:
+    for family in families:
+        if family not in NO_DROP_FAMILIES:
+            continue
+        for block_id in family_block_ids(family):
+            path = RESOURCES / f"data/{NAMESPACE}/loot_tables/blocks/{block_id}.json"
+            if not path.exists():
+                continue
+            if check:
+                raise ValueError(
+                    "Creative-only family loot table remains: "
+                    f"{path.relative_to(ROOT)}"
+                )
+            path.unlink()
+            changed.append(path)
+
+
 def blockstate(family: str, block_id: str) -> dict[str, object]:
     model = f"{NAMESPACE}:mesh/{block_id}"
     if family in BUST_FAMILIES:
@@ -485,6 +612,14 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
         return {"variants": {"": {"model": model}}}
     if family in FINIAL_FAMILIES:
         return {"variants": {f"size={size}": {"model": model} for size in ("small", "large")}}
+    if family in FOUNTAIN_BASIN_FAMILIES:
+        return {
+            "variants": {
+                f"size={size},waterlogged={waterlogged}": {"model": model}
+                for size in ("small", "medium", "large")
+                for waterlogged in ("false", "true")
+            }
+        }
     if family in FIXED_DECOR_FAMILIES:
         return {"variants": {"": {"model": model}}}
     if family in FACING_DECOR_FAMILIES:
@@ -500,7 +635,7 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
         return {
             "variants": {
                 f"size={size},offset={offset},facing={facing}": {"model": model}
-                for size in ("small", "large")
+                for size in ("small", "medium", "large")
                 for offset in ("false", "true")
                 for facing in ("north", "east", "south", "west")
             }
@@ -528,6 +663,8 @@ def display_parent(family: str) -> str:
         name = "krene"
     elif family in FINIAL_FAMILIES:
         name = "finial"
+    elif family in FOUNTAIN_BASIN_FAMILIES:
+        name = "fountain_basin"
     elif family in FIXED_DECOR_FAMILIES:
         name = "decor"
     elif family in SIZED_DECOR_FAMILIES:
@@ -579,12 +716,13 @@ def generate_models_and_loot(
                 check,
                 changed,
             )
-            write(
-                RESOURCES / f"data/{NAMESPACE}/loot_tables/blocks/{block_id}.json",
-                json_bytes(self_drop(block_id)),
-                check,
-                changed,
-            )
+            if family not in NO_DROP_FAMILIES:
+                write(
+                    RESOURCES / f"data/{NAMESPACE}/loot_tables/blocks/{block_id}.json",
+                    json_bytes(self_drop(block_id)),
+                    check,
+                    changed,
+                )
 
 
 def translated_name(language: str, family: str, material: str, aged: bool) -> str:
@@ -931,10 +1069,30 @@ def generate_tags(
             relation_tags["finial"] = finial_tags
             relation_tags["pinnacle"] = finial_tags
             ornament_values.extend(finial_tags)
+        basin_tags = [
+            f"#{NAMESPACE}:{family}"
+            for family in ("louterion_basin", *FOUNTAIN_BASIN_FAMILIES)
+            if family in families
+        ]
         if "louterion_basin" in families:
             relation_tags["louterion"] = [f"#{NAMESPACE}:louterion_basin"]
-            relation_tags.setdefault("basin", []).append(f"#{NAMESPACE}:louterion_basin")
-        fountain_tags = [f"#{NAMESPACE}:{family}" for family in ("krene_fountain", "pege_fountain") if family in families]
+        if basin_tags:
+            relation_tags["basin"] = basin_tags
+        for fountain_style in ("gothic", "georgian", "greek"):
+            basin_family = f"{fountain_style}_fountain_basin"
+            if basin_family in families:
+                relation_tags.setdefault(fountain_style, []).append(
+                    f"#{NAMESPACE}:{basin_family}"
+                )
+        fountain_tags = [
+            f"#{NAMESPACE}:{family}"
+            for family in (
+                "krene_fountain",
+                "pege_fountain",
+                *FOUNTAIN_BASIN_FAMILIES,
+            )
+            if family in families
+        ]
         if fountain_tags:
             relation_tags["fountain"] = fountain_tags
             relation_tags["water_feature"] = fountain_tags
@@ -976,6 +1134,8 @@ def generate(families: tuple[str, ...], check: bool = False) -> list[Path]:
     changed: list[Path] = []
     remove_obsolete_unpublished_urn_assets(check, changed)
     remove_obsolete_unpublished_georgian_plinth_assets(check, changed)
+    remove_obsolete_unpublished_fountain_bowl_ids(check, changed)
+    remove_creative_only_loot(families, check, changed)
     generate_models_and_loot(families, check, changed)
     generate_languages(families, check, changed)
     generate_tags(families, check, changed)

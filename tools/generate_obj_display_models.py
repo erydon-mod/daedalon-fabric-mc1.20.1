@@ -48,15 +48,19 @@ KRENE_DISPLAY = {
 }
 
 
-def two_block_source_display() -> dict[str, object]:
-    """Preserve the approved item size for geometry baked at two blocks."""
+def scaled_source_display(factor: float) -> dict[str, object]:
+    """Preserve the approved item size for oversized baked geometry."""
     return {
         context: {
             **entry,
-            "scale": [value * 0.5 for value in entry["scale"]],
+            "scale": [value * factor for value in entry["scale"]],
         }
         for context, entry in ONE_BLOCK_DISPLAY.items()
     }
+
+
+def two_block_source_display() -> dict[str, object]:
+    return scaled_source_display(0.5)
 
 
 def three_block_display(gui_rotation: list[float]) -> dict[str, object]:
@@ -98,6 +102,14 @@ def expected_files() -> dict[str, bytes]:
         ),
         "plinth_display.json": payload(
             "daedalon:block/aganite_block", two_block_source_display()
+        ),
+        "fountain_basin_display.json": payload(
+            "daedalon:block/statue_spartan_promachos_aganite",
+            scaled_source_display(0.25),
+        ),
+        "fountain_bowl_display.json": payload(
+            "daedalon:block/statue_spartan_promachos_aganite",
+            two_block_source_display(),
         ),
         "krene_display.json": payload(
             "daedalon:block/statue_spartan_promachos_aganite", KRENE_DISPLAY

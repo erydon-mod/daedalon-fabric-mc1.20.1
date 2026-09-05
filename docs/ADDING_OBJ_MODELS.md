@@ -108,14 +108,18 @@ mesh counts, and hashes in a batch evidence file before committing.
 ## Fast finial and decor preparation
 
 Finials, fountains, basins, and monuments use the same bounded local-Blender
-policy. Prepare one source scene at a time and review its single preview:
+policy. Prepare one `.blend` or `.obj` source at a time and review its single
+preview:
 
 ```text
-python tools/prepare_decor_mesh.py --input <source.blend> --name <resource_stem> --output-dir <staging> --target-faces 6000 --preview
+python tools/prepare_decor_mesh.py --input <source.blend> --name <resource_stem> --output-dir <staging> --target-faces 15000 --preview
 ```
 
-The locked Blender 5.2 tool triangulates, applies Collapse Decimate, exports
-smooth Y-up OBJ normals with material `none`, and records source/runtime hashes.
+The locked Blender 5.2 tool triangulates, exports smooth Y-up OBJ normals with
+material `none`, and records source/runtime hashes. Complex models normally use
+the roughly 15,000-face source geometry; the tool only applies Collapse
+Decimate when the triangulated source exceeds the requested budget. Pass the
+source face count when its supplied geometry should remain completely intact.
 Prefer cylindrical runtime projection for rotational forms and axis-stabilized
 box projection for directional or rectilinear forms. Do not start statue UV
 discovery unless one reviewed projection has a specific visible failure.

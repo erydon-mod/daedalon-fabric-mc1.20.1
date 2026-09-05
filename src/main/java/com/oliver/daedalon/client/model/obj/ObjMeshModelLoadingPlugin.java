@@ -6,11 +6,14 @@ import com.oliver.daedalon.block.BustBlock;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.FixedDecorBlock;
+import com.oliver.daedalon.block.FountainBasinBlock;
+import com.oliver.daedalon.block.FountainBowlModel;
 import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.UrnBlock;
 import com.oliver.daedalon.registry.ModBlocks;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.PreparableModelLoadingPlugin;
+import net.minecraft.block.Block;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.Baker;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -80,6 +83,10 @@ public final class ObjMeshModelLoadingPlugin {
             "striatus"
     );
     private static final Identifier BRONZE_TEXTURE = id("block/bronze");
+    private static final Identifier WATER_STILL_TEXTURE = new Identifier(
+            "minecraft",
+            "block/water_still"
+    );
 
     private static final List<MeshFamily> FAMILIES = createFamilies();
 
@@ -98,16 +105,31 @@ public final class ObjMeshModelLoadingPlugin {
     public static List<String> blockIds() {
         List<String> result = new ArrayList<>();
         for (MeshFamily family : activeFamilies()) {
-            result.addAll(family.variants().stream().map(MeshVariant::blockId).toList());
+            result.addAll(family.variants().stream()
+                    .filter(MeshVariant::publicBlockModel)
+                    .map(MeshVariant::sourceBlockId)
+                    .toList());
         }
         return List.copyOf(result);
+    }
+
+    public static Identifier fountainBowlModelId(PlinthBlock plinth) {
+        return fountainBowlModelId(plinth, plinth.style().fountainBowlStyle());
+    }
+
+    public static Identifier fountainBowlModelId(PlinthBlock plinth,
+                                                 FountainBowlModel.Style style) {
+        return id(internalFountainBowlModelPath(
+                plinth.fountainMaterialKey(),
+                style
+        ));
     }
 
     private static List<MeshFamily> activeFamilies() {
         return FAMILIES.stream()
                 .filter(family -> family.variants().stream()
                         .anyMatch(variant -> ModBlocks.blocksById()
-                                .containsKey(id(variant.blockId()))))
+                                .containsKey(id(variant.sourceBlockId()))))
                 .toList();
     }
 
@@ -250,6 +272,22 @@ public final class ObjMeshModelLoadingPlugin {
                     createDetailedVariants(style.idSuffix())
             ));
         }
+        for (FountainBasinBlock.Style style : FountainBasinBlock.Style.values()) {
+            families.add(new MeshFamily(
+                    style.displayName(),
+                    id("models/mesh/" + style.resourceStem() + ".json"),
+                    id("block/mesh/fountain_basin_display"),
+                    createDetailedVariants(style.idSuffix())
+            ));
+        }
+        for (FountainBowlModel.Style style : FountainBowlModel.Style.values()) {
+            families.add(new MeshFamily(
+                    "Internal " + style.id() + " fountain bowls",
+                    id("models/mesh/" + style.resourceStem() + ".json"),
+                    id("block/mesh/fountain_bowl_display"),
+                    createInternalFountainBowlVariants(style)
+            ));
+        }
         families.add(new MeshFamily(
                 "Krene Fountain",
                 id("models/mesh/fountain_krene.json"),
@@ -366,7 +404,9 @@ public final class ObjMeshModelLoadingPlugin {
                 BRONZE_TEXTURE,
                 BRONZE_TEXTURE,
                 layout,
-                blockId
+                blockId,
+                true,
+                false
         );
     }
 
@@ -424,6 +464,40 @@ public final class ObjMeshModelLoadingPlugin {
         return List.copyOf(variants);
     }
 
+    private static List<MeshVariant> createInternalFountainBowlVariants(
+            FountainBowlModel.Style style
+    ) {
+        List<MeshVariant> variants = new ArrayList<>(MATERIALS.size() * 2);
+        for (String material : MATERIALS) {
+            for (boolean aged : new boolean[]{false, true}) {
+                String materialKey = material + (aged ? "_aged" : "");
+                String sourceBlockId = material + (aged ? "_aged" : "")
+                        + "_" + style.basinIdSuffix();
+                String textureBlockId = SPARTAN_BLOCK_PREFIX + materialKey;
+                variants.add(new MeshVariant(
+                        id(internalFountainBowlModelPath(materialKey, style)),
+                        null,
+                        null,
+                        null,
+                        id("block/" + textureBlockId),
+                        id("block/" + baseTextureBlockId(textureBlockId)),
+                        WorldTexturePhase.detailedSurface(),
+                        sourceBlockId,
+                        false,
+                        true
+                ));
+            }
+        }
+        return List.copyOf(variants);
+    }
+
+    private static String internalFountainBowlModelPath(
+            String materialKey,
+            FountainBowlModel.Style style
+    ) {
+        return "mesh/internal/" + materialKey + "_" + style.resourceStem();
+    }
+
     private static MeshVariant variant(String blockId, String textureBlockId) {
         boolean detailedSurface = textureBlockId.startsWith(SPARTAN_BLOCK_PREFIX);
         String repeatTextureBlockId = detailedSurface
@@ -439,7 +513,9 @@ public final class ObjMeshModelLoadingPlugin {
                 detailedSurface
                         ? WorldTexturePhase.detailedSurface()
                         : WorldTexturePhase.blockSurface(),
-                blockId
+                blockId,
+                true,
+                false
         );
     }
 
@@ -452,7 +528,9 @@ public final class ObjMeshModelLoadingPlugin {
                 id("block/" + detailedTextureBlockId(textureBlockId)),
                 id("block/" + textureBlockId),
                 WorldTexturePhase.urnSurface(),
-                blockId
+                blockId,
+                true,
+                false
         );
     }
 
@@ -491,7 +569,9 @@ public final class ObjMeshModelLoadingPlugin {
                                Identifier textureId,
                                Identifier particleTextureId,
                                WorldTexturePhase.Layout worldTexturePhase,
-                               String blockId) {
+                               String sourceBlockId,
+                               boolean publicBlockModel,
+                               boolean containedWater) {
     }
 
     private record MeshFamily(String displayName,
@@ -516,9 +596,11 @@ public final class ObjMeshModelLoadingPlugin {
             for (PreparedModel model : models) {
                 MeshVariant variant = model.variant;
                 byModelId.put(variant.modelId(), model.unbakedModel);
-                byModelId.put(variant.inventoryModelId(), model.unbakedModel);
-                byModelId.put(variant.itemFileModelId(), model.unbakedModel);
-                byModelId.put(variant.plainItemModelId(), model.unbakedModel);
+                if (variant.publicBlockModel()) {
+                    byModelId.put(variant.inventoryModelId(), model.unbakedModel);
+                    byModelId.put(variant.itemFileModelId(), model.unbakedModel);
+                    byModelId.put(variant.plainItemModelId(), model.unbakedModel);
+                }
             }
             // Keep vanilla Identifier and ModelIdentifier aliases side by side. Map.copyOf
             // rejects some same-path aliases because ModelIdentifier has specialised key
@@ -536,9 +618,10 @@ public final class ObjMeshModelLoadingPlugin {
 
     private static final class SharedGeometry {
         private final ObjMeshDefinition definition;
-        private final ObjMeshData data;
+        private final Map<String, Identifier> materialTextures;
         private final int modelCount;
         private final WorldTexturePhase.Layout worldTexturePhase;
+        private ObjMeshData data;
         private ObjMeshBakedModel.GeometryBakeResult baked;
         private ObjGuiIconTemplate guiIconTemplate;
         private Transformation guiTransformation;
@@ -549,6 +632,7 @@ public final class ObjMeshModelLoadingPlugin {
                                WorldTexturePhase.Layout worldTexturePhase) {
             this.definition = definition;
             this.data = data;
+            this.materialTextures = data.materialTextures();
             this.modelCount = modelCount;
             this.worldTexturePhase = worldTexturePhase;
         }
@@ -561,13 +645,18 @@ public final class ObjMeshModelLoadingPlugin {
                     guiIconTemplate = null;
                     Daedalon.LOGGER.warn(
                             "[Daedalon OBJ GUI] {} material variants use different GUI transforms; using full-model fallback",
-                            data.objId()
+                            definition.objId()
                     );
                 }
                 return baked;
             }
 
-            baked = ObjMeshBakedModel.bakeGeometry(definition, data);
+            ObjMeshData sourceData = Objects.requireNonNull(
+                    data,
+                    "OBJ source data was released before shared geometry was baked"
+            );
+            baked = ObjMeshBakedModel.bakeGeometry(definition, sourceData);
+            data = null;
             guiTransformation = requestedGuiTransformation;
             try {
                 guiIconTemplate = ObjGuiIconTemplate.create(
@@ -579,30 +668,30 @@ public final class ObjMeshModelLoadingPlugin {
                 guiIconTemplate = null;
                 Daedalon.LOGGER.warn(
                         "[Daedalon OBJ GUI] Unable to prepare full-mesh icon template for {}; using full-model fallback",
-                        data.objId(),
+                        sourceData.objId(),
                         exception
                 );
             }
-            String mtl = data.mtlIds().isEmpty() ? "none" : data.mtlIds().toString();
+            String mtl = sourceData.mtlIds().isEmpty() ? "none" : sourceData.mtlIds().toString();
             Daedalon.LOGGER.debug(
                     "[Daedalon OBJ Mesh] shared geometry cache MISS obj={} mtl={} vertices={} uvs={} normals={} triangles={} quads={} triangulatedNgons={} fabricQuads={} guiIconSourceQuads={} guiIconSamples={} materials={} objects={} groups={} originalBounds={} transformedBounds={} parseMs={} bakeMs={} normalMode={} smoothAngle={} uvProjection={} worldTexturePhases={} worldTextureMaxUOffset={} smoothedNormalCorners={} repairedNormals={} repairedUvFaces={} degenerateFaces={} approxVertexBytes={} meshIdentity={} materialModels={}",
-                    data.objId(),
+                    sourceData.objId(),
                     mtl,
-                    data.positions().size(),
-                    data.textureCoordinates().size(),
-                    data.normals().size(),
-                    data.emittedTriangleCount(),
-                    data.sourceQuadCount(),
-                    data.triangulatedNgonCount(),
+                    sourceData.positions().size(),
+                    sourceData.textureCoordinates().size(),
+                    sourceData.normals().size(),
+                    sourceData.emittedTriangleCount(),
+                    sourceData.sourceQuadCount(),
+                    sourceData.triangulatedNgonCount(),
                     baked.emittedQuadCount(),
                     guiIconTemplate == null ? 0 : guiIconTemplate.sourceQuadCount(),
                     guiIconTemplate == null ? 0 : guiIconTemplate.coveredSampleCount(),
-                    data.materialCount(),
-                    data.objectCount(),
-                    data.groupCount(),
-                    data.originalBounds(),
+                    sourceData.materialCount(),
+                    sourceData.objectCount(),
+                    sourceData.groupCount(),
+                    sourceData.originalBounds(),
                     baked.transformedBounds(),
-                    milliseconds(data.parseNanos()),
+                    milliseconds(sourceData.parseNanos()),
                     milliseconds(baked.bakeNanos()),
                     definition.smoothNormals() ? "smoothed" : "imported",
                     definition.smoothAngleDegrees(),
@@ -623,7 +712,7 @@ public final class ObjMeshModelLoadingPlugin {
                     || bounds.maxX() > 1.0F || bounds.maxY() > 1.0F || bounds.maxZ() > 1.0F) {
                 Daedalon.LOGGER.debug(
                         "[Daedalon OBJ Mesh] {} extends outside one block at {}; chunk/frustum culling follows the source block position",
-                        data.objId(),
+                        sourceData.objId(),
                         bounds
                 );
             }
@@ -664,7 +753,7 @@ public final class ObjMeshModelLoadingPlugin {
                 return null;
             }
             Identifier textureId = definition.materialOverrides().get(materialName);
-            return textureId == null ? data.materialTextures().get(materialName) : textureId;
+            return textureId == null ? materialTextures.get(materialName) : textureId;
         }
 
         private static String milliseconds(long nanos) {
@@ -705,6 +794,15 @@ public final class ObjMeshModelLoadingPlugin {
                     PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
                     variant.particleTextureId()
             ));
+            Block waterBlock = ModBlocks.blocksById().get(id(variant.sourceBlockId()));
+            boolean containsWater = variant.containedWater()
+                    || waterBlock instanceof FountainBasinBlock;
+            Sprite containedWaterSprite = containsWater
+                    ? textureGetter.apply(new SpriteIdentifier(
+                            PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
+                            WATER_STILL_TEXTURE
+                    ))
+                    : null;
             ObjMeshBakedModel.GeometryBakeResult bakedGeometry = geometry.bake(metadataModel);
             ResolvedMaterials materials = geometry.resolveMaterials(
                     bakedGeometry,
@@ -721,7 +819,8 @@ public final class ObjMeshModelLoadingPlugin {
                     variant.worldTexturePhase(),
                     geometry.guiIconTemplate(),
                     materials.textureIds(),
-                    variant.modelId()
+                    variant.modelId(),
+                    containedWaterSprite
             );
             return bakedModel;
         }

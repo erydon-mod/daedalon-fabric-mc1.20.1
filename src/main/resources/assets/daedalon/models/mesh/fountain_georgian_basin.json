@@ -1,0 +1,17 @@
+{
+  "obj": "daedalon:models/mesh/fountain_georgian_basin.obj",
+  "mtl": "daedalon:models/mesh/fountain_georgian_basin.mtl",
+  "flip_v": true,
+  "repair_degenerate_uvs": true,
+  "force_uv_projection": true,
+  "uv_projection": "axis_stabilized_box",
+  "face_oriented_uvs": true,
+  "smooth_normals": false,
+  "repair_floor_normals": true,
+  "smooth_angle_degrees": 80.0,
+  "fit_to_block": true,
+  "scale": [5.0, 5.0, 5.0],
+  "translate": [0.0, 0.0, 0.0],
+  "particle": "daedalon:block/statue_spartan_promachos_aganite",
+  "materials": {"none": "daedalon:block/statue_spartan_promachos_aganite"}
+}

@@ -119,6 +119,41 @@ class GuiItemPerformanceSafetyTests(unittest.TestCase):
         self.assertIn("Float.NEGATIVE_INFINITY", self.rasterizer)
         self.assertIn("candidateDepth <= depth[index]", self.rasterizer)
 
+    def test_shared_geometry_releases_parsed_obj_data_after_baking(self) -> None:
+        shared_geometry = self.plugin[
+            self.plugin.index("private static final class SharedGeometry") :
+            self.plugin.index("private static final class PreparedModel")
+        ]
+        bake_method = shared_geometry[
+            shared_geometry.index("private synchronized ObjMeshBakedModel.GeometryBakeResult bake(") :
+            shared_geometry.index("private ObjGuiIconTemplate guiIconTemplate()")
+        ]
+
+        self.assertIn("private ObjMeshData data;", shared_geometry)
+        self.assertNotIn("private final ObjMeshData data;", shared_geometry)
+        self.assertIn(
+            "private final Map<String, Identifier> materialTextures;",
+            shared_geometry,
+        )
+        self.assertIn("this.materialTextures = data.materialTextures();", shared_geometry)
+        self.assertIn("ObjMeshData sourceData = Objects.requireNonNull(", bake_method)
+        self.assertIn(
+            "baked = ObjMeshBakedModel.bakeGeometry(definition, sourceData);",
+            bake_method,
+        )
+        self.assertIn("data = null;", bake_method)
+        self.assertLess(
+            bake_method.index("baked = ObjMeshBakedModel.bakeGeometry("),
+            bake_method.index("data = null;"),
+        )
+        self.assertNotIn(
+            "data.", bake_method[bake_method.index("data = null;") :]
+        )
+        self.assertIn(
+            "return textureId == null ? materialTextures.get(materialName) : textureId;",
+            shared_geometry,
+        )
+
     def test_normal_mesh_diagnostics_do_not_pollute_player_logs(self) -> None:
         self.assertIn(
             'Daedalon.LOGGER.debug(\n'
@@ -145,7 +180,7 @@ class GuiItemPerformanceSafetyTests(unittest.TestCase):
 
         self.assertEqual(2048, page_size)
         self.assertEqual(64, icon_size)
-        self.assertEqual(4, max_pages)
+        self.assertEqual(5, max_pages)
         self.assertEqual(64, icon_size * self.integer_constant(self.template, "SUPERSAMPLE"))
         self.assertGreaterEqual(capacity, len(all_block_ids()))
         self.assertIn("nextCellIndex >= MAX_CACHED_ICONS", self.cache)

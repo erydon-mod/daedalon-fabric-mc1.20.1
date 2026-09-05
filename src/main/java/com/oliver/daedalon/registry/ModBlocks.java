@@ -7,6 +7,8 @@ import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
 import com.oliver.daedalon.block.FinialBlock;
 import com.oliver.daedalon.block.FixedDecorBlock;
+import com.oliver.daedalon.block.FountainBasinBlock;
+import com.oliver.daedalon.block.FountainBasinPartBlock;
 import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.SpartanStatueBlock;
 import com.oliver.daedalon.block.SizedDecorBlock;
@@ -15,6 +17,7 @@ import com.oliver.daedalon.block.ZeusStatueBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -40,6 +43,7 @@ public final class ModBlocks {
                     + CorbelBlock.Style.values().length
                     + CapitalBlock.Style.values().length
                     + FixedDecorBlock.Style.values().length
+                    + FountainBasinBlock.Style.values().length
                     + PlinthBlock.Style.values().length + 2;
     private static final int BRONZE_FAMILY_COUNT =
             2 + UrnBlock.UrnStyle.values().length
@@ -63,10 +67,13 @@ public final class ModBlocks {
             new EnumMap<>(CapitalBlock.Style.class);
     private static final Map<FixedDecorBlock.Style, List<Block>> FIXED_DECOR_BY_STYLE =
             new EnumMap<>(FixedDecorBlock.Style.class);
+    private static final Map<FountainBasinBlock.Style, List<Block>> FOUNTAIN_BASINS_BY_STYLE =
+            new EnumMap<>(FountainBasinBlock.Style.class);
     private static final Map<PlinthBlock.Style, List<Block>> PLINTHS_BY_STYLE =
             new EnumMap<>(PlinthBlock.Style.class);
     private static final List<Block> KRENE_FOUNTAINS = new ArrayList<>();
     private static final List<Block> OBELISKOS_MONUMENTS = new ArrayList<>();
+    private static FountainBasinPartBlock fountainBasinPart;
     private static boolean registered;
 
     private ModBlocks() {
@@ -78,6 +85,7 @@ public final class ModBlocks {
         }
         registered = true;
 
+        registerInternalBlocks();
         registerSpartanPromachosStatues();
         registerZeusStatues();
         for (ClassicalStatueBlock.Style style : ClassicalStatueBlock.Style.values()) {
@@ -98,6 +106,9 @@ public final class ModBlocks {
         for (FixedDecorBlock.Style style : FixedDecorBlock.Style.values()) {
             registerFixedDecor(style);
         }
+        for (FountainBasinBlock.Style style : FountainBasinBlock.Style.values()) {
+            registerFountainBasins(style);
+        }
         for (PlinthBlock.Style style : PlinthBlock.Style.values()) {
             registerPlinths(style);
         }
@@ -109,7 +120,7 @@ public final class ModBlocks {
                 || SPARTAN_PROMACHOS_STATUES.size() != BRONZE_FAMILY_VARIANTS
                 || ZEUS_STATUES.size() != BRONZE_FAMILY_VARIANTS) {
             throw new IllegalStateException(
-                    "Daedalon must register exactly 3716 decor blocks and items"
+                    "Daedalon must register exactly 3878 decor blocks and items"
             );
         }
         for (UrnBlock.UrnStyle style : UrnBlock.UrnStyle.values()) {
@@ -149,6 +160,11 @@ public final class ModBlocks {
         }
         for (FixedDecorBlock.Style style : FixedDecorBlock.Style.values()) {
             if (fixedDecor(style).size() != STONE_VARIANTS_PER_FAMILY) {
+                throw new IllegalStateException(style.idSuffix() + " must register exactly 54 variants");
+            }
+        }
+        for (FountainBasinBlock.Style style : FountainBasinBlock.Style.values()) {
+            if (fountainBasins(style).size() != STONE_VARIANTS_PER_FAMILY) {
                 throw new IllegalStateException(style.idSuffix() + " must register exactly 54 variants");
             }
         }
@@ -211,6 +227,18 @@ public final class ModBlocks {
         return blocks == null ? List.of() : Collections.unmodifiableList(blocks);
     }
 
+    public static List<Block> fountainBasins(FountainBasinBlock.Style style) {
+        List<Block> blocks = FOUNTAIN_BASINS_BY_STYLE.get(style);
+        return blocks == null ? List.of() : Collections.unmodifiableList(blocks);
+    }
+
+    public static FountainBasinPartBlock fountainBasinPart() {
+        if (fountainBasinPart == null) {
+            throw new IllegalStateException("ModBlocks.register() must run before placing a fountain basin");
+        }
+        return fountainBasinPart;
+    }
+
     public static List<Block> plinths(PlinthBlock.Style style) {
         List<Block> blocks = PLINTHS_BY_STYLE.get(style);
         return blocks == null ? List.of() : Collections.unmodifiableList(blocks);
@@ -228,6 +256,22 @@ public final class ModBlocks {
             );
         }
         return block;
+    }
+
+    private static void registerInternalBlocks() {
+        fountainBasinPart = Registry.register(
+                Registries.BLOCK,
+                id("fountain_basin_part"),
+                new FountainBasinPartBlock(
+                        AbstractBlock.Settings.create()
+                                .mapColor(MapColor.IRON_GRAY)
+                                .strength(-1.0F, 3_600_000.0F)
+                                .dropsNothing()
+                                .nonOpaque()
+                                .dynamicBounds()
+                                .pistonBehavior(PistonBehavior.BLOCK)
+                )
+        );
     }
 
     private static void registerSpartanPromachosStatues() {
@@ -432,12 +476,29 @@ public final class ModBlocks {
         }
     }
 
+    private static void registerFountainBasins(FountainBasinBlock.Style style) {
+        for (DecorMaterial material : DecorMaterial.values()) {
+            for (boolean aged : new boolean[]{false, true}) {
+                String path = material.id() + (aged ? "_aged" : "") + "_" + style.idSuffix();
+                Block block = registerBlock(
+                        path,
+                        new FountainBasinBlock(decorSettings().dropsNothing(), style)
+                );
+                FOUNTAIN_BASINS_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>()).add(block);
+            }
+        }
+    }
+
     private static void registerPlinths(PlinthBlock.Style style) {
         for (DecorMaterial material : DecorMaterial.values()) {
             for (boolean aged : new boolean[]{false, true}) {
                 String path = material.id() + (aged ? "_aged" : "")
                         + "_" + style.styleId() + "_plinth";
-                Block block = registerBlock(path, new PlinthBlock(decorSettings(), style));
+                String fountainMaterialKey = material.id() + (aged ? "_aged" : "");
+                Block block = registerBlock(
+                        path,
+                        new PlinthBlock(decorSettings(), style, fountainMaterialKey)
+                );
                 PLINTHS_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>()).add(block);
             }
         }

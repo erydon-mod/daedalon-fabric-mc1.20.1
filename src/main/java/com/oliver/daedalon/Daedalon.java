@@ -1,9 +1,11 @@
 package com.oliver.daedalon;
 
 import com.oliver.daedalon.compat.FamilyReleaseCompatibility;
+import com.oliver.daedalon.registry.ModBlockEntities;
 import com.oliver.daedalon.registry.ModBlocks;
 import com.oliver.daedalon.registry.ModItemGroups;
 import com.oliver.daedalon.registry.ModItems;
+import com.oliver.daedalon.registry.ModParticles;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +25,10 @@ public final class Daedalon implements ModInitializer {
         logStartupTextLogo();
         LOGGER.info("[{}] Initialising", MOD_ID);
         ModBlocks.register();
+        ModBlockEntities.register();
         ModItems.register();
         ModItemGroups.register();
+        ModParticles.register();
     }
 
     private static void logStartupTextLogo() {

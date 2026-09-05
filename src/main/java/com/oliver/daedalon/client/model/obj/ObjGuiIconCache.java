@@ -50,9 +50,9 @@ public final class ObjGuiIconCache {
     static final int ICON_CELL_SIZE = ObjGuiIconTemplate.ICON_RESOLUTION + ICON_GUTTER * 2;
     static final int CELLS_PER_ROW = ATLAS_PAGE_SIZE / ICON_CELL_SIZE;
     static final int CELLS_PER_PAGE = CELLS_PER_ROW * CELLS_PER_ROW;
-    // Four lazily allocated 2048 px pages cover the complete 3,672-item launch
-    // catalogue at 64 px per icon (64 MiB only if every icon is requested).
-    static final int MAX_ATLAS_PAGES = 4;
+    // Five lazily allocated 2048 px pages cover the complete 3,878-item catalogue
+    // at 64 px per icon (80 MiB only if every icon is requested).
+    static final int MAX_ATLAS_PAGES = 5;
     static final int MAX_CACHED_ICONS = CELLS_PER_PAGE * MAX_ATLAS_PAGES;
 
     private static final Identifier RELOAD_ID =

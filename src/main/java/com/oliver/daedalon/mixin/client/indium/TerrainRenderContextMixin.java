@@ -41,7 +41,9 @@ abstract class TerrainRenderContextMixin {
             remap = false
     )
     private void daedalon$captureVertexNormals(MutableQuadViewImpl quad, Material material, CallbackInfo ci) {
-        if (!ShaderTerrainNormalBridge.isObjQuad(quad.tag()) || !quad.hasAllVertexNormals()) {
+        boolean containedWater = ShaderTerrainNormalBridge.isContainedWaterQuad(quad.tag());
+        if ((!ShaderTerrainNormalBridge.isObjQuad(quad.tag()) && !containedWater)
+                || !quad.hasAllVertexNormals()) {
             ShaderTerrainNormalBridge.discard();
             return;
         }
@@ -51,12 +53,22 @@ abstract class TerrainRenderContextMixin {
         int i1 = orientation.getVertexIndex(1);
         int i2 = orientation.getVertexIndex(2);
         int i3 = orientation.getVertexIndex(3);
-        ShaderTerrainNormalBridge.publish(
-                vertices,
-                quad.normalX(i0), quad.normalY(i0), quad.normalZ(i0),
-                quad.normalX(i1), quad.normalY(i1), quad.normalZ(i1),
-                quad.normalX(i2), quad.normalY(i2), quad.normalZ(i2),
-                quad.normalX(i3), quad.normalY(i3), quad.normalZ(i3)
-        );
+        if (containedWater) {
+            ShaderTerrainNormalBridge.publishContainedWater(
+                    vertices,
+                    quad.normalX(i0), quad.normalY(i0), quad.normalZ(i0),
+                    quad.normalX(i1), quad.normalY(i1), quad.normalZ(i1),
+                    quad.normalX(i2), quad.normalY(i2), quad.normalZ(i2),
+                    quad.normalX(i3), quad.normalY(i3), quad.normalZ(i3)
+            );
+        } else {
+            ShaderTerrainNormalBridge.publish(
+                    vertices,
+                    quad.normalX(i0), quad.normalY(i0), quad.normalZ(i0),
+                    quad.normalX(i1), quad.normalY(i1), quad.normalZ(i1),
+                    quad.normalX(i2), quad.normalY(i2), quad.normalZ(i2),
+                    quad.normalX(i3), quad.normalY(i3), quad.normalZ(i3)
+            );
+        }
     }
 }

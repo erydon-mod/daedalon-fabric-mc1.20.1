@@ -26,6 +26,7 @@ record ObjMeshDefinition(Identifier definitionId,
                          int textureUTiles,
                          Map<String, UvProjection> materialUvProjections,
                          boolean smoothNormals,
+                         boolean repairFloorNormals,
                          float smoothAngleDegrees,
                          boolean fitToBlock,
                          Vec3 scale,
@@ -63,6 +64,7 @@ record ObjMeshDefinition(Identifier definitionId,
             int textureUTiles = optionalInt(json, "texture_u_tiles", 1, definitionId);
             Map<String, UvProjection> materialUvProjections = materialUvProjections(json, definitionId);
             boolean smoothNormals = optionalBoolean(json, "smooth_normals", false, definitionId);
+            boolean repairFloorNormals = optionalBoolean(json, "repair_floor_normals", false, definitionId);
             float smoothAngleDegrees = optionalFloat(json, "smooth_angle_degrees", 60.0F, definitionId);
             boolean fitToBlock = optionalBoolean(json, "fit_to_block", false, definitionId);
             Vec3 scale = optionalScale(json.get("scale"), definitionId);
@@ -105,7 +107,8 @@ record ObjMeshDefinition(Identifier definitionId,
             }
             return new ObjMeshDefinition(definitionId, objId, mtlId, flipV, repairDegenerateUvs,
                     forceUvProjection, faceOrientedUvs, doubleSided, uvProjection, cylindricalURepeats,
-                    textureUTiles, materialUvProjections, smoothNormals, smoothAngleDegrees, fitToBlock,
+                    textureUTiles, materialUvProjections, smoothNormals, repairFloorNormals,
+                    smoothAngleDegrees, fitToBlock,
                     scale, translate, overrides, particle);
         } catch (RuntimeException exception) {
             if (exception instanceof IllegalArgumentException) {

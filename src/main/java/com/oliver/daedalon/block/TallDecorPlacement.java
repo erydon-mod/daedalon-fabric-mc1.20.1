@@ -66,15 +66,45 @@ public final class TallDecorPlacement {
         }
 
         VoxelShape outline = state.getOutlineShape(world, registeredPos, ShapeContext.absent());
-        if (outline.isEmpty() || !containsHit(outline, registeredPos, hit)) {
+        boolean validHit = !outline.isEmpty() && containsHit(outline, registeredPos, hit);
+        if (!validHit) {
             return vanillaDelta;
         }
 
-        return new Vec3d(
-                clampForVanillaPacketCheck(vanillaDelta.x),
-                clampForVanillaPacketCheck(vanillaDelta.y),
-                clampForVanillaPacketCheck(vanillaDelta.z)
+        return clampForVanillaPacketCheck(vanillaDelta);
+    }
+
+    /**
+     * Measures mining reach to the nearest point of an extended Daedalon model,
+     * rather than to the centre of the one block that registers that model.
+     */
+    public static double serverBreakingDistanceSquared(BlockView world,
+                                                       Vec3d eye,
+                                                       Vec3d registeredBlockCenter) {
+        double vanillaDistance = eye.squaredDistanceTo(registeredBlockCenter);
+        BlockPos registeredPos = BlockPos.ofFloored(registeredBlockCenter);
+        BlockState state = world.getBlockState(registeredPos);
+        if (!Daedalon.MOD_ID.equals(Registries.BLOCK.getId(state.getBlock()).getNamespace())) {
+            return vanillaDistance;
+        }
+
+        VoxelShape outline = state.getOutlineShape(world, registeredPos, ShapeContext.absent());
+        if (outline.isEmpty()) {
+            return vanillaDistance;
+        }
+        Vec3d localEye = eye.subtract(
+                registeredPos.getX(),
+                registeredPos.getY(),
+                registeredPos.getZ()
         );
+        return outline.getClosestPointTo(localEye)
+                .map(closest -> closest.add(
+                        registeredPos.getX(),
+                        registeredPos.getY(),
+                        registeredPos.getZ()
+                ))
+                .map(eye::squaredDistanceTo)
+                .orElse(vanillaDistance);
     }
 
     private static Support findTallSupport(ItemPlacementContext context) {
@@ -149,7 +179,7 @@ public final class TallDecorPlacement {
         );
     }
 
-    private static boolean containsHit(VoxelShape outline, BlockPos pos, Vec3d hit) {
+    static boolean containsHit(VoxelShape outline, BlockPos pos, Vec3d hit) {
         double localX = hit.x - pos.getX();
         double localY = hit.y - pos.getY();
         double localZ = hit.z - pos.getZ();
@@ -171,6 +201,14 @@ public final class TallDecorPlacement {
 
     static double clampForVanillaPacketCheck(double value) {
         return Math.max(-1.0D, Math.min(1.0D, value));
+    }
+
+    static Vec3d clampForVanillaPacketCheck(Vec3d delta) {
+        return new Vec3d(
+                clampForVanillaPacketCheck(delta.x),
+                clampForVanillaPacketCheck(delta.y),
+                clampForVanillaPacketCheck(delta.z)
+        );
     }
 
     private static double squaredHorizontalDistance(BlockPos pos, Vec3d hit) {

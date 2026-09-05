@@ -3,19 +3,30 @@ package com.oliver.daedalon.client.model.obj;
 import com.oliver.daedalon.block.DecorShapeTransforms;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
+import com.oliver.daedalon.block.FountainAssemblyLayout;
+import com.oliver.daedalon.block.FountainBasinBlock;
+import com.oliver.daedalon.block.FountainBowlModel;
+import com.oliver.daedalon.block.FountainWaterShape;
+import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.SizedDecorBlock;
 import com.oliver.daedalon.block.StatueBlock;
 import com.oliver.daedalon.block.TwoSizeDecorBlock;
 import com.oliver.daedalon.block.UrnBlock;
+import com.oliver.daedalon.block.entity.FountainBasinBlockEntity;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.json.ModelOverrideList;
@@ -51,6 +62,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     private final ObjGuiIconTemplate guiIconTemplate;
     private final List<Identifier> materialTextureIds;
     private final Identifier modelId;
+    private final Sprite containedWaterSprite;
+    private final RenderMaterial containedWaterMaterial;
 
     private ObjMeshBakedModel(Mesh mesh,
                               BakedModel metadataModel,
@@ -60,7 +73,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                               WorldTexturePhase.Layout worldTexturePhase,
                               ObjGuiIconTemplate guiIconTemplate,
                               List<Identifier> materialTextureIds,
-                              Identifier modelId) {
+                              Identifier modelId,
+                              Sprite containedWaterSprite) {
         this.mesh = mesh;
         this.metadataModel = metadataModel;
         this.particleSprite = particleSprite;
@@ -75,6 +89,15 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         this.guiIconTemplate = guiIconTemplate;
         this.materialTextureIds = List.copyOf(materialTextureIds);
         this.modelId = modelId;
+        this.containedWaterSprite = containedWaterSprite;
+        Renderer renderer = RendererAccess.INSTANCE.getRenderer();
+        this.containedWaterMaterial = containedWaterSprite == null || renderer == null
+                ? null
+                : renderer.materialFinder()
+                        .blendMode(BlendMode.TRANSLUCENT)
+                        .disableDiffuse(true)
+                        .ambientOcclusion(TriState.FALSE)
+                        .find();
     }
 
     static GeometryBakeResult bakeGeometry(ObjMeshDefinition definition, ObjMeshData data) {
@@ -137,7 +160,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                                          WorldTexturePhase.Layout worldTexturePhase,
                                          ObjGuiIconTemplate guiIconTemplate,
                                          List<Identifier> materialTextureIds,
-                                         Identifier modelId) {
+                                         Identifier modelId,
+                                         Sprite containedWaterSprite) {
         if (materialSprites.size() != geometry.materialNames().size()) {
             throw new IllegalArgumentException("Material sprite count does not match baked OBJ material tags");
         }
@@ -156,7 +180,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 worldTexturePhase,
                 guiIconTemplate,
                 materialTextureIds,
-                modelId
+                modelId,
+                containedWaterSprite
         );
     }
 
@@ -180,13 +205,15 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         }
         Direction nominalFace = closestAxis(geometricNormal);
         FaceUvs faceUvs = faceUvs(definition, data, positions, uvProjector, face, geometricNormal, nominalFace, counters);
+        boolean repairFloorNormals = definition.repairFloorNormals()
+                && uvProjector.isInteriorFloorFace(positions, refs, geometricNormal);
         counters.recordMaximumU(materialTag, faceUvs.u());
 
         emitFaceSide(emitter, definition, data, positions, smoothNormals, refs,
-                geometricNormal, nominalFace, faceUvs, materialTag, false, counters);
+                geometricNormal, nominalFace, faceUvs, materialTag, false, repairFloorNormals, counters);
         if (definition.doubleSided()) {
             emitFaceSide(emitter, definition, data, positions, smoothNormals, refs,
-                    geometricNormal, nominalFace, faceUvs, materialTag, true, counters);
+                    geometricNormal, nominalFace, faceUvs, materialTag, true, repairFloorNormals, counters);
         }
     }
 
@@ -201,6 +228,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                                      FaceUvs faceUvs,
                                      int materialTag,
                                      boolean reverseWinding,
+                                     boolean repairFloorNormals,
                                      BakeCounters counters) {
         for (int vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
             int sourceIndex = sourceIndex(refs.size(), vertexIndex, reverseWinding);
@@ -211,7 +239,12 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             emitter.uv(vertexIndex, faceUvs.u()[sourceIndex], faceUvs.v()[sourceIndex]);
 
             ObjMeshData.Vec3 normal = geometricNormal;
-            if (smoothNormals != null) {
+            if (repairFloorNormals) {
+                // The supplied planar floor has inconsistent corner normals even
+                // among the nearly aligned corners. Give only this floor one normal.
+                normal = new ObjMeshData.Vec3(0.0F, 1.0F, 0.0F);
+                counters.repairedNormalCount++;
+            } else if (smoothNormals != null) {
                 ObjMeshData.Vec3 smoothed = smoothNormals.forCorner(ref.positionIndex(), geometricNormal);
                 if (smoothed != null) {
                     normal = smoothed;
@@ -370,6 +403,10 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         ));
     }
 
+    private static float normalDot(ObjMeshData.Vec3 first, ObjMeshData.Vec3 second) {
+        return first.x() * second.x() + first.y() * second.y() + first.z() * second.z();
+    }
+
     private static ObjMeshData.Vec3 firstUsableImportedNormal(ObjMeshDefinition definition,
                                                               ObjMeshData data,
                                                               List<ObjMeshData.VertexRef> refs) {
@@ -435,6 +472,10 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             positionTransform = FacingDecorTransform.forState(state);
         } else if (state.getBlock() instanceof SizedDecorBlock) {
             positionTransform = SizedDecorTransform.forState(state);
+        } else if (state.getBlock() instanceof FountainBasinBlock) {
+            positionTransform = BasinTransform.forState(state);
+        } else if (state.getBlock() instanceof PlinthBlock) {
+            positionTransform = PlinthTransform.forState(state, 0.0F);
         } else if (state.getBlock() instanceof TwoSizeDecorBlock) {
             positionTransform = GroundScaleTransform.forState(state);
         }
@@ -452,6 +493,246 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             }
             context.popTransform();
         }
+        emitContainedWater(blockView, state, pos, context, 0.0F, false);
+        if (state.getBlock() instanceof FountainBasinBlock) {
+            emitBasinComponents(blockView, state, pos, context);
+        }
+    }
+
+    private void emitContainedWater(BlockRenderView blockView,
+                                    BlockState state,
+                                    BlockPos pos,
+                                    RenderContext context,
+                                    float baseY,
+                                    boolean forceFilled) {
+        if (containedWaterSprite == null
+                || containedWaterMaterial == null) {
+            return;
+        }
+
+        if (!(state.getBlock() instanceof FountainBasinBlock basinBlock)
+                || (!forceFilled && !state.get(FountainBasinBlock.WATERLOGGED))) {
+            return;
+        }
+        FountainBasinBlock.Size size = state.get(FountainBasinBlock.SIZE);
+        FountainBasinBlock.Style style = basinBlock.style();
+        FountainWaterShape outline = style.waterOutline();
+        if (outline != null) {
+            emitWaterProfile(blockView, pos, context, outline, size.modelScale(),
+                    baseY + style.waterSurfaceY(size));
+            return;
+        }
+        emitWaterSurface(
+                blockView,
+                pos,
+                context,
+                style.waterHalfWidth(size),
+                style.waterBevel(size),
+                baseY + style.waterSurfaceY(size)
+        );
+    }
+
+    private void emitWaterProfile(BlockRenderView blockView,
+                                   BlockPos pos,
+                                   RenderContext context,
+                                   FountainWaterShape outline,
+                                   float scale,
+                                   float waterSurfaceY) {
+        int waterColor = 0xFF000000 | BiomeColors.getWaterColor(blockView, pos);
+        QuadEmitter emitter = context.getEmitter();
+        for (int i = 0; i < outline.vertexCount(); i++) {
+            int next = (i + 1) % outline.vertexCount();
+            emitWaterTriangle(emitter, waterColor, 0.5F,
+                    0.5F + outline.x(i) * scale, 0.5F + outline.z(i) * scale,
+                    0.5F + outline.x(next) * scale, 0.5F + outline.z(next) * scale,
+                    outline.halfWidth() * scale, waterSurfaceY);
+        }
+    }
+
+    private void emitContainedBowlWater(BlockRenderView blockView,
+                                        BlockPos pos,
+                                        RenderContext context,
+                                        FountainBowlModel.Style style,
+                                        FountainBowlModel.Size size,
+                                        float baseY,
+                                        boolean filled) {
+        if (!filled || containedWaterSprite == null || containedWaterMaterial == null) {
+            return;
+        }
+        emitWaterProfile(
+                blockView,
+                pos,
+                context,
+                style.waterOutline(),
+                size.diameter(),
+                baseY + style.waterSurfaceY(size)
+        );
+    }
+
+    private void emitWaterSurface(BlockRenderView blockView,
+                                  BlockPos pos,
+                                  RenderContext context,
+                                  float halfWidth,
+                                  float bevel,
+                                  float waterSurfaceY) {
+        float center = 0.5F;
+        int waterColor = 0xFF000000 | BiomeColors.getWaterColor(blockView, pos);
+        QuadEmitter emitter = context.getEmitter();
+        for (int index = 0; index < 8; index++) {
+            int next = (index + 1) & 7;
+            emitWaterTriangle(
+                    emitter,
+                    waterColor,
+                    center,
+                    waterOutlineX(index, center, halfWidth, bevel),
+                    waterOutlineZ(index, center, halfWidth, bevel),
+                    waterOutlineX(next, center, halfWidth, bevel),
+                    waterOutlineZ(next, center, halfWidth, bevel),
+                    halfWidth,
+                    waterSurfaceY
+            );
+        }
+    }
+
+    private static float waterOutlineX(int index, float center, float halfWidth, float bevel) {
+        return switch (index) {
+            case 0, 5 -> center - bevel;
+            case 1, 4 -> center + bevel;
+            case 2, 3 -> center + halfWidth;
+            case 6, 7 -> center - halfWidth;
+            default -> throw new IllegalArgumentException("Water outline index must be between 0 and 7");
+        };
+    }
+
+    private static float waterOutlineZ(int index, float center, float halfWidth, float bevel) {
+        return switch (index) {
+            case 0, 1 -> center - halfWidth;
+            case 2, 7 -> center - bevel;
+            case 3, 6 -> center + bevel;
+            case 4, 5 -> center + halfWidth;
+            default -> throw new IllegalArgumentException("Water outline index must be between 0 and 7");
+        };
+    }
+
+    private void emitBasinComponents(BlockRenderView blockView,
+                                     BlockState basinState,
+                                     BlockPos pos,
+                                     RenderContext context) {
+        if (!(blockView.getBlockEntity(pos) instanceof FountainBasinBlockEntity basin)) {
+            return;
+        }
+        FountainAssemblyLayout layout = basin.layout(basinState);
+        FountainAssemblyLayout.PlacedPlinth plinth = layout.plinth();
+        if (plinth == null || !(plinth.state().getBlock() instanceof PlinthBlock plinthBlock)) {
+            return;
+        }
+        boolean filled = basinState.get(FountainBasinBlock.WATERLOGGED);
+        BakedModel plinthModel = MinecraftClient.getInstance()
+                .getBlockRenderManager()
+                .getModel(plinth.state());
+        if (plinthModel instanceof ObjMeshBakedModel objModel) {
+            objModel.emitAttachedPlinthQuads(
+                    plinth.state(),
+                    pos,
+                    context,
+                    (float) plinth.baseY()
+            );
+        }
+
+        for (FountainAssemblyLayout.PlacedBowl bowl : layout.bowls()) {
+            BakedModel bowlModel = MinecraftClient.getInstance()
+                    .getBakedModelManager()
+                    .getModel(ObjMeshModelLoadingPlugin.fountainBowlModelId(
+                            plinthBlock,
+                            bowl.style()
+                    ));
+            if (bowlModel instanceof ObjMeshBakedModel objModel) {
+                objModel.emitAttachedBowlQuads(
+                        blockView,
+                        pos,
+                        context,
+                        bowl.style(),
+                        bowl.size(),
+                        (float) bowl.baseY(),
+                        filled
+                );
+            }
+        }
+    }
+
+    private void emitAttachedPlinthQuads(BlockState state,
+                                         BlockPos pos,
+                                         RenderContext context,
+                                         float baseY) {
+        RenderContext.QuadTransform positionTransform = PlinthTransform.forState(state, baseY);
+        int worldPhaseIndex = worldTexturePhase.index(pos.getX(), pos.getY(), pos.getZ());
+        context.pushTransform(worldTextureTransforms[worldPhaseIndex]);
+        context.pushTransform(positionTransform);
+        try {
+            mesh.outputTo(context.getEmitter());
+        } finally {
+            context.popTransform();
+            context.popTransform();
+        }
+    }
+
+    private void emitAttachedBowlQuads(BlockRenderView blockView,
+                                       BlockPos pos,
+                                       RenderContext context,
+                                       FountainBowlModel.Style style,
+                                       FountainBowlModel.Size size,
+                                       float baseY,
+                                       boolean filled) {
+        RenderContext.QuadTransform positionTransform = BowlTransform.forSize(size, baseY);
+        int worldPhaseIndex = worldTexturePhase.index(pos.getX(), pos.getY(), pos.getZ());
+        context.pushTransform(worldTextureTransforms[worldPhaseIndex]);
+        context.pushTransform(positionTransform);
+        try {
+            mesh.outputTo(context.getEmitter());
+        } finally {
+            context.popTransform();
+            context.popTransform();
+        }
+        emitContainedBowlWater(blockView, pos, context, style, size, baseY, filled);
+    }
+
+    private void emitWaterTriangle(QuadEmitter emitter,
+                                   int waterColor,
+                                   float center,
+                                   float currentX,
+                                   float currentZ,
+                                   float nextX,
+                                   float nextZ,
+                                   float halfWidth,
+                                   float waterSurfaceY) {
+        // Reverse the clockwise X/Z outline order so the triangles face upward.
+        emitWaterVertex(emitter, 0, center, center, center, halfWidth, waterSurfaceY);
+        emitWaterVertex(emitter, 1, nextX, nextZ, center, halfWidth, waterSurfaceY);
+        emitWaterVertex(emitter, 2, currentX, currentZ, center, halfWidth, waterSurfaceY);
+        emitWaterVertex(emitter, 3, currentX, currentZ, center, halfWidth, waterSurfaceY);
+        emitter.color(waterColor, waterColor, waterColor, waterColor);
+        emitter.material(containedWaterMaterial);
+        emitter.cullFace(null);
+        emitter.nominalFace(Direction.UP);
+        emitter.tag(ShaderTerrainNormalBridge.containedWaterTag());
+        emitter.spriteBake(containedWaterSprite, MutableQuadView.BAKE_NORMALIZED);
+        emitter.emit();
+    }
+
+    private static void emitWaterVertex(QuadEmitter emitter,
+                                        int vertex,
+                                        float x,
+                                        float z,
+                                        float center,
+                                        float halfWidth,
+                                        float waterSurfaceY) {
+        emitter.pos(vertex, x, waterSurfaceY, z);
+        emitter.uv(
+                vertex,
+                0.5F + (x - center) / (2.0F * halfWidth),
+                0.5F + (z - center) / (2.0F * halfWidth)
+        );
+        emitter.normal(vertex, 0.0F, 1.0F, 0.0F);
     }
 
     @Override
@@ -1040,6 +1321,35 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         }
     }
 
+    private record BasinTransform(float scale) implements RenderContext.QuadTransform {
+        private static final BasinTransform[] CACHE = Arrays.stream(FountainBasinBlock.Size.values())
+                .map(size -> new BasinTransform(size.renderScale()))
+                .toArray(BasinTransform[]::new);
+
+        private static BasinTransform forState(BlockState state) {
+            return CACHE[state.get(FountainBasinBlock.SIZE).ordinal()];
+        }
+
+        @Override
+        public boolean transform(MutableQuadView quad) {
+            for (int vertex = 0; vertex < 4; vertex++) {
+                quad.pos(
+                        vertex,
+                        0.5F + (quad.x(vertex) - 0.5F) * scale,
+                        quad.y(vertex) * scale,
+                        0.5F + (quad.z(vertex) - 0.5F) * scale
+                );
+                quad.uv(
+                        vertex,
+                        0.5F + (quad.u(vertex) - 0.5F) * scale,
+                        0.5F + (quad.v(vertex) - 0.5F) * scale
+                );
+            }
+            quad.cullFace(null);
+            return true;
+        }
+    }
+
     private static final class FacingDecorTransform implements RenderContext.QuadTransform {
         private static final FacingDecorTransform[] CACHE = createCache();
         private final int clockwiseSteps;
@@ -1121,6 +1431,122 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             }
             quad.cullFace(null);
             return true;
+        }
+    }
+
+    private record BowlTransform(float scale, float baseY) implements RenderContext.QuadTransform {
+        private static BowlTransform forSize(FountainBowlModel.Size size, float baseY) {
+            return new BowlTransform(size.renderScale(), baseY);
+        }
+
+        @Override
+        public boolean transform(MutableQuadView quad) {
+            for (int vertex = 0; vertex < 4; vertex++) {
+                quad.pos(
+                        vertex,
+                        0.5F + (quad.x(vertex) - 0.5F) * scale,
+                        baseY + quad.y(vertex) * scale,
+                        0.5F + (quad.z(vertex) - 0.5F) * scale
+                );
+                quad.uv(
+                        vertex,
+                        0.5F + (quad.u(vertex) - 0.5F) * scale,
+                        0.5F + (quad.v(vertex) - 0.5F) * scale
+                );
+            }
+            quad.cullFace(null);
+            return true;
+        }
+    }
+
+    private record PlinthTransform(
+            float scale,
+            float offsetDistance,
+            float baseY,
+            int clockwiseSteps
+    ) implements RenderContext.QuadTransform {
+        private static PlinthTransform forState(BlockState state, float assemblyBaseY) {
+            boolean offset = state.get(PlinthBlock.OFFSET);
+            return new PlinthTransform(
+                    state.get(PlinthBlock.SIZE).renderScale(),
+                    offset ? DecorShapeTransforms.OFFSET_DISTANCE : 0.0F,
+                    assemblyBaseY + (offset ? DecorShapeTransforms.OFFSET_BASE_Y : 0.0F),
+                    horizontalIndex(state.get(PlinthBlock.FACING))
+            );
+        }
+
+        @Override
+        public boolean transform(MutableQuadView quad) {
+            for (int vertex = 0; vertex < 4; vertex++) {
+                float x = (quad.x(vertex) - 0.5F) * scale;
+                float z = (quad.z(vertex) - 0.5F) * scale - offsetDistance;
+                quad.pos(
+                        vertex,
+                        rotateX(x, z) + 0.5F,
+                        quad.y(vertex) * scale + baseY,
+                        rotateZ(x, z) + 0.5F
+                );
+                quad.uv(
+                        vertex,
+                        0.5F + (quad.u(vertex) - 0.5F) * scale,
+                        0.5F + (quad.v(vertex) - 0.5F) * scale
+                );
+                if (quad.hasNormal(vertex)) {
+                    float normalX = quad.normalX(vertex);
+                    float normalZ = quad.normalZ(vertex);
+                    quad.normal(
+                            vertex,
+                            rotateX(normalX, normalZ),
+                            quad.normalY(vertex),
+                            rotateZ(normalX, normalZ)
+                    );
+                }
+            }
+            quad.cullFace(null);
+            Direction nominalFace = quad.nominalFace();
+            quad.nominalFace(nominalFace == null ? null : rotateFace(nominalFace));
+            return true;
+        }
+
+        private float rotateX(float x, float z) {
+            return switch (clockwiseSteps) {
+                case 0 -> x;
+                case 1 -> -z;
+                case 2 -> -x;
+                case 3 -> z;
+                default -> throw new IllegalStateException("Invalid quarter-turn count " + clockwiseSteps);
+            };
+        }
+
+        private float rotateZ(float x, float z) {
+            return switch (clockwiseSteps) {
+                case 0 -> z;
+                case 1 -> x;
+                case 2 -> -z;
+                case 3 -> -x;
+                default -> throw new IllegalStateException("Invalid quarter-turn count " + clockwiseSteps);
+            };
+        }
+
+        private Direction rotateFace(Direction face) {
+            if (face == Direction.UP || face == Direction.DOWN) {
+                return face;
+            }
+            Direction rotated = face;
+            for (int step = 0; step < clockwiseSteps; step++) {
+                rotated = rotated.rotateYClockwise();
+            }
+            return rotated;
+        }
+
+        private static int horizontalIndex(Direction direction) {
+            return switch (direction) {
+                case NORTH -> 0;
+                case EAST -> 1;
+                case SOUTH -> 2;
+                case WEST -> 3;
+                default -> throw new IllegalArgumentException("Plinth facing must be horizontal: " + direction);
+            };
         }
     }
 
@@ -1351,6 +1777,9 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         private static final float INWARD_BOWL_MAX_RADIAL_DOT = -0.02F;
         private static final float AXIAL_MIN_NORMAL_DOT = 0.35F;
         private static final float CYLINDRICAL_MIN_RADIUS = 0.04F;
+        private static final float INTERIOR_FLOOR_MIN_Y = 0.06F;
+        private static final float INTERIOR_FLOOR_MAX_Y = 0.09F;
+        private static final float INTERIOR_FLOOR_MAX_RADIUS = 0.42F;
 
         private final ObjMeshDefinition definition;
         private final ObjMeshData.Bounds bounds;
@@ -1475,6 +1904,25 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             float radialDot = (geometricNormal.x() * deltaX
                     + geometricNormal.z() * deltaZ) / horizontalLength;
             return radialDot <= INWARD_BOWL_MAX_RADIAL_DOT;
+        }
+
+        private boolean isInteriorFloorFace(List<ObjMeshData.Vec3> positions,
+                                            List<ObjMeshData.VertexRef> refs,
+                                            ObjMeshData.Vec3 geometricNormal) {
+            if (geometricNormal.y() < AXIAL_CAP_MIN_NORMAL_Y || boxProjectionSpan <= 0.0F) {
+                return false;
+            }
+            ObjMeshData.Vec3 centroid = centroid(positions, refs);
+            float normalizedY = (centroid.y() - bounds.minY()) / boxProjectionSpan;
+            if (normalizedY <= INTERIOR_FLOOR_MIN_Y || normalizedY >= INTERIOR_FLOOR_MAX_Y) {
+                return false;
+            }
+            float centerX = (bounds.minX() + bounds.maxX()) * 0.5F;
+            float centerZ = (bounds.minZ() + bounds.maxZ()) * 0.5F;
+            float normalizedX = (centroid.x() - centerX) / boxProjectionSpan;
+            float normalizedZ = (centroid.z() - centerZ) / boxProjectionSpan;
+            return normalizedX * normalizedX + normalizedZ * normalizedZ
+                    < INTERIOR_FLOOR_MAX_RADIUS * INTERIOR_FLOOR_MAX_RADIUS;
         }
 
         private void project(float[] u,

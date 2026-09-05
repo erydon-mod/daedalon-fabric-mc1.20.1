@@ -1,0 +1,65 @@
+{
+  "model": "fountain_georgian_basin",
+  "source": {
+    "file": "fountain_georgian_basin.obj",
+    "format": "Blender 5.2.0 LTS OBJ",
+    "supplied_by": "Oliver",
+    "provenance": "Created by Oliver using Meshy; Oliver confirmed ownership and permission for public distribution",
+    "ownership_confirmed_on": "2026-09-05",
+    "licence": "OLIVER'S MINECRAFT MODS RESTRICTED LICENSE 1.0",
+    "sha256": "d66108d0e228ed69157969dbe3a39447b531b8b27ff30e3db02eee8592a50c8f",
+    "vertices": 7623,
+    "triangles": 15242,
+    "span": [1.90147, 0.404262, 1.90052]
+  },
+  "preparation": {
+    "tool": "direct byte-for-byte integration",
+    "target_faces": 15242,
+    "face_policy": "preserve exact supplied geometry",
+    "authored_uvs_retained": true,
+    "authored_normals_retained": true,
+    "runtime_uv_policy": "world-scaled projection",
+    "runtime_normal_policy": "supplied normals except the planar inner floor, which uses one upward normal; source normals and geometry remain unchanged",
+    "normalised_span": [1.0, 0.212604985, 0.999500387]
+  },
+  "runtime": {
+    "obj_sha256": "d66108d0e228ed69157969dbe3a39447b531b8b27ff30e3db02eee8592a50c8f",
+    "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+    "vertices": 7623,
+    "uvs": 13120,
+    "normals": 23545,
+    "faces": 15242,
+    "bounds": [
+      [-0.950787, -0.202374, -0.950831],
+      [0.950683, 0.201888, 0.949689]
+    ]
+  },
+  "placement": {
+    "default_size": "medium",
+    "bowl_source": "fountain_greek_bowl",
+    "sizes": {
+      "small": {
+        "footprint_blocks": [3.0, 3.0],
+        "height_blocks": 0.637815,
+        "basin_floor_y": 0.24,
+        "water_surface_y": 0.57,
+        "water_half_width": 1.2278946
+      },
+      "medium": {
+        "footprint_blocks": [4.0, 4.0],
+        "height_blocks": 0.8504199,
+        "basin_floor_y": 0.32,
+        "water_surface_y": 0.76,
+        "water_half_width": 1.6371928
+      },
+      "large": {
+        "footprint_blocks": [5.0, 5.0],
+        "height_blocks": 1.0630249,
+        "basin_floor_y": 0.4,
+        "water_surface_y": 0.95,
+        "water_half_width": 2.046491
+      }
+    },
+    "water_surface_shape": "89-edge measured circular waterline; data/daedalon/fountain_water/georgian.json; minimum normalized radial wall clearance 0.0026087"
+  }
+}

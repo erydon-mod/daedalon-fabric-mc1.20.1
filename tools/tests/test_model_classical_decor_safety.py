@@ -37,10 +37,10 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             for block_id in GENERATOR.family_block_ids(family)
         ]
 
-    def test_exact_3716_id_manifest(self) -> None:
+    def test_exact_3878_id_manifest(self) -> None:
         block_ids = all_block_ids()
-        self.assertEqual(3716, len(block_ids))
-        self.assertEqual(3716, len(set(block_ids)))
+        self.assertEqual(3878, len(block_ids))
+        self.assertEqual(3878, len(set(block_ids)))
         self.assertEqual(605, len(self.urn_ids))
         self.assertEqual(270, len(self.plinth_ids))
         self.assertIn("aganite_amphora_urn", block_ids)
@@ -54,10 +54,17 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
 
         expected_files = {f"{block_id}.json" for block_id in block_ids}
         self.assertEqual(
-            expected_files,
+            expected_files | {"fountain_basin_part.json"},
             {
                 path.name
                 for path in (DAEDALON_ASSETS / "blockstates").glob("*.json")
+            },
+        )
+        self.assertNotIn(
+            "fountain_basin_part.json",
+            {
+                path.name
+                for path in (DAEDALON_ASSETS / "models/item").glob("*.json")
             },
         )
         self.assertEqual(
@@ -67,16 +74,21 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
                 for path in (DAEDALON_ASSETS / "models/item").glob("*.json")
             },
         )
+        no_drop_files = {
+            f"{block_id}.json"
+            for family in GENERATOR.NO_DROP_FAMILIES
+            for block_id in GENERATOR.family_block_ids(family)
+        }
         self.assertEqual(
-            expected_files,
+            expected_files - no_drop_files,
             {
                 path.name
                 for path in (DAEDALON_DATA / "loot_tables/blocks").glob("*.json")
             },
         )
 
-    def test_exact_68_mesh_manifests_and_hashes(self) -> None:
-        self.assertEqual(68, len(MESH_EXPECTATIONS))
+    def test_exact_74_mesh_manifests_and_hashes(self) -> None:
+        self.assertEqual(74, len(MESH_EXPECTATIONS))
         self.assertEqual(
             {expectation["obj"] for expectation in MESH_EXPECTATIONS.values()},
             {path.name for path in MESH_ROOT.glob("*.obj")},
@@ -152,7 +164,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         }
         expected_plinth_states = {
             f"size={size},offset={offset},facing={facing}"
-            for size in ("small", "large")
+            for size in ("small", "medium", "large")
             for offset in ("false", "true")
             for facing in ("north", "east", "south", "west")
         }
@@ -384,7 +396,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             sha256(texture_root / "urn_diota_bronze_handles_s.png"),
         )
 
-    def test_renderer_registration_and_two_height_plinth_contract(self) -> None:
+    def test_renderer_registration_and_three_height_plinth_contract(self) -> None:
         plugin = (
             JAVA_ROOT / "client/model/obj/ObjMeshModelLoadingPlugin.java"
         ).read_text(encoding="utf-8")
@@ -412,7 +424,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertIn('id("block/" + detailedTextureBlockId(textureBlockId))', plugin)
         self.assertIn("WorldTexturePhase.urnSurface()", plugin)
         self.assertIn("definition.materialOverrides().get(materialName)", plugin)
-        self.assertIn("data.materialTextures().get(materialName)", plugin)
+        self.assertIn("materialTextures.get(materialName)", plugin)
         self.assertIn("UrnTransform.forState(state)", baked)
         self.assertIn(
             "quad.spriteBake(sprite, MutableQuadView.BAKE_NORMALIZED)", baked
@@ -424,21 +436,26 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertIn(".with(SIZE, UrnSize.MEDIUM)", block)
 
         plinth_block = (JAVA_ROOT / "block/PlinthBlock.java").read_text(encoding="utf-8")
-        two_size = (JAVA_ROOT / "block/TwoSizeDecorBlock.java").read_text(encoding="utf-8")
         self.assertIn("PlinthBlock.Style.values()", registrations)
-        self.assertIn("new PlinthBlock(decorSettings(), style)", registrations)
-        self.assertIn('SMALL("small", 0.5F), LARGE("large", 1.0F)', two_size)
-        self.assertIn("sourceScale = 1.0 / Size.SMALL.scale()", two_size)
-        self.assertIn("builder.add(OFFSET, FACING)", plinth_block)
-        self.assertIn("supportsOffsetAndFacing()", two_size)
+        self.assertIn("new PlinthBlock(decorSettings(), style, fountainMaterialKey)", registrations)
+        self.assertIn('SMALL("small", 0.25F, 0.5F)', plinth_block)
+        self.assertIn('MEDIUM("medium", 0.5F, 1.0F)', plinth_block)
+        self.assertIn('LARGE("large", 1.0F, 2.0F)', plinth_block)
+        self.assertIn("builder.add(SIZE, OFFSET, FACING)", plinth_block)
+        self.assertIn("PlinthTransform.forState(state, 0.0F)", baked)
         self.assertIn("quad.uv(vertex,", baked)
+        plinth_transform = baked[
+            baked.index("private record PlinthTransform") :
+            baked.index("private record GroundScaleTransform")
+        ]
+        self.assertIn("0.5F + (quad.u(vertex) - 0.5F) * scale", plinth_transform)
+        self.assertIn("0.5F + (quad.v(vertex) - 0.5F) * scale", plinth_transform)
         ground_transform = baked[
             baked.index("private record GroundScaleTransform") :
             baked.index("private static final class SmoothNormals")
         ]
         self.assertIn("0.5F + (quad.u(vertex) - 0.5F) * scale", ground_transform)
         self.assertIn("0.5F + (quad.v(vertex) - 0.5F) * scale", ground_transform)
-        self.assertNotIn('LARGE("large", 2.0F)', two_size)
         mesh_root = DAEDALON_ASSETS / "models/mesh"
         scalable_stems = [
             GENERATOR.FIXED_DECOR_FAMILIES[family][0]
@@ -453,7 +470,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertEqual(5, plinth_block.count('"plinth_'))
         self.assertNotIn("GeorgianPlinth", registrations)
         self.assertIn("EXPECTED_BLOCK_COUNT", registrations)
-        self.assertIn("exactly 3716 decor blocks and items", registrations)
+        self.assertIn("exactly 3878 decor blocks and items", registrations)
 
     def test_urn_source_and_decimation_evidence_is_locked(self) -> None:
         evidence = load_json(REPO_ROOT / "docs/evidence/urn-batch-source.json")

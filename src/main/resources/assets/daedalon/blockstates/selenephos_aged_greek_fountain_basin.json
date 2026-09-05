@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "size=small,waterlogged=false": {
+      "model": "daedalon:mesh/selenephos_aged_greek_fountain_basin"
+    },
+    "size=small,waterlogged=true": {
+      "model": "daedalon:mesh/selenephos_aged_greek_fountain_basin"
+    },
+    "size=medium,waterlogged=false": {
+      "model": "daedalon:mesh/selenephos_aged_greek_fountain_basin"
+    },
+    "size=medium,waterlogged=true": {
+      "model": "daedalon:mesh/selenephos_aged_greek_fountain_basin"
+    },
+    "size=large,waterlogged=false": {
+      "model": "daedalon:mesh/selenephos_aged_greek_fountain_basin"
+    },
+    "size=large,waterlogged=true": {
+      "model": "daedalon:mesh/selenephos_aged_greek_fountain_basin"
+    }
+  }
+}

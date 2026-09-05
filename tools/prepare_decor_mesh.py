@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Prepare one Meshy finial, plinth, or decor object for Daedalon.
 
-The supplied Blender file is opened read-only. Its single mesh is triangulated,
-collapse-decimated to the requested face budget, exported Y-up with one
-``none`` material and no authored UV layer, and measured for the locked batch
-evidence. Daedalon supplies the bounded runtime UV projection.
+The supplied Blender or OBJ file is opened read-only. Its single mesh is
+triangulated, kept intact when already within the requested face budget (or
+collapse-decimated only when above it), exported Y-up with one ``none``
+material and no authored UV layer, and measured for the locked batch evidence.
+Daedalon supplies the bounded runtime UV projection.
 """
 
 from __future__ import annotations
@@ -41,7 +42,7 @@ def arguments(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--name", required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--target-faces", type=int, default=6000)
+    parser.add_argument("--target-faces", type=int, default=15000)
     parser.add_argument("--preview", action="store_true")
     parser.add_argument("--blender", type=Path, default=None)
     result = parser.parse_args(argv)
@@ -147,18 +148,20 @@ def prepare(args: argparse.Namespace) -> int:
     output_dir = args.output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
-    bpy.ops.wm.open_mainfile(filepath=str(source))
+    if source.suffix.lower() == ".blend":
+        bpy.ops.wm.open_mainfile(filepath=str(source))
+    elif source.suffix.lower() == ".obj":
+        bpy.ops.object.select_all(action="SELECT")
+        bpy.ops.object.delete(use_global=False)
+        bpy.ops.wm.obj_import(filepath=str(source))
+    else:
+        raise RuntimeError("decor mesh source must be a .blend or .obj file")
     objects = [obj for obj in bpy.context.scene.objects if obj.type == "MESH"]
     if len(objects) != 1:
         raise RuntimeError(f"expected exactly one mesh object; found {len(objects)}")
     obj = objects[0]
     source_faces = len(obj.data.polygons)
     source_vertices = len(obj.data.vertices)
-    if source_faces <= args.target_faces:
-        raise RuntimeError(
-            f"source already has {source_faces} faces, not more than target {args.target_faces}"
-        )
-
     bpy.ops.object.select_all(action="DESELECT")
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj

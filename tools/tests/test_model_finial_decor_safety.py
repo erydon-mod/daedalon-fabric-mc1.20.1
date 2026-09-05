@@ -31,7 +31,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
     }
 
     def test_canonical_ids_are_complete_and_material_first(self) -> None:
-        self.assertEqual(set(self.FAMILIES), set(GENERATOR.NEW_DECOR_FAMILIES))
+        self.assertTrue(set(self.FAMILIES).issubset(GENERATOR.NEW_DECOR_FAMILIES))
         ids = [
             block_id
             for family in self.FAMILIES
@@ -140,7 +140,13 @@ class FinialDecorSafetyTests(unittest.TestCase):
                 set(load_json(tag_root / "finial.json")["values"]),
             )
             self.assertEqual(
-                {"#daedalon:krene_fountain", "#daedalon:pege_fountain"},
+                {
+                    "#daedalon:georgian_fountain_basin",
+                    "#daedalon:gothic_fountain_basin",
+                    "#daedalon:greek_fountain_basin",
+                    "#daedalon:krene_fountain",
+                    "#daedalon:pege_fountain",
+                },
                 set(load_json(tag_root / "fountain.json")["values"]),
             )
             self.assertEqual(
@@ -163,7 +169,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
         self.assertIn("FixedDecorBlock.Style.values()", mod_blocks)
         self.assertIn("registerKreneFountains()", mod_blocks)
         self.assertIn("registerObeliskosMonuments()", mod_blocks)
-        self.assertIn("exactly 3716 decor blocks and items", mod_blocks)
+        self.assertIn("exactly 3878 decor blocks and items", mod_blocks)
         self.assertIn("new FinialBlock(decorSettings(), style)", mod_blocks)
         self.assertIn("createDetailedVariants(style.idSuffix())", plugin)
         self.assertIn('createDetailedVariants("krene_fountain")', plugin)

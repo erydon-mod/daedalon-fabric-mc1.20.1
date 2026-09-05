@@ -21,3 +21,35 @@ and source-asset safety suite without producing a release JAR:
 python -m pip install -r requirements.txt
 ./gradlew --no-daemon check
 ```
+
+For fountain interaction regressions, run `./gradlew --no-daemon runGameTest`.
+This loads the real server and mixins in an isolated `build/gametest` test world,
+checks repeated debug-stick and bucket edits, and writes
+`build/reports/gametest/fountains.xml`. It does not open player saves or package
+a JAR; the test mod is separate from production sources.
+
+## Fountain particle prototype
+
+Waterlogged fountains with at least one bowl now show a fuller upward jet and
+gravity-driven drops from four rim outlets per bowl, ending in brief splashes
+at the receiving water level. Changing the assembly, emptying the fountain or
+unloading it retires the previous particles. Restart the development client to
+test this Java change; no new block state or saved-world data is required.
+At full rate each outlet emits every tick, with four drops per tick in the top
+jet (8/12/16 total for one/two/three tiers). Droplets vary in size and jet height;
+wider streams and size-matched splashes make the flow easier to see.
+Dedicated transparent 64x64 neutral sprites keep drops and splashes colour-matched.
+Circular landing ripples lie flat on the receiving water surface, independent of
+camera or fountain facing; only airborne drops remain camera-facing.
+
+This first pass uses ordinary lit droplet/ripple particles, not
+refractive shader-water geometry or Physics Mod. The drops follow predetermined
+vertical paths to the pools; they do not yet collide with arbitrary intervening
+blocks or players, or form a continuous sheet across the rim. The stone models,
+pooled water, collision and debug-stick properties remain unchanged.
+
+The effect is client-only, limited to 32 blocks, 768 live particles globally,
+320 per fountain and 48 new particles per tick. Decreased particles halves the
+per-fountain/global spawn budgets and cadence; Minimal disables the prototype.
+Fountain loading events supply the sources, with at most 64 source checks per
+tick, instead of world/chunk scans or a server-side ticker.

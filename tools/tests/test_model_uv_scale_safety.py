@@ -16,6 +16,12 @@ class ModelUvScaleSafetyTests(unittest.TestCase):
             "plinth_": 2.0,
             "bust_": 3.0,
             "corbel_": 3.0,
+            "fountain_gothic_basin": 5.0,
+            "fountain_gothic_bowl": 2.0,
+            "fountain_georgian_basin": 5.0,
+            "fountain_georgian_bowl": 2.0,
+            "fountain_greek_basin": 5.0,
+            "fountain_greek_bowl": 2.0,
         }
         checked: set[str] = set()
 
@@ -38,7 +44,7 @@ class ModelUvScaleSafetyTests(unittest.TestCase):
             ))
             checked.add(stem)
 
-        self.assertEqual(58, len(checked))
+        self.assertEqual(64, len(checked))
         self.assertEqual(
             {f"plinth_{style}" for style in (
                 "astragalos", "bathron", "kion", "stephanos", "triphyllon"
@@ -55,6 +61,9 @@ class ModelUvScaleSafetyTests(unittest.TestCase):
             "StatueTransform",
             "UrnTransform",
             "CorbelTransform",
+            "BasinTransform",
+            "BowlTransform",
+            "PlinthTransform",
             "SizedDecorTransform",
             "GroundScaleTransform",
         ):

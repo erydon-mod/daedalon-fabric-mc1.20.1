@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "daedalon_gametest",
+  "version": "1.0.0",
+  "name": "Daedalon fountain regression tests",
+  "environment": "server",
+  "entrypoints": {
+    "fabric-gametest": ["com.oliver.daedalon.gametest.FountainGameTests"]
+  },
+  "depends": {
+    "daedalon": "*",
+    "fabric-gametest-api-v1": "*"
+  }
+}

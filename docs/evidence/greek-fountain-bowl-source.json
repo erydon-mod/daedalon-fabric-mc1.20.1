@@ -1,0 +1,69 @@
+{
+  "model": "fountain_greek_bowl",
+  "source": {
+    "file": "fountain_greek_bowl.obj",
+    "format": "Blender 5.2.0 LTS OBJ",
+    "supplied_by": "Oliver",
+    "provenance": "Created by Oliver using Meshy; Oliver confirmed ownership and permission for public distribution",
+    "ownership_confirmed_on": "2026-09-05",
+    "licence": "OLIVER'S MINECRAFT MODS RESTRICTED LICENSE 1.0",
+    "sha256": "5fcdf157443dd143ecbc67ba479f4c2d8ed28a9bd590a9855b6bcc2090cae4e4",
+    "vertices": 7950,
+    "triangles": 15900,
+    "span": [1.90087, 1.215098, 1.900558]
+  },
+  "preparation": {
+    "tool": "direct byte-for-byte integration",
+    "target_faces": 15900,
+    "face_policy": "preserve exact supplied geometry",
+    "authored_uvs_retained": true,
+    "authored_normals_retained": true,
+    "runtime_uv_policy": "world-scaled projection",
+    "runtime_normal_policy": "supplied normals",
+    "normalised_span": [1.0, 0.639232562, 0.999835865]
+  },
+  "runtime": {
+    "obj_sha256": "5fcdf157443dd143ecbc67ba479f4c2d8ed28a9bd590a9855b6bcc2090cae4e4",
+    "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+    "vertices": 7950,
+    "uvs": 14315,
+    "normals": 8173,
+    "faces": 15900,
+    "bounds": [
+      [-0.950611, -0.615705, -0.950581],
+      [0.950259, 0.599393, 0.949977]
+    ]
+  },
+  "placement": {
+    "default_size": "medium",
+    "sizes": {
+      "small": {
+        "diameter_blocks": 1.0,
+        "height_blocks": 0.6392326,
+        "connection_rise": 0.55,
+        "water_floor_y": 0.55,
+        "water_surface_y": 0.63,
+        "water_half_width": 0.4486006
+      },
+      "medium": {
+        "diameter_blocks": 1.5,
+        "height_blocks": 0.9588488,
+        "connection_rise": 0.825,
+        "water_floor_y": 0.825,
+        "water_surface_y": 0.945,
+        "water_half_width": 0.6729009
+      },
+      "large": {
+        "diameter_blocks": 2.0,
+        "height_blocks": 1.2784651,
+        "connection_rise": 1.1,
+        "water_floor_y": 1.1,
+        "water_surface_y": 1.26,
+        "water_half_width": 0.8972012
+      }
+    },
+    "connection": "The next model begins at the measured socket level, below the rim.",
+    "water_surface_shape": "102-edge measured round near-brim contour with at least 0.001752 diameter units of inner-wall clearance",
+    "waterline_profile": "data/daedalon/fountain_water/greek_bowl.json"
+  }
+}
