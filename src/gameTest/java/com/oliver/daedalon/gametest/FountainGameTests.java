@@ -65,6 +65,12 @@ public final class FountainGameTests {
                 BlockPos rim = anchor.east();
                 context.assertTrue(world.getBlockState(rim).getBlock() instanceof FountainBasinPartBlock,
                         "Rim must have a local interaction cell");
+                context.assertTrue(state.hasBlockBreakParticles(),
+                        "The visible fountain must retain its material-coloured breaking particles");
+                for (BlockState partState : world.getBlockState(rim).getBlock().getStateManager().getStates()) {
+                    context.assertTrue(!partState.hasBlockBreakParticles(),
+                            "Invisible fountain cells must never emit missing-texture breaking particles");
+                }
                 // Null deliberately fails if lighting tries to query a chunk or controller.
                 for (BlockState lightingState : new BlockState[]{state, world.getBlockState(rim)}) {
                     context.assertTrue(lightingState.getOpacity(null, anchor) == 0

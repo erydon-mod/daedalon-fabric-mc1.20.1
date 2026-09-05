@@ -40,7 +40,9 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
     public static final IntProperty OFFSET_Z = IntProperty.of("offset_z", 0, 4);
 
     public FountainBasinPartBlock(Settings settings) {
-        super(settings.dynamicBounds());
+        // The visible owner emits material-correct debris when broken. These
+        // invisible hit cells use an empty model and must not emit missing-texture debris.
+        super(settings.dynamicBounds().noBlockBreakParticles());
         setDefaultState(getStateManager().getDefaultState()
                 .with(OFFSET_X, HORIZONTAL_OFFSET_BIAS)
                 .with(OFFSET_Y, 0)
