@@ -1,0 +1,122 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "daedalon:block/statue_spartan_promachos_aganite"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.0625,
+        0.0625,
+        0.0625
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.0625,
+        0.0625,
+        0.0625
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.06666666666666667,
+        0.06666666666666667,
+        0.06666666666666667
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.06666666666666667,
+        0.06666666666666667,
+        0.06666666666666667
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.041666666666666664,
+        0.041666666666666664,
+        0.041666666666666664
+      ]
+    },
+    "gui": {
+      "rotation": [
+        25,
+        20,
+        0
+      ],
+      "translation": [
+        0,
+        -2,
+        0
+      ],
+      "scale": [
+        0.14,
+        0.14,
+        0.14
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        -2,
+        0
+      ],
+      "scale": [
+        0.08333333333333333,
+        0.08333333333333333,
+        0.08333333333333333
+      ]
+    }
+  }
+}

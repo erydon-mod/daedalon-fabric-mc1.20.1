@@ -289,8 +289,8 @@ def audit(
         items = direct_json_names("assets/daedalon/models/item/")
         loot = direct_json_names("data/daedalon/loot_tables/blocks/")
         require(
-            blockstates == expected_json_names | {"fountain_basin_part.json"},
-            f"JAR must contain exactly {expected_block_count} public Daedalon blockstates and the internal fountain part",
+            blockstates == expected_json_names | {"fountain_basin_part.json", "monopteros_part.json"},
+            f"JAR must contain exactly {expected_block_count} public Daedalon blockstates and the internal fountain/dome parts",
         )
         require(
             items == expected_json_names | {"emblem.json"},

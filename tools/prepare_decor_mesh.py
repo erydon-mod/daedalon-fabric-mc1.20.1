@@ -33,7 +33,7 @@ DEFAULT_BLENDER = Path(r"C:\Program Files\Blender Foundation\Blender 5.2\blender
 REQUIRED_BLENDER_VERSION = (5, 2, 0)
 REQUIRED_BLENDER_BUILD_HASH = "fbe6228777e7"
 MODEL_NAME = re.compile(
-    r"(?:finial_[a-z0-9_]+|monument_[a-z0-9_]+|basin_[a-z0-9_]+|fountain_[a-z0-9_]+|plinth_[a-z0-9_]+|(?:exedra|hedra)_(?:[234]m|item))\Z"
+    r"(?:finial_[a-z0-9_]+|monument_[a-z0-9_]+|basin_[a-z0-9_]+|fountain_[a-z0-9_]+|plinth_[a-z0-9_]+|(?:exedra|hedra)_(?:[234]m|item)|monopteros_(?:[468]m|item))\Z"
 )
 
 
@@ -55,7 +55,7 @@ def arguments(argv: Sequence[str]) -> argparse.Namespace:
     result = parser.parse_args(argv)
     if not MODEL_NAME.fullmatch(result.name):
         parser.error(
-            "--name must be finial_, monument_, basin_, fountain_, plinth_, or exedra_/hedra_2m/3m/4m/item"
+            "--name must be finial_, monument_, basin_, fountain_, plinth_, exedra_/hedra_2m/3m/4m/item, or monopteros_4m/6m/8m/item"
         )
     if result.target_faces < 100:
         parser.error("--target-faces must be at least 100")

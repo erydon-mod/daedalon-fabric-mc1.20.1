@@ -2,6 +2,8 @@ package com.oliver.daedalon.mixin;
 
 import com.oliver.daedalon.Daedalon;
 import com.oliver.daedalon.block.FountainBasinBlock;
+import com.oliver.daedalon.block.MonopterosBlock;
+import com.oliver.daedalon.block.MonopterosPartBlock;
 import com.oliver.daedalon.block.FountainBasinPartBlock;
 import com.oliver.daedalon.block.FountainBowlModel;
 import com.oliver.daedalon.block.PlinthBlock;
@@ -55,6 +57,12 @@ abstract class DebugStickItemMixin {
             targetState = world.getBlockState(anchorPos);
         }
 
+        if (state.getBlock() instanceof MonopterosPartBlock) {
+            BlockPos anchorPos = MonopterosPartBlock.resolveAnchorPos(world, pos, state);
+            if (anchorPos == null) { callback.setReturnValue(false); return; }
+            targetPos = anchorPos;
+            targetState = world.getBlockState(anchorPos);
+        }
         if (!Daedalon.MOD_ID.equals(Registries.BLOCK.getId(targetState.getBlock()).getNamespace())) {
             return;
         }
@@ -108,6 +116,11 @@ abstract class DebugStickItemMixin {
                 sendMessage(player, Text.translatable(
                         "message.daedalon.fountain_basin_size_blocked"
                 ));
+                callback.setReturnValue(true);
+                return;
+            }
+            if (targetState.getBlock() instanceof MonopterosBlock && !MonopterosBlock.canOccupy(world, targetPos, updated)) {
+                sendMessage(player, Text.translatable("message.daedalon.monopteros_size_blocked"));
                 callback.setReturnValue(true);
                 return;
             }

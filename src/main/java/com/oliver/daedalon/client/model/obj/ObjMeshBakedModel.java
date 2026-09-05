@@ -468,6 +468,9 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                                BlockPos pos,
                                Supplier<Random> randomSupplier,
                                RenderContext context) {
+        if (state.getBlock() instanceof com.oliver.daedalon.block.MonopterosBlock) {
+            MonopterosRenderBounds.mark(pos);
+        }
         RenderContext.QuadTransform positionTransform = null;
         if (state.getBlock() instanceof StatueBlock) {
             positionTransform = StatueTransform.forState(state);

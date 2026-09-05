@@ -21,6 +21,9 @@ public final class DaedalonMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         FabricLoader loader = FabricLoader.getInstance();
+        if (mixinClassName.endsWith(".client.sodium.OcclusionCullerMixin")) {
+            return loader.isModLoaded("sodium");
+        }
         if (mixinClassName.endsWith(".client.indium.TerrainRenderContextMixin")) {
             return loader.isModLoaded("indium") && loader.isModLoaded("sodium");
         }

@@ -253,6 +253,7 @@ PLINTH_FAMILIES = {
 }
 BENCH_FAMILIES = ("exedra", "hedra")
 NEW_DECOR_FAMILIES = {
+    "monopteros_dome": ("monopteros_6m", "Monopteros Dome", "Monopteros-Kuppel", "Cúpula Monópteros"),
     "hedra": ("hedra_3m", "Hedra Bench", "Hedra-Bank", "Banco Hedra"),
     "exedra": ("exedra_3m", "Exedra", "Exedra", "Exedra"),
     **FIXED_DECOR_FAMILIES,
@@ -310,6 +311,7 @@ BRONZE_FAMILIES = (
     *URN_FAMILIES,
     *BUST_FAMILIES,
     "obeliskos_monument",
+    "monopteros_dome",
 )
 STATUE_DISPLAY_MODELS = {
     "spartan": "statue_spartan_promachos",
@@ -360,8 +362,8 @@ def bronze_block_id(family: str) -> str:
         return f"bronze_{family}_urn"
     if family in BUST_FAMILIES:
         return f"bronze_{BUST_FAMILIES[family][0]}_bust"
-    if family == "obeliskos_monument":
-        return "bronze_obeliskos_monument"
+    if family in ("obeliskos_monument", "monopteros_dome"):
+        return "bronze_" + family
     raise ValueError(f"Family does not support the Bronze finish: {family}")
 
 
@@ -583,6 +585,10 @@ def remove_creative_only_loot(
 
 def blockstate(family: str, block_id: str) -> dict[str, object]:
     model = f"{NAMESPACE}:mesh/{block_id}"
+    if family == "monopteros_dome":
+        return {"variants": {f"diameter={diameter}": {
+            "model": model if diameter == 6 else f"{NAMESPACE}:mesh/internal/{block_id}_{diameter}m"
+        } for diameter in (4, 6, 8)}}
     if family in BENCH_FAMILIES:
         return {
             "variants": {
@@ -664,6 +670,8 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
 
 
 def display_parent(family: str) -> str:
+    if family == "monopteros_dome":
+        return f"{NAMESPACE}:block/mesh/monopteros_display"
     if family in BENCH_FAMILIES:
         return f"{NAMESPACE}:block/mesh/{family}_display"
     if family in STATUE_DISPLAY_MODELS:
@@ -822,6 +830,11 @@ def generate_languages(
 ) -> None:
     for language in ("en_us", "de_de", "es_es"):
         entries = dict(STATIC_LANGUAGE_ENTRIES[language])
+        entries["message.daedalon.monopteros_size_blocked"] = {
+            "en_us": "Not enough clear space for this dome diameter.",
+            "de_de": "Nicht genug freier Platz für diesen Kuppeldurchmesser.",
+            "es_es": "No hay suficiente espacio libre para este diámetro de cúpula.",
+        }[language]
         for family in families:
             for material in MATERIALS:
                 ids = family_block_ids(family)
@@ -1083,6 +1096,9 @@ def generate_tags(
                 relation_tags[synonym] = benches
         if "exedra" in families:
             relation_tags["curved_bench"] = [f"#{NAMESPACE}:exedra"]
+        if "monopteros_dome" in families:
+            for synonym in ("monopteros", "dome", "cupola", "pavilion", "pavillion", "gazebo", "rotunda", "roof"):
+                relation_tags[synonym] = [f"#{NAMESPACE}:monopteros_dome"]
         if "hedra" in families:
             relation_tags["straight_bench"] = [f"#{NAMESPACE}:hedra"]
         for family in new_decor_families:

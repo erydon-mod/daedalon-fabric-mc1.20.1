@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "diameter=4": {
+      "model": "daedalon:mesh/internal/laurentium_aged_monopteros_dome_4m"
+    },
+    "diameter=6": {
+      "model": "daedalon:mesh/laurentium_aged_monopteros_dome"
+    },
+    "diameter=8": {
+      "model": "daedalon:mesh/internal/laurentium_aged_monopteros_dome_8m"
+    }
+  }
+}

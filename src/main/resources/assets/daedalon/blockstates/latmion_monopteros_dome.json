@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "diameter=4": {
+      "model": "daedalon:mesh/internal/latmion_monopteros_dome_4m"
+    },
+    "diameter=6": {
+      "model": "daedalon:mesh/latmion_monopteros_dome"
+    },
+    "diameter=8": {
+      "model": "daedalon:mesh/internal/latmion_monopteros_dome_8m"
+    }
+  }
+}

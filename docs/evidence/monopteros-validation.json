@@ -1,0 +1,164 @@
+{
+  "model": "Monopteros pavilion dome",
+  "status": "passed",
+  "date": "2026-09-05",
+  "diameters_m": [
+    4,
+    6,
+    8
+  ],
+  "default_diameter_m": 6,
+  "height_m": [
+    2.805307,
+    4.20796,
+    5.610613
+  ],
+  "finishes": {
+    "stone": 27,
+    "aged_stone": 27,
+    "bronze": 1
+  },
+  "source_sha256": "6183f64cee6b67a59ff972bcac32c579827363d20f663f8f29fbfa5759932948",
+  "source_unchanged": true,
+  "world_triangles_each": 15386,
+  "held_dropped_triangles": 2000,
+  "rendering": "Three shared world meshes across 55 finishes; one shared item mesh and cached GUI icons.",
+  "interaction": "Cached hollow shell cells; no block entities or ticking. Rim raycasting, collision, pick, break, debug resize and obstruction protection passed.",
+  "culling": "Dome section bounds cached during meshing; no frame-time world queries. Exterior and underside verified at an 8m dome crossing X, Y and Z section boundaries with Sodium.",
+  "checks": {
+    "asset_tests": 110,
+    "texture_tests": 10,
+    "junit_tests": 84,
+    "game_tests": 5,
+    "jar_audit": {
+      "status": "passed",
+      "jar": "C:\\Users\\olies\\IdeaProjects\\daedalon-fabric-mc1.20.1\\build\\libs\\daedalon-fabric-mc1.20.1-compat2-1.0.1.jar",
+      "jarBytes": 26271595,
+      "jarSha256": "a59908cd6a46c2aca6cd444f8db9454bb91b8b51dea4c418a5ddc66190b2cac1",
+      "metadata": {
+        "id": "daedalon",
+        "name": "Daedalon",
+        "version": "1.0.1",
+        "familyCompatibilityGeneration": 2,
+        "minecraft": "1.20.1",
+        "java": 17
+      },
+      "resources": {
+        "blockstates": 4043,
+        "itemModels": 4042,
+        "lootTables": 3879,
+        "objFiles": 86,
+        "mtlFiles": 68,
+        "meshDefinitions": 86,
+        "displayModels": 26
+      },
+      "independence": {
+        "forbiddenForeignEntries": 0,
+        "foreignModDependencies": 0,
+        "nestedJars": 0
+      },
+      "textureAliases": {
+        "enabled": true,
+        "aliases": 142,
+        "blobs": 23,
+        "logicalBytes": 21700
+      }
+    },
+    "live_packs": [
+      "native",
+      "32x",
+      "64x",
+      "64x reload"
+    ],
+    "live_views": [
+      "inventory",
+      "bronze 6m",
+      "bronze 8m",
+      "hollow interior",
+      "boundary exterior",
+      "boundary interior"
+    ],
+    "save_restart": "dome owner and rim cells persisted"
+  },
+  "frame_samples": {
+    "results": {
+      "64x": {
+        "frames": 3955,
+        "mean_frame_ms": 2.5293,
+        "mean_fps": 395.4
+      },
+      "32x": {
+        "frames": 4033,
+        "mean_frame_ms": 2.4798,
+        "mean_fps": 403.3
+      },
+      "native": {
+        "frames": 3981,
+        "mean_frame_ms": 2.5125,
+        "mean_fps": 398.0
+      },
+      "64x-reload": {
+        "frames": 3965,
+        "mean_frame_ms": 2.5223,
+        "mean_fps": 396.5
+      },
+      "inventory": {
+        "frames": 1789,
+        "mean_frame_ms": 5.5958,
+        "mean_fps": 178.7
+      }
+    },
+    "tour-culling-fixed": {
+      "bronze-6m": {
+        "frames": 1315,
+        "mean_frame_ms": 3.8057,
+        "mean_fps": 262.8
+      },
+      "bronze-8m": {
+        "frames": 2084,
+        "mean_frame_ms": 2.4007,
+        "mean_fps": 416.6
+      },
+      "hollow-8m": {
+        "frames": 2472,
+        "mean_frame_ms": 2.0234,
+        "mean_fps": 494.2
+      },
+      "boundary-8m": {
+        "frames": 2175,
+        "mean_frame_ms": 2.2994,
+        "mean_fps": 434.9
+      },
+      "boundary-inside": {
+        "frames": 2250,
+        "mean_frame_ms": 2.2236,
+        "mean_fps": 449.7
+      }
+    }
+  },
+  "performance_scope": "These are observations from an isolated local scene, not a before/after benchmark or a guarantee for other computers.",
+  "screenshot_sha256": {
+    "results": {
+      "32x.png": "f1fc97940f71ba9b3286d81a64d9f4171a726a25babb5937ee00097a924e50e4",
+      "64x-reload.png": "8c2e599bccb347667fb2e4d380cd34112c39d62b4536e345547e446c5e20d82d",
+      "64x.png": "7f564bdc8fb11c6c74c6d7e6fe423c633bfb119817d52f0284badb725aebdf76",
+      "inventory.png": "a9501a3a4e59bcd7aec6eb4818708f7ed8c31ded28c86ebc345c5b055cb5fc4b",
+      "native.png": "2ff3cc90438dd2203a3c6ee2cce320210a74f85709f69cf21fb19a651fb984bf"
+    },
+    "tour-culling-fixed": {
+      "boundary-8m.png": "7600bf9c7daedefc738c20dd7b7fe8a3002380cd64b653faa2a4c30bdbedc864",
+      "boundary-inside.png": "9dc3071c7734cf7546525cdadaf566a0e5e3df17e4ec4b3272328217b51db08e",
+      "bronze-6m.png": "ceef7c7a4fa7fe8d2c79299a16be5af574bc513ea7c5f15f20234cd0876f9627",
+      "bronze-8m.png": "a7ca1f46a6ab907667d2942aaa6a6a9d9e783015388955e9604f5021a1194290",
+      "hollow-8m.png": "49d2c49079e3d6c5cc9779f9ae42e0d32ce359fbd9355047d06005cac826a150"
+    }
+  },
+  "blender_zip_sha256": "29e56a668ac9c4519979ea7a31d760b60070233d9ea09baba6f712ce980b5f33",
+  "changelog": {
+    "spreadsheet": "Erydon",
+    "tab": "CL Daedalon",
+    "range": "E14:H14",
+    "entry": "1.0.1-005",
+    "readback_and_visual_check": true
+  }
+}

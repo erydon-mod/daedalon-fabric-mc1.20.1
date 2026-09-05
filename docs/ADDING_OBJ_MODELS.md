@@ -186,6 +186,37 @@ one-block-high/deep bounding box for each width, making the complete bench easy
 to target without filling its collision gap. Source provenance,
 preparation, geometry hashes and bounds are in `docs/evidence/hedra-source.json`.
 
+### Diameter-selectable Monopteros dome
+
+Prepare the supplied Monopteros OBJ with the same local Blender tool, using
+`--name monopteros_4m --width-meters 4 --height-meters 2.8053065
+--proportional-depth --target-faces 15386 --save-blend --preview`.
+Repeat at 6m/4.20795975m and 8m/5.610613m diameter/height. All axes scale
+together; preserve the hollow underside, the lowest rim at Y=0, and the
+horizontal centre. The 6m default owns the public block/item aliases, while
+4m and 8m use internal mesh variants. Each mesh is shared by 54 stone/aged
+finishes and bronze. Keep the box projection span at 8m for constant density.
+Prepare `monopteros_item` at the default dimensions with a 2,000-face budget.
+
+`python tools/generate_monopteros_shape.py --check` verifies the measured
+hollow shell. `MonopterosGeometry` caches quarter-block collision cells once
+for each diameter. Invisible `monopteros_part` blocks let vanilla raycasting
+and collision reach the complete 8m rim. They have no items, rendered meshes,
+block entities or ticks; their offsets refer directly to the central owner.
+Only placement, resizing and removal update these cells. The debug stick and
+pick/break interactions on a rim cell act on the owner. Resizing checks the
+new shell before writing and preserves obstructing builds. Rotation/mirroring
+of copied structures also rotates/mirrors the saved part offsets.
+
+Visual geometry is emitted from the owner's chunk. `MonopterosRenderBounds`
+records only sections which build a dome mesh and conservatively expands their
+frustum bounds to contain an 8m roof. Vanilla/Indigo and optional Sodium hooks
+read the same cached section membership, without frame-time world queries or
+allocations. Entries clear on chunk unload and world change; removal may retain
+the conservative bounds until unload. Check the largest size from underneath
+as well as outside at chunk/section boundaries in-game.
+Source evidence and hashes are in `docs/evidence/monopteros-source.json`.
+
 ### Build and runtime checks
 
 Run, in order:

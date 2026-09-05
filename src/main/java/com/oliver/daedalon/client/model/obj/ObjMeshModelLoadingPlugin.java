@@ -320,6 +320,20 @@ public final class ObjMeshModelLoadingPlugin {
                     createDetailedVariants(style.styleId() + "_plinth")
             ));
         }
+        for (int diameter : new int[]{4, 6, 8}) {
+            List<MeshVariant> variants = withBronze(createDetailedVariants("monopteros_dome"),
+                    "bronze_monopteros_dome", WorldTexturePhase.detailedSurface());
+            if (diameter != 6) {
+                variants = variants.stream().map(variant -> new MeshVariant(
+                        id("mesh/internal/" + variant.sourceBlockId() + "_" + diameter + "m"),
+                        null, null, null, variant.textureId(), variant.particleTextureId(),
+                        variant.worldTexturePhase(), variant.sourceBlockId(), false, false)).toList();
+            }
+            families.add(new MeshFamily("Monopteros " + diameter + "m",
+                    id("models/mesh/monopteros_" + diameter + "m.json"),
+                    id("block/mesh/monopteros_display"), variants,
+                    diameter == 6 ? id("models/mesh/monopteros_item.json") : null));
+        }
         for (String bench : List.of("exedra", "hedra")) {
             for (int width = 2; width <= 4; width++) {
                 families.add(new MeshFamily(

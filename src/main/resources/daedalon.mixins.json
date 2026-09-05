@@ -12,6 +12,9 @@
     "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
+    "client.BuiltChunkMixin",
+    "client.WorldRendererMixin",
+    "client.sodium.OcclusionCullerMixin",
     "client.ItemRendererMixin",
     "client.axiom.BlockRenderCacheMixin",
     "client.indium.TerrainRenderContextMixin",
