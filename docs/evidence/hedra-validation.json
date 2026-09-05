@@ -5,6 +5,9 @@
   "materials": 54,
   "states_per_material": 12,
   "collision_boxes_per_width": 5,
+  "height_meters": 1.0,
+  "depth_meters": 0.861762,
+  "selection_height_and_depth_meters": 1.0,
   "full_build": "passed",
   "asset_tests": 107,
   "texture_tool_tests": 10,
@@ -22,41 +25,35 @@
       "Collection 32x compat2 v1.5.14",
       "Collection 64x compat2 v1.5.14"
     ],
+    "selection_ray": "passed",
     "reload": "passed",
     "gui": "passed",
     "frame_samples": {
-      "results": {
+      "results-scale1": {
         "64x": {
-          "frames": 3666,
-          "average_fps": 366.53,
-          "average_frame_ms": 2.7283
+          "frames": 2217,
+          "average_fps": 221.63,
+          "average_frame_ms": 4.5121
         },
         "32x": {
-          "frames": 3544,
-          "average_fps": 354.27,
-          "average_frame_ms": 2.8227
+          "frames": 2272,
+          "average_fps": 227.05,
+          "average_frame_ms": 4.4042
         },
         "native": {
-          "frames": 3656,
-          "average_fps": 365.49,
-          "average_frame_ms": 2.736
+          "frames": 2234,
+          "average_fps": 223.37,
+          "average_frame_ms": 4.4769
         },
         "64x-reload": {
-          "frames": 3636,
-          "average_fps": 363.49,
-          "average_frame_ms": 2.7511
+          "frames": 2306,
+          "average_fps": 230.45,
+          "average_frame_ms": 4.3394
         },
         "inventory": {
-          "frames": 1776,
-          "average_fps": 177.47,
-          "average_frame_ms": 5.6347
-        }
-      },
-      "results-hand": {
-        "64x": {
-          "frames": 2913,
-          "average_fps": 291.15,
-          "average_frame_ms": 3.4347
+          "frames": 1233,
+          "average_fps": 123.19,
+          "average_frame_ms": 8.1177
         }
       }
     },
@@ -65,15 +62,15 @@
       "world_bakes_per_width_per_load": 1,
       "item_bakes_per_load": 1,
       "materials_per_mesh": 54,
-      "loads_observed": 2
+      "loads_observed": 5
     }
   },
   "jar": "daedalon-fabric-mc1.20.1-compat2-1.0.1.jar",
-  "jar_sha256": "5208013d53c6ee540cb0283a2d864ed964b35b8a509eb2e014d02696b68ec4e7",
+  "jar_sha256": "ab0cb4ee4bc7dbe797cc5b7a721d88a33863d0e9b9224ad57bf956955aace591",
   "changelog": {
     "spreadsheet": "Erydon",
     "sheet": "CL Daedalon",
-    "edited_range": "E13:H13",
+    "edited_range": "G13",
     "entry": "1.0.1-004",
     "status": "Draft"
   }

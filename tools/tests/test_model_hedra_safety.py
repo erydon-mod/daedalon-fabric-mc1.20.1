@@ -16,7 +16,7 @@ class HedraSafetyTests(unittest.TestCase):
             path = MESH_ROOT / f'hedra_{width}m.obj'
             actual = parse_obj(path)
             self.assertEqual((6508, 13012), (actual['vertices'], actual['faces']))
-            self.assertEqual(((-width/2, 0.0, -0.215441), (width/2, 0.5, 0.215441)), actual['bounds'])
+            self.assertEqual(((-width/2, 0.0, -0.430881), (width/2, 1.0, 0.430881)), actual['bounds'])
             self.assertEqual(MESH_EXPECTATIONS[f'hedra_{width}m']['obj_sha256'], sha256(path))
             lines = path.read_text().splitlines()
             vertices.append([tuple(map(float, line.split()[1:])) for line in lines if line.startswith('v ')])
@@ -32,7 +32,7 @@ class HedraSafetyTests(unittest.TestCase):
         for narrow, middle, wide in zip(*vertices):
             self.assertEqual(narrow[1:], middle[1:])
             self.assertEqual(middle[1:], wide[1:])
-            if narrow[1] < 0.35:
+            if narrow[1] < 0.7:
                 # Every support vertex translates by exactly half the extra
                 # seat length: no stretched carvings or widening feet.
                 expected = 0.5 if narrow[0] > 0 else -0.5
@@ -81,7 +81,7 @@ class HedraSafetyTests(unittest.TestCase):
         evidence = load_json(REPO_ROOT/'docs/evidence/hedra-source.json')
         self.assertFalse(evidence['source_files_modified'])
         self.assertFalse(evidence['preparation']['decimation'])
-        self.assertEqual(0.5, evidence['preparation']['height_meters'])
+        self.assertEqual(1.0, evidence['preparation']['height_meters'])
         self.assertEqual(54, evidence['preparation']['item_geometry_shared_across_materials'])
 
 

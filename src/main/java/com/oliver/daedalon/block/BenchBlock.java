@@ -57,7 +57,7 @@ public class BenchBlock extends Block {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return getOutlineShape(state, world, pos, context);
+        return shapes[state.get(WIDTH) - 2][DecorShapeTransforms.horizontalIndex(state.get(FACING))];
     }
 
     @Override

@@ -37,6 +37,7 @@ public final class HedraGameTests {
         ItemStack stick = Items.DEBUG_STICK.getDefaultStack();
         player.setStackInHand(Hand.MAIN_HAND, stick);
         VoxelShape[][] shared = new VoxelShape[3][4];
+        VoxelShape[][] sharedOutlines = new VoxelShape[3][4];
         Direction[] facings = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
         for (DecorMaterial material : DecorMaterial.values()) {
             for (boolean aged : new boolean[]{false, true}) {
@@ -56,19 +57,39 @@ public final class HedraGameTests {
                         double spanX = bounds.maxX - bounds.minX;
                         double spanZ = bounds.maxZ - bounds.minZ;
                         context.assertTrue(Math.abs((alongX ? spanX : spanZ) - width) < 1.0E-6, "Collision width mismatch");
-                        context.assertTrue(Math.abs(bounds.maxY - 0.5) < 1.0E-6 && Math.abs(bounds.minY) < 1.0E-6, "Height/ground must stay fixed");
+                        context.assertTrue(Math.abs(bounds.maxY - 1.0) < 1.0E-6 && Math.abs(bounds.minY) < 1.0E-6, "Height/ground must stay fixed");
                         double expectedDepth = HedraBlock.DEPTH;
                         context.assertTrue(Math.abs((alongX ? spanZ : spanX) - expectedDepth) < 2.0E-6,
                                 "Depth must stay fixed across widths");
                         context.assertTrue(world.getBlockEntity(anchor) == null, "Hedra must not allocate a controller");
                         if (shared[width-2][f] == null) shared[width-2][f] = shape;
                         context.assertTrue(shared[width-2][f] == shape, "Materials must share cached collision shapes");
+                        VoxelShape outline = state.getOutlineShape(world, anchor, ShapeContext.absent());
+                        var selection = outline.getBoundingBox();
+                        double selectionX = selection.maxX - selection.minX;
+                        double selectionZ = selection.maxZ - selection.minZ;
+                        double selectionWidth = alongX ? selectionX : selectionZ;
+                        double selectionDepth = alongX ? selectionZ : selectionX;
+                        context.assertTrue(Math.abs(selectionWidth-width) < 1.0E-6
+                                && Math.abs(selectionDepth-1.0) < 1.0E-6
+                                && Math.abs(selection.maxY-selection.minY-1.0) < 1.0E-6,
+                                "Selection must cover the complete width and a one-block height/depth");
+                        context.assertTrue(outline != shape, "Selection must remain separate from collision");
+                        if (sharedOutlines[width-2][f] == null) sharedOutlines[width-2][f] = outline;
+                        context.assertTrue(sharedOutlines[width-2][f] == outline, "Materials must share cached selection shapes");
                     }
                 }
             }
         }
         Block block = Registries.BLOCK.get(new Identifier("daedalon", "aganite_hedra"));
         world.setBlockState(anchor, block.getDefaultState(), Block.NOTIFY_ALL);
+        Vec3d throughGapStart = Vec3d.of(anchor).add(0.5, 0.4, 2.0);
+        Vec3d throughGapEnd = Vec3d.of(anchor).add(0.5, 0.4, -1.0);
+        BlockState defaultState = block.getDefaultState();
+        context.assertTrue(defaultState.getOutlineShape(world, anchor).raycast(throughGapStart, throughGapEnd, anchor) != null,
+                "The space below the seat must be easy to select");
+        context.assertTrue(defaultState.getCollisionShape(world, anchor).raycast(throughGapStart, throughGapEnd, anchor) == null,
+                "The larger selection must not block the space beneath the seat");
         BlockHitResult hit = new BlockHitResult(Vec3d.ofCenter(anchor), Direction.UP, anchor, false);
         // A remembered control absent on this furniture must select width first.
         stick.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT, "offset");

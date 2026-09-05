@@ -170,18 +170,20 @@ The item source and bounds are locked in `docs/evidence/exedra-item.json`.
 
 Hedra shares `BenchBlock` width/facing controls, cached shapes, mesh families,
 projection, and the optional item-mesh path with Exedra. Prepare each width with
-`--name hedra_2m --width-meters 2 --height-meters 0.5
---stretch-middle-meters 0.5 --target-faces 13012 --save-blend --preview`,
-then repeat for 3m and 4m. The source is uniformly sized to half a block high;
-only the central half-metre of its straight seat stretches. Both carved ends
-translate intact, and depth stays approximately 0.431m. Imported custom normals
+`--name hedra_2m --width-meters 2 --height-meters 1
+--stretch-middle-meters 1 --target-faces 13012 --save-blend --preview`,
+then repeat for 3m and 4m. The source is uniformly sized to one block high;
+only the central metre of its straight seat changes length. Both carved ends
+translate intact, and depth stays approximately 0.862m. Imported custom normals
 use the local inverse transpose of this piecewise stretch.
 
 Prepare `hedra_item` at 3m with the same dimensions/stretch and
 `--target-faces 2000`. The placed meshes retain all 13,012 source triangles;
 the 2,000-triangle 3D item is shared across all 54 materials. Run
 `python tools/generate_hedra_shape.py --check` to verify the five measured boxes
-per width, including the open space beneath the seat. Source provenance,
+per width, including the open space beneath the seat. Selection uses a separate
+one-block-high/deep bounding box for each width, making the complete bench easy
+to target without filling its collision gap. Source provenance,
 preparation, geometry hashes and bounds are in `docs/evidence/hedra-source.json`.
 
 ### Build and runtime checks

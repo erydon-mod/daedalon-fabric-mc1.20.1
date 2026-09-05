@@ -22,8 +22,8 @@ def boxes(width):
         elif line.startswith('f '):
             triangles.append([vertices[int(v.split('/')[0]) - 1] for v in line.split()[1:]])
     result = []
-    for y0, y1 in ((0.0, 0.075), (0.075, 0.35), (0.35, 0.5)):
-        spans = ((-width/2, width/2),) if y0 == 0.35 else ((-width/2, 0), (0, width/2))
+    for y0, y1 in ((0.0, 0.15), (0.15, 0.7), (0.7, 1.0)):
+        spans = ((-width/2, width/2),) if y0 == 0.7 else ((-width/2, 0), (0, width/2))
         for x0, x1 in spans:
             points = []
             for triangle in triangles:
