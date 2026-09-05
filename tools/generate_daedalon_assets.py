@@ -831,6 +831,14 @@ def generate_languages(
 ) -> None:
     for language in ("en_us", "de_de", "es_es"):
         entries = dict(STATIC_LANGUAGE_ENTRIES[language])
+        orientation_labels = {
+            "en_us": ("Capital orientation", "Straight", "Diagonal (45°)", "Straight (90°)", "Diagonal (135°)"),
+            "de_de": ("Kapitellausrichtung", "Gerade", "Diagonal (45°)", "Gerade (90°)", "Diagonal (135°)"),
+            "es_es": ("Orientación del capitel", "Recta", "Diagonal (45°)", "Recta (90°)", "Diagonal (135°)"),
+        }[language]
+        entries["property.daedalon.capital_orientation"] = orientation_labels[0]
+        for orientation, label in zip(("straight", "diagonal", "straight_90", "diagonal_135"), orientation_labels[1:]):
+            entries[f"option.daedalon.capital.orientation.{orientation}"] = label
         entries["message.daedalon.monopteros_size_blocked"] = {
             "en_us": "Not enough clear space for this dome diameter.",
             "de_de": "Nicht genug freier Platz für diesen Kuppeldurchmesser.",

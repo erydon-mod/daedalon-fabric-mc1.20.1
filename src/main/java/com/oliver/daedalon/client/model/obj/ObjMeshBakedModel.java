@@ -1,6 +1,7 @@
 package com.oliver.daedalon.client.model.obj;
 
 import com.oliver.daedalon.block.DecorShapeTransforms;
+import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.BenchBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
@@ -478,6 +479,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             positionTransform = UrnTransform.forState(state);
         } else if (state.getBlock() instanceof CorbelBlock) {
             positionTransform = CorbelTransform.forState(state);
+        } else if (state.getBlock() instanceof CapitalBlock capital) {
+            positionTransform = CapitalOrientationTransform.forOrientation(capital.orientation(state));
         } else if (state.getBlock() instanceof BenchBlock) {
             positionTransform = GroundScaleTransform.forBenchState(state);
         } else if (state.getBlock() instanceof FacingDecorBlock) {

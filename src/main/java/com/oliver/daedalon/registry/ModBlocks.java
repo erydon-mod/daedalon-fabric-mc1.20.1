@@ -469,7 +469,7 @@ public final class ModBlocks {
                 + "_capital";
         Block block = registerBlock(
                 path,
-                new CapitalBlock(decorSettings(), style)
+                CapitalBlock.create(decorSettings(), style)
         );
         CAPITALS_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>()).add(block);
     }

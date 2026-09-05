@@ -77,6 +77,13 @@ public final class DaedalonDebugProperties {
     private static <T extends Comparable<T>> int valuePriority(Property<T> property, T value) {
         String valueName = property.name(value);
         return switch (property.getName()) {
+            case "capital_orientation" -> switch (valueName) {
+                case "straight" -> 0;
+                case "diagonal" -> 1;
+                case "straight_90" -> 2;
+                case "diagonal_135" -> 3;
+                default -> 100;
+            };
             case "size" -> switch (valueName) {
                 case "small" -> 0;
                 case "medium" -> 1;

@@ -97,7 +97,7 @@ class ArchitecturalDecorSafetyTests(unittest.TestCase):
             self.assertEqual("axis_stabilized_box", definition["uv_projection"])
             self.assertEqual("daedalon:block/aganite_block", definition["materials"]["none"])
 
-    def test_fixed_top_corbel_and_fixed_state_capital_contracts(self) -> None:
+    def test_fixed_top_corbel_and_shared_capital_model_contracts(self) -> None:
         corbel = (JAVA_ROOT / "block/CorbelBlock.java").read_text(encoding="utf-8")
         capital = (JAVA_ROOT / "block/CapitalBlock.java").read_text(encoding="utf-8")
         baked = (JAVA_ROOT / "client/model/obj/ObjMeshBakedModel.java").read_text(encoding="utf-8")
@@ -125,9 +125,9 @@ class ArchitecturalDecorSafetyTests(unittest.TestCase):
         self.assertIn("CorbelTransform.forState(state)", baked)
 
         self.assertNotIn("DirectionProperty", capital)
-        self.assertNotIn("EnumProperty", capital)
+        self.assertIn('"capital_orientation", CapitalOrientation.class', capital)
         self.assertIn("new CorbelBlock(decorSettings(), style)", registrations)
-        self.assertIn("new CapitalBlock(decorSettings(), style)", registrations)
+        self.assertIn("CapitalBlock.create(decorSettings(), style)", registrations)
         self.assertNotIn("greek_doric", GENERATOR.CAPITAL_FAMILIES)
 
     def test_refined_capitals_and_high_resolution_corbel_surface_are_locked(self) -> None:

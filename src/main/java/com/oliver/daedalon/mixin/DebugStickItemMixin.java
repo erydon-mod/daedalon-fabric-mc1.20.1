@@ -1,6 +1,7 @@
 package com.oliver.daedalon.mixin;
 
 import com.oliver.daedalon.Daedalon;
+import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
 import com.oliver.daedalon.block.MonopterosPartBlock;
@@ -127,8 +128,8 @@ abstract class DebugStickItemMixin {
             world.setBlockState(targetPos, updated, 18);
             sendMessage(player, Text.translatable(
                     "item.minecraft.debug_stick.update",
-                    selected.getName(),
-                    valueName(updated, selected)
+                    displayPropertyName(updated, selected),
+                    displayValueName(updated, selected)
             ));
         } else {
             selected = DaedalonDebugProperties.cycle(
@@ -142,8 +143,8 @@ abstract class DebugStickItemMixin {
             );
             sendMessage(player, Text.translatable(
                     "item.minecraft.debug_stick.select",
-                    selected.getName(),
-                    valueName(targetState, selected)
+                    displayPropertyName(targetState, selected),
+                    displayValueName(targetState, selected)
             ));
         }
         callback.setReturnValue(true);
@@ -299,6 +300,17 @@ abstract class DebugStickItemMixin {
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static String valueName(BlockState state, Property property) {
         return property.name(state.get(property));
+    }
+
+    private static Object displayPropertyName(BlockState state, Property<?> property) {
+        return state.getBlock() instanceof CapitalBlock
+                ? Text.translatable("property.daedalon.capital_orientation") : property.getName();
+    }
+
+    private static Object displayValueName(BlockState state, Property<?> property) {
+        return state.getBlock() instanceof CapitalBlock
+                ? Text.translatable("option.daedalon.capital.orientation." + valueName(state, property))
+                : valueName(state, property);
     }
 
     private static void sendMessage(PlayerEntity player, Text message) {

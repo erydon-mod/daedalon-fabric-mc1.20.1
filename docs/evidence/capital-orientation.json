@@ -1,0 +1,41 @@
+{
+  "date": "2026-09-05",
+  "scope": "Capital orientation",
+  "validation": {
+    "build": "passed",
+    "asset_safety_tests": 113,
+    "texture_tests": 10,
+    "junit_tests": 85,
+    "junit_failures": 0,
+    "gametests": 9,
+    "gametest_failures": 0,
+    "capital_ids_exercised": 324,
+    "capital_states": 756
+  },
+  "runtime": {
+    "renderer": "Sodium 0.5.13 / Indium 1.0.36 / Iris 1.7.6",
+    "resource_pack": "ERYDON Collection 64x compat2 v1.5.14",
+    "shaders": "Complementary Unbound r5.9 dev2",
+    "shared_model_checks": [
+      "BYZANTINE STRAIGHT shared model; quads=17999; finite normals; uncullled; bounds=[0.01474335789680481, 0.0, 0.01478525996208191, 0.9852566719055176, 1.0, 0.9852147102355957]",
+      "BYZANTINE DIAGONAL shared model; quads=17999; finite normals; uncullled; bounds=[-0.18622684478759766, 0.0, -0.1855170726776123, 1.1862268447875977, 1.0, 1.1859973669052124]",
+      "CORINTHIAN STRAIGHT shared model; quads=12000; finite normals; uncullled; bounds=[0.04818981885910034, 0.0, 0.04868015646934509, 0.9518101811408997, 1.0, 0.9513198137283325]",
+      "CORINTHIAN DIAGONAL shared model; quads=12000; finite normals; uncullled; bounds=[-0.09028542041778564, 0.0, -0.09009814262390137, 1.0896906852722168, 1.0, 1.0899499654769897]",
+      "GOTHIC STRAIGHT shared model; quads=5999; finite normals; uncullled; bounds=[0.010225892066955566, 0.0, 0.010666847229003906, 0.9897741079330444, 1.0, 0.9893331527709961]",
+      "GOTHIC DIAGONAL shared model; quads=5999; finite normals; uncullled; bounds=[-0.1087348461151123, 0.0, -0.10861682891845703, 1.106670618057251, 1.0, 1.10640549659729]",
+      "GREEK_IONIC STRAIGHT shared model; quads=5999; finite normals; uncullled; bounds=[-0.15853077173233032, 0.0, 0.02924400568008423, 1.1585307121276855, 0.9999999403953552, 0.9707559943199158]",
+      "GREEK_IONIC DIAGONAL shared model; quads=5999; finite normals; uncullled; bounds=[-0.2729710340499878, 0.0, -0.27689921855926514, 1.2688755989074707, 0.9999999403953552, 1.274741291999817]",
+      "GREEK_IONIC STRAIGHT_90 shared model; quads=5999; finite normals; uncullled; bounds=[0.02924400568008423, 0.0, -0.15853077173233032, 0.9707559943199158, 0.9999999403953552, 1.1585307121276855]",
+      "GREEK_IONIC DIAGONAL_135 shared model; quads=5999; finite normals; uncullled; bounds=[-0.2747412919998169, 0.0, -0.2729710340499878, 1.2768992185592651, 0.9999999403953552, 1.2688755989074707]",
+      "ROMAN_COMPOSITE STRAIGHT shared model; quads=11999; finite normals; uncullled; bounds=[0.04379117488861084, 0.0, 0.04262080788612366, 0.9562088251113892, 1.0, 0.9573792219161987]",
+      "ROMAN_COMPOSITE DIAGONAL shared model; quads=11999; finite normals; uncullled; bounds=[-0.1255481243133545, 0.0, -0.1278666853904724, 1.1311402320861816, 1.0, 1.1258949041366577]",
+      "TUSCAN STRAIGHT shared model; quads=6000; finite normals; uncullled; bounds=[0.0036394596099853516, 0.0, -1.7255544662475586E-4, 0.9963605403900146, 1.0000005960464478, 1.0001726150512695]",
+      "TUSCAN DIAGONAL shared model; quads=6000; finite normals; uncullled; bounds=[-0.20170581340789795, 0.0, -0.20165830850601196, 1.2017033100128174, 1.0000005960464478, 1.2020936012268066]"
+    ],
+    "visual_review": "All six styles and Ionic four-way orientations inspected in three screenshots; centered mounting, rotated top plates and volutes render correctly.",
+    "fixture": "Isolated Exedra FPS Scene; client closed automatically after checks."
+  },
+  "limitations": [
+    "No FPS benchmark was performed. Existing geometry counts are preserved, not reduced."
+  ]
+}
