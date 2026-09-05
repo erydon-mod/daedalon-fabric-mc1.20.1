@@ -701,6 +701,11 @@ MESH_EXPECTATIONS["exedra_item"] = {
 }
 
 
+MESH_EXPECTATIONS["hedra_2m"] = {'definition': 'hedra_2m.json', 'obj': 'hedra_2m.obj', 'mtl': 'hedra_2m.mtl', 'display': 'hedra_display.json', 'vertices': 6508, 'uvs': 0, 'normals': 6830, 'faces': 13012, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-1.0, 0.0, -0.215441), (1.0, 0.5, 0.215441)), 'obj_sha256': '17cbebbdbbb36e66b6146f7c266cece82fe3a42f094fe9cd0e6fc057df35e16f', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
+MESH_EXPECTATIONS["hedra_3m"] = {'definition': 'hedra_3m.json', 'obj': 'hedra_3m.obj', 'mtl': 'hedra_3m.mtl', 'display': 'hedra_display.json', 'vertices': 6508, 'uvs': 0, 'normals': 6833, 'faces': 13012, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-1.5, 0.0, -0.215441), (1.5, 0.5, 0.215441)), 'obj_sha256': '4fb32939a2b1860b1cc168d6a82a078c3c696049d6eabc8c4de8bffc86052430', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
+MESH_EXPECTATIONS["hedra_4m"] = {'definition': 'hedra_4m.json', 'obj': 'hedra_4m.obj', 'mtl': 'hedra_4m.mtl', 'display': 'hedra_display.json', 'vertices': 6508, 'uvs': 0, 'normals': 6832, 'faces': 13012, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-2.0, 0.0, -0.215441), (2.0, 0.5, 0.215441)), 'obj_sha256': '541b625c8d4c162a7d8b36228f9f42bf15fb488b38b65bc50b1e31bb07fca909', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
+MESH_EXPECTATIONS["hedra_item"] = {'definition': 'hedra_item.json', 'obj': 'hedra_item.obj', 'mtl': 'hedra_item.mtl', 'display': 'hedra_display.json', 'vertices': 1002, 'uvs': 0, 'normals': 1063, 'faces': 2000, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-1.499955, 0.000912, -0.215532), (1.500262, 0.499799, 0.215584)), 'obj_sha256': '3bb2036819969061ddc5aac29bfb2064fb1952e58ae7af03cafb1a4e925e20dd', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
+
 def load_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8-sig"))
 

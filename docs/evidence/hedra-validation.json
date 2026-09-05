@@ -1,0 +1,80 @@
+{
+  "model": "Hedra",
+  "world_triangles_per_width": 13012,
+  "item_triangles": 2000,
+  "materials": 54,
+  "states_per_material": 12,
+  "collision_boxes_per_width": 5,
+  "full_build": "passed",
+  "asset_tests": 107,
+  "texture_tool_tests": 10,
+  "junit_tests": 82,
+  "game_tests": 4,
+  "live_client": {
+    "scene": "12 benches: 3 widths x 4 facings, standard and aged materials; held and dropped items",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "shaders": "ComplementaryUnbound_r5.9_dev2",
+    "resource_packs": [
+      "native",
+      "Collection 32x compat2 v1.5.14",
+      "Collection 64x compat2 v1.5.14"
+    ],
+    "reload": "passed",
+    "gui": "passed",
+    "frame_samples": {
+      "results": {
+        "64x": {
+          "frames": 3666,
+          "average_fps": 366.53,
+          "average_frame_ms": 2.7283
+        },
+        "32x": {
+          "frames": 3544,
+          "average_fps": 354.27,
+          "average_frame_ms": 2.8227
+        },
+        "native": {
+          "frames": 3656,
+          "average_fps": 365.49,
+          "average_frame_ms": 2.736
+        },
+        "64x-reload": {
+          "frames": 3636,
+          "average_fps": 363.49,
+          "average_frame_ms": 2.7511
+        },
+        "inventory": {
+          "frames": 1776,
+          "average_fps": 177.47,
+          "average_frame_ms": 5.6347
+        }
+      },
+      "results-hand": {
+        "64x": {
+          "frames": 2913,
+          "average_fps": 291.15,
+          "average_frame_ms": 3.4347
+        }
+      }
+    },
+    "performance_scope": "Single-machine scene check; not a before/after benchmark or a guarantee for other hardware.",
+    "geometry_sharing": {
+      "world_bakes_per_width_per_load": 1,
+      "item_bakes_per_load": 1,
+      "materials_per_mesh": 54,
+      "loads_observed": 2
+    }
+  },
+  "jar": "daedalon-fabric-mc1.20.1-compat2-1.0.1.jar",
+  "jar_sha256": "5208013d53c6ee540cb0283a2d864ed964b35b8a509eb2e014d02696b68ec4e7",
+  "changelog": {
+    "spreadsheet": "Erydon",
+    "sheet": "CL Daedalon",
+    "edited_range": "E13:H13",
+    "entry": "1.0.1-004",
+    "status": "Draft"
+  }
+}

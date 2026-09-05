@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "width=2,facing=north": {
+      "model": "daedalon:mesh/internal/gelastrum_hedra_2m"
+    },
+    "width=2,facing=east": {
+      "model": "daedalon:mesh/internal/gelastrum_hedra_2m"
+    },
+    "width=2,facing=south": {
+      "model": "daedalon:mesh/internal/gelastrum_hedra_2m"
+    },
+    "width=2,facing=west": {
+      "model": "daedalon:mesh/internal/gelastrum_hedra_2m"
+    },
+    "width=3,facing=north": {
+      "model": "daedalon:mesh/gelastrum_hedra"
+    },
+    "width=3,facing=east": {
+      "model": "daedalon:mesh/gelastrum_hedra"
+    },
+    "width=3,facing=south": {
+      "model": "daedalon:mesh/gelastrum_hedra"
+    },
+    "width=3,facing=west": {
+      "model": "daedalon:mesh/gelastrum_hedra"
+    },
+    "width=4,facing=north": {
+      "model": "daedalon:mesh/internal/gelastrum_hedra_4m"
+    },
+    "width=4,facing=east": {
+      "model": "daedalon:mesh/internal/gelastrum_hedra_4m"
+    },
+    "width=4,facing=south": {
+      "model": "daedalon:mesh/internal/gelastrum_hedra_4m"
+    },
+    "width=4,facing=west": {
+      "model": "daedalon:mesh/internal/gelastrum_hedra_4m"
+    }
+  }
+}

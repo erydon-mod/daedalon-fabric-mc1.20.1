@@ -68,7 +68,7 @@ class ExedraSafetyTests(unittest.TestCase):
                 self.assertIn('Exedra', language[f'block.daedalon.{block_id}'])
         for kind in ('blocks','items'):
             self.assertEqual({f'daedalon:{block_id}' for block_id in ids}, set(load_json(DAEDALON_DATA / f'tags/{kind}/exedra.json')['values']))
-            for synonym in ('bench','seat','seating','furniture','curved_bench'):
+            for synonym in ('curved_bench',):
                 self.assertEqual(['#daedalon:exedra'], load_json(DAEDALON_DATA / f'tags/{kind}/{synonym}.json')['values'])
 
     def test_curved_collision_profile_is_reproducible_and_keeps_front_open(self):
@@ -85,15 +85,15 @@ class ExedraSafetyTests(unittest.TestCase):
         self.assertFalse(any(x0 <= 0 <= x1 and z0 <= 0.2 <= z1 for x0,y0,z0,x1,y1,z1 in boxes))
 
     def test_prepared_widths_use_shared_geometry_without_tick_or_controller(self):
-        block = (JAVA_ROOT / 'block/ExedraBlock.java').read_text(encoding='utf-8')
+        block = (JAVA_ROOT / 'block/BenchBlock.java').read_text(encoding='utf-8')
         plugin = (JAVA_ROOT / 'client/model/obj/ObjMeshModelLoadingPlugin.java').read_text(encoding='utf-8')
         self.assertIn('IntProperty.of("width", 2, 4)', block)
         self.assertIn('DEFAULT_WIDTH = 3', block)
         self.assertIn('builder.add(WIDTH, FACING)', block)
         for forbidden in ('BlockWithEntity','BlockEntityProvider','scheduledTick','randomTick','getTicker'):
             self.assertNotIn(forbidden, block)
-        self.assertIn('createExedraVariants(width)', plugin)
-        self.assertIn('width == ExedraBlock.DEFAULT_WIDTH', plugin)
+        self.assertIn('createBenchVariants(bench, width)', plugin)
+        self.assertIn('width == BenchBlock.DEFAULT_WIDTH', plugin)
         evidence = load_json(REPO_ROOT / 'docs/evidence/exedra-source.json')
         self.assertFalse(evidence['source_files_modified'])
         self.assertFalse(evidence['preparation']['decimation'])

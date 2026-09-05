@@ -286,7 +286,7 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
         basin_transform = baked[baked.index("record BasinTransform"):baked.index("class FacingDecorTransform")]
         self.assertIn("quad.pos", basin_transform)
         self.assertIn("quad.uv", basin_transform)
-        self.assertIn("exactly 3932 decor blocks and items", mod_blocks)
+        self.assertIn("exactly 3986 decor blocks and items", mod_blocks)
         self.assertIn('id("fountain_basin_part")', mod_blocks)
         self.assertNotIn(
             'registerBlock("fountain_basin_part"',

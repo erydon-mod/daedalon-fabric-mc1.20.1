@@ -5,7 +5,7 @@ import com.oliver.daedalon.block.ClassicalStatueBlock;
 import com.oliver.daedalon.block.BustBlock;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
-import com.oliver.daedalon.block.ExedraBlock;
+import com.oliver.daedalon.block.BenchBlock;
 import com.oliver.daedalon.block.FixedDecorBlock;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.FountainBowlModel;
@@ -320,21 +320,23 @@ public final class ObjMeshModelLoadingPlugin {
                     createDetailedVariants(style.styleId() + "_plinth")
             ));
         }
-        for (int width = 2; width <= 4; width++) {
-            families.add(new MeshFamily(
-                    "Exedra " + width + "m",
-                    id("models/mesh/exedra_" + width + "m.json"),
-                    id("block/mesh/exedra_display"),
-                    createExedraVariants(width),
-                    width == ExedraBlock.DEFAULT_WIDTH ? id("models/mesh/exedra_item.json") : null
-            ));
+        for (String bench : List.of("exedra", "hedra")) {
+            for (int width = 2; width <= 4; width++) {
+                families.add(new MeshFamily(
+                        bench + " " + width + "m",
+                        id("models/mesh/" + bench + "_" + width + "m.json"),
+                        id("block/mesh/" + bench + "_display"),
+                        createBenchVariants(bench, width),
+                        width == BenchBlock.DEFAULT_WIDTH ? id("models/mesh/" + bench + "_item.json") : null
+                ));
+            }
         }
         return List.copyOf(families);
     }
 
-    private static List<MeshVariant> createExedraVariants(int width) {
-        List<MeshVariant> variants = createDetailedVariants("exedra");
-        if (width == ExedraBlock.DEFAULT_WIDTH) {
+    private static List<MeshVariant> createBenchVariants(String bench, int width) {
+        List<MeshVariant> variants = createDetailedVariants(bench);
+        if (width == BenchBlock.DEFAULT_WIDTH) {
             return variants;
         }
         // Only the default width owns the item aliases and public block list.

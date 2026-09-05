@@ -33,7 +33,7 @@ DEFAULT_BLENDER = Path(r"C:\Program Files\Blender Foundation\Blender 5.2\blender
 REQUIRED_BLENDER_VERSION = (5, 2, 0)
 REQUIRED_BLENDER_BUILD_HASH = "fbe6228777e7"
 MODEL_NAME = re.compile(
-    r"(?:finial_[a-z0-9_]+|monument_[a-z0-9_]+|basin_[a-z0-9_]+|fountain_[a-z0-9_]+|plinth_[a-z0-9_]+|exedra_(?:[234]m|item))\Z"
+    r"(?:finial_[a-z0-9_]+|monument_[a-z0-9_]+|basin_[a-z0-9_]+|fountain_[a-z0-9_]+|plinth_[a-z0-9_]+|(?:exedra|hedra)_(?:[234]m|item))\Z"
 )
 
 
@@ -46,6 +46,8 @@ def arguments(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--preview", action="store_true")
     parser.add_argument("--width-meters", type=float)
     parser.add_argument("--height-meters", type=float)
+    parser.add_argument("--stretch-middle-meters", type=float,
+                        help="Stretch only this central width after uniform height sizing; translate the ends intact")
     parser.add_argument("--proportional-depth", action="store_true",
                         help="Scale depth with width, preserving the source footprint proportions")
     parser.add_argument("--save-blend", action="store_true")
@@ -53,7 +55,7 @@ def arguments(argv: Sequence[str]) -> argparse.Namespace:
     result = parser.parse_args(argv)
     if not MODEL_NAME.fullmatch(result.name):
         parser.error(
-            "--name must be finial_, monument_, basin_, fountain_, plinth_, or exedra_2m/3m/4m/item"
+            "--name must be finial_, monument_, basin_, fountain_, plinth_, or exedra_/hedra_2m/3m/4m/item"
         )
     if result.target_faces < 100:
         parser.error("--target-faces must be at least 100")
@@ -61,6 +63,10 @@ def arguments(argv: Sequence[str]) -> argparse.Namespace:
         parser.error("--width-meters and --height-meters must be supplied together")
     if result.proportional_depth and result.width_meters is None:
         parser.error("--proportional-depth requires --width-meters and --height-meters")
+    if result.stretch_middle_meters is not None and (
+        result.width_meters is None or result.stretch_middle_meters <= 0 or result.proportional_depth
+    ):
+        parser.error("--stretch-middle-meters requires dimensions and cannot combine with proportional depth")
     if result.width_meters is not None and not (
         0.0 < result.width_meters <= 16.0 and 0.0 < result.height_meters <= 16.0
     ):
@@ -182,25 +188,37 @@ def prepare(args: argparse.Namespace) -> int:
         height_scale = args.height_meters / original_span.z
         width_scale = args.width_meters / original_span.x
         depth_scale = width_scale if args.proportional_depth else height_scale
+        middle = args.stretch_middle_meters
+        extra_width = args.width_meters - original_span.x * height_scale
+        if middle is not None and not (0 < middle < original_span.x * height_scale and middle + extra_width > 0):
+            raise RuntimeError("central stretch band must fit the sized source and retain positive width")
         center = (original_minimum + original_maximum) * 0.5
         points = mesh_points(obj)
         normal_matrix = obj.matrix_world.to_3x3().inverted().transposed()
         source_normals = [normal_matrix @ normal.vector for normal in obj.data.corner_normals]
         obj.matrix_world.identity()
         for vertex, point in zip(obj.data.vertices, points):
+            x = (point.x - center.x) * width_scale
+            if middle is not None:
+                x = (point.x - center.x) * height_scale
+                x += max(-0.5, min(0.5, x / middle)) * extra_width
             vertex.co = (
-                (point.x - center.x) * width_scale,
+                x,
                 (point.y - center.y) * depth_scale,
                 (point.z - original_minimum.z) * height_scale,
             )
         obj.data.update()
         # Width changes are non-uniform: normals need the inverse transpose,
         # otherwise the imported custom shading still describes the old width.
-        corrected_normals = [Vector((
-            normal.x / width_scale,
-            normal.y / depth_scale,
-            normal.z / height_scale,
-        )).normalized() for normal in source_normals]
+        corrected_normals = []
+        for loop, normal in zip(obj.data.loops, source_normals):
+            local_width_scale = width_scale
+            if middle is not None:
+                x = (points[loop.vertex_index].x - center.x) * height_scale
+                local_width_scale = height_scale * (1 + extra_width / middle if abs(x) < middle / 2 else 1)
+            corrected_normals.append(Vector((normal.x / local_width_scale,
+                                             normal.y / depth_scale,
+                                             normal.z / height_scale)).normalized())
         obj.data.normals_split_custom_set(corrected_normals)
     source_faces = len(obj.data.polygons)
     source_vertices = len(obj.data.vertices)
@@ -286,6 +304,7 @@ def prepare(args: argparse.Namespace) -> int:
         "output_faces": len(obj.data.polygons),
         "output_vertices": len(obj.data.vertices),
         "target_faces": args.target_faces,
+        "stretch_middle_meters": args.stretch_middle_meters,
         "preview": str(preview) if args.preview else None,
         "seconds": round(time.monotonic() - started, 3),
         "blender_version": bpy.app.version_string,

@@ -251,7 +251,9 @@ PLINTH_FAMILIES = {
     "stephanos_plinth": ("plinth_stephanos", "Stephanos", "Stephanos", "Stephanos"),
     "triphyllon_plinth": ("plinth_triphyllon", "Triphyllon", "Triphyllon", "Triphyllon"),
 }
+BENCH_FAMILIES = ("exedra", "hedra")
 NEW_DECOR_FAMILIES = {
+    "hedra": ("hedra_3m", "Hedra Bench", "Hedra-Bank", "Banco Hedra"),
     "exedra": ("exedra_3m", "Exedra", "Exedra", "Exedra"),
     **FIXED_DECOR_FAMILIES,
     **FACING_DECOR_FAMILIES,
@@ -581,7 +583,7 @@ def remove_creative_only_loot(
 
 def blockstate(family: str, block_id: str) -> dict[str, object]:
     model = f"{NAMESPACE}:mesh/{block_id}"
-    if family == "exedra":
+    if family in BENCH_FAMILIES:
         return {
             "variants": {
                 f"width={width},facing={facing}": {
@@ -662,8 +664,8 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
 
 
 def display_parent(family: str) -> str:
-    if family == "exedra":
-        return f"{NAMESPACE}:block/mesh/exedra_display"
+    if family in BENCH_FAMILIES:
+        return f"{NAMESPACE}:block/mesh/{family}_display"
     if family in STATUE_DISPLAY_MODELS:
         name = STATUE_DISPLAY_MODELS[family]
     elif family in BUST_FAMILIES:
@@ -1075,9 +1077,14 @@ def generate_tags(
         ornament_values.append(f"#{NAMESPACE}:plinth")
     new_decor_families = [family for family in families if family in NEW_DECOR_FAMILIES]
     if new_decor_families:
+        benches = [f"#{NAMESPACE}:{bench}" for bench in BENCH_FAMILIES if bench in families]
+        if benches:
+            for synonym in ("bench", "seat", "seating", "furniture"):
+                relation_tags[synonym] = benches
         if "exedra" in families:
-            for synonym in ("bench", "seat", "seating", "furniture", "curved_bench"):
-                relation_tags[synonym] = [f"#{NAMESPACE}:exedra"]
+            relation_tags["curved_bench"] = [f"#{NAMESPACE}:exedra"]
+        if "hedra" in families:
+            relation_tags["straight_bench"] = [f"#{NAMESPACE}:hedra"]
         for family in new_decor_families:
             direct_tags[family] = [f"{NAMESPACE}:{block_id}" for block_id in ids_by_family[family]]
         finial_tags = [f"#{NAMESPACE}:{family}" for family in FIXED_DECOR_FAMILIES if family.endswith("_finial") and family in families]
