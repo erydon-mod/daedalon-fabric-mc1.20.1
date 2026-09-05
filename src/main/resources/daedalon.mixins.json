@@ -17,6 +17,7 @@
     "client.sodium.OcclusionCullerMixin",
     "client.ItemRendererMixin",
     "client.axiom.BlockRenderCacheMixin",
+    "client.axiom.BuilderToolSelectionStateMixin",
     "client.indium.TerrainRenderContextMixin",
     "client.iris.XHFPTerrainVertexMixin"
   ],

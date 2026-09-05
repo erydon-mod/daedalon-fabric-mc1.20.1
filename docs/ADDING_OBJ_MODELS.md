@@ -217,6 +217,17 @@ the conservative bounds until unload. Check the largest size from underneath
 as well as outside at chunk/section boundaries in-game.
 Source evidence and hashes are in `docs/evidence/monopteros-source.json`.
 
+### Axiom builder selection for oversized assemblies
+
+With Axiom installed, left-clicking or middle-clicking a Monopteros dome or
+fountain rim selects the complete object using Axiom's own sparse selection.
+`DecorAssemblySelection` includes the owner and only its existing owned cells;
+floors, air and nearby blocks are excluded. The bounded lookup runs on clicks,
+not per frame. Axiom handles preview, movement and undo, including the fountain
+block entity's plinth, bowls and water. Starting a normal box selection clears
+the previous automatic object selection. Selection compatibility is optional
+and must also be tested with Axiom absent.
+
 ### Build and runtime checks
 
 Run, in order:

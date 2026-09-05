@@ -30,7 +30,7 @@ public final class DaedalonMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.endsWith(".client.iris.XHFPTerrainVertexMixin")) {
             return loader.isModLoaded("iris") && loader.isModLoaded("sodium");
         }
-        if (mixinClassName.endsWith(".client.axiom.BlockRenderCacheMixin")) {
+        if (mixinClassName.contains(".client.axiom.")) {
             return loader.isModLoaded("axiom");
         }
         return true;

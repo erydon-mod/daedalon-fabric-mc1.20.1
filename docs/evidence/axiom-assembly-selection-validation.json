@@ -1,0 +1,38 @@
+{
+  "status": "passed",
+  "date": "2026-09-05",
+  "axiom_version": "5.4.2",
+  "minecraft": "1.20.1",
+  "change": "Clicking a dome or oversized fountain selects its owner and owned cells as one sparse Axiom builder selection. Normal box selection resets the previous object.",
+  "live_checks": [
+    "bronze_monopteros_dome: Axiom ray hit remote rim; baseline excluded owner; complete selection=50 cells",
+    "bronze_monopteros_dome: overlapping 2-block move and undo passed; states, owned cells and fountain NBT preserved",
+    "calacattum_monopteros_dome: Axiom ray hit remote rim; baseline excluded owner; complete selection=119 cells",
+    "calacattum_monopteros_dome: overlapping 2-block move and undo passed; states, owned cells and fountain NBT preserved",
+    "glacium_aged_monopteros_dome: Axiom ray hit remote rim; baseline excluded owner; complete selection=211 cells",
+    "glacium_aged_monopteros_dome: overlapping 2-block move and undo passed; states, owned cells and fountain NBT preserved",
+    "calacattum_gothic_fountain_basin: Axiom ray hit remote rim; baseline excluded owner; complete selection=60 cells",
+    "calacattum_gothic_fountain_basin: overlapping 2-block move and undo passed; states, owned cells and fountain NBT preserved",
+    "calacattum_georgian_fountain_basin: Axiom ray hit remote rim; baseline excluded owner; complete selection=55 cells",
+    "calacattum_georgian_fountain_basin: overlapping 2-block move and undo passed; states, owned cells and fountain NBT preserved",
+    "calacattum_greek_fountain_basin: Axiom ray hit remote rim; baseline excluded owner; complete selection=51 cells",
+    "calacattum_greek_fountain_basin: overlapping 2-block move and undo passed; states, owned cells and fountain NBT preserved",
+    "All six Axiom selection, move and undo cases passed."
+  ],
+  "runtime_scope": "Isolated test world; real Axiom raycast, builder selection, move, confirmation and undo. The destination uses normal Axiom replacement behaviour.",
+  "headless_game_tests": 6,
+  "java_tests": 84,
+  "asset_tests": 110,
+  "texture_tests": 10,
+  "axiom_absent": "Headless GameTest run passed without Axiom installed.",
+  "jar_sha256": "ba2f86173058af0cda5a17ae9d2fe28c22a864c1624b949acc1de6da836d6803",
+  "jar_bytes": 26278594,
+  "temporary_test_mod_in_jar": false,
+  "normal_launch_restored": true,
+  "changelog_amended": [
+    "CL Daedalon!G11",
+    "CL Daedalon!G14"
+  ],
+  "changelog_readback_and_visual_verified": true,
+  "performance_scope": "Scans at most 486 nearby cells on an assembly click; no new per-frame scans, ticking, or geometry baking."
+}
