@@ -138,10 +138,10 @@ than inventing geometry from the preview.
 ### Width-selectable Exedra
 
 The Exedra pilot uses the decor preparation tool with
-`--name exedra_2m --width-meters 2 --height-meters 1 --target-faces 14842`.
+`--name exedra_2m --width-meters 2 --height-meters 1 --proportional-depth --target-faces 14842`.
 Repeat for `exedra_3m` and `exedra_4m`; `--save-blend --preview` produces
 editable metric Blender files and a preview. This preserves the supplied
-topology, scales height/depth together, changes only the remaining width,
+topology, scales width/depth together, keeps height independently at 1m,
 and transforms the imported custom normals with the inverse transpose.
 
 The three prepared meshes use `fit_to_block=false`, unit scale, and

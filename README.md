@@ -32,7 +32,8 @@ a JAR; the test mod is separate from production sources.
 
 Exedra is available in all 27 standard and aged stone finishes. Place it at
 the default 3m width; the debug stick selects `width=2`, `width=3` or `width=4`,
-then `facing`. All widths stay 1m high and 1.029m deep. Search for Exedra,
+then `facing`. All widths stay 1m high; depth scales with width while preserving
+the original footprint proportions (about 1.07m, 1.60m and 2.13m deep). Search for Exedra,
 bench, seat or furniture.
 
 Each width uses a pre-sized Blender mesh shared across all materials, with

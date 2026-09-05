@@ -22,7 +22,7 @@ public final class ExedraBlock extends Block {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final int DEFAULT_WIDTH = 3;
     public static final double HEIGHT = 1.0;
-    public static final double DEPTH = 1.029;
+    public static final double DEPTH_PER_WIDTH = 1.013337 / 1.89977;
     private static final VoxelShape[][] SHAPES = createShapes();
 
     public ExedraBlock(Settings settings) {
@@ -76,8 +76,8 @@ public final class ExedraBlock extends Block {
             VoxelShape south = VoxelShapes.empty();
             for (double[] box : ExedraShape.BOXES) {
                 south = VoxelShapes.union(south, VoxelShapes.cuboid(
-                        0.5 + box[0] * width, box[1], 0.5 + box[2],
-                        0.5 + box[3] * width, box[4], 0.5 + box[5]));
+                        0.5 + box[0] * width, box[1], 0.5 + box[2] * width,
+                        0.5 + box[3] * width, box[4], 0.5 + box[5] * width));
             }
             south = south.simplify();
             for (Direction facing : new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {

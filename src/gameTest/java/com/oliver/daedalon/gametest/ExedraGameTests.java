@@ -57,7 +57,9 @@ public final class ExedraGameTests {
                         double spanZ = bounds.maxZ - bounds.minZ;
                         context.assertTrue(Math.abs((alongX ? spanX : spanZ) - width) < 1.0E-6, "Collision width mismatch");
                         context.assertTrue(Math.abs(bounds.maxY - 1.0) < 1.0E-6 && Math.abs(bounds.minY) < 1.0E-6, "Height/ground must stay fixed");
-                        context.assertTrue(Math.abs((alongX ? spanZ : spanX) - 1.029) < 1.0E-6, "Depth must stay fixed");
+                        double expectedDepth = width * (1.013337 / 1.89977);
+                        context.assertTrue(Math.abs((alongX ? spanZ : spanX) - expectedDepth) < 2.0E-6,
+                                "Depth must preserve the source footprint proportions");
                         context.assertTrue(world.getBlockEntity(anchor) == null, "Exedra must not allocate a controller");
                         if (shared[width-2][f] == null) shared[width-2][f] = shape;
                         context.assertTrue(shared[width-2][f] == shape, "Materials must share cached collision shapes");

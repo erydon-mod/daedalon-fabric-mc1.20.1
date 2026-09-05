@@ -27,14 +27,15 @@
       4
     ],
     "height_meters": 1,
-    "depth_meters": 1.029,
-    "geometry_change": "Normalize height/depth together to 1m high, then scale only X to exact width."
+    "geometry_change": "Scale width and depth together to preserve the source footprint proportions; set height independently to 1m.",
+    "proportional_depth": true,
+    "source_depth_per_width": 0.5333998326113161
   },
   "models": [
     {
       "width_meters": 2,
       "name": "exedra_2m",
-      "runtime_obj_sha256": "dd51a01e34bdf0c0a6290d4a02027117ce06b2ffb1a3b671773533ad16945161",
+      "runtime_obj_sha256": "40d1da3bea3391f80ff771af9936b6ff68f02440dec4331ec0d0f48ca319ca74",
       "runtime_mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
       "runtime_vertices": 7423,
       "runtime_faces": 14842,
@@ -43,19 +44,20 @@
         [
           -1.0,
           0.0,
-          -0.5145
+          -0.5334
         ],
         [
           1.0,
           1.0,
-          0.5145
+          0.5334
         ]
-      ]
+      ],
+      "depth_meters": 1.0668
     },
     {
       "width_meters": 3,
       "name": "exedra_3m",
-      "runtime_obj_sha256": "b443fb1dad5b2728ce3103d5b5cfe0a592c676c08f39ab77fcbc611b4d68e7f5",
+      "runtime_obj_sha256": "2e9e21227eb1d785d9ff499ae1cb368337fdec0da8a929cd3cba6e59aa5b8354",
       "runtime_mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
       "runtime_vertices": 7423,
       "runtime_faces": 14842,
@@ -64,19 +66,20 @@
         [
           -1.5,
           0.0,
-          -0.5145
+          -0.8001
         ],
         [
           1.5,
           1.0,
-          0.5145
+          0.8001
         ]
-      ]
+      ],
+      "depth_meters": 1.6002
     },
     {
       "width_meters": 4,
       "name": "exedra_4m",
-      "runtime_obj_sha256": "34c53e42b341a621efbe0575804ac05580e70cf4328c57f9ed1ff0d86292d2fa",
+      "runtime_obj_sha256": "1bd7c5cc4fc6822784341e63569bb8e54f6de3615486a4e5bc1a0f1edcc860fa",
       "runtime_mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
       "runtime_vertices": 7423,
       "runtime_faces": 14842,
@@ -85,14 +88,15 @@
         [
           -2.0,
           0.0,
-          -0.5145
+          -1.0668
         ],
         [
           2.0,
           1.0,
-          0.5145
+          1.0668
         ]
-      ]
+      ],
+      "depth_meters": 2.1336
     }
   ]
 }

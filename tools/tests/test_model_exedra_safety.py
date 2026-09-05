@@ -11,17 +11,22 @@ from daedalon_test_support import (
 
 
 class ExedraSafetyTests(unittest.TestCase):
-    def test_widths_preserve_topology_height_depth_and_ground(self):
+    def test_widths_preserve_topology_height_ground_and_footprint_proportions(self):
         vertices, topology = [], []
         for width in (2, 3, 4):
             path = MESH_ROOT / f'exedra_{width}m.obj'
             actual = parse_obj(path)
             self.assertEqual(7423, actual['vertices'])
             self.assertEqual(14842, actual['faces'])
-            self.assertEqual(((-width / 2, 0.0, -0.5145), (width / 2, 1.0, 0.5145)), actual['bounds'])
+            self.assertEqual(MESH_EXPECTATIONS[f'exedra_{width}m']['bounds'], actual['bounds'])
             self.assertEqual(MESH_EXPECTATIONS[f'exedra_{width}m']['obj_sha256'], sha256(path))
             lines = path.read_text(encoding='utf-8').splitlines()
             vertices.append([tuple(map(float, line.split()[1:])) for line in lines if line.startswith('v ')])
+            points = vertices[-1]
+            depth = max(p[2] for p in points) - min(p[2] for p in points)
+            self.assertAlmostEqual(1.013337 / 1.89977, depth / width, delta=1.0e-6)
+            self.assertEqual((0.0, 1.0), (min(p[1] for p in points), max(p[1] for p in points)))
+            self.assertEqual((-width / 2, width / 2), (min(p[0] for p in points), max(p[0] for p in points)))
             topology.append([[int(v.split('/')[0]) for v in line.split()[1:]] for line in lines if line.startswith('f ')])
             for line in lines:
                 if line.startswith('vn '):
@@ -37,10 +42,11 @@ class ExedraSafetyTests(unittest.TestCase):
         self.assertEqual(topology[0], topology[1])
         self.assertEqual(topology[1], topology[2])
         for narrow, middle, wide in zip(*vertices):
-            self.assertEqual(narrow[1:], middle[1:])
-            self.assertEqual(middle[1:], wide[1:])
-            self.assertAlmostEqual(narrow[0] / 2, middle[0] / 3, places=6)
-            self.assertAlmostEqual(wide[0] / 4, middle[0] / 3, places=6)
+            self.assertEqual(narrow[1], middle[1])
+            self.assertEqual(middle[1], wide[1])
+            for axis in (0, 2):
+                self.assertAlmostEqual(narrow[axis] / 2, middle[axis] / 3, places=6)
+                self.assertAlmostEqual(wide[axis] / 4, middle[axis] / 3, places=6)
 
     def test_materials_states_items_drops_names_and_search_are_complete(self):
         ids = GENERATOR.family_block_ids('exedra')
@@ -73,7 +79,10 @@ class ExedraSafetyTests(unittest.TestCase):
         self.assertEqual(module.content(), (JAVA_ROOT / 'block/ExedraShape.java').read_text(encoding='utf-8'))
         boxes = module.boxes()
         self.assertEqual(36, len(boxes))
-        self.assertFalse(any(x0 <= 0 <= x1 and z0 <= 0.4 <= z1 for x0,y0,z0,x1,y1,z1 in boxes))
+        # X/Z are fractions of width. Check inside the footprint, in the
+        # central opening, rather than trivially beyond the front edge.
+        self.assertGreater(max(box[5] for box in boxes), 0.2)
+        self.assertFalse(any(x0 <= 0 <= x1 and z0 <= 0.2 <= z1 for x0,y0,z0,x1,y1,z1 in boxes))
 
     def test_prepared_widths_use_shared_geometry_without_tick_or_controller(self):
         block = (JAVA_ROOT / 'block/ExedraBlock.java').read_text(encoding='utf-8')

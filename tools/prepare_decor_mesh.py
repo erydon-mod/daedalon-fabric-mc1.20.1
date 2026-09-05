@@ -46,6 +46,8 @@ def arguments(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--preview", action="store_true")
     parser.add_argument("--width-meters", type=float)
     parser.add_argument("--height-meters", type=float)
+    parser.add_argument("--proportional-depth", action="store_true",
+                        help="Scale depth with width, preserving the source footprint proportions")
     parser.add_argument("--save-blend", action="store_true")
     parser.add_argument("--blender", type=Path, default=None)
     result = parser.parse_args(argv)
@@ -57,6 +59,8 @@ def arguments(argv: Sequence[str]) -> argparse.Namespace:
         parser.error("--target-faces must be at least 100")
     if (result.width_meters is None) != (result.height_meters is None):
         parser.error("--width-meters and --height-meters must be supplied together")
+    if result.proportional_depth and result.width_meters is None:
+        parser.error("--proportional-depth requires --width-meters and --height-meters")
     if result.width_meters is not None and not (
         0.0 < result.width_meters <= 16.0 and 0.0 < result.height_meters <= 16.0
     ):
@@ -173,10 +177,11 @@ def prepare(args: argparse.Namespace) -> int:
     original_minimum, original_maximum = bounds(mesh_points(obj))
     original_span = original_maximum - original_minimum
     if args.width_meters is not None:
-        # Blender is Z-up. Keep proportional depth at the requested height;
-        # only the horizontal width gets a separate scale. Ground and centre
-        # the vertices before export so Minecraft needs no resizing work.
+        # Blender is Z-up. Optionally preserve the source X/Y footprint while
+        # sizing height independently. Ground and centre the exported vertices.
         height_scale = args.height_meters / original_span.z
+        width_scale = args.width_meters / original_span.x
+        depth_scale = width_scale if args.proportional_depth else height_scale
         center = (original_minimum + original_maximum) * 0.5
         points = mesh_points(obj)
         normal_matrix = obj.matrix_world.to_3x3().inverted().transposed()
@@ -184,16 +189,16 @@ def prepare(args: argparse.Namespace) -> int:
         obj.matrix_world.identity()
         for vertex, point in zip(obj.data.vertices, points):
             vertex.co = (
-                (point.x - center.x) * args.width_meters / original_span.x,
-                (point.y - center.y) * height_scale,
+                (point.x - center.x) * width_scale,
+                (point.y - center.y) * depth_scale,
                 (point.z - original_minimum.z) * height_scale,
             )
         obj.data.update()
         # Width changes are non-uniform: normals need the inverse transpose,
         # otherwise the imported custom shading still describes the old width.
         corrected_normals = [Vector((
-            normal.x * original_span.x / args.width_meters,
-            normal.y / height_scale,
+            normal.x / width_scale,
+            normal.y / depth_scale,
             normal.z / height_scale,
         )).normalized() for normal in source_normals]
         obj.data.normals_split_custom_set(corrected_normals)
