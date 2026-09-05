@@ -87,8 +87,8 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             },
         )
 
-    def test_exact_77_mesh_manifests_and_hashes(self) -> None:
-        self.assertEqual(77, len(MESH_EXPECTATIONS))
+    def test_exact_78_mesh_manifests_and_hashes(self) -> None:
+        self.assertEqual(78, len(MESH_EXPECTATIONS))
         self.assertEqual(
             {expectation["obj"] for expectation in MESH_EXPECTATIONS.values()},
             {path.name for path in MESH_ROOT.glob("*.obj")},

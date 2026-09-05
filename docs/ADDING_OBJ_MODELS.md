@@ -156,6 +156,16 @@ resolve internal model IDs; only a cached facing rotation runs during chunk
 meshing. `python tools/generate_exedra_shape.py --check` verifies the shared
 curved shape against triangle-clipped width strips and height bands.
 
+Exedra also opts into one shared `exedra_item` mesh for 3D item rendering.
+Prepare it from the same source with `--name exedra_item --width-meters 3
+--height-meters 1 --proportional-depth --target-faces 2000`. Its 2,000 faces
+avoid resubmitting the full 14,842-face bench through the shader item pipeline
+every frame. Only the default-width family owns this optional item definition;
+all material variants reuse the same mesh. World geometry, collision, debug
+widths, item display transforms, and the full-detail cached GUI icon are
+unchanged. Families without an item definition retain their existing rendering.
+The item source and bounds are locked in `docs/evidence/exedra-item.json`.
+
 ### Build and runtime checks
 
 Run, in order:

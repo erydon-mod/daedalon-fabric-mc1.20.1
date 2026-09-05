@@ -684,6 +684,23 @@ for _width, _half_depth, _normals, _obj_sha256 in (
     }
 
 
+MESH_EXPECTATIONS["exedra_item"] = {
+    "definition": "exedra_item.json",
+    "obj": "exedra_item.obj",
+    "mtl": "exedra_item.mtl",
+    "display": "exedra_display.json",
+    "vertices": 1002,
+    "uvs": 0,
+    "normals": 1112,
+    "faces": 2000,
+    "face_sizes": {3},
+    "face_index_styles": {"v//vn"},
+    "bounds": ((-1.505635, -0.000999, -0.800718), (1.502796, 0.997362, 0.799699)),
+    "obj_sha256": "ff0a4914294ca6fc7107c34d70241e82a7f5f4ca6c11d7ea95e5af30c4f37b95",
+    "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+}
+
+
 def load_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8-sig"))
 

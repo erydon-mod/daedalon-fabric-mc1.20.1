@@ -1,0 +1,168 @@
+{
+  "date": "2026-09-05",
+  "scenario": "Copy of the Daedalon IntelliJ test world; fixed saved camera; Calacattum Exedra held; two placed benches",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "vsync": false,
+  "fps_cap": "unlimited",
+  "other_minecraft_processes": 0,
+  "hardware": {
+    "cpu": "Ryzen 9 9950X3D",
+    "gpu": "RTX 5090"
+  },
+  "render_stack": {
+    "minecraft": "1.20.1",
+    "sodium": "0.5.13",
+    "indium": "1.0.36",
+    "iris": "1.7.6",
+    "shader": "ComplementaryUnbound_r5.9_dev2.zip; existing custom settings",
+    "pack": "ERYDON-Collection-64x-compat2-v1.5.14.zip"
+  },
+  "method": "45s warm-up; alternate original and optimized item mesh in one client; six 30s phases; discard first 11s of each phase after chunk rebuild and screenshot; no compilation, Blender preparation or JFR during this comparison",
+  "comparison": [
+    {
+      "phase": "0_original",
+      "frames": 3169,
+      "seconds": 19.0,
+      "fps": 166.75,
+      "median_ms": 5.836,
+      "p99_ms": 8.144,
+      "mean_render_ms": 5.95,
+      "item_emissions_per_frame": 2,
+      "block_emissions": 2,
+      "unique_positions": 2,
+      "sizes": [
+        [
+          "1920",
+          "1080"
+        ]
+      ],
+      "paused_frames": 0
+    },
+    {
+      "phase": "1_optimized",
+      "frames": 7297,
+      "seconds": 19.0,
+      "fps": 384.02,
+      "median_ms": 2.528,
+      "p99_ms": 4.426,
+      "mean_render_ms": 2.582,
+      "item_emissions_per_frame": 2,
+      "block_emissions": 2,
+      "unique_positions": 2,
+      "sizes": [
+        [
+          "1920",
+          "1080"
+        ]
+      ],
+      "paused_frames": 5
+    },
+    {
+      "phase": "2_original",
+      "frames": 3149,
+      "seconds": 19.0,
+      "fps": 165.75,
+      "median_ms": 5.881,
+      "p99_ms": 8.07,
+      "mean_render_ms": 5.998,
+      "item_emissions_per_frame": 2,
+      "block_emissions": 2,
+      "unique_positions": 2,
+      "sizes": [
+        [
+          "1920",
+          "1080"
+        ]
+      ],
+      "paused_frames": 0
+    },
+    {
+      "phase": "3_optimized",
+      "frames": 7040,
+      "seconds": 19.0,
+      "fps": 370.53,
+      "median_ms": 2.744,
+      "p99_ms": 3.806,
+      "mean_render_ms": 2.673,
+      "item_emissions_per_frame": 2,
+      "block_emissions": 2,
+      "unique_positions": 2,
+      "sizes": [
+        [
+          "1920",
+          "1080"
+        ]
+      ],
+      "paused_frames": 0
+    },
+    {
+      "phase": "4_original",
+      "frames": 3134,
+      "seconds": 19.0,
+      "fps": 164.94,
+      "median_ms": 5.931,
+      "p99_ms": 8.211,
+      "mean_render_ms": 6.027,
+      "item_emissions_per_frame": 2,
+      "block_emissions": 2,
+      "unique_positions": 2,
+      "sizes": [
+        [
+          "1920",
+          "1080"
+        ]
+      ],
+      "paused_frames": 0
+    },
+    {
+      "phase": "5_optimized",
+      "frames": 7093,
+      "seconds": 19.0,
+      "fps": 373.35,
+      "median_ms": 2.729,
+      "p99_ms": 3.671,
+      "mean_render_ms": 2.657,
+      "item_emissions_per_frame": 2,
+      "block_emissions": 2,
+      "unique_positions": 2,
+      "sizes": [
+        [
+          "1920",
+          "1080"
+        ]
+      ],
+      "paused_frames": 0
+    }
+  ],
+  "aggregate": {
+    "original_fps": 165.82,
+    "optimized_fps": 375.96,
+    "frame_time_reduction_percent": 55.9
+  },
+  "mesh": {
+    "original_item_faces": 14842,
+    "optimized_item_faces": 2000,
+    "world_faces_per_width": 14842,
+    "world_widths": [
+      2,
+      3,
+      4
+    ],
+    "height_m": 1,
+    "shared_item_meshes": 1,
+    "materials_per_shared_mesh": 54,
+    "gui_uses_original_geometry": true
+  },
+  "geometry_quality": {
+    "full_vertices": 7423,
+    "item_vertices": 1002,
+    "full_to_item_max_m": 0.03432077169418335,
+    "full_to_item_rms_m": 0.004365806247916198,
+    "item_to_full_max_m": 0.01565624214708805
+  },
+  "profile": "A separate 15s JFR during diagnosis found 515 of 718 render-thread execution samples in SodiumBufferBuilder.next; Iris extended vertex/tangent processing and Indium item buffering dominated. Two Exedra item mesh emissions per frame were observed.",
+  "limits": "Local controlled rendering comparison; not a measurement of the historical two-client slowdown or a prediction for other hardware. The 3D item mesh is simplified; placed models and GUI geometry are unchanged."
+}

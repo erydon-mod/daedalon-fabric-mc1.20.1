@@ -32,6 +32,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -54,6 +55,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     private static final long ESTIMATED_BYTES_PER_VERTEX = 36L;
 
     private final Mesh mesh;
+    private final Mesh itemMesh;
     private final BakedModel metadataModel;
     private final Sprite particleSprite;
     private final TextureTransform textureTransform;
@@ -67,6 +69,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     private final RenderMaterial containedWaterMaterial;
 
     private ObjMeshBakedModel(Mesh mesh,
+                              Mesh itemMesh,
                               BakedModel metadataModel,
                               Sprite particleSprite,
                               List<Sprite> materialSprites,
@@ -77,6 +80,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                               Identifier modelId,
                               Sprite containedWaterSprite) {
         this.mesh = mesh;
+        this.itemMesh = itemMesh;
         this.metadataModel = metadataModel;
         this.particleSprite = particleSprite;
         this.textureTransform = new TextureTransform(materialSprites, worldPhaseMaterials, worldTexturePhase, 0);
@@ -154,6 +158,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     }
 
     static ObjMeshBakedModel materialize(GeometryBakeResult geometry,
+                                         Mesh itemMesh,
                                          BakedModel metadataModel,
                                          Sprite particleSprite,
                                          List<Sprite> materialSprites,
@@ -174,6 +179,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         }
         return new ObjMeshBakedModel(
                 geometry.mesh(),
+                itemMesh,
                 metadataModel,
                 particleSprite,
                 materialSprites,
@@ -742,7 +748,11 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
         context.pushTransform(textureTransform);
         try {
-            mesh.outputTo(context.getEmitter());
+            if (itemMesh != null && context.itemTransformationMode() != ModelTransformationMode.GUI) {
+                itemMesh.outputTo(context.getEmitter());
+            } else {
+                mesh.outputTo(context.getEmitter());
+            }
         } finally {
             context.popTransform();
         }

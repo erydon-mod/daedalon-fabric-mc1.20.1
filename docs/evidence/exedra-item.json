@@ -1,0 +1,45 @@
+{
+  "blender_build_hash": "fbe6228777e7",
+  "blender_version": "5.2.0 LTS",
+  "name": "exedra_item",
+  "normalised_span": [
+    1.0,
+    0.331854466,
+    0.531977316
+  ],
+  "original_source_span": [
+    1.899770021,
+    0.984777987,
+    1.013336897
+  ],
+  "output_faces": 2000,
+  "output_mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+  "output_obj_sha256": "ff0a4914294ca6fc7107c34d70241e82a7f5f4ca6c11d7ea95e5af30c4f37b95",
+  "output_vertices": 1002,
+  "source_faces": 14842,
+  "source_sha256": "99527861da9611712a0a5e238c58eb2f51189ead2c48bbbb0ac119920f8a2ad7",
+  "source_span": [
+    3.008430719,
+    0.99836117,
+    1.600416899
+  ],
+  "source_triangles": 14842,
+  "source_vertices": 7423,
+  "target_faces": 2000,
+  "purpose": "Shared small 3D item mesh only. All placed widths and full-detail GUI templates retain their original geometry.",
+  "bounds": [
+    [
+      -1.505635,
+      -0.000999,
+      -0.800718
+    ],
+    [
+      1.502796,
+      0.997362,
+      0.799699
+    ]
+  ],
+  "normals": 1112,
+  "source": "exedra.obj",
+  "reproduction": "python tools/prepare_decor_mesh.py --input <original-exedra.obj> --name exedra_item --output-dir <staging> --target-faces 2000 --width-meters 3 --height-meters 1 --proportional-depth --preview"
+}

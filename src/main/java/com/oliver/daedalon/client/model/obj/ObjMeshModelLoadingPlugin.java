@@ -14,6 +14,7 @@ import com.oliver.daedalon.block.UrnBlock;
 import com.oliver.daedalon.registry.ModBlocks;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.PreparableModelLoadingPlugin;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.Baker;
@@ -150,11 +151,17 @@ public final class ObjMeshModelLoadingPlugin {
                     );
                 }
 
+                ObjMeshDefinition itemDefinition = family.itemDefinitionResource() == null ? null
+                        : ObjMeshDefinition.load(resourceManager, family.itemDefinitionResource());
+                ObjMeshData itemData = itemDefinition == null ? null
+                        : ObjMeshParser.parse(resourceManager, itemDefinition);
                 SharedGeometry geometry = new SharedGeometry(
                         definition,
                         data,
                         family.variants().size(),
-                        family.variants().get(0).worldTexturePhase()
+                        family.variants().get(0).worldTexturePhase(),
+                        itemDefinition,
+                        itemData
                 );
                 List<PreparedModel> prepared = new ArrayList<>(family.variants().size());
                 for (MeshVariant variant : family.variants()) {
@@ -318,7 +325,8 @@ public final class ObjMeshModelLoadingPlugin {
                     "Exedra " + width + "m",
                     id("models/mesh/exedra_" + width + "m.json"),
                     id("block/mesh/exedra_display"),
-                    createExedraVariants(width)
+                    createExedraVariants(width),
+                    width == ExedraBlock.DEFAULT_WIDTH ? id("models/mesh/exedra_item.json") : null
             ));
         }
         return List.copyOf(families);
@@ -601,7 +609,13 @@ public final class ObjMeshModelLoadingPlugin {
     private record MeshFamily(String displayName,
                               Identifier definitionResource,
                               Identifier displayModel,
-                              List<MeshVariant> variants) {
+                              List<MeshVariant> variants,
+                              Identifier itemDefinitionResource) {
+        private MeshFamily(String displayName, Identifier definitionResource,
+                           Identifier displayModel, List<MeshVariant> variants) {
+            this(displayName, definitionResource, displayModel, variants, null);
+        }
+
         private MeshFamily {
             variants = List.copyOf(variants);
             if (variants.isEmpty()) {
@@ -646,6 +660,9 @@ public final class ObjMeshModelLoadingPlugin {
         private final int modelCount;
         private final WorldTexturePhase.Layout worldTexturePhase;
         private ObjMeshData data;
+        private final ObjMeshDefinition itemDefinition;
+        private ObjMeshData itemData;
+        private Mesh itemMesh;
         private ObjMeshBakedModel.GeometryBakeResult baked;
         private ObjGuiIconTemplate guiIconTemplate;
         private Transformation guiTransformation;
@@ -653,12 +670,16 @@ public final class ObjMeshModelLoadingPlugin {
         private SharedGeometry(ObjMeshDefinition definition,
                                ObjMeshData data,
                                int modelCount,
-                               WorldTexturePhase.Layout worldTexturePhase) {
+                               WorldTexturePhase.Layout worldTexturePhase,
+                               ObjMeshDefinition itemDefinition,
+                               ObjMeshData itemData) {
             this.definition = definition;
             this.data = data;
             this.materialTextures = data.materialTextures();
             this.modelCount = modelCount;
             this.worldTexturePhase = worldTexturePhase;
+            this.itemDefinition = itemDefinition;
+            this.itemData = itemData;
         }
 
         private synchronized ObjMeshBakedModel.GeometryBakeResult bake(BakedModel metadataModel) {
@@ -681,6 +702,21 @@ public final class ObjMeshModelLoadingPlugin {
             );
             baked = ObjMeshBakedModel.bakeGeometry(definition, sourceData);
             data = null;
+            if (itemData != null) {
+                // One optional small 3D item mesh per family, shared by every material.
+                // Placed geometry and the full-detail GUI template still use baked.mesh().
+                ObjMeshBakedModel.GeometryBakeResult itemBake =
+                        ObjMeshBakedModel.bakeGeometry(itemDefinition, itemData);
+                if (!itemBake.materialNames().equals(baked.materialNames())) {
+                    throw new IllegalStateException("Item mesh must retain the world's material tags: " + itemDefinition.objId());
+                }
+                itemMesh = itemBake.mesh();
+                itemData = null;
+                Daedalon.LOGGER.debug(
+                        "[Daedalon OBJ Item] shared item mesh obj={} fabricQuads={} materialModels={}",
+                        itemDefinition.objId(), itemBake.emittedQuadCount(), modelCount
+                );
+            }
             guiTransformation = requestedGuiTransformation;
             try {
                 guiIconTemplate = ObjGuiIconTemplate.create(
@@ -836,6 +872,7 @@ public final class ObjMeshModelLoadingPlugin {
             );
             bakedModel = ObjMeshBakedModel.materialize(
                     bakedGeometry,
+                    geometry.itemMesh,
                     metadataModel,
                     particleSprite,
                     materials.sprites(),
