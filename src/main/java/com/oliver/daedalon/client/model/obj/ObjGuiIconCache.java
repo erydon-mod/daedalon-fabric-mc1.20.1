@@ -10,17 +10,21 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -37,10 +41,10 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Lazy GUI-only cache for high-detail OBJ items. A complete family mesh is
+ * Shared flat-icon cache for high-detail OBJ items. A complete family mesh is
  * rasterized once into a shared texture-independent template; each material
  * variant then occupies one small dynamic-atlas cell and renders as one quad.
- * Unsupported inputs always fall through to the normal complete OBJ model.
+ * Unavailable OBJ icons use a flat material sprite rather than a full mesh.
  */
 public final class ObjGuiIconCache {
     private static final float UV_EPSILON = 1.0E-5F;
@@ -107,18 +111,30 @@ public final class ObjGuiIconCache {
                                     int light,
                                     int overlay,
                                     BakedModel bakedModel) {
+        if (!Daedalon.MOD_ID.equals(Registries.ITEM.getId(stack.getItem()).getNamespace())) {
+            return false;
+        }
+        // Cancel before requesting an icon or emitting geometry, including the off hand.
+        if (renderMode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND
+                || renderMode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND) {
+            return true;
+        }
+        if (renderMode != ModelTransformationMode.GUI && bakedModel instanceof ObjMeshBakedModel objModel) {
+            return renderWorldIcon(stack, renderMode, matrices, vertexConsumers, light, overlay, objModel);
+        }
         if (renderMode != ModelTransformationMode.GUI
                 || leftHanded
                 || overlay != OverlayTexture.DEFAULT_UV
                 || stack.hasGlint()
                 || !(bakedModel instanceof ObjMeshBakedModel objModel)
                 || objModel.guiIconTemplate() == null) {
-            return false;
+            return bakedModel instanceof ObjMeshBakedModel objModel
+                    && renderWorldIcon(stack, renderMode, matrices, vertexConsumers, light, overlay, objModel);
         }
 
         IconCell cell = INSTANCE.getOrCreate(objModel);
         if (cell == null) {
-            return false;
+            return renderWorldIcon(stack, renderMode, matrices, vertexConsumers, light, overlay, objModel);
         }
 
         MatrixStack.Entry matrixEntry = matrices.peek();
@@ -136,6 +152,66 @@ public final class ObjGuiIconCache {
         vertex(consumer, positionMatrix, normalMatrix,
                 0.5F, -0.5F, cell.maxU(), cell.maxV(), light, overlay);
         return true;
+    }
+
+    private static boolean renderWorldIcon(ItemStack stack,
+                                           ModelTransformationMode mode,
+                                           MatrixStack matrices,
+                                           VertexConsumerProvider vertexConsumers,
+                                           int light, int overlay,
+                                           ObjMeshBakedModel model) {
+        IconCell cell = model.guiIconTemplate() == null ? null : INSTANCE.getOrCreate(model);
+        if (cell == null) {
+            // Resource-pack/cache failures must not bring back an expensive 3D item.
+            var sprite = model.getParticleSprite();
+            cell = new IconCell(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE,
+                    sprite.getMinU(), sprite.getMinV(), sprite.getMaxU(), sprite.getMaxV());
+        }
+        matrices.push();
+        try {
+            // Use vanilla flat-item size and offsets, independent of OBJ dimensions.
+            switch (mode) {
+                case THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND -> {
+                    matrices.translate(0.0, 3.0 / 16.0, 1.0 / 16.0);
+                    // A slight tilt keeps a paper-thin icon visible in a front view.
+                    matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
+                    matrices.scale(0.55F, 0.55F, 0.55F);
+                }
+                case GROUND -> {
+                    matrices.translate(0.0, 2.0 / 16.0, 0.0);
+                    matrices.scale(0.5F, 0.5F, 0.5F);
+                }
+                case HEAD -> {
+                    matrices.translate(0.0, 13.0 / 16.0, 7.0 / 16.0);
+                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
+                }
+                case FIXED -> matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
+                default -> { }
+            }
+            VertexConsumer consumer = ItemRenderer.getItemGlintConsumer(vertexConsumers,
+                    RenderLayer.getEntityCutout(cell.atlasId()), true, stack.hasGlint());
+            MatrixStack.Entry entry = matrices.peek();
+            // Opposite winding and mirrored back UVs keep the picture readable from both sides.
+            worldVertex(consumer, entry, -0.5F, -0.5F, cell.minU(), cell.maxV(), 1, light, overlay);
+            worldVertex(consumer, entry, 0.5F, -0.5F, cell.maxU(), cell.maxV(), 1, light, overlay);
+            worldVertex(consumer, entry, 0.5F, 0.5F, cell.maxU(), cell.minV(), 1, light, overlay);
+            worldVertex(consumer, entry, -0.5F, 0.5F, cell.minU(), cell.minV(), 1, light, overlay);
+            worldVertex(consumer, entry, 0.5F, -0.5F, cell.minU(), cell.maxV(), -1, light, overlay);
+            worldVertex(consumer, entry, -0.5F, -0.5F, cell.maxU(), cell.maxV(), -1, light, overlay);
+            worldVertex(consumer, entry, -0.5F, 0.5F, cell.maxU(), cell.minV(), -1, light, overlay);
+            worldVertex(consumer, entry, 0.5F, 0.5F, cell.minU(), cell.minV(), -1, light, overlay);
+        } finally {
+            matrices.pop();
+        }
+        return true;
+    }
+
+    private static void worldVertex(VertexConsumer consumer, MatrixStack.Entry entry,
+                                    float x, float y, float u, float v, float normalZ,
+                                    int light, int overlay) {
+        consumer.vertex(entry.getPositionMatrix(), x, y, 0.0F)
+                .color(255, 255, 255, 255).texture(u, v).overlay(overlay).light(light)
+                .normal(entry.getNormalMatrix(), 0.0F, 0.0F, normalZ).next();
     }
 
     private synchronized IconCell getOrCreate(ObjMeshBakedModel model) {
@@ -183,7 +259,7 @@ public final class ObjGuiIconCache {
         } catch (IOException | RuntimeException exception) {
             failedModels.add(model);
             Daedalon.LOGGER.warn(
-                    "[Daedalon OBJ GUI] Unable to cache full-model icon for {}; using complete-mesh fallback: {}",
+                    "[Daedalon OBJ GUI] Unable to cache full-model icon for {}; using flat material icon fallback: {}",
                     model.modelId(),
                     exception.getMessage()
             );

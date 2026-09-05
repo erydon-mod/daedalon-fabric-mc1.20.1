@@ -45,7 +45,7 @@ class GuiItemPerformanceSafetyTests(unittest.TestCase):
             raise AssertionError(f"Missing integer constant {name}")
         return int(match.group(1))
 
-    def test_gui_cache_is_narrow_and_complete_mesh_is_the_fallback(self) -> None:
+    def test_gui_cache_is_narrow_and_unavailable_icons_stay_flat(self) -> None:
         mixins = load_json(RESOURCES / "daedalon.mixins.json")["client"]
         self.assertIn("client.ItemRendererMixin", mixins)
         self.assertIn("ObjGuiIconCache.register()", self.client)
@@ -81,7 +81,7 @@ class GuiItemPerformanceSafetyTests(unittest.TestCase):
         self.assertIn("stack.hasGlint()", self.cache)
         self.assertIn("objModel.guiIconTemplate() == null", self.cache)
         self.assertIn("return false;", self.cache)
-        self.assertIn("using complete-mesh fallback", self.cache)
+        self.assertIn("using flat material icon fallback", self.cache)
 
     def test_axiom_palette_reuses_the_bounded_gui_icon_path(self) -> None:
         mixins = load_json(RESOURCES / "daedalon.mixins.json")["client"]
