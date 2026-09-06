@@ -28,6 +28,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class MonopterosGameTests {
+    @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE)
+    public void onlyMaterialOwnersEmitBreakParticles(TestContext context) {
+        for (BlockState part : ModBlocks.monopterosPart().getStateManager().getStates()) {
+            context.assertTrue(!part.hasBlockBreakParticles(), "Invisible cells must not emit Aganite fallback particles");
+        }
+        int owners = 0;
+        for (Block block : Registries.BLOCK) {
+            if (!(block instanceof MonopterosBlock)) continue;
+            owners++;
+            for (BlockState state : block.getStateManager().getStates()) {
+                context.assertTrue(state.hasBlockBreakParticles(), "Every dome material and diameter must retain its particles");
+            }
+        }
+        context.assertTrue(owners == 55, "Check all stone, aged stone and bronze domes");
+        context.complete();
+    }
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=400)
     public void flushCrownsAcceptBlocksAndEveryBronzeFinial(TestContext context) {
         var world=context.getWorld();

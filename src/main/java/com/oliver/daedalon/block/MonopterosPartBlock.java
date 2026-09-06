@@ -7,6 +7,9 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.BlockMirror;
@@ -22,7 +25,11 @@ public final class MonopterosPartBlock extends Block {
     public static final IntProperty X=IntProperty.of("offset_x",0,8);
     public static final IntProperty Y=IntProperty.of("offset_y",0,5);
     public static final IntProperty Z=IntProperty.of("offset_z",0,8);
-    public MonopterosPartBlock(Settings settings) { super(settings.dynamicBounds()); }
+    public MonopterosPartBlock(Settings settings) {
+        // The break handler emits the owner's material. Shared invisible cells
+        // must not add another burst using their fallback sprite.
+        super(settings.dynamicBounds().noBlockBreakParticles());
+    }
     @Override protected void appendProperties(StateManager.Builder<Block,BlockState> builder) { builder.add(X,Y,Z); }
     public BlockState stateForOffset(BlockPos offset) {
         return getDefaultState().with(X,offset.getX()+4).with(Y,offset.getY()).with(Z,offset.getZ()+4);
@@ -59,7 +66,15 @@ public final class MonopterosPartBlock extends Block {
     @Override public void onBreak(World world,BlockPos pos,BlockState state,PlayerEntity player) {
         if (!world.isClient) {
             BlockPos anchor=resolveAnchorPos(world,pos,state);
-            if (anchor!=null) world.breakBlock(anchor,!player.isCreative(),player);
+            if (anchor!=null) {
+                // The hollow owner's origin has no outline to generate vanilla
+                // debris from. Emit one bounded burst at the clicked cell before
+                // removing the owner; no per-cell material state or ticking needed.
+                BlockState owner=world.getBlockState(anchor);
+                ((ServerWorld)world).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK,owner),
+                        pos.getX()+.5,pos.getY()+.5,pos.getZ()+.5,16,.2,.2,.2,.05);
+                world.breakBlock(anchor,!player.isCreative(),player);
+            }
         }
         super.onBreak(world,pos,state,player);
     }
