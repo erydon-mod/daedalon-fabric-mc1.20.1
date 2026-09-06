@@ -831,6 +831,13 @@ def generate_languages(
 ) -> None:
     for language in ("en_us", "de_de", "es_es"):
         entries = dict(STATIC_LANGUAGE_ENTRIES[language])
+        particle_messages = {
+            "en_us": ("Dome particles: Normal (16). This computer only.", "Dome particles: High (64, 4x). This computer only.", "Could not save the dome particle setting; the previous setting is unchanged."),
+            "de_de": ("Kuppelpartikel: Normal (16). Nur auf diesem Computer.", "Kuppelpartikel: Hoch (64, 4x). Nur auf diesem Computer.", "Die Kuppelpartikel-Einstellung konnte nicht gespeichert werden; die bisherige Einstellung bleibt erhalten."),
+            "es_es": ("Partículas de cúpula: Normal (16). Solo en este equipo.", "Partículas de cúpula: Alto (64, 4x). Solo en este equipo.", "No se pudo guardar la configuración de partículas de cúpula; se mantiene la configuración anterior."),
+        }[language]
+        for key, message in zip(("normal", "high", "save_failed"), particle_messages):
+            entries[f"message.daedalon.dome_particles.{key}"] = message
         orientation_labels = {
             "en_us": ("Capital orientation", "Straight", "Diagonal (45°)", "Straight (90°)", "Diagonal (135°)"),
             "de_de": ("Kapitellausrichtung", "Gerade", "Diagonal (45°)", "Gerade (90°)", "Diagonal (135°)"),

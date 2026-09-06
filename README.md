@@ -12,6 +12,15 @@ This repository is source-available under Oliver's restricted licence. It is
 not open-source software; see `LICENSE`. Third-party asset credits are retained
 under `src/main/resources/META-INF/THIRD_PARTY_NOTICES.md`.
 
+## Dome particles
+
+For denser dome-breaking particles, run `/daedalon domeParticles high` in game
+(64 particles instead of 16). Use `/daedalon domeParticles normal` to restore
+the default, or `/daedalon domeParticles` to check the setting. The option is
+saved for this computer and takes effect immediately. It adds no server traffic
+and does not change other players' settings. Normal mode creates no extra
+particles; Minecraft's particle settings and distance limits still apply.
+
 ## Development validation
 
 Daedalon requires Java 17 and Python 3.13. Run the complete compilation, test,

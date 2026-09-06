@@ -29,6 +29,26 @@ import java.util.List;
 
 public final class MonopterosGameTests {
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE)
+    public void highParticlesAreOptionalBoundedAndMaterialPreserving(TestContext context) {
+        for (Block block : Registries.BLOCK) {
+            if (!(block instanceof MonopterosBlock)) continue;
+            for (BlockState state : block.getStateManager().getStates()) {
+                var effect = new net.minecraft.particle.BlockStateParticleEffect(net.minecraft.particle.ParticleTypes.BLOCK, state);
+                var normal = new net.minecraft.network.packet.s2c.play.ParticleS2CPacket(effect, false, 1, 2, 3, .2f, .2f, .2f, .05f, 16);
+                context.assertTrue(com.oliver.daedalon.client.DomeParticleBurst.apply(normal, false) == normal, "Normal must reuse the unchanged packet");
+                var high = com.oliver.daedalon.client.DomeParticleBurst.apply(normal, true);
+                context.assertTrue(high.getCount() == 64 && high.getParameters() == effect, "High must quadruple only the count, retaining material and age");
+                context.assertTrue(high.getX() == normal.getX() && high.getY() == normal.getY() && high.getZ() == normal.getZ()
+                        && high.getOffsetX() == normal.getOffsetX() && high.getSpeed() == normal.getSpeed(), "Burst position and motion must remain unchanged");
+                context.assertTrue(com.oliver.daedalon.client.DomeParticleBurst.apply(high, true) == high, "Main-thread dispatch must not multiply twice");
+                context.assertTrue(normal.getCount() == 16, "Other clients must retain the original count");
+            }
+        }
+        var unrelated = new net.minecraft.network.packet.s2c.play.ParticleS2CPacket(net.minecraft.particle.ParticleTypes.FLAME, false, 0, 0, 0, 0, 0, 0, 0, 16);
+        context.assertTrue(com.oliver.daedalon.client.DomeParticleBurst.apply(unrelated, true) == unrelated, "Other effects must remain unchanged");
+        context.complete();
+    }
+    @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE)
     public void onlyMaterialOwnersEmitBreakParticles(TestContext context) {
         for (BlockState part : ModBlocks.monopterosPart().getStateManager().getStates()) {
             context.assertTrue(!part.hasBlockBreakParticles(), "Invisible cells must not emit Aganite fallback particles");
