@@ -65,7 +65,8 @@ class FountainParticleSafetyTests(unittest.TestCase):
             self.assertIn(required, source)
         for required in ("source.plan.emissionsPerTick()", "source.plan.emitterForEmission(source.emitter)",
                          "FountainSprayPlan.dropletScale(world.random.nextFloat())",
-                         "cadence / 2", "MAX_SPAWNS_PER_TICK / 2",
+                         "budget.emissions(cadence", "budget.spawnLimit(",
+                         "DROPS.trimToSize()", "selected == FountainParticleBudget.NORMAL",
                          "emitter.landing().contains(x, z)"):
             self.assertIn(required, source)
         for forbidden in ("ServerTick", "getChunk(", "iterateOutwards", "setBlockState",

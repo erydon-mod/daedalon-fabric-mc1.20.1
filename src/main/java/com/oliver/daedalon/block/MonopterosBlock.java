@@ -20,7 +20,7 @@ import net.minecraft.world.WorldAccess;
 public final class MonopterosBlock extends Block {
     public static final EnumProperty<Diameter> DIAMETER=EnumProperty.of("diameter",Diameter.class);
     public MonopterosBlock(Settings settings) {
-        super(settings.pistonBehavior(PistonBehavior.BLOCK));
+        super(settings.pistonBehavior(PistonBehavior.BLOCK).noBlockBreakParticles());
         setDefaultState(getStateManager().getDefaultState().with(DIAMETER,Diameter.SIX));
         MonopterosGeometry.offsets(Diameter.SIX);
     }

@@ -12,7 +12,6 @@
     "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
-    "client.DomeParticlePacketMixin",
     "client.BuiltChunkMixin",
     "client.WorldRendererMixin",
     "client.sodium.OcclusionCullerMixin",

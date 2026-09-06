@@ -12,14 +12,15 @@ This repository is source-available under Oliver's restricted licence. It is
 not open-source software; see `LICENSE`. Third-party asset credits are retained
 under `src/main/resources/META-INF/THIRD_PARTY_NOTICES.md`.
 
-## Dome particles
+## Fountain droplets
 
-For denser dome-breaking particles, run `/daedalon domeParticles high` in game
-(64 particles instead of 16). Use `/daedalon domeParticles normal` to restore
-the default, or `/daedalon domeParticles` to check the setting. The option is
-saved for this computer and takes effect immediately. It adds no server traffic
-and does not change other players' settings. Normal mode creates no extra
-particles; Minecraft's particle settings and distance limits still apply.
+Use `/daedalon fountainParticles high` for four times the fountain liquid drops
+and their landing ripples, or `/daedalon fountainParticles normal` for the default.
+`/daedalon fountainParticles` reports the saved setting for this computer.
+Changes take effect immediately; Normal restores the original particle budgets,
+including clearing any remaining High-mode drops. No server work or network
+traffic is added. Minecraft's Decreased and Minimal particle settings still apply.
+Dome-breaking particles are disabled.
 
 ## Development validation
 
@@ -74,7 +75,7 @@ vertical paths to the pools; they do not yet collide with arbitrary intervening
 blocks or players, or form a continuous sheet across the rim. The stone models,
 pooled water, collision and debug-stick properties remain unchanged.
 
-The effect is client-only, limited to 32 blocks, 768 live particles globally,
+In Normal mode the client-only effect is limited to 32 blocks, 768 live particles globally,
 320 per fountain and 48 new particles per tick. Decreased particles halves the
 per-fountain/global spawn budgets and cadence; Minimal disables the prototype.
 Fountain loading events supply the sources, with at most 64 source checks per

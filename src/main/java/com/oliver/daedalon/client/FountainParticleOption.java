@@ -12,10 +12,10 @@ import java.util.Properties;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 /** Loaded once; disk access only when the player changes the option. */
-public final class DomeParticleOption {
+public final class FountainParticleOption {
     private static volatile boolean high;
-    private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("daedalon-dome-particles.properties");
-    private DomeParticleOption() {}
+    private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("daedalon-fountain-particles.properties");
+    private FountainParticleOption() {}
 
     public static boolean isHigh() { return high; }
 
@@ -26,11 +26,11 @@ public final class DomeParticleOption {
                 properties.load(reader);
                 high = Boolean.parseBoolean(properties.getProperty("high", "false"));
             } catch (IOException | IllegalArgumentException exception) {
-                Daedalon.LOGGER.warn("Could not read dome particle option; using normal", exception);
+                Daedalon.LOGGER.warn("Could not read fountain particle option; using normal", exception);
             }
         }
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, access) -> dispatcher.register(
-                literal("daedalon").then(literal("domeParticles")
+                literal("daedalon").then(literal("fountainParticles")
                         .executes(context -> report(context.getSource()))
                         .then(literal("normal").executes(context -> set(context.getSource(), false)))
                         .then(literal("high").executes(context -> set(context.getSource(), true))))));
@@ -43,13 +43,13 @@ public final class DomeParticleOption {
             high = enabled;
             return report(source);
         } catch (IOException exception) {
-            source.sendError(Text.translatable("message.daedalon.dome_particles.save_failed"));
+            source.sendError(Text.translatable("message.daedalon.fountain_particles.save_failed"));
             return 0;
         }
     }
 
     private static int report(FabricClientCommandSource source) {
-        source.sendFeedback(Text.translatable(high ? "message.daedalon.dome_particles.high" : "message.daedalon.dome_particles.normal"));
+        source.sendFeedback(Text.translatable(high ? "message.daedalon.fountain_particles.high" : "message.daedalon.fountain_particles.normal"));
         return 1;
     }
 }

@@ -10,7 +10,7 @@ import net.fabricmc.api.ClientModInitializer;
 public final class DaedalonClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        com.oliver.daedalon.client.DomeParticleOption.register();
+        com.oliver.daedalon.client.FountainParticleOption.register();
         CollectionResourcePackNotice.register();
         ObjGuiIconCache.register();
         ObjMeshModelLoadingPlugin.register();

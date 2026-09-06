@@ -3,6 +3,7 @@ package com.oliver.daedalon.client.fountain;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.entity.FountainBasinBlockEntity;
 import com.oliver.daedalon.registry.ModParticles;
+import com.oliver.daedalon.client.FountainParticleOption;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -30,6 +31,7 @@ public final class FountainParticles {
     private static SpriteProvider sprites;
     private static int cursor;
     private static long tick;
+    private static FountainParticleBudget budget = FountainParticleBudget.NORMAL;
 
     private FountainParticles() { }
 
@@ -72,6 +74,19 @@ public final class FountainParticles {
         if (world == null || client.isPaused()) return;
         tick++;
         ParticlesMode mode = client.options.getParticles().getValue();
+        FountainParticleBudget selected = FountainParticleBudget.select(FountainParticleOption.isHigh());
+        if (selected != budget) {
+            if (selected == FountainParticleBudget.NORMAL) {
+                // Switching down immediately releases the extra particles and storage.
+                for (Drop drop : DROPS) {
+                    drop.particle.markDead();
+                    drop.source.live--;
+                }
+                DROPS.clear();
+                DROPS.trimToSize();
+            }
+            budget = selected;
+        }
         // Also retire detached particles after resource reloads, when the vanilla manager may
         // discard them without ticking/marking them dead. The retained list always stays bounded.
         DROPS.removeIf(drop -> {
@@ -86,11 +101,10 @@ public final class FountainParticles {
         if (sprites == null || client.getCameraEntity() == null || mode == ParticlesMode.MINIMAL
                 || (mode == ParticlesMode.DECREASED && (tick & 1) != 0)) return;
 
-        int remaining = mode == ParticlesMode.DECREASED
-                ? MAX_SPAWNS_PER_TICK / 2 : MAX_SPAWNS_PER_TICK;
+        int remaining = budget.spawnLimit(mode == ParticlesMode.DECREASED);
         int checks = Math.min(SOURCES.size(), MAX_SOURCE_CHECKS);
         for (int i = 0; i < checks && !SOURCES.isEmpty()
-                && remaining > 0 && DROPS.size() < MAX_PARTICLES; i++) {
+                && remaining > 0 && DROPS.size() < budget.maxParticles(); i++) {
             if (cursor >= SOURCES.size()) cursor = 0;
             Source source = SOURCES.get(cursor++);
             if (!source.valid || source.basin.isRemoved()) {
@@ -115,9 +129,9 @@ public final class FountainParticles {
                 source.emitter = 0;
             }
             int cadence = source.plan.emissionsPerTick();
-            int count = mode == ParticlesMode.DECREASED ? cadence / 2 : cadence;
-            for (int j = 0; j < count && remaining > 0 && DROPS.size() < MAX_PARTICLES
-                    && source.live < MAX_PER_FOUNTAIN; j++) {
+            int count = budget.emissions(cadence, mode == ParticlesMode.DECREASED);
+            for (int j = 0; j < count && remaining > 0 && DROPS.size() < budget.maxParticles()
+                    && source.live < budget.maxPerFountain(); j++) {
                 var emitter = source.plan.emitterForEmission(source.emitter);
                 source.emitter = (source.emitter + 1) % cadence;
                 boolean jet = emitter.velocityY() > 0;
