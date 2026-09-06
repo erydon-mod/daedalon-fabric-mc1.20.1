@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.model.WrapperBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.block.BlockState;
@@ -645,7 +646,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         BakedModel plinthModel = MinecraftClient.getInstance()
                 .getBlockRenderManager()
                 .getModel(plinth.state());
-        if (plinthModel instanceof ObjMeshBakedModel objModel) {
+        if (unwrapAttachedModel(plinthModel) instanceof ObjMeshBakedModel objModel) {
             objModel.emitAttachedPlinthQuads(
                     plinth.state(),
                     pos,
@@ -661,7 +662,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                             plinthBlock,
                             bowl.style()
                     ));
-            if (bowlModel instanceof ObjMeshBakedModel objModel) {
+            if (unwrapAttachedModel(bowlModel) instanceof ObjMeshBakedModel objModel) {
                 objModel.emitAttachedBowlQuads(
                         blockView,
                         pos,
@@ -673,6 +674,13 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 );
             }
         }
+    }
+
+    static BakedModel unwrapAttachedModel(BakedModel model) {
+        // Continuity can wrap both blockstate models and internal bowl models.
+        // Only access the underlying attachment geometry; retain the manager's
+        // wrappers and the basin's active render transforms. No reload cache.
+        return WrapperBakedModel.unwrap(model);
     }
 
     private void emitAttachedPlinthQuads(BlockState state,
