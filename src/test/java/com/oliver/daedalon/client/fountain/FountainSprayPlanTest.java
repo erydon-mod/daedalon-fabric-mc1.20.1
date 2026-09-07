@@ -53,6 +53,7 @@ final class FountainSprayPlanTest {
                                     age++;
                                 } while ((v >= 0 || y > emitter.landing().y())
                                         && age < FountainSprayPlan.MAX_AGE);
+                                assertEquals(age, FountainSprayPlan.flightTicks(emitter.y() - emitter.landing().y(), emitter.velocityY() * velocityScale), context);
                                 assertTrue(age < FountainSprayPlan.MAX_AGE - 4, context);
                                 assertTrue(v < 0, context);
                                 longestFlight = Math.max(longestFlight, age);
@@ -85,16 +86,16 @@ final class FountainSprayPlanTest {
 
     @Test
     void dropletSizesVaryWithinBoundsAndSplashesFollowTheirSize() {
-        assertEquals(0.04F, FountainSprayPlan.dropletScale(0), 0.00001F);
-        assertEquals(0.09F, FountainSprayPlan.dropletScale(1), 0.00001F);
+        assertEquals(0.055F, FountainSprayPlan.dropletScale(0), 0.00001F);
+        assertEquals(0.11F, FountainSprayPlan.dropletScale(1), 0.00001F);
         float previous = 0;
         for (int sample = 0; sample <= 100; sample++) {
             float size = FountainSprayPlan.dropletScale(sample / 100F);
             assertTrue(size >= previous);
-            assertTrue(size >= 0.04F && size <= 0.09001F);
+            assertTrue(size >= 0.055F && size <= 0.11001F);
             assertTrue(FountainSprayPlan.splashScale(size, 0) > size);
             assertTrue(FountainSprayPlan.splashScale(size, 3) > FountainSprayPlan.splashScale(size, 0));
-            assertTrue(FountainSprayPlan.splashScale(size, 3) < 0.2F);
+            assertTrue(FountainSprayPlan.splashScale(size, 3) < 0.32F);
             previous = size;
         }
     }

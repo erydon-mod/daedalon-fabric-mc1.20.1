@@ -14,10 +14,12 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 /** Loaded once; disk access only when the player changes the option. */
 public final class FountainParticleOption {
     private static volatile boolean high;
+    private static volatile boolean sound = true;
     private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("daedalon-fountain-particles.properties");
     private FountainParticleOption() {}
 
     public static boolean isHigh() { return high; }
+    public static boolean isSoundEnabled() { return sound; }
 
     public static void register() {
         if (Files.exists(FILE)) {
@@ -25,6 +27,7 @@ public final class FountainParticleOption {
             try (var reader = Files.newBufferedReader(FILE)) {
                 properties.load(reader);
                 high = Boolean.parseBoolean(properties.getProperty("high", "false"));
+                sound = Boolean.parseBoolean(properties.getProperty("sound", "true"));
             } catch (IOException | IllegalArgumentException exception) {
                 Daedalon.LOGGER.warn("Could not read fountain particle option; using normal", exception);
             }
@@ -33,19 +36,40 @@ public final class FountainParticleOption {
                 literal("daedalon").then(literal("fountainParticles")
                         .executes(context -> report(context.getSource()))
                         .then(literal("normal").executes(context -> set(context.getSource(), false)))
-                        .then(literal("high").executes(context -> set(context.getSource(), true))))));
+                        .then(literal("high").executes(context -> set(context.getSource(), true))))
+                        .then(literal("fountainSound")
+                                .executes(context -> reportSound(context.getSource()))
+                                .then(literal("on").executes(context -> setSound(context.getSource(), true)))
+                                .then(literal("off").executes(context -> setSound(context.getSource(), false))))));
     }
 
     private static int set(FabricClientCommandSource source, boolean enabled) {
         try {
             Files.createDirectories(FILE.getParent());
-            Files.writeString(FILE, "high=" + enabled + "\n");
+            Files.writeString(FILE, "high=" + enabled + "\nsound=" + sound + "\n");
             high = enabled;
             return report(source);
         } catch (IOException exception) {
             source.sendError(Text.translatable("message.daedalon.fountain_particles.save_failed"));
             return 0;
         }
+    }
+
+    private static int setSound(FabricClientCommandSource source, boolean enabled) {
+        try {
+            Files.createDirectories(FILE.getParent());
+            Files.writeString(FILE, "high=" + high + "\nsound=" + enabled + "\n");
+            sound = enabled;
+            return reportSound(source);
+        } catch (IOException exception) {
+            source.sendError(Text.translatable("message.daedalon.fountain_particles.save_failed"));
+            return 0;
+        }
+    }
+
+    private static int reportSound(FabricClientCommandSource source) {
+        source.sendFeedback(Text.translatable(sound ? "message.daedalon.fountain_sound.on" : "message.daedalon.fountain_sound.off"));
+        return 1;
     }
 
     private static int report(FabricClientCommandSource source) {

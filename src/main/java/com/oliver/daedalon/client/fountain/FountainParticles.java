@@ -27,6 +27,8 @@ public final class FountainParticles {
     private static final double RANGE_SQUARED = 32 * 32;
     private static final ArrayList<Source> SOURCES = new ArrayList<>();
     private static final ArrayList<Drop> DROPS = new ArrayList<>();
+    private static final ArrayList<FountainSound> SOUNDS = new ArrayList<>(4);
+    private static int soundCursor;
     private static ClientWorld world;
     private static SpriteProvider sprites;
     private static int cursor;
@@ -62,6 +64,8 @@ public final class FountainParticles {
 
     private static void useWorld(ClientWorld next) {
         if (world == next) return;
+        for (FountainSound sound : SOUNDS) MinecraftClient.getInstance().getSoundManager().stop(sound);
+        SOUNDS.clear();
         for (Drop drop : DROPS) drop.particle.markDead();
         DROPS.clear();
         SOURCES.clear();
@@ -73,6 +77,7 @@ public final class FountainParticles {
         useWorld(client.world);
         if (world == null || client.isPaused()) return;
         tick++;
+        updateSounds(client);
         ParticlesMode mode = client.options.getParticles().getValue();
         FountainParticleBudget selected = FountainParticleBudget.select(FountainParticleOption.isHigh());
         if (selected != budget) {
@@ -147,9 +152,19 @@ public final class FountainParticles {
                 }
                 double x = emitter.x() + jitterX, z = emitter.z() + jitterZ;
                 if (!emitter.landing().contains(x, z)) continue;
+                double velocityY = emitter.velocityY() * (0.88 + world.random.nextDouble() * 0.24);
+                int flight = FountainSprayPlan.flightTicks(emitter.y() - emitter.landing().y(), velocityY);
+                // Spread the crown and let rim streams arc outwards. Constrain the
+                // landing point analytically, without collision or world searches.
+                double driftX = jet ? (world.random.nextDouble()-.5)*.65 : emitter.x()*.09;
+                double driftZ = jet ? (world.random.nextDouble()-.5)*.65 : emitter.z()*.09;
+                for (int attempt=0; attempt<5 && !emitter.landing().contains(x+driftX,z+driftZ); attempt++) {
+                    driftX *= .5; driftZ *= .5;
+                }
+                if (!emitter.landing().contains(x+driftX,z+driftZ)) { driftX=0; driftZ=0; }
                 var particle = new FountainDropParticle(world, sprites,
                         pos.getX() + 0.5 + x, pos.getY() + emitter.y(), pos.getZ() + 0.5 + z,
-                        emitter.velocityY() * (0.88 + world.random.nextDouble() * 0.24),
+                        driftX / flight, velocityY, driftZ / flight,
                         pos.getY() + emitter.landing().y(), source.color,
                         FountainSprayPlan.dropletScale(world.random.nextFloat()));
                 client.particleManager.addParticle(particle);
@@ -157,6 +172,29 @@ public final class FountainParticles {
                 source.live++;
                 remaining--;
             }
+        }
+    }
+
+    private static void updateSounds(MinecraftClient client) {
+        SOUNDS.removeIf(sound -> {
+            if (!sound.isDone() && FountainSound.active(sound.basin, client) && client.getSoundManager().isPlaying(sound)) return false;
+            client.getSoundManager().stop(sound);
+            return true;
+        });
+        // Sound remains independent of Minimal particles. Only known, loaded
+        // fountain sources are visited, with four voices and 64 checks at most.
+        if (!FountainParticleOption.isSoundEnabled() || tick % 10 != 0) return;
+        int checks = Math.min(SOURCES.size(), MAX_SOURCE_CHECKS);
+        for (int i=0; i<checks && SOUNDS.size()<4; i++) {
+            if (soundCursor >= SOURCES.size()) soundCursor=0;
+            Source source = SOURCES.get(soundCursor++);
+            if (!FountainSound.active(source.basin, client)) continue;
+            boolean playing=false;
+            for (FountainSound sound : SOUNDS) if (sound.basin==source.basin) { playing=true; break; }
+            if (playing) continue;
+            FountainSound sound = new FountainSound(source.basin);
+            SOUNDS.add(sound);
+            client.getSoundManager().play(sound);
         }
     }
 

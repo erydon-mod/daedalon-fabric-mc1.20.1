@@ -10,6 +10,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 final class FountainRippleGeometryTest {
     @Test
+    void movingDropsStretchWithSpeedWithoutAddingQuadsOrChangingCamera() {
+        for (float pitch : new float[]{0, .7F, 1.57F}) {
+            var rotation = new org.joml.Quaternionf().rotationXYZ(pitch, .4F, 0);
+            var original = new org.joml.Quaternionf(rotation);
+            for (float speed : new float[]{0, .1F, .8F}) {
+                Capture capture = new Capture();
+                FountainStreakGeometry.emit(capture, rotation, 1, 2, 3, .04F, .01F, speed, .02F,
+                        0, 1, 0, 1, 1, 1, 1, .9F, 0);
+                assertEquals(4, capture.vertices.size());
+                assertEquals(original, rotation, "Rendering must not mutate the camera");
+                for (Vertex vertex : capture.vertices) {
+                    assertTrue(Double.isFinite(vertex.x) && Double.isFinite(vertex.y) && Double.isFinite(vertex.z));
+                    assertTrue(Math.abs(vertex.x-1)<.35 && Math.abs(vertex.y-2)<.35 && Math.abs(vertex.z-3)<.35);
+                }
+                var a = capture.vertices.get(0);
+                var b = capture.vertices.get(1);
+                var c = capture.vertices.get(2);
+                double length = Math.sqrt(Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2)+Math.pow(b.z-a.z,2));
+                double width = Math.sqrt(Math.pow(c.x-b.x,2)+Math.pow(c.y-b.y,2)+Math.pow(c.z-b.z,2));
+                assertEquals(.08, width, .00001);
+                assertTrue(length >= width - .00001);
+            }
+        }
+    }
+    @Test
     void rippleIsSquareFlatUpwardFacingAndKeepsTintAndLighting() {
         for (float radius : new float[]{0.05F, 0.1F, 0.2F}) {
             Capture capture = new Capture();

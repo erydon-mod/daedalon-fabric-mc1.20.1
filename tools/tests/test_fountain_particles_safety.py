@@ -46,7 +46,7 @@ class FountainParticleSafetyTests(unittest.TestCase):
         self.assertNotIn("getSprite(splashAge", source)
         self.assertIn("setAlpha(0.85F - splashAge * 0.18F)", source)
         self.assertIn("FountainRippleGeometry.emit(", source)
-        self.assertIn("super.buildGeometry(vertices, camera, tickDelta)", source)
+        self.assertIn("FountainStreakGeometry.emit(", source)
         geometry = (JAVA_ROOT / "client/fountain/FountainRippleGeometry.java").read_text()
         for forbidden in ("getRotation", "Quaternion", "new Vector", "FACING", "RenderSystem"):
             self.assertNotIn(forbidden, geometry)

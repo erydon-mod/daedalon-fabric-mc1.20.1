@@ -9,7 +9,7 @@ import java.util.List;
 
 /** Small immutable emitter list, rebuilt only when the fountain is edited. */
 public record FountainSprayPlan(List<Emitter> emitters) {
-    public static final double GRAVITY = 0.018; // Blocks per client tick squared.
+    public static final double GRAVITY = 0.028; // Brisk jets and falling streams, without longer lifetimes.
     public static final int MAX_AGE = 60;
 
     public FountainSprayPlan {
@@ -24,7 +24,7 @@ public record FountainSprayPlan(List<Emitter> emitters) {
 
         var top = bowls.get(bowls.size() - 1);
         Pool topPool = pool(top);
-        emitters.add(new Emitter(0, topPool.y + 0.025, 0, 0.18, topPool));
+        emitters.add(new Emitter(0, topPool.y + 0.025, 0, 0.28, topPool));
 
         Pool below = new Pool(style.waterSurfaceY(size), size.modelScale(), style.waterOutline(),
                 style.waterHalfWidth(size), style.waterBevel(size));
@@ -55,6 +55,12 @@ public record FountainSprayPlan(List<Emitter> emitters) {
         return velocityY - GRAVITY;
     }
 
+    /** Exact integer landing tick for our discrete gravity integration. */
+    public static int flightTicks(double height, double velocityY) {
+        double b = velocityY - GRAVITY * 0.5;
+        return Math.max(1, (int)Math.ceil((b + Math.sqrt(b * b + 2 * GRAVITY * height)) / GRAVITY));
+    }
+
     /** Four jet drops plus one per rim outlet: 8/12/16 drops per full-rate tick. */
     public int emissionsPerTick() {
         return emitters.isEmpty() ? 0 : emitters.size() + 3;
@@ -67,11 +73,11 @@ public record FountainSprayPlan(List<Emitter> emitters) {
 
     /** Mostly medium drops with occasional larger ones, rather than uniform oversized beads. */
     public static float dropletScale(float sample) {
-        return 0.04F + 0.05F * sample * sample;
+        return 0.055F + 0.055F * sample * sample;
     }
 
     public static float splashScale(float dropletScale, int age) {
-        return dropletScale * 1.8F + age * 0.012F;
+        return dropletScale * 2.1F + age * 0.025F;
     }
 
     public record Emitter(double x, double y, double z, double velocityY, Pool landing) { }

@@ -838,6 +838,13 @@ def generate_languages(
         }[language]
         for key, message in zip(("normal", "high", "save_failed"), particle_messages):
             entries[f"message.daedalon.fountain_particles.{key}"] = message
+        sound_messages = {
+            "en_us": ("Fountain sound: On. This computer only.", "Fountain sound: Off. This computer only."),
+            "de_de": ("Brunnengeräusch: Ein. Nur auf diesem Computer.", "Brunnengeräusch: Aus. Nur auf diesem Computer."),
+            "es_es": ("Sonido de fuente: Activado. Solo en este equipo.", "Sonido de fuente: Desactivado. Solo en este equipo."),
+        }[language]
+        for key, message in zip(("on", "off"), sound_messages):
+            entries[f"message.daedalon.fountain_sound.{key}"] = message
         orientation_labels = {
             "en_us": ("Capital orientation", "Straight", "Diagonal (45°)", "Straight (90°)", "Diagonal (135°)"),
             "de_de": ("Kapitellausrichtung", "Gerade", "Diagonal (45°)", "Gerade (90°)", "Diagonal (135°)"),

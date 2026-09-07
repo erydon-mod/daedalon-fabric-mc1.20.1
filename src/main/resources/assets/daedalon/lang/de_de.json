@@ -15,6 +15,8 @@
   "message.daedalon.fountain_particles.normal": "Brunnentropfen: Normal (1x). Nur auf diesem Computer.",
   "message.daedalon.fountain_particles.high": "Brunnentropfen: Hoch (4x). Nur auf diesem Computer.",
   "message.daedalon.fountain_particles.save_failed": "Die Brunnenpartikel-Einstellung konnte nicht gespeichert werden; die bisherige Einstellung bleibt erhalten.",
+  "message.daedalon.fountain_sound.on": "Brunnengeräusch: Ein. Nur auf diesem Computer.",
+  "message.daedalon.fountain_sound.off": "Brunnengeräusch: Aus. Nur auf diesem Computer.",
   "property.daedalon.capital_orientation": "Kapitellausrichtung",
   "option.daedalon.capital.orientation.straight": "Gerade",
   "option.daedalon.capital.orientation.diagonal": "Diagonal (45°)",

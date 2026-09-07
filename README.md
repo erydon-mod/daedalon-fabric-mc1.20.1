@@ -64,14 +64,15 @@ unloading it retires the previous particles. Restart the development client to
 test this Java change; no new block state or saved-world data is required.
 At full rate each outlet emits every tick, with four drops per tick in the top
 jet (8/12/16 total for one/two/three tiers). Droplets vary in size and jet height;
-wider streams and size-matched splashes make the flow easier to see.
+Motion-stretched drops and larger expanding ripples make the flow easier to see.
+A stronger top jet and outward-curving spill streams use the same particle-count limits.
 Dedicated transparent 64x64 neutral sprites keep drops and splashes colour-matched.
 Circular landing ripples lie flat on the receiving water surface, independent of
 camera or fountain facing; only airborne drops remain camera-facing.
 
 This first pass uses ordinary lit droplet/ripple particles, not
 refractive shader-water geometry or Physics Mod. The drops follow predetermined
-vertical paths to the pools; they do not yet collide with arbitrary intervening
+bounded ballistic arcs to the pools; they do not yet collide with arbitrary intervening
 blocks or players, or form a continuous sheet across the rim. The stone models,
 pooled water, collision and debug-stick properties remain unchanged.
 
@@ -80,3 +81,13 @@ In Normal mode the client-only effect is limited to 32 blocks, 768 live particle
 per-fountain/global spawn budgets and cadence; Minimal disables the prototype.
 Fountain loading events supply the sources, with at most 64 source checks per
 tick, instead of world/chunk scans or a server-side ticker.
+
+Fountain sound uses Minecraft's positional flowing-water ambience, with a gentle
+fade-in and at most four audible fountains within 16 blocks. It stops when the
+water is switched off, a fountain unloads, or you walk away; no server audio
+packets or world searches are added. `/daedalon fountainSound off` mutes it and
+`/daedalon fountainSound on` restores it. This saved setting is independent of
+particle quality and Minecraft's Minimal particles; volume follows Blocks.
+
+Motion inspiration: [Fontana aerating jets](https://fontanafountains.com/products/spray-systems/fountain-nozzles-heads/aerating-jet/)
+and [Roman Fountains on flowing-water sound](https://www.romanfountains.com/why-do-water-fountains-make-noise/).

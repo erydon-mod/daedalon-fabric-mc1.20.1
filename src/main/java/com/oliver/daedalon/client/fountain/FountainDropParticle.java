@@ -15,12 +15,14 @@ final class FountainDropParticle extends SpriteBillboardParticle {
     private int splashAge = -1;
 
     FountainDropParticle(ClientWorld world, SpriteProvider sprites,
-                         double x, double y, double z, double velocityY, double landingY,
+                         double x, double y, double z, double velocityX, double velocityY, double velocityZ, double landingY,
                          int color, float dropletScale) {
         super(world, x, y, z);
         this.sprites = sprites;
         this.landingY = landingY;
         this.velocityY = velocityY;
+        this.velocityX = velocityX;
+        this.velocityZ = velocityZ;
         this.dropletScale = dropletScale;
         maxAge = FountainSprayPlan.MAX_AGE;
         collidesWithWorld = false;
@@ -52,7 +54,7 @@ final class FountainDropParticle extends SpriteBillboardParticle {
             velocityY = FountainSprayPlan.velocityAfterTick(velocityY);
             double nextY = y + velocityY;
             if (velocityY < 0 && nextY <= landingY) {
-                setPos(x, landingY + 0.006, z);
+                setPos(x + velocityX, landingY + 0.006, z + velocityZ);
                 velocityY = 0;
                 splashAge = 0;
                 scale = FountainSprayPlan.splashScale(dropletScale, 0);
@@ -60,7 +62,7 @@ final class FountainDropParticle extends SpriteBillboardParticle {
                 // Both dedicated sprites are neutral, so landing retains the droplet's tint.
                 setSprite(sprites.getSprite(1, 1));
             } else {
-                setPos(x, nextY, z);
+                setPos(x + velocityX, nextY, z + velocityZ);
             }
         }
     }
@@ -74,7 +76,13 @@ final class FountainDropParticle extends SpriteBillboardParticle {
     @Override
     public void buildGeometry(VertexConsumer vertices, Camera camera, float tickDelta) {
         if (splashAge < 0) {
-            super.buildGeometry(vertices, camera, tickDelta);
+            var cameraPos = camera.getPos();
+            float px = (float)(prevPosX + (x - prevPosX) * tickDelta - cameraPos.x);
+            float py = (float)(prevPosY + (y - prevPosY) * tickDelta - cameraPos.y);
+            float pz = (float)(prevPosZ + (z - prevPosZ) * tickDelta - cameraPos.z);
+            FountainStreakGeometry.emit(vertices, camera.getRotation(), px, py, pz, scale * .5F,
+                    (float)velocityX, (float)velocityY, (float)velocityZ,
+                    getMinU(), getMaxU(), getMinV(), getMaxV(), red, green, blue, alpha, getBrightness(tickDelta));
             return;
         }
         // Ripples lie on the receiving water plane, never on the camera's billboard plane.
