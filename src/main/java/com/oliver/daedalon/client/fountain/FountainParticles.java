@@ -27,7 +27,7 @@ public final class FountainParticles {
     private static final double RANGE_SQUARED = 32 * 32;
     private static final ArrayList<Source> SOURCES = new ArrayList<>();
     private static final ArrayList<Drop> DROPS = new ArrayList<>();
-    private static final ArrayList<FountainSound> SOUNDS = new ArrayList<>(4);
+    private static final ArrayList<FountainSound> SOUNDS = new ArrayList<>(8);
     private static int soundCursor;
     private static ClientWorld world;
     private static SpriteProvider sprites;
@@ -182,20 +182,33 @@ public final class FountainParticles {
             return true;
         });
         // Sound remains independent of Minimal particles. Only known, loaded
-        // fountain sources are visited, with four voices and 64 checks at most.
+        // fountain sources are visited, with four fountains, two staggered voices each, and 64 checks at most.
         if (!FountainParticleOption.isSoundEnabled() || tick % 10 != 0) return;
         int checks = Math.min(SOURCES.size(), MAX_SOURCE_CHECKS);
-        for (int i=0; i<checks && SOUNDS.size()<4; i++) {
+        for (int i=0; i<checks && SOUNDS.size()<8; i++) {
             if (soundCursor >= SOURCES.size()) soundCursor=0;
             Source source = SOURCES.get(soundCursor++);
             if (!FountainSound.active(source.basin, client)) continue;
-            boolean playing=false;
-            for (FountainSound sound : SOUNDS) if (sound.basin==source.basin) { playing=true; break; }
-            if (playing) continue;
+            int youngest = Integer.MAX_VALUE;
+            for (FountainSound sound : SOUNDS) if (sound.basin==source.basin) youngest=Math.min(youngest,sound.age());
+            // The original 2.58s sample plays for about 3s at pitch .85.
+            // Start the next voice halfway through; never restart a per-voice fade.
+            if (youngest < 30) continue;
+            if (youngest == Integer.MAX_VALUE && audibleFountains() >= 4) continue;
             FountainSound sound = new FountainSound(source.basin);
             SOUNDS.add(sound);
             client.getSoundManager().play(sound);
         }
+    }
+
+    private static int audibleFountains() {
+        int count=0;
+        for (int i=0; i<SOUNDS.size(); i++) {
+            boolean seen=false;
+            for (int j=0; j<i; j++) if (SOUNDS.get(j).basin==SOUNDS.get(i).basin) { seen=true; break; }
+            if (!seen) count++;
+        }
+        return count;
     }
 
     private static final class Source {

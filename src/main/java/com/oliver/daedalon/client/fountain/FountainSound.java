@@ -10,20 +10,22 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
-/** One steady four-second water loop per nearby fountain, capped by the controller. */
+/** An original water clip; staggered voices cover its authored fade-in and fade-out. */
 final class FountainSound extends MovingSoundInstance {
     private static final SoundEvent WATER = SoundEvent.of(new Identifier("daedalon", "fountain_steady"));
     final FountainBasinBlockEntity basin;
+    private int age;
+    int age() { return age; }
     FountainSound(FountainBasinBlockEntity basin) {
         super(WATER, SoundCategory.BLOCKS, SoundInstance.createRandom());
         this.basin = basin;
         x = basin.getPos().getX() + .5;
         y = basin.getPos().getY() + 1;
         z = basin.getPos().getZ() + .5;
-        repeat = true;
+        repeat = false;
         repeatDelay = 0;
-        volume = .01F;
-        pitch = 1.0F;
+        volume = .22F + .04F * basin.bowlCount();
+        pitch = .85F;
     }
     static boolean active(FountainBasinBlockEntity basin, MinecraftClient client) {
         var state = basin.getCachedState();
@@ -33,7 +35,6 @@ final class FountainSound extends MovingSoundInstance {
                 && client.getCameraEntity().squaredDistanceTo(basin.getPos().getX()+.5, basin.getPos().getY()+1, basin.getPos().getZ()+.5) < 16*16;
     }
     @Override public void tick() {
-        if (!active(basin, MinecraftClient.getInstance())) { setDone(); return; }
-        volume = Math.min(.22F + .04F * basin.bowlCount(), volume + .015F);
+        if (++age >= 60 || !active(basin, MinecraftClient.getInstance())) setDone();
     }
 }
