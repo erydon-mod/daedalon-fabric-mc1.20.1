@@ -1,0 +1,7 @@
+{
+  "fountain_steady": {
+    "sounds": [
+      { "name": "daedalon:fountain/steady", "stream": false, "attenuation_distance": 16 }
+    ]
+  }
+}

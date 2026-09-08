@@ -82,7 +82,7 @@ per-fountain/global spawn budgets and cadence; Minimal disables the prototype.
 Fountain loading events supply the sources, with at most 64 source checks per
 tick, instead of world/chunk scans or a server-side ticker.
 
-Fountain sound uses Minecraft's positional flowing-water ambience, with a gentle
+Fountain sound uses an original, steady four-second mono splash-noise loop, with a gentle
 fade-in and at most four audible fountains within 16 blocks. It stops when the
 water is switched off, a fountain unloads, or you walk away; no server audio
 packets or world searches are added. `/daedalon fountainSound off` mutes it and
@@ -91,3 +91,8 @@ particle quality and Minecraft's Minimal particles; volume follows Blocks.
 
 Motion inspiration: [Fontana aerating jets](https://fontanafountains.com/products/spray-systems/fountain-nozzles-heads/aerating-jet/)
 and [Roman Fountains on flowing-water sound](https://www.romanfountains.com/why-do-water-fountains-make-noise/).
+
+The fountain audio is synthesized offline without third-party recordings by
+`tools/generate_fountain_audio.py` (authoring dependencies: numpy and soundfile).
+The shipped Ogg is preloaded, plays at its original pitch and repeats immediately;
+its filtered noise avoids low river-like rumble and slow loudness swells.

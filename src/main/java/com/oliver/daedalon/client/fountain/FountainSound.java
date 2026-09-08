@@ -7,13 +7,15 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
 
-/** One attenuated vanilla water loop per nearby fountain, capped by the controller. */
+/** One steady four-second water loop per nearby fountain, capped by the controller. */
 final class FountainSound extends MovingSoundInstance {
+    private static final SoundEvent WATER = SoundEvent.of(new Identifier("daedalon", "fountain_steady"));
     final FountainBasinBlockEntity basin;
     FountainSound(FountainBasinBlockEntity basin) {
-        super(SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, SoundInstance.createRandom());
+        super(WATER, SoundCategory.BLOCKS, SoundInstance.createRandom());
         this.basin = basin;
         x = basin.getPos().getX() + .5;
         y = basin.getPos().getY() + 1;
@@ -21,7 +23,7 @@ final class FountainSound extends MovingSoundInstance {
         repeat = true;
         repeatDelay = 0;
         volume = .01F;
-        pitch = .85F;
+        pitch = 1.0F;
     }
     static boolean active(FountainBasinBlockEntity basin, MinecraftClient client) {
         var state = basin.getCachedState();
