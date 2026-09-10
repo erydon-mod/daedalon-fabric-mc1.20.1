@@ -25,29 +25,37 @@ final class ObjGuiIconTemplate {
 
     private final ObjGuiRasterizer rasterizer;
     private final int sourceQuadCount;
+    private final int resolution;
 
-    private ObjGuiIconTemplate(ObjGuiRasterizer rasterizer, int sourceQuadCount) {
+    private ObjGuiIconTemplate(ObjGuiRasterizer rasterizer, int sourceQuadCount, int resolution) {
         this.rasterizer = rasterizer;
         this.sourceQuadCount = sourceQuadCount;
+        this.resolution = resolution;
     }
 
     static ObjGuiIconTemplate create(Mesh mesh,
                                      Transformation guiTransformation,
                                      int expectedQuadCount,
                                      float frameScale) {
+        return create(mesh, guiTransformation, expectedQuadCount, frameScale, ICON_RESOLUTION);
+    }
+
+    static ObjGuiIconTemplate create(Mesh mesh, Transformation guiTransformation,
+                                     int expectedQuadCount, float frameScale, int resolution) {
+        if (resolution < 16 || resolution > 256) throw new IllegalArgumentException("Icon resolution out of bounds");
         MatrixStack matrices = new MatrixStack();
         guiTransformation.apply(false, matrices);
         matrices.translate(-0.5D, -0.5D, -0.5D);
         Matrix4f positionMatrix = new Matrix4f(matrices.peek().getPositionMatrix());
         Matrix3f normalMatrix = new Matrix3f(matrices.peek().getNormalMatrix());
-        ObjGuiRasterizer rasterizer = new ObjGuiRasterizer(SAMPLE_RESOLUTION);
+        ObjGuiRasterizer rasterizer = new ObjGuiRasterizer(resolution * SUPERSAMPLE);
         ObjGuiRasterizer.Vertex a = new ObjGuiRasterizer.Vertex();
         ObjGuiRasterizer.Vertex b = new ObjGuiRasterizer.Vertex();
         ObjGuiRasterizer.Vertex c = new ObjGuiRasterizer.Vertex();
         ObjGuiRasterizer.Vertex d = new ObjGuiRasterizer.Vertex();
         Vector3f positionScratch = new Vector3f();
         Vector3f normalScratch = new Vector3f();
-        ProjectionBounds bounds = ProjectionBounds.measure(mesh, positionMatrix, positionScratch, frameScale);
+        ProjectionBounds bounds = ProjectionBounds.measure(mesh, positionMatrix, positionScratch, frameScale, resolution * SUPERSAMPLE);
         int[] visitedQuads = {0};
 
         mesh.forEach(quad -> {
@@ -70,8 +78,10 @@ final class ObjGuiIconTemplate {
         if (rasterizer.coveredSampleCount() == 0) {
             throw new IllegalStateException("Full OBJ GUI projection produced no covered samples");
         }
-        return new ObjGuiIconTemplate(rasterizer, visitedQuads[0]);
+        return new ObjGuiIconTemplate(rasterizer, visitedQuads[0], resolution);
     }
+
+    int resolution() { return resolution; }
 
     int sourceQuadCount() {
         return sourceQuadCount;
@@ -123,8 +133,8 @@ final class ObjGuiIconTemplate {
         }
 
         target.set(
-                SAMPLE_RESOLUTION * 0.5F + (position.x - bounds.centerX()) * bounds.scale(),
-                SAMPLE_RESOLUTION * 0.5F - (position.y - bounds.centerY()) * bounds.scale(),
+                bounds.sampleResolution() * 0.5F + (position.x - bounds.centerX()) * bounds.scale(),
+                bounds.sampleResolution() * 0.5F - (position.y - bounds.centerY()) * bounds.scale(),
                 position.z,
                 quad.u(vertex),
                 quad.v(vertex),
@@ -135,8 +145,8 @@ final class ObjGuiIconTemplate {
     }
 
     /** Auto-frames the projected full mesh so narrow decor does not get lost in a slot. */
-    private record ProjectionBounds(float centerX, float centerY, float scale) {
-        private static ProjectionBounds measure(Mesh mesh, Matrix4f matrix, Vector3f scratch, float frameScale) {
+    private record ProjectionBounds(float centerX, float centerY, float scale, int sampleResolution) {
+        private static ProjectionBounds measure(Mesh mesh, Matrix4f matrix, Vector3f scratch, float frameScale, int sampleResolution) {
             float[] values = {
                     Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY,
                     Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY
@@ -159,11 +169,12 @@ final class ObjGuiIconTemplate {
                     || width <= 1.0E-6F || height <= 1.0E-6F) {
                 throw new IllegalStateException("Full OBJ GUI projection has no finite two-dimensional bounds");
             }
-            float available = SAMPLE_RESOLUTION - FRAME_PADDING * 2.0F;
+            float available = sampleResolution - FRAME_PADDING * 2.0F;
             return new ProjectionBounds(
                     (values[0] + values[2]) * 0.5F,
                     (values[1] + values[3]) * 0.5F,
-                    Math.min(available / width, available / height) * frameScale
+                    Math.min(available / width, available / height) * frameScale,
+                    sampleResolution
             );
         }
     }

@@ -17,6 +17,8 @@
     "client.sodium.OcclusionCullerMixin",
     "client.ItemRendererMixin",
     "client.axiom.BlockRenderCacheMixin",
+    "client.axiom.AxiomWorldRenderContextAccessor",
+    "client.axiom.ChunkedBlockRegionMixin",
     "client.axiom.BuilderToolSelectionStateMixin",
     "client.indium.TerrainRenderContextMixin",
     "client.iris.XHFPTerrainVertexMixin"

@@ -69,6 +69,13 @@ public final class ObjGuiIconCache {
             Collections.newSetFromMap(new IdentityHashMap<>());
     private final Map<Identifier, SourceTexture> sourceTextures = new LinkedHashMap<>();
     private final List<AtlasPage> pages = new ArrayList<>();
+    private static final int MAX_PREVIEW_IMAGES = 64;
+    private static final float[][] PREVIEW_QUAD = {
+            {-.5F,-.5F,0,1},{.5F,-.5F,1,1},{.5F,.5F,1,0},{-.5F,.5F,0,0}
+    };
+    private final Map<ObjMeshBakedModel, Identifier> previewImages = new IdentityHashMap<>();
+    private final Map<net.fabricmc.fabric.api.renderer.v1.mesh.Mesh, ObjGuiIconTemplate> previewTemplates = new IdentityHashMap<>();
+    private final Set<ObjMeshBakedModel> failedPreviews = Collections.newSetFromMap(new IdentityHashMap<>());
     private ResourceManager resourceManager;
     private int nextCellIndex;
 
@@ -214,6 +221,56 @@ public final class ObjGuiIconCache {
                 .normal(entry.getNormalMatrix(), 0.0F, 0.0F, normalZ).next();
     }
 
+    /** One image quad; the caller provides the camera-facing world matrix. */
+    public static void renderAxiomPreview(ItemStack stack, MatrixStack matrices,
+                                          VertexConsumerProvider consumers, float opacity) {
+        if (!(net.minecraft.block.Block.getBlockFromItem(stack.getItem())
+                instanceof com.oliver.daedalon.block.SpartanStatueBlock)) return;
+        BakedModel baked = ObjMeshBakedModel.unwrapAttachedModel(MinecraftClient.getInstance()
+                .getItemRenderer().getModel(stack, null, null, 0));
+        if (!(baked instanceof ObjMeshBakedModel model)) return;
+        Identifier image = INSTANCE.previewImage(model);
+        if (image == null) return;
+        VertexConsumer consumer = consumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(image));
+        var entry = matrices.peek();
+        int alpha = Math.round(Math.max(0, Math.min(1, opacity)) * 255);
+        for (float[] vertex : PREVIEW_QUAD) consumer.vertex(entry.getPositionMatrix(), vertex[0], vertex[1], 0)
+                .color(255,255,255,alpha).texture(vertex[2],vertex[3])
+                .overlay(OverlayTexture.DEFAULT_UV).light(LightmapTextureManager.MAX_LIGHT_COORDINATE)
+                .normal(entry.getNormalMatrix(),0,0,1).next();
+    }
+
+    private synchronized Identifier previewImage(ObjMeshBakedModel model) {
+        Identifier cached = previewImages.get(model);
+        if (cached != null) return cached;
+        if (failedPreviews.contains(model) || previewImages.size() >= MAX_PREVIEW_IMAGES) return null;
+        NativeImage image = null;
+        try {
+            ObjGuiIconTemplate template = previewTemplates.computeIfAbsent(model.previewMesh(),
+                    ignored -> model.createAxiomPreviewTemplate());
+            ResourceManager manager = MinecraftClient.getInstance().getResourceManager();
+            List<SourceTexture> materials = new ArrayList<>();
+            for (Identifier id : model.materialTextureIds()) materials.add(sourceTexture(manager, id));
+            image = new NativeImage(256, 256, true);
+            image.fillRect(0, 0, 256, 256, 0);
+            // The projection already supplies its own transparent edge padding.
+            renderIcon(model, template, materials, image, -ICON_GUTTER, -ICON_GUTTER);
+            NativeImageBackedTexture texture = new NativeImageBackedTexture(image);
+            Identifier id = new Identifier(Daedalon.MOD_ID, "dynamic/axiom_preview_" + previewImages.size());
+            MinecraftClient.getInstance().getTextureManager().registerTexture(id, texture);
+            texture.setFilter(true, false);
+            image = null; // Owned by the texture manager until resource reload.
+            previewImages.put(model, id);
+            return id;
+        } catch (IOException | RuntimeException exception) {
+            failedPreviews.add(model);
+            Daedalon.LOGGER.warn("Unable to create Axiom statue preview for {}: {}", model.modelId(), exception.getMessage());
+            return null;
+        } finally {
+            if (image != null) image.close();
+        }
+    }
+
     private synchronized IconCell getOrCreate(ObjMeshBakedModel model) {
         IconCell cached = cells.get(model);
         if (cached != null) {
@@ -337,10 +394,15 @@ public final class ObjGuiIconCache {
                                    NativeImage atlas,
                                    int cellX,
                                    int cellY) throws IOException {
-        ObjGuiIconTemplate template = model.guiIconTemplate();
+        renderIcon(model, model.guiIconTemplate(), materials, atlas, cellX, cellY);
+    }
+
+    private static void renderIcon(ObjMeshBakedModel model, ObjGuiIconTemplate template,
+                                   List<SourceTexture> materials, NativeImage atlas,
+                                   int cellX, int cellY) throws IOException {
         int writtenPixels = 0;
-        for (int iconY = 0; iconY < ObjGuiIconTemplate.ICON_RESOLUTION; iconY++) {
-            for (int iconX = 0; iconX < ObjGuiIconTemplate.ICON_RESOLUTION; iconX++) {
+        for (int iconY = 0; iconY < template.resolution(); iconY++) {
+            for (int iconX = 0; iconX < template.resolution(); iconX++) {
                 long alphaSum = 0L;
                 double redPremultiplied = 0.0D;
                 double greenPremultiplied = 0.0D;
@@ -350,7 +412,7 @@ public final class ObjGuiIconCache {
                     for (int sampleX = 0; sampleX < ObjGuiIconTemplate.SUPERSAMPLE; sampleX++) {
                         int rasterX = iconX * ObjGuiIconTemplate.SUPERSAMPLE + sampleX;
                         int rasterY = iconY * ObjGuiIconTemplate.SUPERSAMPLE + sampleY;
-                        int sampleIndex = rasterY * ObjGuiIconTemplate.SAMPLE_RESOLUTION + rasterX;
+                        int sampleIndex = rasterY * (template.resolution() * ObjGuiIconTemplate.SUPERSAMPLE) + rasterX;
                         if (!template.isCovered(sampleIndex)) {
                             continue;
                         }
@@ -408,6 +470,10 @@ public final class ObjGuiIconCache {
             textureManager.destroyTexture(page.id());
         }
         pages.clear();
+        for (Identifier image : previewImages.values()) textureManager.destroyTexture(image);
+        previewImages.clear();
+        previewTemplates.clear();
+        failedPreviews.clear();
         for (SourceTexture sourceTexture : sourceTextures.values()) {
             sourceTexture.close();
         }

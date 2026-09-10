@@ -1,37 +1,43 @@
-# Axiom preview pilot
+# Axiom camera-facing preview pilot
 
-The Spartan Promachos statue supplies a cheap vanilla baked-model fallback for
-Axiom 5.4.2 on Minecraft 1.20.1. This pilot covers its stone, aged and bronze
-variants. Other OBJ families still return no vanilla quads.
+Spartan Promachos statues use a single 256x256 image in Axiom 5.4.2 region
+previews on Minecraft 1.20.1. The image uses the same complete-mesh projection
+and active-material sampling as the 64x64 REI icons, at a higher resolution.
+The image faces the current Axiom camera, including its pitch, while region
+translation and rotation move its anchor. It intentionally does not depict the
+statue facing away from the viewer; placement still uses the actual blockstate.
 
-The fallback reuses the statue's cached collision silhouette, including body,
-shield and spear. The existing profile handles all sizes, facings and offsets;
-collision is used instead of the outline so the invisible offset targeting post
-does not become visible. This is an approximate blocky preview, not the full mesh.
+This replaces the rejected collision-box preview. All OBJ models again return
+empty vanilla quads. Placed world meshes and existing inventory/item rendering
+are unchanged. No display entities or extra world blocks are created.
 
-Quads are generated lazily and cached by collision shape within each baked model.
-Resource reload discards the cache with the model and its atlas sprite. Only the
-unculled query emits faces. Geometry is limited to 128 boxes / 768 quads, with one
-bounding box used if a future profile exceeds that limit. Normal Fabric world
-rendering continues to emit the original mesh; item rendering and the existing
-REI/Axiom palette icon route are unchanged. Other vanilla model consumers may
-also see the fallback.
+## Scope and cost
 
-## Validation
+- Pilot only: Spartan Promachos stone, aged and bronze variants.
+- Region add/remove/clear hooks maintain a statue-only list; no world scans.
+- One geometry projection is shared per mesh and resource reload. Each requested
+  material creates one image lazily, with at most 64 images (16 MiB of RGBA pixels
+  each on CPU and GPU, plus shared projection data). Reload frees images and templates.
+- Each image is one quad, with at most 1,024 statues drawn per region render.
+- Full-bright image rendering preserves the baked icon lighting. Preview opacity
+  follows Axiom; projection, model-view and framebuffer bindings are restored.
+- Only Axiom region previews are hooked; editor tools using other rendering
+  paths remain outside this pilot. Without Axiom these optional mixins are skipped.
 
-Automated tests check outward winding, atlas-safe UVs, geometry outside the anchor
-cell, immutable output, the complexity cap and empty/item/directional requests.
-The development client starts with Axiom 5.4.2, Sodium and Indium.
+## Verification
 
-In-game visual verification is pending Oliver's check:
+Automated tests cover camera-facing orientation across yaw, pitch and selection
+rotation, translated/rotated anchors, precision near the world border, and the
+separate 256px preview / 64px inventory raster resolutions.
 
-1. Place a Spartan Promachos statue in a development test world.
-2. Check its Axiom move and paste previews from all sides.
-3. Repeat for Small, Medium and Large, all four facings, and offset on/off.
-4. Check a stone, aged and bronze finish; reload resources and preview again.
-5. Rotate and paste, then undo; confirm the placed statue remains fully detailed.
-6. Confirm a normal vanilla block and the existing palette icons still render.
+Oliver will check visual quality in game:
 
-The fallback changes rendering only. It does not alter selection targeting,
-placement, blockstate rotation or undo logic. Do not claim full Axiom compatibility
-or expand the pilot until these visual checks pass.
+1. Preview a Spartan Promachos statue using Axiom move/copy/paste.
+2. Orbit and look from above: the picture must keep facing the camera.
+3. Repeat for all sizes, facings and offset states; place, rotate and undo.
+4. Check stone, aged and bronze finishes, then reload resources and preview again.
+5. Check mixed selections with vanilla blocks and existing palette/REI icons.
+6. Confirm placed statues retain full detail and normal world lighting/shaders.
+
+In-game visual acceptance is pending. Do not expand to other families or claim
+full Axiom compatibility until the pilot passes.

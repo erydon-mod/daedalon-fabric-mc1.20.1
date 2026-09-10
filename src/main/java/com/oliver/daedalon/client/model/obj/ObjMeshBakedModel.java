@@ -72,7 +72,6 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     private final Identifier modelId;
     private final Sprite containedWaterSprite;
     private final RenderMaterial containedWaterMaterial;
-    private final StatuePreviewQuads statuePreviewQuads = new StatuePreviewQuads();
 
     private ObjMeshBakedModel(Mesh mesh,
                               Mesh itemMesh,
@@ -803,7 +802,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(BlockState state, Direction face, Random random) {
-        return statuePreviewQuads.get(state, face, particleSprite);
+        return Collections.emptyList();
     }
 
     @Override
@@ -839,6 +838,16 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     @Override
     public ModelOverrideList getOverrides() {
         return metadataModel.getOverrides();
+    }
+
+    Mesh previewMesh() { return mesh; }
+
+    ObjGuiIconTemplate createAxiomPreviewTemplate() {
+        int[] count = {0};
+        mesh.forEach(quad -> count[0]++);
+        return ObjGuiIconTemplate.create(mesh,
+                metadataModel.getTransformation().getTransformation(ModelTransformationMode.GUI),
+                count[0], 1.0F, 256);
     }
 
     ObjGuiIconTemplate guiIconTemplate() {
