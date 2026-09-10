@@ -1,6 +1,6 @@
 package com.oliver.daedalon.mixin.client.axiom;
 
-import com.oliver.daedalon.client.compat.AxiomStatueBillboards;
+import com.oliver.daedalon.client.compat.AxiomDecorBillboards;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.util.math.Vec3d;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Pseudo
 @Mixin(targets = "com.moulberry.axiom.render.regions.ChunkedBlockRegion", remap = false)
 abstract class ChunkedBlockRegionMixin {
-    @Unique private final AxiomStatueBillboards daedalon$billboards = new AxiomStatueBillboards();
+    @Unique private final AxiomDecorBillboards daedalon$billboards = new AxiomDecorBillboards();
 
     // Explicit named + intermediary descriptors support development and release without
     // a compile dependency on Axiom, and select only the int-coordinate overload.

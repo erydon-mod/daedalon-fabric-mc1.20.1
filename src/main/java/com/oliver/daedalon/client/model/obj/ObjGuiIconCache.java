@@ -69,13 +69,15 @@ public final class ObjGuiIconCache {
             Collections.newSetFromMap(new IdentityHashMap<>());
     private final Map<Identifier, SourceTexture> sourceTextures = new LinkedHashMap<>();
     private final List<AtlasPage> pages = new ArrayList<>();
-    private static final int MAX_PREVIEW_IMAGES = 64;
+    private static final int MAX_PREVIEW_IMAGES = 128;
     private static final float[][] PREVIEW_QUAD = {
             {-.5F,-.5F,0,1},{.5F,-.5F,1,1},{.5F,.5F,1,0},{-.5F,.5F,0,0}
     };
-    private final Map<ObjMeshBakedModel, Identifier> previewImages = new IdentityHashMap<>();
-    private final Map<net.fabricmc.fabric.api.renderer.v1.mesh.Mesh, ObjGuiIconTemplate> previewTemplates = new IdentityHashMap<>();
+    private final Map<ObjMeshBakedModel, PreviewImage> previewImages = new LinkedHashMap<>(128, .75F, true);
+    private final Map<net.fabricmc.fabric.api.renderer.v1.mesh.Mesh, ObjGuiIconTemplate> previewTemplates = new LinkedHashMap<>(8, .75F, true);
     private final Set<ObjMeshBakedModel> failedPreviews = Collections.newSetFromMap(new IdentityHashMap<>());
+    private long nextPreviewGeneration;
+    private record PreviewImage(Identifier id, long usedAt) {}
     private ResourceManager resourceManager;
     private int nextCellIndex;
 
@@ -223,31 +225,42 @@ public final class ObjGuiIconCache {
 
     /** One image quad; the caller provides the camera-facing world matrix. */
     public static void renderAxiomPreview(ItemStack stack, MatrixStack matrices,
-                                          VertexConsumerProvider consumers, float opacity) {
-        if (!(net.minecraft.block.Block.getBlockFromItem(stack.getItem())
-                instanceof com.oliver.daedalon.block.SpartanStatueBlock)) return;
+                                          VertexConsumerProvider.Immediate consumers, float opacity) {
+        if (!Daedalon.MOD_ID.equals(Registries.ITEM.getId(stack.getItem()).getNamespace())) return;
         BakedModel baked = ObjMeshBakedModel.unwrapAttachedModel(MinecraftClient.getInstance()
                 .getItemRenderer().getModel(stack, null, null, 0));
         if (!(baked instanceof ObjMeshBakedModel model)) return;
-        Identifier image = INSTANCE.previewImage(model);
-        if (image == null) return;
-        VertexConsumer consumer = consumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(image));
+        Identifier image = INSTANCE.previewImage(model, consumers);
+        IconCell cell = image == null ? INSTANCE.getOrCreate(model) : new IconCell(image, 0, 0, 1, 1);
+        if (cell == null) return;
+        VertexConsumer consumer = consumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(cell.atlasId()));
         var entry = matrices.peek();
         int alpha = Math.round(Math.max(0, Math.min(1, opacity)) * 255);
         for (float[] vertex : PREVIEW_QUAD) consumer.vertex(entry.getPositionMatrix(), vertex[0], vertex[1], 0)
-                .color(255,255,255,alpha).texture(vertex[2],vertex[3])
+                .color(255,255,255,alpha).texture(cell.minU() + vertex[2] * (cell.maxU() - cell.minU()),
+                        cell.minV() + vertex[3] * (cell.maxV() - cell.minV()))
                 .overlay(OverlayTexture.DEFAULT_UV).light(LightmapTextureManager.MAX_LIGHT_COORDINATE)
                 .normal(entry.getNormalMatrix(),0,0,1).next();
     }
 
-    private synchronized Identifier previewImage(ObjMeshBakedModel model) {
-        Identifier cached = previewImages.get(model);
-        if (cached != null) return cached;
-        if (failedPreviews.contains(model) || previewImages.size() >= MAX_PREVIEW_IMAGES) return null;
+    private synchronized Identifier previewImage(ObjMeshBakedModel model, VertexConsumerProvider.Immediate consumers) {
+        long now = System.nanoTime();
+        PreviewImage cached = previewImages.get(model);
+        if (cached != null) {
+            previewImages.put(model, new PreviewImage(cached.id(), now));
+            return cached.id();
+        }
+        if (failedPreviews.contains(model) || now < nextPreviewGeneration) return null;
+        var oldest = previewImages.isEmpty() ? null : previewImages.entrySet().iterator().next();
+        // Keep images used by the current selection; excess materials use the existing GUI atlas.
+        boolean full = previewImages.size() >= MAX_PREVIEW_IMAGES;
+        if (full && now - oldest.getValue().usedAt() < 1_000_000_000L) return null;
+        nextPreviewGeneration = now + 50_000_000L;
         NativeImage image = null;
         try {
             ObjGuiIconTemplate template = previewTemplates.computeIfAbsent(model.previewMesh(),
                     ignored -> model.createAxiomPreviewTemplate());
+            if (previewTemplates.size() > 8) previewTemplates.remove(previewTemplates.keySet().iterator().next());
             ResourceManager manager = MinecraftClient.getInstance().getResourceManager();
             List<SourceTexture> materials = new ArrayList<>();
             for (Identifier id : model.materialTextureIds()) materials.add(sourceTexture(manager, id));
@@ -256,15 +269,22 @@ public final class ObjGuiIconCache {
             // The projection already supplies its own transparent edge padding.
             renderIcon(model, template, materials, image, -ICON_GUTTER, -ICON_GUTTER);
             NativeImageBackedTexture texture = new NativeImageBackedTexture(image);
-            Identifier id = new Identifier(Daedalon.MOD_ID, "dynamic/axiom_preview_" + previewImages.size());
+            Identifier id = full ? oldest.getValue().id()
+                    : new Identifier(Daedalon.MOD_ID, "dynamic/axiom_preview_" + previewImages.size());
+            if (full) {
+                // Deferred vertices may still reference this slot. Submit them before reusing it.
+                consumers.draw();
+                previewImages.remove(oldest.getKey());
+                MinecraftClient.getInstance().getTextureManager().destroyTexture(id);
+            }
             MinecraftClient.getInstance().getTextureManager().registerTexture(id, texture);
             texture.setFilter(true, false);
             image = null; // Owned by the texture manager until resource reload.
-            previewImages.put(model, id);
+            previewImages.put(model, new PreviewImage(id, now));
             return id;
         } catch (IOException | RuntimeException exception) {
             failedPreviews.add(model);
-            Daedalon.LOGGER.warn("Unable to create Axiom statue preview for {}: {}", model.modelId(), exception.getMessage());
+            Daedalon.LOGGER.warn("Unable to create Axiom decoration preview for {}: {}", model.modelId(), exception.getMessage());
             return null;
         } finally {
             if (image != null) image.close();
@@ -470,7 +490,8 @@ public final class ObjGuiIconCache {
             textureManager.destroyTexture(page.id());
         }
         pages.clear();
-        for (Identifier image : previewImages.values()) textureManager.destroyTexture(image);
+        for (PreviewImage image : previewImages.values()) textureManager.destroyTexture(image.id());
+        nextPreviewGeneration = 0;
         previewImages.clear();
         previewTemplates.clear();
         failedPreviews.clear();

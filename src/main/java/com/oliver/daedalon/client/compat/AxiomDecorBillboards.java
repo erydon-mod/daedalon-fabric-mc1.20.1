@@ -2,11 +2,10 @@ package com.oliver.daedalon.client.compat;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.oliver.daedalon.block.SpartanStatueBlock;
+import com.oliver.daedalon.block.DecorPreviewBounds;
 import com.oliver.daedalon.client.model.obj.ObjGuiIconCache;
 import com.oliver.daedalon.mixin.client.axiom.AxiomWorldRenderContextAccessor;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -15,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.EmptyBlockView;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL30;
@@ -23,20 +21,19 @@ import org.lwjgl.opengl.GL30;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Tracks only pilot statues as Axiom edits a region; never scans the world. */
-public final class AxiomStatueBillboards {
+/** Tracks decoration anchors as Axiom edits a region; never scans the world. */
+public final class AxiomDecorBillboards {
     private static final int MAX_DRAWN = 1024;
     private final Map<Long, Entry> entries = new ConcurrentHashMap<>();
     private VertexConsumerProvider.Immediate buffers;
 
     public void update(int x, int y, int z, BlockState state) {
         long key = BlockPos.asLong(x, y, z);
-        if (state != null && state.getBlock() instanceof SpartanStatueBlock) {
-            Box bounds = state.getBlock().getCollisionShape(state, EmptyBlockView.INSTANCE,
-                    BlockPos.ORIGIN, ShapeContext.absent()).getBoundingBox();
+        if (DecorPreviewBounds.supports(state)) {
+            Box bounds = DecorPreviewBounds.bounds(state);
             entries.put(key, new Entry(x + (bounds.minX + bounds.maxX) * .5,
                     y + (bounds.minY + bounds.maxY) * .5, z + (bounds.minZ + bounds.maxZ) * .5,
-                    (float) (bounds.maxY - bounds.minY) * 256 / 254,
+                    (float) Math.max(bounds.maxY - bounds.minY, Math.max(bounds.maxX - bounds.minX, bounds.maxZ - bounds.minZ)) * 256 / 254,
                     state.getBlock().asItem().getDefaultStack()));
         } else entries.remove(key);
     }
