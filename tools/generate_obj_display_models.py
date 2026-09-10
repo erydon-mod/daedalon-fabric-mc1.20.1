@@ -97,12 +97,38 @@ def payload(particle: str, display: dict[str, object]) -> bytes:
 
 def expected_files() -> dict[str, bytes]:
     files = {
+        "byzantine_frieze_display.json": payload(
+            "daedalon:block/statue_spartan_promachos_aganite",
+            {**ONE_BLOCK_DISPLAY, "gui": transform([20, 10, 0], scale=0.48)}
+        ),
+        "corinthian_frieze_display.json": payload(
+            "daedalon:block/statue_spartan_promachos_aganite",
+            {**ONE_BLOCK_DISPLAY, "gui": transform([20, 10, 0], scale=0.48)}
+        ),
+        "ionic_frieze_display.json": payload(
+            "daedalon:block/statue_spartan_promachos_aganite",
+            {**ONE_BLOCK_DISPLAY, "gui": transform([20, 10, 0], scale=0.48)}
+        ),
+        "gothic_frieze_display.json": payload(
+            "daedalon:block/statue_spartan_promachos_aganite",
+            {**ONE_BLOCK_DISPLAY, "gui": transform([20, 10, 0], scale=0.48)}
+        ),
         "monopteros_display.json": payload(
             "daedalon:block/statue_spartan_promachos_aganite",
             {
                 **scaled_source_display(1.0 / 6.0),
                 "gui": transform([25, 20, 0], [0, -2, 0], scale=0.14),
                 "fixed": transform([0, 0, 0], [0, -2, 0], scale=1.0 / 12.0),
+            },
+        ),
+        "anthophoros_display.json": payload(
+            "daedalon:block/statue_spartan_promachos_aganite",
+            {
+                **scaled_source_display(1.0 / 3.0),
+                "firstperson_righthand": transform([0, 225, 0], [0, 3, 0], scale=0.4 / 3.0),
+                "firstperson_lefthand": transform([0, 45, 0], [0, 3, 0], scale=0.4 / 3.0),
+                "gui": transform([25, 20, 0], [0, 1, 0], scale=0.28),
+                "fixed": transform([0, 0, 0], scale=1.0 / 6.0),
             },
         ),
         "hedra_display.json": payload(

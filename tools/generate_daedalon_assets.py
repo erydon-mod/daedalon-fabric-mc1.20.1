@@ -252,7 +252,13 @@ PLINTH_FAMILIES = {
     "triphyllon_plinth": ("plinth_triphyllon", "Triphyllon", "Triphyllon", "Triphyllon"),
 }
 BENCH_FAMILIES = ("exedra", "hedra")
+WIDTH_FAMILIES = (*BENCH_FAMILIES, "anthophoros_planter")
 NEW_DECOR_FAMILIES = {
+    "byzantine_frieze": ("byzantine_frieze", "Byzantine Frieze", "Byzantinischer Fries", "Friso Bizantino"),
+    "gothic_frieze": ("gothic_frieze", "Gothic Frieze", "Gotischer Fries", "Friso Gótico"),
+    "corinthian_frieze": ("corinthian_frieze", "Corinthian Frieze", "Korinthischer Fries", "Friso Corintio"),
+    "ionic_frieze": ("ionic_frieze", "Ionic Frieze", "Ionischer Fries", "Friso Jónico"),
+    "anthophoros_planter": ("anthophoros_3m", "Anthophoros Planter", "Anthophoros-Pflanzgefäß", "Jardinera Anthophoros"),
     "monopteros_dome": ("monopteros_6m", "Monopteros Dome", "Monopteros-Kuppel", "Cúpula Monópteros"),
     "hedra": ("hedra_3m", "Hedra Bench", "Hedra-Bank", "Banco Hedra"),
     "exedra": ("exedra_3m", "Exedra", "Exedra", "Exedra"),
@@ -313,6 +319,7 @@ BRONZE_FAMILIES = (
     *BUST_FAMILIES,
     "obeliskos_monument",
     "monopteros_dome",
+    "anthophoros_planter",
 )
 STATUE_DISPLAY_MODELS = {
     "spartan": "statue_spartan_promachos",
@@ -363,7 +370,7 @@ def bronze_block_id(family: str) -> str:
         return f"bronze_{family}_urn"
     if family in BUST_FAMILIES:
         return f"bronze_{BUST_FAMILIES[family][0]}_bust"
-    if family in FINIAL_FAMILIES or family in ("obeliskos_monument", "monopteros_dome"):
+    if family in FINIAL_FAMILIES or family in ("obeliskos_monument", "monopteros_dome", "anthophoros_planter"):
         return "bronze_" + family
     raise ValueError(f"Family does not support the Bronze finish: {family}")
 
@@ -586,11 +593,13 @@ def remove_creative_only_loot(
 
 def blockstate(family: str, block_id: str) -> dict[str, object]:
     model = f"{NAMESPACE}:mesh/{block_id}"
+    if family in ("corinthian_frieze", "ionic_frieze", "gothic_frieze", "byzantine_frieze"):
+        return {"variants": {"": {"model": model}}}
     if family == "monopteros_dome":
         return {"variants": {f"diameter={diameter}": {
             "model": model if diameter == 6 else f"{NAMESPACE}:mesh/internal/{block_id}_{diameter}m"
         } for diameter in (4, 6, 8)}}
-    if family in BENCH_FAMILIES:
+    if family in WIDTH_FAMILIES:
         return {
             "variants": {
                 f"width={width},facing={facing}": {
@@ -671,6 +680,10 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
 
 
 def display_parent(family: str) -> str:
+    if family in ("corinthian_frieze", "ionic_frieze", "gothic_frieze", "byzantine_frieze"):
+        return f"{NAMESPACE}:block/mesh/{family}_display"
+    if family == "anthophoros_planter":
+        return f"{NAMESPACE}:block/mesh/anthophoros_display"
     if family == "monopteros_dome":
         return f"{NAMESPACE}:block/mesh/monopteros_display"
     if family in BENCH_FAMILIES:
@@ -1113,10 +1126,27 @@ def generate_tags(
         ornament_values.append(f"#{NAMESPACE}:plinth")
     new_decor_families = [family for family in families if family in NEW_DECOR_FAMILIES]
     if new_decor_families:
+        for family in ("corinthian_frieze", "ionic_frieze", "gothic_frieze", "byzantine_frieze"):
+            if family not in families:
+                continue
+            frieze = f"#{NAMESPACE}:{family}"
+            terms={"corinthian_frieze":("acanthus", "corinthian"),
+                   "ionic_frieze":("ionic", "horse", "chariot", "palm", "palmette", "procession"),
+                   "gothic_frieze":("gothic", "quatrefoil", "tracery", "lancet"),
+                   "byzantine_frieze":("byzantine", "guilloche", "interlace", "cross", "medallion", "palm", "palmette")}[family]
+            for synonym in ("frieze", "entablature", "wall_relief", *terms):
+                relation_tags.setdefault(synonym, []).append(frieze)
+            ornament_values.append(frieze)
         benches = [f"#{NAMESPACE}:{bench}" for bench in BENCH_FAMILIES if bench in families]
         if benches:
             for synonym in ("bench", "seat", "seating", "furniture"):
-                relation_tags[synonym] = benches
+                relation_tags[synonym] = list(benches)
+        if "anthophoros_planter" in families:
+            planter = f"#{NAMESPACE}:anthophoros_planter"
+            for synonym in ("anthophoros", "planter", "flower_box", "garden_planter"):
+                relation_tags[synonym] = [planter]
+            relation_tags.setdefault("furniture", []).append(planter)
+            ornament_values.append(planter)
         if "exedra" in families:
             relation_tags["curved_bench"] = [f"#{NAMESPACE}:exedra"]
         if "monopteros_dome" in families:

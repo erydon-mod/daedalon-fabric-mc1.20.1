@@ -6,6 +6,8 @@ import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.ExedraBlock;
 import com.oliver.daedalon.block.HedraBlock;
+import com.oliver.daedalon.block.AnthophorosBlock;
+import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
 import com.oliver.daedalon.block.MonopterosPartBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
@@ -48,11 +50,11 @@ public final class ModBlocks {
                     + CapitalBlock.Style.values().length
                     + FixedDecorBlock.Style.values().length
                     + FountainBasinBlock.Style.values().length
-                    + PlinthBlock.Style.values().length + 5;
+                    + PlinthBlock.Style.values().length + 6 + FriezeBlock.Style.values().length;
     private static final int BRONZE_FAMILY_COUNT =
             2 + UrnBlock.UrnStyle.values().length
                     + ClassicalStatueBlock.Style.values().length
-                    + BustBlock.Style.values().length + 2
+                    + BustBlock.Style.values().length + 3
                     + (int) java.util.Arrays.stream(FixedDecorBlock.Style.values()).filter(FixedDecorBlock.Style::isFinial).count();
     private static final int EXPECTED_BLOCK_COUNT =
             STONE_VARIANTS_PER_FAMILY * FAMILY_COUNT + BRONZE_FAMILY_COUNT;
@@ -123,6 +125,8 @@ public final class ModBlocks {
         registerObeliskosMonuments();
         registerExedras();
         registerHedras();
+        registerAnthophorosPlanters();
+        registerFriezes();
         registerMonopterosDomes();
 
         if (BY_ID.size() != EXPECTED_BLOCK_COUNT
@@ -130,7 +134,7 @@ public final class ModBlocks {
                 || SPARTAN_PROMACHOS_STATUES.size() != BRONZE_FAMILY_VARIANTS
                 || ZEUS_STATUES.size() != BRONZE_FAMILY_VARIANTS) {
             throw new IllegalStateException(
-                    "Daedalon must register exactly 4046 decor blocks and items"
+                    "Daedalon must register exactly 4317 decor blocks and items"
             );
         }
         for (UrnBlock.UrnStyle style : UrnBlock.UrnStyle.values()) {
@@ -529,6 +533,25 @@ public final class ModBlocks {
             }
         }
         registerBlock("bronze_monopteros_dome", new MonopterosBlock(decorSettings()));
+    }
+
+    private static void registerAnthophorosPlanters() {
+        for (DecorMaterial material : DecorMaterial.values()) {
+            for (boolean aged : new boolean[]{false, true}) {
+                String path = material.id() + (aged ? "_aged" : "") + "_anthophoros_planter";
+                registerBlock(path, new AnthophorosBlock(decorSettings()));
+            }
+        }
+        registerBlock("bronze_anthophoros_planter", new AnthophorosBlock(decorSettings()));
+    }
+
+    private static void registerFriezes() {
+        for (FriezeBlock.Style style : FriezeBlock.Style.values()) for (DecorMaterial material : DecorMaterial.values()) {
+            for (boolean aged : new boolean[]{false, true}) {
+                registerBlock(material.id() + (aged ? "_aged" : "") + "_" + style.id() + "_frieze",
+                        new FriezeBlock(decorSettings(),style));
+            }
+        }
     }
 
     private static void registerHedras() {

@@ -2,6 +2,7 @@ package com.oliver.daedalon.mixin;
 
 import com.oliver.daedalon.Daedalon;
 import com.oliver.daedalon.block.CapitalBlock;
+import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
 import com.oliver.daedalon.block.MonopterosPartBlock;
@@ -89,8 +90,16 @@ abstract class DebugStickItemMixin {
             return;
         }
 
+        boolean manualFrieze = targetState.getBlock() instanceof FriezeBlock
+                && targetState.get(FriezeBlock.MANUAL_CORNER);
+        boolean repeatingFrieze = !(targetState.getBlock() instanceof FriezeBlock frieze)
+                || frieze.style().sections()>1;
         List<Property<?>> properties = DaedalonDebugProperties.ordered(
-                targetState.getBlock().getStateManager().getProperties()
+                targetState.getBlock().getStateManager().getProperties().stream()
+                        .filter(property -> property != FriezeBlock.JOIN
+                                || manualFrieze)
+                        .filter(property -> property != FriezeBlock.PATTERN
+                                || repeatingFrieze).toList()
         );
         String rememberedName = stack.getOrCreateNbt().getString(
                 DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT
@@ -111,6 +120,7 @@ abstract class DebugStickItemMixin {
                     selected,
                     player.shouldCancelInteraction()
             );
+            if (updated.getBlock() instanceof FriezeBlock) updated = FriezeBlock.refresh(world, targetPos, updated);
             if (targetState.getBlock() instanceof FountainBasinBlock basin
                     && selected == FountainBasinBlock.SIZE
                     && !basin.canChangeSize(world, targetPos, updated)) {
@@ -125,7 +135,7 @@ abstract class DebugStickItemMixin {
                 callback.setReturnValue(true);
                 return;
             }
-            world.setBlockState(targetPos, updated, 18);
+            world.setBlockState(targetPos, updated, updated.getBlock() instanceof FriezeBlock ? 3 : 18);
             sendMessage(player, Text.translatable(
                     "item.minecraft.debug_stick.update",
                     displayPropertyName(updated, selected),

@@ -1,37 +1,54 @@
 {
   "model": "fountain_gothic_bowl",
   "source": {
-    "file": "fountain_gothic_bowl.obj",
+    "file": "fountain_gothic_bowl_BE.obj",
     "format": "Blender 5.2.0 LTS OBJ",
     "supplied_by": "Oliver",
-    "provenance": "Created by Oliver using Meshy; Oliver confirmed ownership and permission for public distribution",
+    "provenance": "Created by Oliver using Meshy, decimated and re-exported by Oliver using Blender; Oliver confirmed ownership and permission for public distribution",
     "ownership_confirmed_on": "2026-09-05",
     "licence": "OLIVER'S MINECRAFT MODS RESTRICTED LICENSE 1.0",
-    "sha256": "6cdb2ea453828aecea485d0166a0159496c345369464caba73fc80bdf88f3c36",
-    "vertices": 7904,
-    "triangles": 15804,
-    "span": [1.901305, 1.675452, 1.826327]
+    "sha256": "15c2b0875f90d8a7d036b1b9c4eba67f7f41c93e46f0de17d1bcd99c615a70e1",
+    "vertices": 7769,
+    "triangles": 15544,
+    "span": [
+      1.902426,
+      1.676065,
+      1.827755
+    ],
+    "uvs": 0
   },
   "preparation": {
     "tool": "direct byte-for-byte integration",
-    "target_faces": 15804,
+    "target_faces": 15544,
     "face_policy": "preserve exact supplied geometry",
     "authored_uvs_retained": true,
     "authored_normals_retained": true,
     "runtime_uv_policy": "world-scaled projection",
     "runtime_normal_policy": "supplied normals",
-    "normalised_span": [1.0, 0.881211589, 0.96056498]
+    "normalised_span": [
+      1.0,
+      0.881014557,
+      0.96074959
+    ]
   },
   "runtime": {
-    "obj_sha256": "6cdb2ea453828aecea485d0166a0159496c345369464caba73fc80bdf88f3c36",
+    "obj_sha256": "15c2b0875f90d8a7d036b1b9c4eba67f7f41c93e46f0de17d1bcd99c615a70e1",
     "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
-    "vertices": 7904,
-    "uvs": 12349,
-    "normals": 8031,
-    "faces": 15804,
+    "vertices": 7769,
+    "uvs": 0,
+    "normals": 15465,
+    "faces": 15544,
     "bounds": [
-      [-0.95142, -0.838629, -0.913679],
-      [0.949885, 0.836823, 0.912648]
+      [
+        -0.951358,
+        -0.838856,
+        -0.914638
+      ],
+      [
+        0.951068,
+        0.837209,
+        0.913117
+      ]
     ]
   },
   "placement": {
@@ -39,31 +56,31 @@
     "sizes": {
       "small": {
         "diameter_blocks": 1.0,
-        "height_blocks": 0.8812116,
+        "height_blocks": 0.8810146,
         "connection_rise": 0.643,
         "water_floor_y": 0.643,
         "water_surface_y": 0.87,
-        "water_half_width": 0.4276101
+        "water_half_width": 0.4276997
       },
       "medium": {
         "diameter_blocks": 1.5,
-        "height_blocks": 1.3218174,
+        "height_blocks": 1.3215218,
         "connection_rise": 0.9645,
         "water_floor_y": 0.9645,
         "water_surface_y": 1.305,
-        "water_half_width": 0.6414152
+        "water_half_width": 0.64154955
       },
       "large": {
         "diameter_blocks": 2.0,
-        "height_blocks": 1.7624232,
+        "height_blocks": 1.7620291,
         "connection_rise": 1.286,
         "water_floor_y": 1.286,
         "water_surface_y": 1.74,
-        "water_half_width": 0.8552202
+        "water_half_width": 0.8553994
       }
     },
     "connection": "The next model begins on the measured inset floor, below the rim.",
-    "water_surface_shape": "92-edge measured near-brim contour with at least 0.0019288 diameter units of inner-wall clearance",
+    "water_surface_shape": "77-edge measured contour with at least 0.0022144 normalized units of inner-wall clearance",
     "waterline_profile": "data/daedalon/fountain_water/gothic_bowl.json"
   }
 }

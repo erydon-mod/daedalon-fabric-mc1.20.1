@@ -1,0 +1,26 @@
+{
+  "obj": "daedalon:models/mesh/anthophoros_3m.obj",
+  "mtl": "daedalon:models/mesh/anthophoros_3m.mtl",
+  "flip_v": true,
+  "repair_degenerate_uvs": true,
+  "force_uv_projection": true,
+  "uv_projection": "axis_stabilized_box",
+  "box_projection_span": 4.0,
+  "face_oriented_uvs": true,
+  "smooth_normals": false,
+  "fit_to_block": false,
+  "scale": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "translate": [
+    0.5,
+    0.0,
+    0.5
+  ],
+  "particle": "daedalon:block/statue_spartan_promachos_aganite",
+  "materials": {
+    "none": "daedalon:block/statue_spartan_promachos_aganite"
+  }
+}

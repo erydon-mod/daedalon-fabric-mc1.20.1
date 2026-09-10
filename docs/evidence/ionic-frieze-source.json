@@ -1,0 +1,102 @@
+{
+  "source_name": "entablature_ionic.obj",
+  "source_sha256": "a54c49f6e9178e0a88af467979e33d78085eb726e60d4d587c4cb6684db3f799",
+  "source_files_modified": false,
+  "provenance": "Oliver supplied his own Meshy creation; approved for the public Daedalon repository.",
+  "source": {
+    "vertices": 7645,
+    "triangles": 15397,
+    "bounds": [
+      [
+        -0.9522160291671753,
+        0.950564980506897
+      ],
+      [
+        -0.2581869959831238,
+        0.25587698817253113
+      ],
+      [
+        -0.08758000284433365,
+        0.08715900033712387
+      ]
+    ],
+    "front": "+Z",
+    "up": "+Y"
+  },
+  "preparation": {
+    "tool": "Blender 5.2.0 LTS",
+    "height_m": 1,
+    "repeat_width_m": 3,
+    "decimated": false,
+    "repeat_cut_source_x": [
+      -0.357,
+      0.724
+    ],
+    "motifs_per_repeat": [
+      "palm",
+      "chariot group",
+      "palm",
+      "mounted group"
+    ],
+    "source_repeat_width": 1.081,
+    "depth_scale": "same as height; retains authored section proportions",
+    "depth_envelope_m": 0.34,
+    "shared_repeat_profile_blend_m": 0.025,
+    "top_bottom_planarity_band_m": 0.001,
+    "normal_smoothing_angle_degrees": 30,
+    "smoothing_changes_geometry": false,
+    "end_closure": "exact section silhouette; zero added width",
+    "components": {
+      "straight_0": 5200,
+      "cap_left_0": 866,
+      "cap_right_0": 416,
+      "straight_1": 3220,
+      "cap_left_1": 416,
+      "cap_right_1": 342,
+      "straight_2": 4867,
+      "cap_left_2": 342,
+      "cap_right_2": 866,
+      "inner_left_primary_0": 5473,
+      "inner_left_secondary_0": 5386,
+      "inner_left_primary_1": 3419,
+      "inner_left_secondary_1": 3342,
+      "inner_left_primary_2": 5098,
+      "inner_left_secondary_2": 5202,
+      "inner_right_primary_0": 5386,
+      "inner_right_secondary_0": 5469,
+      "inner_right_primary_1": 3342,
+      "inner_right_secondary_1": 3415,
+      "inner_right_primary_2": 5202,
+      "inner_right_secondary_2": 5104,
+      "outer_left_primary_0": 1923,
+      "outer_left_secondary_0": 1340,
+      "outer_left_primary_1": 1269,
+      "outer_left_secondary_1": 1188,
+      "outer_left_primary_2": 1117,
+      "outer_left_secondary_2": 1895,
+      "outer_right_primary_0": 1340,
+      "outer_right_secondary_0": 1919,
+      "outer_right_primary_1": 1188,
+      "outer_right_secondary_1": 1265,
+      "outer_right_primary_2": 1895,
+      "outer_right_secondary_2": 1123,
+      "cap_east_low_0": 866,
+      "cap_east_high_0": 416,
+      "cap_west_low_0": 866,
+      "cap_west_high_0": 416,
+      "cap_east_low_1": 416,
+      "cap_east_high_1": 342,
+      "cap_west_low_1": 416,
+      "cap_west_high_1": 342,
+      "cap_east_low_2": 342,
+      "cap_east_high_2": 866,
+      "cap_west_low_2": 342,
+      "cap_west_high_2": 866
+    }
+  },
+  "outputs": {
+    "ionic_frieze.json": "cdb28aaa2a2d1a2ecb5a389b1cd3b91b879b444fd0ac8ec3977615cb07525eaa",
+    "ionic_frieze.mtl": "8b3dd5b7c0d3683118b0c27f01ddb713d3295dc054e45c2b898d054cd84a17af",
+    "ionic_frieze.obj": "1469d6694e5ea0e27b23467657a8f6ad0a4e10ac58005cba4003e3718373579c"
+  }
+}

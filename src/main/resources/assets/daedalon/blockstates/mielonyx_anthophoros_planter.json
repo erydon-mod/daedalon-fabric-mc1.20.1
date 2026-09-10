@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "width=2,facing=north": {
+      "model": "daedalon:mesh/internal/mielonyx_anthophoros_planter_2m"
+    },
+    "width=2,facing=east": {
+      "model": "daedalon:mesh/internal/mielonyx_anthophoros_planter_2m"
+    },
+    "width=2,facing=south": {
+      "model": "daedalon:mesh/internal/mielonyx_anthophoros_planter_2m"
+    },
+    "width=2,facing=west": {
+      "model": "daedalon:mesh/internal/mielonyx_anthophoros_planter_2m"
+    },
+    "width=3,facing=north": {
+      "model": "daedalon:mesh/mielonyx_anthophoros_planter"
+    },
+    "width=3,facing=east": {
+      "model": "daedalon:mesh/mielonyx_anthophoros_planter"
+    },
+    "width=3,facing=south": {
+      "model": "daedalon:mesh/mielonyx_anthophoros_planter"
+    },
+    "width=3,facing=west": {
+      "model": "daedalon:mesh/mielonyx_anthophoros_planter"
+    },
+    "width=4,facing=north": {
+      "model": "daedalon:mesh/internal/mielonyx_anthophoros_planter_4m"
+    },
+    "width=4,facing=east": {
+      "model": "daedalon:mesh/internal/mielonyx_anthophoros_planter_4m"
+    },
+    "width=4,facing=south": {
+      "model": "daedalon:mesh/internal/mielonyx_anthophoros_planter_4m"
+    },
+    "width=4,facing=west": {
+      "model": "daedalon:mesh/internal/mielonyx_anthophoros_planter_4m"
+    }
+  }
+}

@@ -141,7 +141,9 @@ class GeorgianGreekFountainCollectionSafetyTests(unittest.TestCase):
                 source = evidence["source"]
                 runtime = evidence["runtime"]
                 with self.subTest(style=style, kind=kind):
-                    self.assertEqual(f"{mesh}.obj", source["file"])
+                    supplied_style = ({"georgian": "greek", "greek": "georgian"}[style]
+                                      if kind == "bowl" else style)
+                    self.assertEqual(f"fountain_{supplied_style}_{kind}_BE.obj", source["file"])
                     self.assertNotIn(":\\", source["file"])
                     self.assertTrue(source["provenance"])
                     self.assertEqual(
@@ -177,9 +179,9 @@ class GeorgianGreekFountainCollectionSafetyTests(unittest.TestCase):
                         "bounds",
                     ):
                         self.assertEqual(expected[key], actual[key], key)
-                    self.assertGreater(actual["uvs"], 0)
+                    self.assertEqual(0, actual["uvs"])
                     self.assertGreater(actual["normals"], 0)
-                    self.assertEqual({"v/vt/vn"}, actual["face_index_styles"])
+                    self.assertEqual({"v//vn"}, actual["face_index_styles"])
                     self.assertEqual(expected["obj_sha256"], sha256(obj_path))
                     self.assertEqual(
                         expected["mtl_sha256"],
@@ -285,9 +287,9 @@ class GeorgianGreekFountainCollectionSafetyTests(unittest.TestCase):
                     face_repaired = True
             affected_faces += int(face_repaired)
 
-        self.assertEqual(624, floor_faces)
-        self.assertEqual(73, repaired_corners)
-        self.assertEqual(67, affected_faces)
+        self.assertEqual(186, floor_faces)
+        self.assertEqual(0, repaired_corners)
+        self.assertEqual(0, affected_faces)
 
         baked = (JAVA_ROOT / "client/model/obj/ObjMeshBakedModel.java").read_text(
             encoding="utf-8"

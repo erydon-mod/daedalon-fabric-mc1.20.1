@@ -42,9 +42,9 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
         source = evidence["source"]
         runtime = evidence["runtime"]
 
-        self.assertEqual("fountain_gothic_basin.obj", source["file"])
+        self.assertEqual("fountain_gothic_basin_BE.obj", source["file"])
         self.assertEqual(
-            "81f8e985c79b63611e46641359256213f6483f9158fbc6147fb734d72b2bc3b3",
+            expected["obj_sha256"],
             source["sha256"],
         )
         self.assertTrue(source["provenance"])
@@ -67,9 +67,9 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
 
         obj_path = MESH_ROOT / expected["obj"]
         actual = parse_obj(obj_path)
-        self.assertEqual(12204, actual["uvs"])
+        self.assertEqual(0, actual["uvs"])
         self.assertEqual({3}, actual["face_sizes"])
-        self.assertEqual({"v/vt/vn"}, actual["face_index_styles"])
+        self.assertEqual({"v//vn"}, actual["face_index_styles"])
         self.assertEqual(expected["bounds"], actual["bounds"])
         self.assertEqual(expected["obj_sha256"], sha256(obj_path))
         self.assertEqual(expected["mtl_sha256"], sha256(MESH_ROOT / expected["mtl"]))
@@ -199,7 +199,7 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
         self.assertIn('LARGE("large", LARGE_MODEL_SCALE)', block)
         self.assertIn("MEDIUM_MODEL_SCALE = 4.0F", block)
         self.assertIn("LARGE_MODEL_SCALE = 5.0F", block)
-        self.assertIn("NORMALIZED_MODEL_HEIGHT = 0.26625957F", block)
+        self.assertIn("NORMALIZED_MODEL_HEIGHT = 0.26585404F", block)
         self.assertIn("MEDIUM_BASIN_FLOOR_Y = 0.40F", block)
         self.assertIn("MEDIUM_WATER_SURFACE_Y = 0.9066667F", block)
         self.assertIn("MEDIUM_WATER_HALF_WIDTH = 1.5866667F", block)
@@ -286,7 +286,7 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
         basin_transform = baked[baked.index("record BasinTransform"):baked.index("class FacingDecorTransform")]
         self.assertIn("quad.pos", basin_transform)
         self.assertIn("quad.uv", basin_transform)
-        self.assertIn("exactly 4046 decor blocks and items", mod_blocks)
+        self.assertIn("exactly 4317 decor blocks and items", mod_blocks)
         self.assertIn('id("fountain_basin_part")', mod_blocks)
         self.assertNotIn(
             'registerBlock("fountain_basin_part"',

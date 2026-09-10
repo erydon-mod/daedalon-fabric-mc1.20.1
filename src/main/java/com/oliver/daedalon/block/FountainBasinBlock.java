@@ -39,7 +39,7 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final float MEDIUM_MODEL_SCALE = 4.0F;
     public static final float LARGE_MODEL_SCALE = 5.0F;
-    public static final float NORMALIZED_MODEL_HEIGHT = 0.26625957F;
+    public static final float NORMALIZED_MODEL_HEIGHT = 0.26585404F;
 
     /** Medium-size coordinates measured against the supplied Gothic basin mesh. */
     public static final float MEDIUM_BASIN_FLOOR_Y = 0.40F;
@@ -607,7 +607,7 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
                 "Gothic Fountain Basin",
                 FountainBowlModel.Style.GOTHIC,
                 new GeometryProfile(
-                        0.26625957F,
+                        0.26585404F,
                         0.10000000F,
                         0.49666668F,
                         0.20000000F,
@@ -624,7 +624,7 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
                 "Georgian Fountain Basin",
                 FountainBowlModel.Style.GREEK,
                 new GeometryProfile(
-                        0.21260499F,
+                        0.21243666F,
                         0.08000000F,
                         0.42000000F,
                         0.17000000F,
@@ -641,7 +641,7 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
                 "Greek Fountain Basin",
                 FountainBowlModel.Style.GEORGIAN,
                 new GeometryProfile(
-                        0.20059413F,
+                        0.20023336F,
                         0.08000000F,
                         0.48000000F,
                         0.18000000F,

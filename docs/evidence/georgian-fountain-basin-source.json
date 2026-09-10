@@ -1,37 +1,54 @@
 {
   "model": "fountain_georgian_basin",
   "source": {
-    "file": "fountain_georgian_basin.obj",
+    "file": "fountain_georgian_basin_BE.obj",
     "format": "Blender 5.2.0 LTS OBJ",
     "supplied_by": "Oliver",
-    "provenance": "Created by Oliver using Meshy; Oliver confirmed ownership and permission for public distribution",
+    "provenance": "Created by Oliver using Meshy, decimated and re-exported by Oliver using Blender; Oliver confirmed ownership and permission for public distribution",
     "ownership_confirmed_on": "2026-09-05",
     "licence": "OLIVER'S MINECRAFT MODS RESTRICTED LICENSE 1.0",
-    "sha256": "d66108d0e228ed69157969dbe3a39447b531b8b27ff30e3db02eee8592a50c8f",
-    "vertices": 7623,
-    "triangles": 15242,
-    "span": [1.90147, 0.404262, 1.90052]
+    "sha256": "7274ec15a6fff258f98a234e718b297911e24b8869886a0f6e1d49519cbb2680",
+    "vertices": 7801,
+    "triangles": 15646,
+    "span": [
+      1.903212,
+      0.404312,
+      1.902745
+    ],
+    "uvs": 0
   },
   "preparation": {
     "tool": "direct byte-for-byte integration",
-    "target_faces": 15242,
+    "target_faces": 15646,
     "face_policy": "preserve exact supplied geometry",
     "authored_uvs_retained": true,
     "authored_normals_retained": true,
     "runtime_uv_policy": "world-scaled projection",
     "runtime_normal_policy": "supplied normals except the planar inner floor, which uses one upward normal; source normals and geometry remain unchanged",
-    "normalised_span": [1.0, 0.212604985, 0.999500387]
+    "normalised_span": [
+      1.0,
+      0.21243666,
+      0.999754625
+    ]
   },
   "runtime": {
-    "obj_sha256": "d66108d0e228ed69157969dbe3a39447b531b8b27ff30e3db02eee8592a50c8f",
+    "obj_sha256": "7274ec15a6fff258f98a234e718b297911e24b8869886a0f6e1d49519cbb2680",
     "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
-    "vertices": 7623,
-    "uvs": 13120,
-    "normals": 23545,
-    "faces": 15242,
+    "vertices": 7801,
+    "uvs": 0,
+    "normals": 18437,
+    "faces": 15646,
     "bounds": [
-      [-0.950787, -0.202374, -0.950831],
-      [0.950683, 0.201888, 0.949689]
+      [
+        -0.952662,
+        -0.202356,
+        -0.951337
+      ],
+      [
+        0.95055,
+        0.201956,
+        0.951408
+      ]
     ]
   },
   "placement": {
@@ -39,27 +56,36 @@
     "bowl_source": "fountain_greek_bowl",
     "sizes": {
       "small": {
-        "footprint_blocks": [3.0, 3.0],
-        "height_blocks": 0.637815,
+        "footprint_blocks": [
+          3.0,
+          3.0
+        ],
+        "height_blocks": 0.63731,
         "basin_floor_y": 0.24,
-        "water_surface_y": 0.57,
-        "water_half_width": 1.2278946
+        "water_surface_y": 0.5700000000000001,
+        "water_half_width": 1.2279843
       },
       "medium": {
-        "footprint_blocks": [4.0, 4.0],
-        "height_blocks": 0.8504199,
+        "footprint_blocks": [
+          4.0,
+          4.0
+        ],
+        "height_blocks": 0.8497466,
         "basin_floor_y": 0.32,
         "water_surface_y": 0.76,
-        "water_half_width": 1.6371928
+        "water_half_width": 1.6373124
       },
       "large": {
-        "footprint_blocks": [5.0, 5.0],
-        "height_blocks": 1.0630249,
+        "footprint_blocks": [
+          5.0,
+          5.0
+        ],
+        "height_blocks": 1.0621833,
         "basin_floor_y": 0.4,
         "water_surface_y": 0.95,
-        "water_half_width": 2.046491
+        "water_half_width": 2.0466404999999996
       }
     },
-    "water_surface_shape": "89-edge measured circular waterline; data/daedalon/fountain_water/georgian.json; minimum normalized radial wall clearance 0.0026087"
+    "water_surface_shape": "73-edge measured contour with at least 0.0026961 normalized units of inner-wall clearance"
   }
 }

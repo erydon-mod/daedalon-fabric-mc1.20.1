@@ -136,6 +136,150 @@ than inventing geometry from the preview.
 
 ## Verification
 
+### Corinthian Frieze pilot
+
+The Corinthian Frieze is a one-block wall relief, exactly 1m high and at most
+0.23m deep. Its three prepared sections repeat over 3m; short runs are valid.
+All 27 stone finishes and their aged variants share one component OBJ. Search
+terms include frieze, entablature, wall relief and acanthus.
+
+Run Blender 5.2.0 with `--background --factory-startup --disable-autoexec
+--python tools/prepare_corinthian_frieze.py -- --input <source.obj>
+--output-dir src/main/resources/assets/daedalon/models/mesh
+--evidence docs/evidence/corinthian-frieze-source.json
+--preview-dir <preview-directory>`. The supplied OBJ remains unchanged. No
+decimation is applied: only the finished source returns are cropped, the height
+and width normalized, and the last 25mm at each repeat end lofted to a common
+profile. The three straight sections contain 6,851 / 4,975 / 6,947 triangles.
+Each exposed end is closed on its exact section plane, following that section's
+cut silhouette without adding width or projection. There is no generic border.
+Corner components are clipped and individually closed on matching mitre planes;
+the full component file is not emitted for each placed block.
+
+`FriezeBlock` uses facing, pattern offset 0/1/2, join and `manual_corner`.
+Look towards a wall for ordinary wall-facing placement. Look predominantly along
+it (more than 45 degrees from the wall normal) when placing to choose a short
+outside corner return, even on a continuing flat wall. That corner is retained
+through neighbour edits, saving, rotation and mirroring. Extending a frieze from
+its side inherits its facing and pattern offset. For automatic placements,
+full wall faces take precedence: a backing wall
+and one side wall form an inside return; an exposed diagonal wall corner forms
+an outside return even without another frieze. Fences and partial faces do not
+act as full walls. Two side walls keep a narrow recess flat. Unsupported builds
+retain the perpendicular-frieze fallback, with parallel continuations taking
+precedence over incidental T junctions. Connections work across material
+changes. Each block owns its one-cell collision and selection, without entities,
+ticks or whole-run scans. The block occupies the air cell against the wall;
+an outside turn needs a frieze placed in the corner cell. Rendering and dynamic
+collision/selection resolve the current local wall faces, including diagonal
+wall edits that do not send a direct blockstate neighbour notification.
+
+The debug stick exposes facing, pattern offset and `manual_corner`; join is
+editable when manual mode is enabled and otherwise calculated from neighbours.
+Offset changes apply to the selected block, while newly extended
+pieces inherit it. The pattern is world-aligned, so moving or rotating a copied
+run can change which motif occupies a particular block. Breaking any section
+exposes finished ends immediately. Local moulding coordinates are projected
+into the shared material sheet after facing rotation so textures join across
+all four directions and remain inside the atlas.
+
+Validation: `./gradlew --no-daemon check` plus `runGameTest`. The frieze tests
+cover forward/reverse placement, every corner/facing, wall-only corners and
+diagonal support removal, angled corner placement against straight walls,
+manual corner persistence and transforms, all 54 finishes,
+height/collision, negative coordinates, chunk boundaries, and side-click
+inheritance. Geometry tests check all three seam profiles within 0.01mm, source
+hashes, flush end closures and collision containment. Client visual acceptance remains required
+for native textures, both Collection packs, shaders, reload, and inventory.
+
+### Ionic Frieze
+
+The supplied Ionic panel contains roughly one and a half repeats, not three
+identical horses. Its full repeat includes the chariot group and mounted group
+with both intervening palm motifs. Matching shallow gaps after the mounted
+groups occur at source X -0.357 and +0.724 (period 1.081); crop there, keeping
+both designs, before dividing the resulting 3m run into three 1m sections.
+
+Run `tools/prepare_ionic_frieze.py` in the same locked Blender background mode,
+with `--input <source.obj> --output-dir src/main/resources/assets/daedalon/models/mesh
+--evidence docs/evidence/ionic-frieze-source.json --preview-dir <directory>`.
+It reuses the Corinthian clipping, exact end closures, corner components and
+25mm repeat-edge loft. No decimation is applied. Sub-millimetre source noise on
+the intended top/bottom planes is flattened within a 1mm band. The three sections
+contain 5,200 / 3,220 / 4,867 triangles before any exposed end closures.
+
+Height is exactly 1m. Depth scales with height to retain the Ionic section
+proportions, giving a 0.34m collision envelope rather than Corinthian's 0.23m.
+Each style caches its own shapes and shares one mesh across all 54 finishes.
+The established automatic and angled/manual placement behaviour is unchanged.
+Material changes within a design connect; different designs keep their finished
+ends because the moulding profiles do not match. Inventory icons use the same
+approved rotation and compact framing as Corinthian. Search terms include
+Ionic, frieze, entablature, horse, chariot, palm, palmette and procession.
+
+Both designs run the same server placement tests, including manual corner
+retention, all facings, negative coordinates, wall edits and material changes.
+The component tests check seams, exact end silhouettes, bounds and source hashes.
+
+### One-block Gothic Frieze and conservative smoothing
+
+Prepare `entablature_gothic.obj` with `tools/prepare_gothic_frieze.py` in the
+same locked Blender background mode. Use `--input <source.obj> --output-dir
+src/main/resources/assets/daedalon/models/mesh --evidence
+docs/evidence/gothic-frieze-source.json --preview-dir <directory>`.
+The source has a roughly 0.674-wide arch/quatrefoil repeat. Two complete repeats
+between X=-0.674 and X=0.674 fit a 1m-wide block with uniform scale 1/1.348.
+Only the plain top fascia at source Y=0.620..0.650 gains the missing 19.535mm
+of height. Carved motifs retain their proportions, with no decimation.
+The 12.5mm repeat-edge loft uses a 0.01mm profile tolerance to avoid redundant
+triangles. The straight panel has 14,043 triangles, plus 978 per exposed end.
+Height and width are exactly 1m; its cached depth envelope is 0.256m.
+
+Gothic uses one component phase, including its inventory mesh, shared across
+all 54 finishes. It reuses the approved wall/angled corner placement and compact
+GUI transform. The debug stick omits the irrelevant pattern offset for this
+one-block repeat; facing and manual corners remain available. Search terms
+include Gothic, frieze, entablature, quatrefoil, tracery and lancet.
+
+All frieze preparation tools bake 30-degree, angle-weighted corner
+normals before splitting the straight mesh into render components. Repeat ends
+share their normals, while subsequently generated cut caps remain flat. Runtime
+`smooth_normals` stays false deliberately: Minecraft imports the prepared normals
+instead of averaging overlapping straight/corner variants together. This changes
+shading only; the accepted Corinthian and Ionic vertex positions, faces, end
+closures and corner geometry remain identical. Tests verify repeat seams,
+normal lengths and sharp caps, all finishes and placement behaviour.
+
+### Two-block Byzantine Frieze
+
+Use `tools/prepare_byzantine_frieze.py` with the same locked Blender invocation
+and `--input <source.obj> --output-dir src/main/resources/assets/daedalon/models/mesh
+--evidence docs/evidence/byzantine-frieze-source.json --preview-dir <directory>`.
+The complete main panel repeats between the large outer pillar centres at
+source X=-0.737 and X=0.737, with both palms, both smaller pillars, both
+interlace panels and the cross medallion retained. The large half-pillars join
+into a complete pillar at each two-metre repeat boundary. The earlier crop at
+the palms omitted those larger pillars and is superseded.
+
+The main panel is uniformly scaled by 2/1.474 and remains undecimated. Its
+ornament occupies 0.488467m vertically. Foliage, dentils, braid and rope retain
+uniform XYZ proportions within their own independently tiled bands; the plain
+mouldings share the remaining height. Smaller trim uses a 0.5 decimation ratio
+before seam fitting; its original topology is never simplified across the main
+panel. Every tier is closed against its neighbours with fitted horizontal
+ledges. Endpoint lofts share profiles, with a 0.1mm profile tolerance.
+
+The complete design is 2m wide and 1m high, divided into two 1m blocks with a
+0.235m depth envelope (measured depth 0.232186m). Straight sections contain
+14,225 and 14,270 triangles, plus fitted caps on exposed ends. The shared
+30-degree smoothing, corner placement and compact GUI transform apply to all
+54 finishes. World-coordinate phase selection uses the style's repeat length,
+including negative coordinates and arbitrary partial runs; saved pattern values
+remain compatible. Search includes Byzantine, Guilloche, frieze, entablature,
+interlace, cross, medallion, palm and palmette. Asset and server tests cover the
+complete repeat, both pillar sizes, dimensions, seams, normals, ends, corners,
+materials and source provenance.
+
 ### Width-selectable Exedra
 
 The Exedra pilot uses the decor preparation tool with
@@ -186,6 +330,28 @@ per width, including the open space beneath the seat. Selection uses a separate
 one-block-high/deep bounding box for each width, making the complete bench easy
 to target without filling its collision gap. Source provenance,
 preparation, geometry hashes and bounds are in `docs/evidence/hedra-source.json`.
+
+### Width-selectable Anthophoros planter
+
+Use Blender 5.2.0 LTS with `tools/prepare_anthophoros_mesh.py -- --input
+<source.obj> --output-dir <output>` to reproduce the approved repeated-panel
+design. Widths are 2m, 3m and 4m, all 1m high and approximately 1.188486m deep.
+The narrow and wide end caps translate intact. Only plain panel margins change
+width; garlands and rosettes repeat before the explicitly approved Blender
+Collapse decimation to at most 15,000 triangles per placed model.
+
+The script transfers reference normals from triangle centres, avoiding shading
+borrowed from an adjacent wall at a moulding vertex. Runtime smoothing is off
+for this family only. Generated definitions keep a fixed 4m projection span,
+so world texture density does not stretch with width. All 54 stone/aged finishes
+and bronze reuse three world meshes and one approximately 2,000-triangle held
+item; inventory icons retain the established full-model raster cache.
+
+The default 3m width owns the public item aliases. `AnthophorosBlock` reuses
+the static furniture width/facing controls and five cached floor/wall boxes
+per width, preserving its hollow interior without block entities or ticking.
+This is a decorative planter, not a new crop or fluid system. Provenance,
+Blender version and output hashes are in `docs/evidence/anthophoros-source.json`.
 
 ### Diameter-selectable Monopteros dome
 

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#daedalon:byzantine_capital"
+    "#daedalon:byzantine_capital",
+    "#daedalon:byzantine_frieze"
   ]
 }

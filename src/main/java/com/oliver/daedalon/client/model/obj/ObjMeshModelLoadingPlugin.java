@@ -6,6 +6,7 @@ import com.oliver.daedalon.block.BustBlock;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.BenchBlock;
+import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.FixedDecorBlock;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.FountainBowlModel;
@@ -336,22 +337,33 @@ public final class ObjMeshModelLoadingPlugin {
                     id("block/mesh/monopteros_display"), variants,
                     diameter == 6 ? id("models/mesh/monopteros_item.json") : null));
         }
-        for (String bench : List.of("exedra", "hedra")) {
+        for (String bench : List.of("exedra", "hedra", "anthophoros_planter")) {
+            String mesh = bench.equals("anthophoros_planter") ? "anthophoros" : bench;
             for (int width = 2; width <= 4; width++) {
                 families.add(new MeshFamily(
                         bench + " " + width + "m",
-                        id("models/mesh/" + bench + "_" + width + "m.json"),
-                        id("block/mesh/" + bench + "_display"),
+                        id("models/mesh/" + mesh + "_" + width + "m.json"),
+                        id("block/mesh/" + mesh + "_display"),
                         createBenchVariants(bench, width),
-                        width == BenchBlock.DEFAULT_WIDTH ? id("models/mesh/" + bench + "_item.json") : null
+                        width == BenchBlock.DEFAULT_WIDTH ? id("models/mesh/" + mesh + "_item.json") : null
                 ));
             }
+        }
+        for (FriezeBlock.Style style : FriezeBlock.Style.values()) {
+            String family=style.id()+"_frieze";
+            families.add(new MeshFamily(family,
+                    id("models/mesh/"+family+".json"),
+                    id("block/mesh/"+family+"_display"),
+                    createDetailedVariants(family)));
         }
         return List.copyOf(families);
     }
 
     private static List<MeshVariant> createBenchVariants(String bench, int width) {
         List<MeshVariant> variants = createDetailedVariants(bench);
+        if (bench.equals("anthophoros_planter")) {
+            variants = withBronze(variants, "bronze_anthophoros_planter", WorldTexturePhase.detailedSurface());
+        }
         if (width == BenchBlock.DEFAULT_WIDTH) {
             return variants;
         }
@@ -740,7 +752,11 @@ public final class ObjMeshModelLoadingPlugin {
                 guiIconTemplate = ObjGuiIconTemplate.create(
                         baked.mesh(),
                         guiTransformation,
-                        baked.emittedQuadCount()
+                        baked.emittedQuadCount(),
+                        // Keep the frieze's authored size relative to its original
+                        // 0.6 GUI scale; automatic framing otherwise cancels it.
+                        FriezeBlock.isMeshPath(sourceData.objId().getPath())
+                                ? guiTransformation.scale.x() / 0.6F : 1.0F
                 );
             } catch (RuntimeException exception) {
                 guiIconTemplate = null;

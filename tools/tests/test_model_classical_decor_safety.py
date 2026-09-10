@@ -37,10 +37,10 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             for block_id in GENERATOR.family_block_ids(family)
         ]
 
-    def test_exact_4046_id_manifest(self) -> None:
+    def test_exact_4317_id_manifest(self) -> None:
         block_ids = all_block_ids()
-        self.assertEqual(4046, len(block_ids))
-        self.assertEqual(4046, len(set(block_ids)))
+        self.assertEqual(4317, len(block_ids))
+        self.assertEqual(4317, len(set(block_ids)))
         self.assertEqual(605, len(self.urn_ids))
         self.assertEqual(270, len(self.plinth_ids))
         self.assertIn("aganite_amphora_urn", block_ids)
@@ -87,8 +87,8 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             },
         )
 
-    def test_exact_86_mesh_manifests_and_hashes(self) -> None:
-        self.assertEqual(86, len(MESH_EXPECTATIONS))
+    def test_exact_94_mesh_manifests_and_hashes(self) -> None:
+        self.assertEqual(94, len(MESH_EXPECTATIONS))
         self.assertEqual(
             {expectation["obj"] for expectation in MESH_EXPECTATIONS.values()},
             {path.name for path in MESH_ROOT.glob("*.obj")},
@@ -314,7 +314,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             GENERATOR.bronze_block_id(family)
             for family in GENERATOR.BRONZE_FAMILIES
         }
-        self.assertEqual(50, len(bronze_ids))
+        self.assertEqual(51, len(bronze_ids))
         self.assertTrue(bronze_ids <= set(all_block_ids()))
         self.assertFalse(any("aged" in block_id for block_id in bronze_ids))
         self.assertEqual(
@@ -470,7 +470,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertEqual(5, plinth_block.count('"plinth_'))
         self.assertNotIn("GeorgianPlinth", registrations)
         self.assertIn("EXPECTED_BLOCK_COUNT", registrations)
-        self.assertIn("exactly 4046 decor blocks and items", registrations)
+        self.assertIn("exactly 4317 decor blocks and items", registrations)
 
     def test_urn_source_and_decimation_evidence_is_locked(self) -> None:
         evidence = load_json(REPO_ROOT / "docs/evidence/urn-batch-source.json")

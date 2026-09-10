@@ -4,6 +4,7 @@ import com.oliver.daedalon.block.DecorShapeTransforms;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.BenchBlock;
+import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
 import com.oliver.daedalon.block.FountainAssemblyLayout;
 import com.oliver.daedalon.block.FountainBasinBlock;
@@ -48,6 +49,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -58,6 +60,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
 
     private final Mesh mesh;
     private final Mesh itemMesh;
+    private final FriezeMeshParts friezeParts;
     private final BakedModel metadataModel;
     private final Sprite particleSprite;
     private final TextureTransform textureTransform;
@@ -72,6 +75,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
 
     private ObjMeshBakedModel(Mesh mesh,
                               Mesh itemMesh,
+                              FriezeMeshParts friezeParts,
                               BakedModel metadataModel,
                               Sprite particleSprite,
                               List<Sprite> materialSprites,
@@ -83,6 +87,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                               Sprite containedWaterSprite) {
         this.mesh = mesh;
         this.itemMesh = itemMesh;
+        this.friezeParts = friezeParts;
         this.metadataModel = metadataModel;
         this.particleSprite = particleSprite;
         this.textureTransform = new TextureTransform(materialSprites, worldPhaseMaterials, worldTexturePhase, 0);
@@ -132,18 +137,36 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 .distinct()
                 .toList();
         BakeCounters counters = new BakeCounters(materialNames.size());
+        BakeCounters displayCounters = new BakeCounters(materialNames.size());
+        FriezeBlock.Style friezeStyle = FriezeBlock.meshStyle(definition.objId().getPath());
+        boolean frieze = friezeStyle != null;
+        int displaySection = frieze ? friezeStyle.displaySection() : 0;
+        Map<String, MeshBuilder> partBuilders = new LinkedHashMap<>();
+        int displayFaces = 0;
 
         for (ObjMeshData.Face face : data.faces()) {
             int materialTag = materialNames.indexOf(face.material());
-            emitFace(emitter, definition, data, transformedPositions, uvProjector, smoothNormals,
+            QuadEmitter target = frieze ? partBuilders.computeIfAbsent(face.objectName(),
+                    ignored -> renderer.meshBuilder()).getEmitter() : emitter;
+            emitFace(target, definition, data, transformedPositions, uvProjector, smoothNormals,
                     face, materialTag, counters);
+            if (frieze && (face.objectName().equals("straight_"+displaySection)
+                    || face.objectName().equals("cap_left_"+displaySection) || face.objectName().equals("cap_right_"+displaySection))) {
+                emitFace(emitter, definition, data, transformedPositions, uvProjector, smoothNormals,
+                        face, materialTag, displayCounters);
+                displayFaces += face.isTriangle() ? 1 : face.vertices().size() - 2;
+            }
         }
 
         Mesh mesh = meshBuilder.build();
-        int emittedQuadCount = data.finalQuadCount() * (definition.doubleSided() ? 2 : 1);
-        long estimatedVertexBytes = (long) emittedQuadCount * 4L * ESTIMATED_BYTES_PER_VERTEX;
+        Map<String, Mesh> parts = new LinkedHashMap<>();
+        partBuilders.forEach((name, builder) -> parts.put(name, builder.build()));
+        int emittedQuadCount = (frieze ? displayFaces : data.finalQuadCount()) * (definition.doubleSided() ? 2 : 1);
+        long estimatedVertexBytes = (long) (data.finalQuadCount() + (frieze ? displayFaces : 0))
+                * (definition.doubleSided() ? 2 : 1) * 4L * ESTIMATED_BYTES_PER_VERTEX;
         return new GeometryBakeResult(
                 mesh,
+                frieze ? new FriezeMeshParts(parts,friezeStyle) : null,
                 transformedBounds,
                 materialNames,
                 emittedQuadCount,
@@ -182,6 +205,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         return new ObjMeshBakedModel(
                 geometry.mesh(),
                 itemMesh,
+                geometry.friezeParts(),
                 metadataModel,
                 particleSprite,
                 materialSprites,
@@ -496,13 +520,17 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             positionTransform = GroundScaleTransform.forState(state);
         }
 
-        int worldPhaseIndex = worldTexturePhase.index(pos.getX(), pos.getY(), pos.getZ());
+        int worldPhaseIndex = friezeParts != null ? 0 : worldTexturePhase.index(pos.getX(), pos.getY(), pos.getZ());
         context.pushTransform(worldTextureTransforms[worldPhaseIndex]);
         if (positionTransform != null) {
             context.pushTransform(positionTransform);
         }
         try {
-            mesh.outputTo(context.getEmitter());
+            if (friezeParts != null && state.getBlock() instanceof FriezeBlock) {
+                friezeParts.emit(blockView, pos, state, context);
+            } else {
+                mesh.outputTo(context.getEmitter());
+            }
         } finally {
             if (positionTransform != null) {
                 context.popTransform();
@@ -843,6 +871,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     }
 
     record GeometryBakeResult(Mesh mesh,
+                              FriezeMeshParts friezeParts,
                               ObjMeshData.Bounds transformedBounds,
                               List<String> materialNames,
                               int emittedQuadCount,

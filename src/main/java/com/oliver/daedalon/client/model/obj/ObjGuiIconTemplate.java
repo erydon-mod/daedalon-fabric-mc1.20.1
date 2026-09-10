@@ -33,7 +33,8 @@ final class ObjGuiIconTemplate {
 
     static ObjGuiIconTemplate create(Mesh mesh,
                                      Transformation guiTransformation,
-                                     int expectedQuadCount) {
+                                     int expectedQuadCount,
+                                     float frameScale) {
         MatrixStack matrices = new MatrixStack();
         guiTransformation.apply(false, matrices);
         matrices.translate(-0.5D, -0.5D, -0.5D);
@@ -46,7 +47,7 @@ final class ObjGuiIconTemplate {
         ObjGuiRasterizer.Vertex d = new ObjGuiRasterizer.Vertex();
         Vector3f positionScratch = new Vector3f();
         Vector3f normalScratch = new Vector3f();
-        ProjectionBounds bounds = ProjectionBounds.measure(mesh, positionMatrix, positionScratch);
+        ProjectionBounds bounds = ProjectionBounds.measure(mesh, positionMatrix, positionScratch, frameScale);
         int[] visitedQuads = {0};
 
         mesh.forEach(quad -> {
@@ -135,7 +136,7 @@ final class ObjGuiIconTemplate {
 
     /** Auto-frames the projected full mesh so narrow decor does not get lost in a slot. */
     private record ProjectionBounds(float centerX, float centerY, float scale) {
-        private static ProjectionBounds measure(Mesh mesh, Matrix4f matrix, Vector3f scratch) {
+        private static ProjectionBounds measure(Mesh mesh, Matrix4f matrix, Vector3f scratch, float frameScale) {
             float[] values = {
                     Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY,
                     Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY
@@ -162,7 +163,7 @@ final class ObjGuiIconTemplate {
             return new ProjectionBounds(
                     (values[0] + values[2]) * 0.5F,
                     (values[1] + values[3]) * 0.5F,
-                    Math.min(available / width, available / height)
+                    Math.min(available / width, available / height) * frameScale
             );
         }
     }

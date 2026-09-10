@@ -45,6 +45,30 @@ public final class MonopterosGameTests {
         context.complete();
     }
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=400)
+    public void ownerlessPartDoesNotBlockNewDomeShell(TestContext context) {
+        var world=context.getWorld();
+        BlockPos anchor=context.getAbsolutePos(new BlockPos(140,10,140));
+        BlockPos staleCell=anchor.add(0,2,3);
+        Block dome=Registries.BLOCK.get(new Identifier("daedalon","glacium_aged_monopteros_dome"));
+        BlockState domeState=dome.getDefaultState().with(MonopterosBlock.DIAMETER,MonopterosBlock.Diameter.SIX);
+
+        // This saved part points to a missing older owner one block lower and south.
+        world.setBlockState(staleCell,ModBlocks.monopterosPart().stateForOffset(new BlockPos(0,3,2)),Block.NOTIFY_ALL);
+        context.assertTrue(MonopterosPartBlock.resolveAnchorPos(world,staleCell,world.getBlockState(staleCell))==null,
+                "Fixture must be an ownerless saved interaction cell");
+        context.assertTrue(MonopterosBlock.canOccupy(world,anchor,domeState),
+                "An ownerless interaction cell must not block a replacement dome");
+
+        world.setBlockState(anchor,domeState,Block.NOTIFY_ALL);
+        BlockState repaired=world.getBlockState(staleCell);
+        context.assertTrue(anchor.equals(MonopterosPartBlock.resolveAnchorPos(world,staleCell,repaired)),
+                "Placement must replace the stale cell with the new dome's interaction shell");
+        context.assertTrue(parts(world,anchor).size()==125,"The 6m dome must create its complete interaction shell");
+        world.removeBlock(anchor,false);
+        context.assertTrue(parts(world,anchor).isEmpty(),"Removal must clear the repaired interaction shell");
+        context.complete();
+    }
+    @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=400)
     public void flushCrownsAcceptBlocksAndEveryBronzeFinial(TestContext context) {
         var world=context.getWorld();
         BlockPos anchor=context.getAbsolutePos(new BlockPos(110,10,110));

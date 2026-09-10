@@ -12,11 +12,11 @@ class FountainWaterProfileSafetyTests(unittest.TestCase):
         result = subprocess.run([sys.executable, "tools/generate_fountain_water_profiles.py"],
                                 cwd=REPO_ROOT, capture_output=True, text=True, timeout=30)
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
-        self.assertIn("georgian: 89 edges", result.stdout)
-        self.assertIn("greek: 130 edges", result.stdout)
-        self.assertIn("gothic_bowl: 92 edges", result.stdout)
-        self.assertIn("georgian_bowl: 153 edges", result.stdout)
-        self.assertIn("greek_bowl: 102 edges", result.stdout)
+        self.assertIn("georgian: 73 edges", result.stdout)
+        self.assertIn("greek: 121 edges", result.stdout)
+        self.assertIn("gothic_bowl: 77 edges", result.stdout)
+        self.assertIn("georgian_bowl: 154 edges", result.stdout)
+        self.assertIn("greek_bowl: 84 edges", result.stdout)
 
     def test_bowl_profiles_are_near_the_brim_and_scale_with_all_three_sizes(self):
         for style in ("gothic", "georgian", "greek"):

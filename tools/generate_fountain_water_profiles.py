@@ -9,12 +9,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MESH_ROOT = ROOT / "src/main/resources/assets/daedalon/models/mesh"
 OUTPUT = ROOT / "src/main/resources/data/daedalon/fountain_water"
-# Source model names, not the player-facing basin/bowl pairing.
+# Internal resource names, not the supplied export names or player-facing pairing.
 PROFILES = {
     "georgian": ("georgian", "basin", 0.19),
     "greek": ("greek", "basin", 0.18),
     "gothic_bowl": ("gothic", "bowl", 0.87),
-    "georgian_bowl": ("georgian", "bowl", 0.56),
+    "georgian_bowl": ("georgian", "bowl", 0.562),
     "greek_bowl": ("greek", "bowl", 0.63),
 }
 INSET = 0.003

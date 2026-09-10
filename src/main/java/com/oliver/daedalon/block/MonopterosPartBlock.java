@@ -38,6 +38,9 @@ public final class MonopterosPartBlock extends Block {
     public static boolean isOwnedBy(BlockState state,BlockPos pos,BlockPos anchor) {
         return state.getBlock() instanceof MonopterosPartBlock && anchorPos(pos,state).equals(anchor);
     }
+    public static boolean isOrphaned(BlockView world,BlockPos pos,BlockState state) {
+        return state.getBlock() instanceof MonopterosPartBlock && resolveAnchorPos(world,pos,state)==null;
+    }
     @Override public VoxelShape getOutlineShape(BlockState state,BlockView world,BlockPos pos,ShapeContext context) {
         BlockState anchor=world.getBlockState(anchorPos(pos,state));
         if (!(anchor.getBlock() instanceof MonopterosBlock)) return VoxelShapes.empty();

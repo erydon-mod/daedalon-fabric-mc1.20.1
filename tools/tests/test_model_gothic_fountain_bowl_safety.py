@@ -57,9 +57,9 @@ class GothicFountainBowlSafetyTests(unittest.TestCase):
         evidence = load_json(
             REPO_ROOT / "docs/evidence/gothic-fountain-bowl-source.json"
         )
-        self.assertEqual("fountain_gothic_bowl.obj", evidence["source"]["file"])
+        self.assertEqual("fountain_gothic_bowl_BE.obj", evidence["source"]["file"])
         self.assertEqual(
-            "6cdb2ea453828aecea485d0166a0159496c345369464caba73fc80bdf88f3c36",
+            expected["obj_sha256"],
             evidence["source"]["sha256"],
         )
         self.assertTrue(evidence["source"]["provenance"])

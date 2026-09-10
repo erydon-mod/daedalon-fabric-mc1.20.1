@@ -5,7 +5,19 @@
   "name": "Daedalon fountain regression tests",
   "environment": "server",
   "entrypoints": {
-    "fabric-gametest": ["com.oliver.daedalon.gametest.FountainGameTests", "com.oliver.daedalon.gametest.CapitalGameTests", "com.oliver.daedalon.gametest.ExedraGameTests", "com.oliver.daedalon.gametest.HedraGameTests", "com.oliver.daedalon.gametest.MonopterosGameTests", "com.oliver.daedalon.gametest.DecorAssemblySelectionGameTests"]
+    "fabric-gametest": [
+      "com.oliver.daedalon.gametest.FountainGameTests",
+      "com.oliver.daedalon.gametest.CapitalGameTests",
+      "com.oliver.daedalon.gametest.ExedraGameTests",
+      "com.oliver.daedalon.gametest.HedraGameTests",
+      "com.oliver.daedalon.gametest.AnthophorosGameTests",
+      "com.oliver.daedalon.gametest.MonopterosGameTests",
+      "com.oliver.daedalon.gametest.DecorAssemblySelectionGameTests",
+      "com.oliver.daedalon.gametest.FriezeGameTests",
+      "com.oliver.daedalon.gametest.IonicFriezeGameTests",
+      "com.oliver.daedalon.gametest.GothicFriezeGameTests",
+      "com.oliver.daedalon.gametest.ByzantineFriezeGameTests"
+    ]
   },
   "depends": {
     "daedalon": "*",

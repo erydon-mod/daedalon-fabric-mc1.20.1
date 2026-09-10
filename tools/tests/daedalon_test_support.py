@@ -527,17 +527,17 @@ MESH_EXPECTATIONS["fountain_gothic_basin"] = {
     "obj": "fountain_gothic_basin.obj",
     "mtl": "fountain_gothic_basin.mtl",
     "display": "fountain_basin_display.json",
-    "vertices": 7927,
-    "uvs": 12204,
-    "normals": 18329,
-    "faces": 15850,
+    "vertices": 7741,
+    "uvs": 0,
+    "normals": 15996,
+    "faces": 15478,
     "face_sizes": {3},
-    "face_index_styles": {"v/vt/vn"},
+    "face_index_styles": {"v//vn"},
     "bounds": (
-        (-0.950873, -0.253756, -0.95115),
-        (0.950516, 0.252507, 0.950069),
+        (-0.951454, -0.253745, -0.95256),
+        (0.951396, 0.252452, 0.951481),
     ),
-    "obj_sha256": "81f8e985c79b63611e46641359256213f6483f9158fbc6147fb734d72b2bc3b3",
+    "obj_sha256": "2a1db6419e34f01e67d1d888b51737873c9809b2ab16d18e157d6ed91cbdb538",
     "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
 }
 
@@ -546,17 +546,17 @@ MESH_EXPECTATIONS["fountain_gothic_bowl"] = {
     "obj": "fountain_gothic_bowl.obj",
     "mtl": "fountain_gothic_bowl.mtl",
     "display": "fountain_bowl_display.json",
-    "vertices": 7904,
-    "uvs": 12349,
-    "normals": 8031,
-    "faces": 15804,
+    "vertices": 7769,
+    "uvs": 0,
+    "normals": 15465,
+    "faces": 15544,
     "face_sizes": {3},
-    "face_index_styles": {"v/vt/vn"},
+    "face_index_styles": {"v//vn"},
     "bounds": (
-        (-0.95142, -0.838629, -0.913679),
-        (0.949885, 0.836823, 0.912648),
+        (-0.951358, -0.838856, -0.914638),
+        (0.951068, 0.837209, 0.913117),
     ),
-    "obj_sha256": "6cdb2ea453828aecea485d0166a0159496c345369464caba73fc80bdf88f3c36",
+    "obj_sha256": "15c2b0875f90d8a7d036b1b9c4eba67f7f41c93e46f0de17d1bcd99c615a70e1",
     "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
 }
 
@@ -565,17 +565,17 @@ MESH_EXPECTATIONS["fountain_georgian_basin"] = {
     "obj": "fountain_georgian_basin.obj",
     "mtl": "fountain_georgian_basin.mtl",
     "display": "fountain_basin_display.json",
-    "vertices": 7623,
-    "uvs": 13120,
-    "normals": 23545,
-    "faces": 15242,
+    "vertices": 7801,
+    "uvs": 0,
+    "normals": 18437,
+    "faces": 15646,
     "face_sizes": {3},
-    "face_index_styles": {"v/vt/vn"},
+    "face_index_styles": {"v//vn"},
     "bounds": (
-        (-0.950787, -0.202374, -0.950831),
-        (0.950683, 0.201888, 0.949689),
+        (-0.952662, -0.202356, -0.951337),
+        (0.95055, 0.201956, 0.951408),
     ),
-    "obj_sha256": "d66108d0e228ed69157969dbe3a39447b531b8b27ff30e3db02eee8592a50c8f",
+    "obj_sha256": "7274ec15a6fff258f98a234e718b297911e24b8869886a0f6e1d49519cbb2680",
     "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
 }
 
@@ -584,17 +584,17 @@ MESH_EXPECTATIONS["fountain_georgian_bowl"] = {
     "obj": "fountain_georgian_bowl.obj",
     "mtl": "fountain_georgian_bowl.mtl",
     "display": "fountain_bowl_display.json",
-    "vertices": 8031,
-    "uvs": 12343,
-    "normals": 16692,
-    "faces": 16062,
+    "vertices": 7772,
+    "uvs": 0,
+    "normals": 15540,
+    "faces": 15547,
     "face_sizes": {3},
-    "face_index_styles": {"v/vt/vn"},
+    "face_index_styles": {"v//vn"},
     "bounds": (
-        (-0.950044, -0.553105, -0.949975),
-        (0.949686, 0.53247, 0.950644),
+        (-0.952811, -0.553131, -0.950689),
+        (0.951579, 0.532418, 0.951586),
     ),
-    "obj_sha256": "b1f521604cdbf4c9bc9b34102083948de3ff9d2501b15e216fca34d7576fe174",
+    "obj_sha256": "eddccd1cf5a00459b3b4d7a02a4da80516bca2e2a56545de4913ae7dd55d45d7",
     "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
 }
 
@@ -603,17 +603,17 @@ MESH_EXPECTATIONS["fountain_greek_basin"] = {
     "obj": "fountain_greek_basin.obj",
     "mtl": "fountain_greek_basin.mtl",
     "display": "fountain_basin_display.json",
-    "vertices": 9885,
-    "uvs": 15754,
-    "normals": 27323,
-    "faces": 19766,
+    "vertices": 7679,
+    "uvs": 0,
+    "normals": 14789,
+    "faces": 15354,
     "face_sizes": {3},
-    "face_index_styles": {"v/vt/vn"},
+    "face_index_styles": {"v//vn"},
     "bounds": (
-        (-0.950888, -0.192367, -0.950504),
-        (0.949706, 0.188881, 0.950046),
+        (-0.951701, -0.192355, -0.952107),
+        (0.951798, 0.188789, 0.949897),
     ),
-    "obj_sha256": "f51508aeba4d8c3c7f4e826bf69b90d521d584f5e1274bda98454e3800f13c13",
+    "obj_sha256": "5510fb52cc2d073f1c697daa5326f7b70ee2af9b404ab7dbbc5e23e5543e7ac0",
     "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
 }
 
@@ -622,17 +622,17 @@ MESH_EXPECTATIONS["fountain_greek_bowl"] = {
     "obj": "fountain_greek_bowl.obj",
     "mtl": "fountain_greek_bowl.mtl",
     "display": "fountain_bowl_display.json",
-    "vertices": 7950,
-    "uvs": 14315,
-    "normals": 8173,
-    "faces": 15900,
+    "vertices": 7754,
+    "uvs": 0,
+    "normals": 15455,
+    "faces": 15516,
     "face_sizes": {3},
-    "face_index_styles": {"v/vt/vn"},
+    "face_index_styles": {"v//vn"},
     "bounds": (
-        (-0.950611, -0.615705, -0.950581),
-        (0.950259, 0.599393, 0.949977),
+        (-0.952245, -0.615403, -0.951704),
+        (0.951155, 0.599959, 0.949265),
     ),
-    "obj_sha256": "5fcdf157443dd143ecbc67ba479f4c2d8ed28a9bd590a9855b6bcc2090cae4e4",
+    "obj_sha256": "f91b66b74ebbf62968f245300139616f790d251a893fe0e5793705f70312e903",
     "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
 }
 
@@ -710,6 +710,20 @@ MESH_EXPECTATIONS["monopteros_4m"] = {'definition': 'monopteros_4m.json', 'obj':
 MESH_EXPECTATIONS["monopteros_6m"] = {'definition': 'monopteros_6m.json', 'obj': 'monopteros_6m.obj', 'mtl': 'monopteros_6m.mtl', 'display': 'monopteros_display.json', 'vertices': 7602, 'uvs': 0, 'normals': 20187, 'faces': 15204, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-3.0, 0.0, -2.99933), (3.0, 4.0, 2.99933)), 'obj_sha256': '4c5ea04bea5e71078e527a52a08e5ea4f22875a0c5113ba4eba7823561ef86a4', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
 MESH_EXPECTATIONS["monopteros_8m"] = {'definition': 'monopteros_8m.json', 'obj': 'monopteros_8m.obj', 'mtl': 'monopteros_8m.mtl', 'display': 'monopteros_display.json', 'vertices': 7602, 'uvs': 0, 'normals': 20174, 'faces': 15204, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-4.0, 0.0, -3.999106), (4.0, 5.0, 3.999106)), 'obj_sha256': 'cfa7131c5813a48e6b0eb50a9db8f53ea114401c687a7c976adc574c217758fe', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
 MESH_EXPECTATIONS["monopteros_item"] = {'definition': 'monopteros_item.json', 'obj': 'monopteros_item.obj', 'mtl': 'monopteros_item.mtl', 'display': 'monopteros_display.json', 'vertices': 1000, 'uvs': 0, 'normals': 2423, 'faces': 2000, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-3.004723, 0.002431, -3.017909), (2.980528, 3.995438, 2.999981)), 'obj_sha256': 'fdbbeb79474fcb55baa81425535ed79c6a8d9659c54f496fe01278944704d663', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
+
+MESH_EXPECTATIONS['anthophoros_2m'] = {'definition': 'anthophoros_2m.json', 'obj': 'anthophoros_2m.obj', 'mtl': 'anthophoros_2m.mtl', 'display': 'anthophoros_display.json', 'vertices': 44991, 'uvs': 0, 'normals': 22290, 'faces': 14997, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-1.0, 0.0, -0.594243), (1.0, 1.0, 0.594243)), 'obj_sha256': 'c73712cab451b094645becd17af07468b941c01e1035f24d7e29887b6ccd1f6a', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
+MESH_EXPECTATIONS['anthophoros_3m'] = {'definition': 'anthophoros_3m.json', 'obj': 'anthophoros_3m.obj', 'mtl': 'anthophoros_3m.mtl', 'display': 'anthophoros_display.json', 'vertices': 44994, 'uvs': 0, 'normals': 25291, 'faces': 14998, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-1.5, 0.0, -0.594243), (1.5, 1.0, 0.594243)), 'obj_sha256': '9c9ae9ae075db638d860d19965152d8bef0cb5a27085086c416beddf8fcc795c', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
+MESH_EXPECTATIONS['anthophoros_4m'] = {'definition': 'anthophoros_4m.json', 'obj': 'anthophoros_4m.obj', 'mtl': 'anthophoros_4m.mtl', 'display': 'anthophoros_display.json', 'vertices': 44994, 'uvs': 0, 'normals': 19362, 'faces': 14998, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-2.0, 0.0, -0.594243), (2.0, 1.0, 0.594243)), 'obj_sha256': '2679d4de3f05f09fa53c91028d3adaf37a6cd318ac9fd112cff50e898a4972f4', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
+MESH_EXPECTATIONS['anthophoros_item'] = {'definition': 'anthophoros_item.json', 'obj': 'anthophoros_item.obj', 'mtl': 'anthophoros_item.mtl', 'display': 'anthophoros_display.json', 'vertices': 5991, 'uvs': 0, 'normals': 4124, 'faces': 1997, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-1.5, 0.0, -0.594243), (1.5, 1.0, 0.594243)), 'obj_sha256': '846dcac3f2e6333f4b77f3e0133acebc41dcfa3927dbbbd8209ab3d87260da96', 'mtl_sha256': 'ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894'}
+
+
+MESH_EXPECTATIONS["corinthian_frieze"] = {'vertices': 45895, 'uvs': 0, 'normals': 74406, 'faces': 127739, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-1e-07, 0.0, -1e-07), (1.0, 1.0, 1.0)), 'definition': 'corinthian_frieze.json', 'obj': 'corinthian_frieze.obj', 'mtl': 'corinthian_frieze.mtl', 'display': 'corinthian_frieze_display.json', 'obj_sha256': '1cd7b08577dc95c0150920b00ebe4182a29cd3c89406d7b367c5d8dee0748dc2', 'mtl_sha256': '8b3dd5b7c0d3683118b0c27f01ddb713d3295dc054e45c2b898d054cd84a17af'}
+MESH_EXPECTATIONS["ionic_frieze"] = {'vertices': 36109, 'uvs': 0, 'normals': 50710, 'faces': 96331, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((0.0, 0.0, 0.0), (1.0, 1.0, 1.0)), 'definition': 'ionic_frieze.json', 'obj': 'ionic_frieze.obj', 'mtl': 'ionic_frieze.mtl', 'display': 'ionic_frieze_display.json', 'obj_sha256': '1469d6694e5ea0e27b23467657a8f6ad0a4e10ac58005cba4003e3718373579c', 'mtl_sha256': '8b3dd5b7c0d3683118b0c27f01ddb713d3295dc054e45c2b898d054cd84a17af'}
+
+
+MESH_EXPECTATIONS["gothic_frieze"] = {'vertices': 29483, 'uvs': 0, 'normals': 64297, 'faces': 83595, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((0.0, 0.0, 0.0), (1.0, 1.0, 1.0)), 'definition': 'gothic_frieze.json', 'obj': 'gothic_frieze.obj', 'mtl': 'gothic_frieze.mtl', 'display': 'gothic_frieze_display.json', 'obj_sha256': 'bf775b30edf43cf086cdc91c1ee4d87f139ee34ecd99a173ea80e69a74c59860', 'mtl_sha256': '8b3dd5b7c0d3683118b0c27f01ddb713d3295dc054e45c2b898d054cd84a17af'}
+
+MESH_EXPECTATIONS["byzantine_frieze"] = {'vertices': 58678, 'uvs': 0, 'normals': 70317, 'faces': 174555, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-1e-07, 0.0, -1e-07), (1.0, 1.0, 1.0)), 'definition': 'byzantine_frieze.json', 'obj': 'byzantine_frieze.obj', 'mtl': 'byzantine_frieze.mtl', 'display': 'byzantine_frieze_display.json', 'obj_sha256': '7da22ad45183612bd6cf1ff247152d1a0047801d2a7fbf230c52b9b43bd1ceaf', 'mtl_sha256': '8b3dd5b7c0d3683118b0c27f01ddb713d3295dc054e45c2b898d054cd84a17af'}
 
 def load_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8-sig"))

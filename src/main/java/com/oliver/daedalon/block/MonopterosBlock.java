@@ -33,7 +33,9 @@ public final class MonopterosBlock extends Block {
             BlockPos part=pos.add(offset);
             if (world.isOutOfHeightLimit(part) || !world.getWorldBorder().contains(part)) return false;
             BlockState existing=world.getBlockState(part);
-            if (!existing.isAir() && !MonopterosPartBlock.isOwnedBy(existing,part,pos)) return false;
+            if (!existing.isAir()
+                    && !MonopterosPartBlock.isOwnedBy(existing,part,pos)
+                    && !MonopterosPartBlock.isOrphaned(world,part,existing)) return false;
         }
         return true;
     }

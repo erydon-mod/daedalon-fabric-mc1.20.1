@@ -1,37 +1,54 @@
 {
   "model": "fountain_greek_basin",
   "source": {
-    "file": "fountain_greek_basin.obj",
+    "file": "fountain_greek_basin_BE.obj",
     "format": "Blender 5.2.0 LTS OBJ",
     "supplied_by": "Oliver",
-    "provenance": "Created by Oliver using Meshy; Oliver confirmed ownership and permission for public distribution",
+    "provenance": "Created by Oliver using Meshy, decimated and re-exported by Oliver using Blender; Oliver confirmed ownership and permission for public distribution",
     "ownership_confirmed_on": "2026-09-05",
     "licence": "OLIVER'S MINECRAFT MODS RESTRICTED LICENSE 1.0",
-    "sha256": "f51508aeba4d8c3c7f4e826bf69b90d521d584f5e1274bda98454e3800f13c13",
-    "vertices": 9885,
-    "triangles": 19766,
-    "span": [1.900594, 0.381248, 1.90055]
+    "sha256": "5510fb52cc2d073f1c697daa5326f7b70ee2af9b404ab7dbbc5e23e5543e7ac0",
+    "vertices": 7679,
+    "triangles": 15354,
+    "span": [
+      1.903499,
+      0.381144,
+      1.902004
+    ],
+    "uvs": 0
   },
   "preparation": {
     "tool": "direct byte-for-byte integration",
-    "target_faces": 19766,
+    "target_faces": 15354,
     "face_policy": "preserve exact supplied geometry",
     "authored_uvs_retained": true,
     "authored_normals_retained": true,
     "runtime_uv_policy": "world-scaled projection",
     "runtime_normal_policy": "supplied normals",
-    "normalised_span": [1.0, 0.20059413, 0.999976849]
+    "normalised_span": [
+      1.0,
+      0.20023336,
+      0.999214604
+    ]
   },
   "runtime": {
-    "obj_sha256": "f51508aeba4d8c3c7f4e826bf69b90d521d584f5e1274bda98454e3800f13c13",
+    "obj_sha256": "5510fb52cc2d073f1c697daa5326f7b70ee2af9b404ab7dbbc5e23e5543e7ac0",
     "mtl_sha256": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
-    "vertices": 9885,
-    "uvs": 15754,
-    "normals": 27323,
-    "faces": 19766,
+    "vertices": 7679,
+    "uvs": 0,
+    "normals": 14789,
+    "faces": 15354,
     "bounds": [
-      [-0.950888, -0.192367, -0.950504],
-      [0.949706, 0.188881, 0.950046]
+      [
+        -0.951701,
+        -0.192355,
+        -0.952107
+      ],
+      [
+        0.951798,
+        0.188789,
+        0.949897
+      ]
     ]
   },
   "placement": {
@@ -39,27 +56,36 @@
     "bowl_source": "fountain_georgian_bowl",
     "sizes": {
       "small": {
-        "footprint_blocks": [3.0, 3.0],
-        "height_blocks": 0.6017824,
+        "footprint_blocks": [
+          3.0,
+          3.0
+        ],
+        "height_blocks": 0.6007001,
         "basin_floor_y": 0.24,
         "water_surface_y": 0.54,
-        "water_half_width": 1.156308
+        "water_half_width": 1.1554614
       },
       "medium": {
-        "footprint_blocks": [4.0, 4.0],
-        "height_blocks": 0.8023765,
+        "footprint_blocks": [
+          4.0,
+          4.0
+        ],
+        "height_blocks": 0.8009334,
         "basin_floor_y": 0.32,
         "water_surface_y": 0.72,
-        "water_half_width": 1.541744
+        "water_half_width": 1.5406152
       },
       "large": {
-        "footprint_blocks": [5.0, 5.0],
-        "height_blocks": 1.0029707,
+        "footprint_blocks": [
+          5.0,
+          5.0
+        ],
+        "height_blocks": 1.0011668,
         "basin_floor_y": 0.4,
-        "water_surface_y": 0.9,
-        "water_half_width": 1.92718
+        "water_surface_y": 0.8999999999999999,
+        "water_half_width": 1.9257689999999998
       }
     },
-    "water_surface_shape": "130-edge measured lobed waterline; data/daedalon/fountain_water/greek.json; minimum normalized radial wall clearance 0.0017484"
+    "water_surface_shape": "121-edge measured contour with at least 0.0020789 normalized units of inner-wall clearance"
   }
 }

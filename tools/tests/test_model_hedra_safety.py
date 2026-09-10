@@ -59,8 +59,10 @@ class HedraSafetyTests(unittest.TestCase):
                 self.assertIn('Hedra', language[f'block.daedalon.{block_id}'])
         for kind in ('blocks', 'items'):
             self.assertEqual({f'daedalon:{block_id}' for block_id in ids}, set(load_json(DAEDALON_DATA / f'tags/{kind}/hedra.json')['values']))
-            for synonym in ('bench','seat','seating','furniture'):
+            for synonym in ('bench','seat','seating'):
                 self.assertEqual(['#daedalon:exedra', '#daedalon:hedra'], load_json(DAEDALON_DATA / f'tags/{kind}/{synonym}.json')['values'])
+            self.assertEqual(['#daedalon:exedra', '#daedalon:hedra', '#daedalon:anthophoros_planter'],
+                             load_json(DAEDALON_DATA / f'tags/{kind}/furniture.json')['values'])
 
     def test_measured_collision_contains_mesh_and_keeps_space_beneath_seat(self):
         sys.path.insert(0, str(REPO_ROOT/'tools'))

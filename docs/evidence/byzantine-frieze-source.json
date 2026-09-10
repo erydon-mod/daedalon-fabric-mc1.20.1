@@ -1,0 +1,309 @@
+{
+  "source_name": "entablature_byzantine.obj",
+  "source_sha256": "a556fb01677ff20b022942ce4ec765dc94275703584484fba8992d3c2b9e43ca",
+  "source_files_modified": false,
+  "provenance": "Oliver supplied his own Meshy creation; approved for the public Daedalon repository.",
+  "source": {
+    "vertices": 7589,
+    "triangles": 15197,
+    "bounds": [
+      [
+        -0.952472984790802,
+        0.9513019919395447
+      ],
+      [
+        -0.5393159985542297,
+        0.5372170209884644
+      ],
+      [
+        -0.11164700239896774,
+        0.12053900212049484
+      ]
+    ],
+    "front": "+Z",
+    "up": "+Y"
+  },
+  "preparation": {
+    "tool": "Blender 5.2.0 LTS",
+    "height_m": 1,
+    "repeat_width_m": 2,
+    "decimated": true,
+    "small_trim_decimation_ratio": 0.5,
+    "main_panel_decimated": false,
+    "repeat_cut_source_x": [
+      -0.737,
+      0.737
+    ],
+    "motifs_per_repeat": [
+      "half large pillar",
+      "palm",
+      "small pillar",
+      "interlace",
+      "cross medallion",
+      "interlace",
+      "small pillar",
+      "palm",
+      "half large pillar"
+    ],
+    "source_repeat_width": 1.474,
+    "ornament_stretched": false,
+    "carving_bands": [
+      {
+        "name": "moulding",
+        "source_y": [
+          -0.539316,
+          -0.468
+        ],
+        "source_x": [
+          -0.737,
+          0.737
+        ],
+        "cycles": 1,
+        "uniform_scale": null,
+        "height_m": 0.03118580247663809,
+        "output_y": [
+          0.0,
+          0.03118580247663809
+        ],
+        "triangles": 544
+      },
+      {
+        "name": "rope",
+        "source_y": [
+          -0.468,
+          -0.405
+        ],
+        "source_x": [
+          -0.041,
+          0.044
+        ],
+        "cycles": 24,
+        "uniform_scale": 0.9803921568627452,
+        "height_m": 0.061764705882352944,
+        "output_y": [
+          0.03118580247663809,
+          0.09295050835899103
+        ],
+        "triangles": 4392
+      },
+      {
+        "name": "braid",
+        "source_y": [
+          -0.405,
+          -0.332
+        ],
+        "source_x": [
+          -0.07,
+          0.076
+        ],
+        "cycles": 14,
+        "uniform_scale": 0.9784735812133071,
+        "height_m": 0.07142857142857142,
+        "output_y": [
+          0.09295050835899103,
+          0.16437907978756244
+        ],
+        "triangles": 4396
+      },
+      {
+        "name": "moulding",
+        "source_y": [
+          -0.332,
+          -0.255
+        ],
+        "source_x": [
+          -0.737,
+          0.737
+        ],
+        "cycles": 1,
+        "uniform_scale": null,
+        "height_m": 0.03367136113496457,
+        "output_y": [
+          0.16437907978756244,
+          0.19805044092252702
+        ],
+        "triangles": 1158
+      },
+      {
+        "name": "main_panel",
+        "source_y": [
+          -0.255,
+          0.105
+        ],
+        "source_x": [
+          -0.737,
+          0.737
+        ],
+        "cycles": 1,
+        "uniform_scale": 1.3568521031207599,
+        "height_m": 0.48846675712347354,
+        "output_y": [
+          0.19805044092252702,
+          0.6865171980460005
+        ],
+        "triangles": 5034
+      },
+      {
+        "name": "moulding",
+        "source_y": [
+          0.105,
+          0.189
+        ],
+        "source_x": [
+          -0.737,
+          0.737
+        ],
+        "cycles": 1,
+        "uniform_scale": null,
+        "height_m": 0.036732393965415895,
+        "output_y": [
+          0.6865171980460005,
+          0.7232495920114165
+        ],
+        "triangles": 693
+      },
+      {
+        "name": "dentils",
+        "source_y": [
+          0.189,
+          0.25
+        ],
+        "source_x": [
+          -0.04,
+          0.05
+        ],
+        "cycles": 22,
+        "uniform_scale": 1.0101010101010102,
+        "height_m": 0.06161616161616162,
+        "output_y": [
+          0.7232495920114165,
+          0.784865753627578
+        ],
+        "triangles": 1892
+      },
+      {
+        "name": "moulding",
+        "source_y": [
+          0.25,
+          0.289
+        ],
+        "source_x": [
+          -0.737,
+          0.737
+        ],
+        "cycles": 1,
+        "uniform_scale": null,
+        "height_m": 0.017054325769657368,
+        "output_y": [
+          0.784865753627578,
+          0.8019200793972354
+        ],
+        "triangles": 1029
+      },
+      {
+        "name": "foliage",
+        "source_y": [
+          0.289,
+          0.461
+        ],
+        "source_x": [
+          -0.17,
+          0.178
+        ],
+        "cycles": 6,
+        "uniform_scale": 0.9578544061302682,
+        "height_m": 0.16475095785440616,
+        "output_y": [
+          0.8019200793972354,
+          0.9666710372516416
+        ],
+        "triangles": 4692
+      },
+      {
+        "name": "moulding",
+        "source_y": [
+          0.461,
+          0.537217
+        ],
+        "source_x": [
+          -0.737,
+          0.737
+        ],
+        "cycles": 1,
+        "uniform_scale": null,
+        "height_m": 0.03332896274835834,
+        "output_y": [
+          0.9666710372516416,
+          1.0
+        ],
+        "triangles": 463
+      }
+    ],
+    "plain_fascia_source_y": [
+      [
+        -0.539316,
+        -0.468
+      ],
+      [
+        -0.332,
+        -0.255
+      ],
+      [
+        0.105,
+        0.189
+      ],
+      [
+        0.25,
+        0.289
+      ],
+      [
+        0.461,
+        0.537217
+      ]
+    ],
+    "plain_moulding_vertical_scale": 0.4372904043501892,
+    "depth_envelope_m": 0.235,
+    "measured_depth_m": 0.23218600451946259,
+    "loft_profile_tolerance_m": 0.0001,
+    "normal_smoothing_angle_degrees": 30,
+    "smoothing_changes_geometry": false,
+    "end_closure": "exact section silhouette; zero added width",
+    "components": {
+      "straight_0": 14225,
+      "cap_left_0": 664,
+      "cap_right_0": 659,
+      "straight_1": 14270,
+      "cap_left_1": 659,
+      "cap_right_1": 664,
+      "inner_left_primary_0": 13344,
+      "inner_left_secondary_0": 14029,
+      "inner_left_primary_1": 14037,
+      "inner_left_secondary_1": 13429,
+      "inner_right_primary_0": 14029,
+      "inner_right_secondary_0": 13346,
+      "inner_right_primary_1": 13429,
+      "inner_right_secondary_1": 14033,
+      "outer_left_primary_0": 3612,
+      "outer_left_secondary_0": 3425,
+      "outer_left_primary_1": 3498,
+      "outer_left_secondary_1": 3689,
+      "outer_right_primary_0": 3425,
+      "outer_right_secondary_0": 3614,
+      "outer_right_primary_1": 3689,
+      "outer_right_secondary_1": 3494,
+      "cap_east_low_0": 664,
+      "cap_east_high_0": 659,
+      "cap_west_low_0": 664,
+      "cap_west_high_0": 659,
+      "cap_east_low_1": 659,
+      "cap_east_high_1": 664,
+      "cap_west_low_1": 659,
+      "cap_west_high_1": 664
+    }
+  },
+  "outputs": {
+    "byzantine_frieze.json": "070ded96e48b489f03a24d30cf4157d21328d2050026035b126c0e752a3a193d",
+    "byzantine_frieze.mtl": "8b3dd5b7c0d3683118b0c27f01ddb713d3295dc054e45c2b898d054cd84a17af",
+    "byzantine_frieze.obj": "7da22ad45183612bd6cf1ff247152d1a0047801d2a7fbf230c52b9b43bd1ceaf"
+  }
+}

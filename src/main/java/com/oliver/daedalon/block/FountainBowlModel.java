@@ -12,7 +12,7 @@ import java.util.List;
 /** Internal bowl geometry used by a plinth-controlled fountain assembly. */
 public final class FountainBowlModel {
     /** Measurements taken from Oliver's corrected Gothic bowl OBJ. */
-    public static final float NORMALIZED_MODEL_HEIGHT = 0.8812116F;
+    public static final float NORMALIZED_MODEL_HEIGHT = 0.8810146F;
     public static final float CONNECTION_RISE_PER_DIAMETER = 0.6430F;
     public static final float WATER_FLOOR_PER_DIAMETER = 0.6430F;
     public static final float WATER_SURFACE_PER_DIAMETER = 0.8700F;
@@ -267,7 +267,7 @@ public final class FountainBowlModel {
                 "gothic",
                 "fountain_gothic_bowl",
                 new GeometryProfile(
-                        0.8812116F,
+                        0.8810146F,
                         0.6430F,
                         0.6430F,
                         0.8700F,
@@ -280,7 +280,7 @@ public final class FountainBowlModel {
                                 new CollisionStage(0.4500F, 0.1800F, 0.0750F),
                                 new CollisionStage(0.5000F, 0.2500F, 0.1040F),
                                 new CollisionStage(0.5800F, 0.3600F, 0.1490F),
-                                new CollisionStage(0.8812116F, 0.5000F, 0.2070F)
+                                new CollisionStage(0.8810146F, 0.5000F, 0.2070F)
                         }
                 )
         ),
@@ -288,10 +288,10 @@ public final class FountainBowlModel {
                 "georgian",
                 "fountain_georgian_bowl",
                 new GeometryProfile(
-                        0.5711692F,
+                        0.5700245F,
                         0.4100F,
                         0.5000F,
-                        0.5600F,
+                        0.5620F,
                         0.3700F,
                         0.0100F,
                         0.0F,
@@ -302,7 +302,7 @@ public final class FountainBowlModel {
                                 new CollisionStage(0.4000F, 0.1600F, 0.0020F),
                                 new CollisionStage(0.4600F, 0.3080F, 0.0020F),
                                 new CollisionStage(0.5200F, 0.4080F, 0.0020F),
-                                new CollisionStage(0.5711692F, 0.4780F, 0.0020F)
+                                new CollisionStage(0.5700245F, 0.4780F, 0.0020F)
                         }
                 )
         ),
@@ -310,7 +310,7 @@ public final class FountainBowlModel {
                 "greek",
                 "fountain_greek_bowl",
                 new GeometryProfile(
-                        0.6392326F,
+                        0.6385216F,
                         0.5500F,
                         0.5500F,
                         0.6300F,
@@ -323,7 +323,7 @@ public final class FountainBowlModel {
                                 new CollisionStage(0.3200F, 0.1100F, 0.0460F),
                                 new CollisionStage(0.4000F, 0.2600F, 0.1080F),
                                 new CollisionStage(0.5000F, 0.4500F, 0.1860F),
-                                new CollisionStage(0.6392326F, 0.5000F, 0.2070F)
+                                new CollisionStage(0.6385216F, 0.5000F, 0.2070F)
                         }
                 )
         );

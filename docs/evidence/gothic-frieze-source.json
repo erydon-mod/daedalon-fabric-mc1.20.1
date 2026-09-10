@@ -1,0 +1,83 @@
+{
+  "source_name": "entablature_gothic.obj",
+  "source_sha256": "864d92fb085e364bb1574839ec21c0a15a51c82817ecea52ea8acb50817bb8e5",
+  "source_files_modified": false,
+  "provenance": "Oliver supplied his own Meshy creation; approved for the public Daedalon repository.",
+  "source": {
+    "vertices": 7584,
+    "triangles": 15250,
+    "bounds": [
+      [
+        -0.9521269798278809,
+        0.9502720236778259
+      ],
+      [
+        -0.6610220074653625,
+        0.6608449816703796
+      ],
+      [
+        -0.17258700728416443,
+        0.17201699316501617
+      ]
+    ],
+    "front": "+Z",
+    "up": "+Y"
+  },
+  "preparation": {
+    "tool": "Blender 5.2.0 LTS",
+    "height_m": 1,
+    "repeat_width_m": 1,
+    "decimated": false,
+    "repeat_cut_source_x": [
+      -0.674,
+      0.674
+    ],
+    "motifs_per_repeat": [
+      "lancet",
+      "quatrefoil",
+      "lancet",
+      "quatrefoil"
+    ],
+    "source_repeat_width": 1.348,
+    "ornament_uniform_scale": 0.7418397626112759,
+    "ornament_stretched": false,
+    "plain_fascia_source_y": [
+      0.62,
+      0.65
+    ],
+    "plain_fascia_added_height_m": 0.01953489914845996,
+    "source_crop_y": [
+      -0.6608219742774963,
+      0.6608449816703796
+    ],
+    "depth_envelope_m": 0.256,
+    "shared_repeat_profile_blend_m": 0.0125,
+    "loft_profile_tolerance_m": 1e-05,
+    "top_bottom_planarity_band_m": 0.0005,
+    "normal_smoothing_angle_degrees": 30,
+    "smoothing_changes_geometry": false,
+    "end_closure": "exact section silhouette; zero added width",
+    "components": {
+      "straight_0": 14043,
+      "cap_left_0": 978,
+      "cap_right_0": 978,
+      "inner_left_primary_0": 12281,
+      "inner_left_secondary_0": 12324,
+      "inner_right_primary_0": 12324,
+      "inner_right_secondary_0": 12279,
+      "outer_left_primary_0": 3614,
+      "outer_left_secondary_0": 3625,
+      "outer_right_primary_0": 3625,
+      "outer_right_secondary_0": 3612,
+      "cap_east_low_0": 978,
+      "cap_east_high_0": 978,
+      "cap_west_low_0": 978,
+      "cap_west_high_0": 978
+    }
+  },
+  "outputs": {
+    "gothic_frieze.json": "c451f596429b824546abfd747ad7e6b4879c1b1d09153449bc1dc6e79baa1897",
+    "gothic_frieze.mtl": "8b3dd5b7c0d3683118b0c27f01ddb713d3295dc054e45c2b898d054cd84a17af",
+    "gothic_frieze.obj": "bf775b30edf43cf086cdc91c1ee4d87f139ee34ecd99a173ea80e69a74c59860"
+  }
+}

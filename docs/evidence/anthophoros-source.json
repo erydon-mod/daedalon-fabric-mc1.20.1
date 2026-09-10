@@ -1,0 +1,82 @@
+{
+  "source_file": "anthophoros.obj",
+  "source_sha256": "ba080eb654e9bd1997dd0c0d9b81da3f540c7b20acb7e2b2db94dd4ac87d1de4",
+  "source_files_modified": false,
+  "ownership": "User-created Meshy model; ownership confirmed for Daedalon use.",
+  "preparation": {
+    "tool": "Blender 5.2.0 LTS",
+    "build": "fbe6228777e7",
+    "script": "tools/prepare_anthophoros_mesh.py",
+    "decimation": "Blender Collapse; at most 15000 triangles per placed model",
+    "normals": "Reference triangle-centre corner normals retained after decimation; no runtime smoothing override",
+    "height_meters": 1.0,
+    "depth_meters": 1.188485,
+    "widths_meters": [
+      2,
+      3,
+      4
+    ],
+    "models": [
+      {
+        "width_m": 2,
+        "height_m": 1,
+        "depth_m": 1.188485,
+        "panels": [
+          "L",
+          "R"
+        ],
+        "triangles_before_cleanup": 16236,
+        "triangles": 14997,
+        "protected_garland_width_m": 0.584,
+        "protected_rosette_width_m": 0.44
+      },
+      {
+        "width_m": 3,
+        "height_m": 1,
+        "depth_m": 1.188485,
+        "panels": [
+          "L",
+          "O",
+          "R"
+        ],
+        "triangles_before_cleanup": 20723,
+        "triangles": 14998,
+        "protected_garland_width_m": 0.584,
+        "protected_rosette_width_m": 0.44
+      },
+      {
+        "width_m": 4,
+        "height_m": 1,
+        "depth_m": 1.188485,
+        "panels": [
+          "L",
+          "O",
+          "L",
+          "O",
+          "R"
+        ],
+        "triangles_before_cleanup": 30450,
+        "triangles": 14998,
+        "protected_garland_width_m": 0.584,
+        "protected_rosette_width_m": 0.44
+      }
+    ],
+    "item_triangles": 1997,
+    "geometry_shared_across_materials": 55,
+    "runtime": "Static width/facing states, cached hollow five-box shell; no controller or ticks"
+  },
+  "outputs": {
+    "anthophoros_2m.obj": "c73712cab451b094645becd17af07468b941c01e1035f24d7e29887b6ccd1f6a",
+    "anthophoros_2m.mtl": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+    "anthophoros_2m.json": "85db82ce0dffc0c98a957bbd6c903de09b204ca73a554608ed8195be27a6be38",
+    "anthophoros_3m.obj": "9c9ae9ae075db638d860d19965152d8bef0cb5a27085086c416beddf8fcc795c",
+    "anthophoros_3m.mtl": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+    "anthophoros_3m.json": "c9ba2915a8183b2e9cc22f21a49be29940fb0dfaa06b51df82c1bfd4bf817d40",
+    "anthophoros_4m.obj": "2679d4de3f05f09fa53c91028d3adaf37a6cd318ac9fd112cff50e898a4972f4",
+    "anthophoros_4m.mtl": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+    "anthophoros_4m.json": "2bbf19554517f09e44f112b7ec0e3f7efebe8dbb907c19771821e723aa8b809d",
+    "anthophoros_item.obj": "846dcac3f2e6333f4b77f3e0133acebc41dcfa3927dbbbd8209ab3d87260da96",
+    "anthophoros_item.mtl": "ffa501e8db667fc486f2641f788f4c7bc96af4b565484aee6bf908f475e2a894",
+    "anthophoros_item.json": "8d43c9119b0cb43508fdaf9baef7a4cd7ed06852705cb94fcfa850ca7ab81b6c"
+  }
+}
