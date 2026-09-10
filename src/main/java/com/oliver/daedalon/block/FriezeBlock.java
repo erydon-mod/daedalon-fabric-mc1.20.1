@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.BooleanProperty;
@@ -90,6 +91,14 @@ public final class FriezeBlock extends Block {
 
     public static BlockState refresh(BlockView world, BlockPos pos, BlockState state) {
         if (state.get(MANUAL_CORNER)) return state;
+        // Lighting workers also request dynamic outline/collision shapes. A
+        // neighbour lookup here can wait for the very chunk being lit, leaving
+        // both lighting and the server stuck. Use the persisted join and cached
+        // shape off the server thread; gameplay and client views still refresh.
+        // Exit before wallFace, whose third-party solidity hooks can also load chunks.
+        if (world instanceof ServerWorld serverWorld && !serverWorld.getServer().isOnThread()) {
+            return state;
+        }
         Direction facing = state.get(FACING);
         Direction left=facing.rotateYClockwise(), right=facing.rotateYCounterclockwise();
         BlockPos backPos=pos.offset(facing.getOpposite());

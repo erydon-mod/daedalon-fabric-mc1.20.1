@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtOps;
@@ -19,6 +20,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
 public final class FriezeGameTests {
     private final FriezeBlock.Style style;
     public FriezeGameTests() { this(FriezeBlock.Style.CORINTHIAN); }
@@ -31,6 +35,33 @@ public final class FriezeGameTests {
     private static float yaw(Direction direction) {
         return switch (direction) { case SOUTH -> 0; case WEST -> 90; case NORTH -> 180; case EAST -> 270;
             default -> throw new IllegalArgumentException(); };
+    }
+
+    @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE)
+    public void backgroundShapesNeverWaitForServerChunks(TestContext context) throws Exception {
+        var world = context.getWorld();
+        // Deliberately outside the loaded test area. The server thread waits for
+        // this worker, reproducing the lighting/chunk dependency if it queries
+        // the world. A timeout turns that dependency into a bounded test failure.
+        var pos = new BlockPos(1_000_000, 80, 1_000_000);
+        var frieze = block();
+        var states = frieze.getStateManager().getStates().stream()
+                .filter(state -> !state.get(FriezeBlock.MANUAL_CORNER)).toList();
+        var expected = states.stream().map(state -> frieze.getOutlineShape(
+                state.with(FriezeBlock.MANUAL_CORNER, true), world, pos, ShapeContext.absent())).toList();
+        boolean safe = CompletableFuture.supplyAsync(() -> {
+            for (int i = 0; i < states.size(); i++) {
+                var state = states.get(i);
+                if (FriezeBlock.refresh(world, pos, state) != state
+                        || frieze.getOutlineShape(state, world, pos, ShapeContext.absent()) != expected.get(i)
+                        || frieze.getCollisionShape(state, world, pos, ShapeContext.absent()) != expected.get(i)) {
+                    return false;
+                }
+            }
+            return true;
+        }).get(5, TimeUnit.SECONDS);
+        context.assertTrue(safe, "Background shapes must preserve every stored join without loading chunks");
+        context.complete();
     }
 
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE)
