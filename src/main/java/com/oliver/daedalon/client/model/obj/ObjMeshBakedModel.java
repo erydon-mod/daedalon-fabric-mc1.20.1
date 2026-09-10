@@ -72,6 +72,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     private final Identifier modelId;
     private final Sprite containedWaterSprite;
     private final RenderMaterial containedWaterMaterial;
+    private final StatuePreviewQuads statuePreviewQuads = new StatuePreviewQuads();
 
     private ObjMeshBakedModel(Mesh mesh,
                               Mesh itemMesh,
@@ -802,7 +803,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(BlockState state, Direction face, Random random) {
-        return Collections.emptyList();
+        return statuePreviewQuads.get(state, face, particleSprite);
     }
 
     @Override
