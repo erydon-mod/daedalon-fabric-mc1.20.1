@@ -57,14 +57,14 @@ def main():
     groups=build_components(triangles)
     out=args.output_dir; out.mkdir(parents=True,exist_ok=True)
     export(out/'ionic_frieze.obj',groups,'Ionic Frieze')
-    (out/'ionic_frieze.mtl').write_text('newmtl none\nKd 1.0 1.0 1.0\n')
+    (out/'ionic_frieze.mtl').write_text('newmtl none\nKd 1.0 1.0 1.0\n', encoding="utf-8", newline="\n")
     definition={'obj':'daedalon:models/mesh/ionic_frieze.obj','mtl':'daedalon:models/mesh/ionic_frieze.mtl',
                 'flip_v':True,'repair_degenerate_uvs':True,'force_uv_projection':True,'uv_projection':'axis_stabilized_box',
                 'box_projection_span':6.0,'face_oriented_uvs':True,'smooth_normals':False,'fit_to_block':False,
                 'scale':[1.,1.,1.],'translate':[0.,0.,0.],
                 'particle':'daedalon:block/statue_spartan_promachos_aganite',
                 'materials':{'none':'daedalon:block/statue_spartan_promachos_aganite'}}
-    (out/'ionic_frieze.json').write_text(json.dumps(definition,indent=2)+'\n')
+    (out/'ionic_frieze.json').write_text(json.dumps(definition,indent=2)+'\n', encoding="utf-8", newline="\n")
     evidence={'source_name':args.input.name,'source_sha256':digest,'source_files_modified':False,
               'provenance':'Oliver supplied his own Meshy creation; approved for the public Daedalon repository.',
               'source':{'vertices':len(vertices),'triangles':source_faces,'bounds':bounds,'front':'+Z','up':'+Y'},
@@ -80,7 +80,7 @@ def main():
                              'components':{k:len(v) for k,v in groups.items()}},
               'outputs':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.glob('ionic_frieze.*')}}
     args.evidence.parent.mkdir(parents=True,exist_ok=True)
-    args.evidence.write_text(json.dumps(evidence,indent=2)+'\n')
+    args.evidence.write_text(json.dumps(evidence,indent=2)+'\n', encoding="utf-8", newline="\n")
     if args.preview_dir:
         args.preview_dir.mkdir(parents=True,exist_ok=True)
         preview(groups,args.preview_dir,'ionic')

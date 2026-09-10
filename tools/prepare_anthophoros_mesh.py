@@ -192,7 +192,7 @@ def export_obj(obj):
         'particle': 'daedalon:block/statue_spartan_promachos_aganite',
         'materials': {'none': 'daedalon:block/statue_spartan_promachos_aganite'},
     }
-    (output/f'{obj.name}.json').write_text(json.dumps(definition, indent=2)+'\n', encoding='utf-8')
+    (output/f'{obj.name}.json').write_text(json.dumps(definition, indent=2)+'\n', encoding='utf-8', newline="\n")
 
 
 original.hide_render = True
@@ -283,7 +283,7 @@ bpy.context.preferences.filepaths.save_version = 0
 bpy.ops.wm.save_as_mainfile(filepath=str(output/'anthophoros_sizes.blend'))
 assert hashlib.sha256(source.read_bytes()).hexdigest() == source_hash
 (output/'anthophoros_sizes.json').write_text(json.dumps({'source_file':source.name,
-    'source_sha256':source_hash,'source_modified':False,'models':metrics},indent=2)+'\n', encoding='utf-8')
+    'source_sha256':source_hash,'source_modified':False,'models':metrics},indent=2)+'\n', encoding='utf-8', newline="\n")
 if not args.width:
     evidence = {
         'source_file': source.name, 'source_sha256': source_hash,
@@ -303,5 +303,5 @@ if not args.width:
                     for stem in ('anthophoros_2m', 'anthophoros_3m', 'anthophoros_4m', 'anthophoros_item')
                     for name in (stem+'.obj', stem+'.mtl', stem+'.json')},
     }
-    (output/'anthophoros-source.json').write_text(json.dumps(evidence, indent=2)+'\n', encoding='utf-8')
+    (output/'anthophoros-source.json').write_text(json.dumps(evidence, indent=2)+'\n', encoding='utf-8', newline="\n")
 print(json.dumps(metrics))

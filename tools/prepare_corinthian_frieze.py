@@ -234,7 +234,7 @@ def export(path, groups, title="Corinthian Frieze"):
     for name,refs in records:
         lines += [f'o {name}','usemtl none','s 1']
         lines += ['f '+' '.join(f'{v}//{n}' for v,n in row) for row in refs]
-    path.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+    path.write_text('\n'.join(lines)+'\n',encoding='utf-8', newline="\n")
 
 
 def preview(groups, directory, prefix="corinthian"):
@@ -333,14 +333,14 @@ def main():
     groups=build_components(triangles)
     out=args.output_dir; out.mkdir(parents=True,exist_ok=True)
     export(out/'corinthian_frieze.obj',groups)
-    (out/'corinthian_frieze.mtl').write_text('newmtl none\nKd 1.0 1.0 1.0\n',encoding='utf-8')
+    (out/'corinthian_frieze.mtl').write_text('newmtl none\nKd 1.0 1.0 1.0\n',encoding='utf-8', newline="\n")
     definition={'obj':'daedalon:models/mesh/corinthian_frieze.obj','mtl':'daedalon:models/mesh/corinthian_frieze.mtl',
                 'flip_v':True,'repair_degenerate_uvs':True,'force_uv_projection':True,'uv_projection':'axis_stabilized_box',
                 'box_projection_span':6.0,'face_oriented_uvs':True,'smooth_normals':False,'fit_to_block':False,
                 'scale':[1.,1.,1.],'translate':[0.,0.,0.],
                 'particle':'daedalon:block/statue_spartan_promachos_aganite',
                 'materials':{'none':'daedalon:block/statue_spartan_promachos_aganite'}}
-    (out/'corinthian_frieze.json').write_text(json.dumps(definition,indent=2)+'\n',encoding='utf-8')
+    (out/'corinthian_frieze.json').write_text(json.dumps(definition,indent=2)+'\n',encoding='utf-8', newline="\n")
     evidence={'source_name':args.input.name,'source_sha256':source_hash,'source_files_modified':False,
               'provenance':'Oliver supplied his own Meshy creation; approved for the public Daedalon repository.',
               'preparation':{'tool':'Blender 5.2.0 LTS','height_m':1,'repeat_width_m':3,'decimated':False,
@@ -351,7 +351,7 @@ def main():
               'outputs':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.glob('corinthian_frieze.*')}}
     evidence_path=args.evidence or out/'corinthian-frieze-source.json'
     evidence_path.parent.mkdir(parents=True,exist_ok=True)
-    evidence_path.write_text(json.dumps(evidence,indent=2)+'\n',encoding='utf-8')
+    evidence_path.write_text(json.dumps(evidence,indent=2)+'\n',encoding='utf-8', newline="\n")
     if args.preview_dir:
         args.preview_dir.mkdir(parents=True,exist_ok=True); preview(groups,args.preview_dir)
     assert hashlib.sha256(args.input.read_bytes()).hexdigest()==source_hash
