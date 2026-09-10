@@ -54,7 +54,7 @@ class DebugStickPropertyOrderSafetyTests(unittest.TestCase):
         self.assertIn("builder.add(SIZE, OFFSET, FACING)", urn)
         self.assertIn("builder.add(SIZE, FACING)", corbel)
         self.assertIn("builder.add(SIZE, WATERLOGGED)", fountain_basin)
-        self.assertIn("builder.add(SIZE, OFFSET, FACING)", plinth)
+        self.assertIn("builder.add(SIZE, OFFSET, FACING, WATERLOGGED)", plinth)
         self.assertIn("supportsOffsetAndFacing()", two_size)
 
         for source in (statue, urn, corbel, fountain_basin, sized, plinth):

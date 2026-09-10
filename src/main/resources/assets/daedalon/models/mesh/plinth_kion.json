@@ -5,6 +5,7 @@
   "repair_degenerate_uvs": true,
   "force_uv_projection": true,
   "uv_projection": "axis_stabilized_box",
+  "box_projection_span": 6.0,
   "face_oriented_uvs": true,
   "smooth_normals": true,
   "smooth_angle_degrees": 80.0,

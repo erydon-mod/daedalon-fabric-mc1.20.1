@@ -4,6 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.Waterloggable;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.Items;
 import net.minecraft.state.StateManager;
@@ -19,12 +22,14 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldAccess;
 
 /** Half-, one-, and two-metre plinths that can also control a fountain assembly. */
-public final class PlinthBlock extends Block {
+public final class PlinthBlock extends Block implements Waterloggable {
     public static final EnumProperty<Size> SIZE = EnumProperty.of("size", Size.class);
     public static final BooleanProperty OFFSET = BooleanProperty.of("offset");
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     private final Style style;
     private final String fountainMaterialKey;
@@ -39,17 +44,34 @@ public final class PlinthBlock extends Block {
         setDefaultState(getStateManager().getDefaultState()
                 .with(SIZE, Size.MEDIUM)
                 .with(OFFSET, false)
-                .with(FACING, Direction.NORTH));
+                .with(FACING, Direction.NORTH)
+                .with(WATERLOGGED, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(SIZE, OFFSET, FACING);
+        builder.add(SIZE, OFFSET, FACING, WATERLOGGED);
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return getDefaultState().with(FACING, context.getHorizontalPlayerFacing());
+        return getDefaultState().with(FACING, context.getHorizontalPlayerFacing())
+                .with(WATERLOGGED, context.getWorld().getFluidState(context.getBlockPos()).getFluid() == Fluids.WATER);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction,
+                                                BlockState neighborState, WorldAccess world,
+                                                BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override

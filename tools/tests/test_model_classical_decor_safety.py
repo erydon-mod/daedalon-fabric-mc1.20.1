@@ -441,7 +441,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertIn('SMALL("small", 0.25F, 0.5F)', plinth_block)
         self.assertIn('MEDIUM("medium", 0.5F, 1.0F)', plinth_block)
         self.assertIn('LARGE("large", 1.0F, 2.0F)', plinth_block)
-        self.assertIn("builder.add(SIZE, OFFSET, FACING)", plinth_block)
+        self.assertIn("builder.add(SIZE, OFFSET, FACING, WATERLOGGED)", plinth_block)
         self.assertIn("PlinthTransform.forState(state, 0.0F)", baked)
         self.assertIn("quad.uv(vertex,", baked)
         plinth_transform = baked[
