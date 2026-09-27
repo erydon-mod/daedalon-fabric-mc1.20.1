@@ -2,10 +2,12 @@ package com.oliver.daedalon.gametest;
 
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CapitalOrientation;
+import com.oliver.daedalon.block.CapitalPartBlock;
 import com.oliver.daedalon.item.DaedalonDebugProperties;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtOps;
@@ -40,9 +42,10 @@ public final class CapitalGameTests {
             if (!(block instanceof CapitalBlock capital)) continue;
             count++;
             int variants = capital.style() == CapitalBlock.Style.GREEK_IONIC ? 4 : 2;
-            context.assertTrue(block.getStateManager().getStates().size() == variants, "Only the required capital states may exist");
+            context.assertTrue(block.getStateManager().getStates().size() == variants * 2, "Orientation and size are the only capital states");
             BlockState original = block.getDefaultState();
             context.assertTrue(capital.orientation(original) == CapitalOrientation.STRAIGHT, "Old appearance must be the default");
+            context.assertTrue(original.get(CapitalBlock.SIZE) == CapitalBlock.Size.STANDARD, "Legacy capitals remain standard size");
             var legacy = new NbtCompound(); legacy.putString("Name", Registries.BLOCK.getId(block).toString());
             var restoredLegacy = BlockState.CODEC.parse(NbtOps.INSTANCE, legacy).result().orElseThrow();
             context.assertTrue(restoredLegacy == original, "Legacy saves without orientation must remain straight");
@@ -65,6 +68,66 @@ public final class CapitalGameTests {
             player.setSneaking(false);
         }
         context.assertTrue(count == 324, "All six capital styles and 54 finishes must be tested");
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void doubleCapitalOccupiesAndReleasesEightCells(TestContext context) {
+        var world = context.getWorld();
+        Block block = Registries.BLOCK.get(new net.minecraft.util.Identifier("daedalon", "aganite_tuscan_capital"));
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(2, 2, 2));
+        BlockState large = block.getDefaultState().with(CapitalBlock.SIZE, CapitalBlock.Size.DOUBLE);
+        world.setBlockState(anchor, large, Block.NOTIFY_ALL);
+        for (int y = 0; y < 2; y++) for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
+            BlockPos cell = anchor.add(x, y, z);
+            context.assertTrue(x == 0 && y == 0 && z == 0
+                    ? world.getBlockState(cell).isOf(block)
+                    : world.getBlockState(cell).getBlock() instanceof com.oliver.daedalon.block.CapitalPartBlock,
+                    "Double capital must occupy all eight cells");
+        }
+        world.setBlockState(anchor, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+        for (int y = 0; y < 2; y++) for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++)
+            context.assertTrue(world.getBlockState(anchor.add(x, y, z)).isAir(), "Removed capital must clear its cells");
+        world.setBlockState(anchor, block.getDefaultState(), Block.NOTIFY_ALL);
+        BlockPos occupied = anchor.add(1, 0, 0);
+        world.setBlockState(occupied, Blocks.STONE.getDefaultState(), Block.NOTIFY_ALL);
+        world.setBlockState(anchor, large, Block.NOTIFY_ALL);
+        context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SIZE) == CapitalBlock.Size.STANDARD,
+                "Resizing must fail when a neighbouring cell is occupied");
+        context.assertTrue(world.getBlockState(occupied).isOf(Blocks.STONE),
+                "Resizing must never replace a neighbouring block");
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void capitalsAlignToEveryQuadrantOfLargeErydonColumn(TestContext context) {
+        var world = context.getWorld();
+        BlockPos support = context.getAbsolutePos(new BlockPos(2, 2, 2));
+        BlockPos anchor = support.up();
+        Block capitalBlock = Registries.BLOCK.get(new net.minecraft.util.Identifier("daedalon", "aganite_tuscan_capital"));
+        var player = context.createMockCreativeServerPlayerInWorld();
+        player.changeGameMode(GameMode.CREATIVE);
+        for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++)
+            world.setBlockState(support.add(x, 0, z), LargeColumnFixture.BLOCK.getDefaultState()
+                    .with(LargeColumnFixture.X, x).with(LargeColumnFixture.Z, z)
+                    .with(LargeColumnFixture.SECTION, LargeColumnFixture.Section.CAPITAL_UPPER), Block.NOTIFY_ALL);
+
+        for (int clickedX = 0; clickedX < 2; clickedX++) for (int clickedZ = 0; clickedZ < 2; clickedZ++) {
+            BlockPos clicked = support.add(clickedX, 0, clickedZ);
+            player.setStackInHand(Hand.MAIN_HAND, capitalBlock.asItem().getDefaultStack());
+            var hit = new BlockHitResult(new Vec3d(clicked.getX() + 0.5, clicked.getY() + 1, clicked.getZ() + 0.5),
+                    Direction.UP, clicked, false);
+            capitalBlock.asItem().useOnBlock(new ItemUsageContext(player, Hand.MAIN_HAND, hit));
+            BlockState placed = world.getBlockState(anchor);
+            context.assertTrue(placed.isOf(capitalBlock) && placed.get(CapitalBlock.SIZE) == CapitalBlock.Size.DOUBLE,
+                    "Capital must be double and anchored at the column corner for every clicked quadrant");
+            for (int y = 0; y < 2; y++) for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
+                if (x == 0 && y == 0 && z == 0) continue;
+                context.assertTrue(world.getBlockState(anchor.add(x, y, z)).getBlock() instanceof CapitalPartBlock,
+                        "Aligned double capital must reserve the complete two-by-two footprint");
+            }
+            world.setBlockState(anchor, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+        }
         context.complete();
     }
 }

@@ -392,8 +392,8 @@ def audit(
         metadata = json.loads(archive.read("fabric.mod.json"))
         require(metadata["id"] == "daedalon", "fabric.mod.json id must be daedalon")
         require(
-            metadata["name"] == "ERYDON DEADALON",
-            "fabric.mod.json name must be ERYDON DEADALON",
+            metadata["name"] == "ERYDON Daedalon",
+            "fabric.mod.json name must be ERYDON Daedalon",
         )
         require(
             metadata["version"] == EXPECTED_MOD_VERSION,

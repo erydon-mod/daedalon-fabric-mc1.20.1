@@ -1,0 +1,55 @@
+{
+  "source_name": "panel_gothic.obj",
+  "source_sha256": "bc625eb51c7c491a3e5119ccdee0cc28a1f11f51b648c5ce81f2e64ee5884b5c",
+  "source_files_modified": false,
+  "provenance": "Oliver supplied his own Meshy creation; approved for the public Daedalon repository.",
+  "source": {
+    "vertices": 6985,
+    "triangles": 15510,
+    "bounds": [
+      [
+        -0.9517670273780823,
+        0.950419008731842
+      ],
+      [
+        -0.9518340229988098,
+        0.9501950144767761
+      ],
+      [
+        -0.07678599655628204,
+        0.09482400119304657
+      ]
+    ],
+    "front": "+Z",
+    "up": "+Y"
+  },
+  "preparation": {
+    "tool": "Blender 5.2.0 LTS",
+    "uniform_scale": 0.5257109352169651,
+    "decimated": false,
+    "square_outer_frame_snap_m": 0.001,
+    "back_planarity_band_m": 0.0001,
+    "normal_smoothing_angle_degrees": 30,
+    "depth_m": 0.09021725505590439,
+    "base_size_m": [
+      1,
+      1
+    ],
+    "runtime_sizes_m": [
+      1,
+      2,
+      3
+    ],
+    "mounts": [
+      "wall",
+      "ceiling"
+    ],
+    "triangles": 15510,
+    "shared_geometry": true
+  },
+  "outputs": {
+    "gothic_panel.json": "af90261e0ea1281b39b552ed95e516f22c7b8b580fec446cd2a2ae67a73ae8c1",
+    "gothic_panel.mtl": "6440a6b04ede85ee1b6226258debb33ccec536d86aa2f3bcdbac1180a597ea2e",
+    "gothic_panel.obj": "a4ffa391c5db984aa44c3f163c8fb25c3c423768b26f4ea55722cb8279c7b11a"
+  }
+}

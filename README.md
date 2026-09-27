@@ -1,6 +1,6 @@
-# Daedalon for Fabric 1.20.1
+# ERYDON Daedalon for Fabric 1.20.1
 
-Daedalon is ERYDON's standalone collection of detailed OBJ decor for
+ERYDON Daedalon is ERYDON's standalone collection of detailed OBJ decor for
 Minecraft 1.20.1.
 
 Version 1.0.1 uses native 16x textures. The unified ERYDON Collection 32x and

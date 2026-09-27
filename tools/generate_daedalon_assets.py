@@ -11,8 +11,8 @@ NAMESPACE = "daedalon"
 
 STATIC_LANGUAGE_ENTRIES = {
     "en_us": {
-        "itemGroup.daedalon": "Daedalon",
-        "item.daedalon.emblem": "Daedalon Emblem",
+        "itemGroup.daedalon": "ERYDON Daedalon",
+        "item.daedalon.emblem": "ERYDON Daedalon Emblem",
         "message.erydon_family.resource_packs.notice": (
             "ERYDON now uses native 16x textures. Download the optional 32x "
             "and 64x packs from %s or %s."
@@ -39,8 +39,8 @@ STATIC_LANGUAGE_ENTRIES = {
         ),
     },
     "de_de": {
-        "itemGroup.daedalon": "Daedalon",
-        "item.daedalon.emblem": "Daedalon-Emblem",
+        "itemGroup.daedalon": "ERYDON Daedalon",
+        "item.daedalon.emblem": "ERYDON Daedalon-Emblem",
         "message.erydon_family.resource_packs.notice": (
             "ERYDON verwendet jetzt native 16x-Texturen. Lade die optionalen "
             "32x- und 64x-Pakete bei %s oder %s herunter."
@@ -67,8 +67,8 @@ STATIC_LANGUAGE_ENTRIES = {
         ),
     },
     "es_es": {
-        "itemGroup.daedalon": "Daedalon",
-        "item.daedalon.emblem": "Emblema de Daedalon",
+        "itemGroup.daedalon": "ERYDON Daedalon",
+        "item.daedalon.emblem": "Emblema de ERYDON Daedalon",
         "message.erydon_family.resource_packs.notice": (
             "ERYDON ahora usa texturas nativas de 16x. Descarga los paquetes "
             "opcionales de 32x y 64x en %s o %s."
@@ -253,7 +253,9 @@ PLINTH_FAMILIES = {
 }
 BENCH_FAMILIES = ("exedra", "hedra")
 WIDTH_FAMILIES = (*BENCH_FAMILIES, "anthophoros_planter")
+PANEL_FAMILIES = ("gothic_wall_panel",)
 NEW_DECOR_FAMILIES = {
+    "gothic_wall_panel": ("gothic_panel", "Gothic Panel", "Gotisches Paneel", "Panel Gótico"),
     "byzantine_frieze": ("byzantine_frieze", "Byzantine Frieze", "Byzantinischer Fries", "Friso Bizantino"),
     "gothic_frieze": ("gothic_frieze", "Gothic Frieze", "Gotischer Fries", "Friso Gótico"),
     "corinthian_frieze": ("corinthian_frieze", "Corinthian Frieze", "Korinthischer Fries", "Friso Corintio"),
@@ -572,6 +574,28 @@ def remove_obsolete_unpublished_fountain_bowl_ids(
         changed.append(path)
 
 
+def remove_obsolete_unpublished_ceiling_panels(check: bool, changed: list[Path]) -> None:
+    # The development-only ceiling item was merged into the existing Gothic Panel.
+    paths = []
+    for material in MATERIALS:
+        for aged in (False, True):
+            block_id = f"{material}{'_aged' if aged else ''}_gothic_coffered_ceiling"
+            paths.extend((
+                RESOURCES / f"assets/{NAMESPACE}/blockstates/{block_id}.json",
+                RESOURCES / f"assets/{NAMESPACE}/models/item/{block_id}.json",
+                RESOURCES / f"data/{NAMESPACE}/loot_tables/blocks/{block_id}.json",
+            ))
+    for kind in ("blocks", "items"):
+        paths.append(RESOURCES / f"data/{NAMESPACE}/tags/{kind}/gothic_coffered_ceiling.json")
+    for path in paths:
+        if not path.exists():
+            continue
+        if check:
+            raise ValueError(f"Retired unpublished ceiling panel asset remains: {path.relative_to(ROOT)}")
+        path.unlink()
+        changed.append(path)
+
+
 def remove_creative_only_loot(
     families: tuple[str, ...], check: bool, changed: list[Path]
 ) -> None:
@@ -609,6 +633,8 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
                 for facing in ("north", "east", "south", "west")
             }
         }
+    if family in PANEL_FAMILIES:
+        return {"variants": {"": {"model": model}}}
     if family in BUST_FAMILIES:
         # Busts place at Small by default, but retain all three correctly
         # scaling options alongside their shared facing and offset controls.
@@ -680,6 +706,8 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
 
 
 def display_parent(family: str) -> str:
+    if family in PANEL_FAMILIES:
+        return f"{NAMESPACE}:block/mesh/gothic_panel_display"
     if family in ("corinthian_frieze", "ionic_frieze", "gothic_frieze", "byzantine_frieze"):
         return f"{NAMESPACE}:block/mesh/{family}_display"
     if family == "anthophoros_planter":
@@ -1137,6 +1165,15 @@ def generate_tags(
             for synonym in ("frieze", "entablature", "wall_relief", *terms):
                 relation_tags.setdefault(synonym, []).append(frieze)
             ornament_values.append(frieze)
+        for family in PANEL_FAMILIES:
+            if family not in families:
+                continue
+            panel = f"#{NAMESPACE}:{family}"
+            terms = ("panel", "gothic", "tracery", "ribbed", "vault", "ornamental_panel")
+            terms += ("wall_panel", "wall_relief", "ceiling", "coffer", "coffered_ceiling", "ceiling_panel")
+            for synonym in terms:
+                relation_tags.setdefault(synonym, []).append(panel)
+            ornament_values.append(panel)
         benches = [f"#{NAMESPACE}:{bench}" for bench in BENCH_FAMILIES if bench in families]
         if benches:
             for synonym in ("bench", "seat", "seating", "furniture"):
@@ -1227,6 +1264,7 @@ def generate(families: tuple[str, ...], check: bool = False) -> list[Path]:
     remove_obsolete_unpublished_urn_assets(check, changed)
     remove_obsolete_unpublished_georgian_plinth_assets(check, changed)
     remove_obsolete_unpublished_fountain_bowl_ids(check, changed)
+    remove_obsolete_unpublished_ceiling_panels(check, changed)
     remove_creative_only_loot(families, check, changed)
     generate_models_and_loot(families, check, changed)
     generate_languages(families, check, changed)

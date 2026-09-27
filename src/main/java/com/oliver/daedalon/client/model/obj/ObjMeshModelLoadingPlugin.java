@@ -349,6 +349,10 @@ public final class ObjMeshModelLoadingPlugin {
                 ));
             }
         }
+        for (String form : List.of("gothic_wall_panel")) {
+            families.add(new MeshFamily(form,id("models/mesh/gothic_panel.json"),
+                    id("block/mesh/gothic_panel_display"),createDetailedVariants(form)));
+        }
         for (FriezeBlock.Style style : FriezeBlock.Style.values()) {
             String family=style.id()+"_frieze";
             families.add(new MeshFamily(family,

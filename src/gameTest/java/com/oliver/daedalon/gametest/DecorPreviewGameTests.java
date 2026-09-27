@@ -1,6 +1,7 @@
 package com.oliver.daedalon.gametest;
 
 import com.oliver.daedalon.block.DecorPreviewBounds;
+import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
 import net.minecraft.registry.Registries;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
@@ -26,9 +27,13 @@ public final class DecorPreviewGameTests {
                     context.assertTrue(box.maxX - box.minX == size.metres && box.maxY - box.minY == size.height,
                             "Monopteros preview must include its full structure");
                 }
+                if (block instanceof CapitalBlock && state.get(CapitalBlock.SIZE) == CapitalBlock.Size.DOUBLE) {
+                    context.assertTrue(box.maxY - box.minY == 2.0,
+                            "Double capital preview must include both vertical cells");
+                }
             }
         }
-        context.assertTrue(supported > 4000 && helpers == 2, "Missing decorations or duplicate helper previews");
+        context.assertTrue(supported > 4000 && helpers == 3, "Missing decorations or duplicate helper previews");
         context.complete();
     }
 }

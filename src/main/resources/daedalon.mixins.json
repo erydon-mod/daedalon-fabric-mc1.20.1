@@ -21,7 +21,8 @@
     "client.axiom.ChunkedBlockRegionMixin",
     "client.axiom.BuilderToolSelectionStateMixin",
     "client.indium.TerrainRenderContextMixin",
-    "client.iris.XHFPTerrainVertexMixin"
+    "client.iris.XHFPTerrainVertexMixin",
+    "client.iris.WorldRenderingSettingsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

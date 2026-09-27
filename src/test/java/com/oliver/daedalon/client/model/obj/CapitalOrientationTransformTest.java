@@ -1,6 +1,7 @@
 package com.oliver.daedalon.client.model.obj;
 
 import com.oliver.daedalon.block.CapitalOrientation;
+import com.oliver.daedalon.block.CapitalBlock;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.minecraft.util.math.Direction;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,28 @@ import java.lang.reflect.Proxy;
 import static org.junit.jupiter.api.Assertions.*;
 
 final class CapitalOrientationTransformTest {
+    @Test
+    void doubleCapitalSpansTwoCellsInEveryAxis() {
+        float[][] point = {{1F, 1F, 0.5F}, {0F, 0F, 0F}, {0F, 0F, 0F}, {0F, 0F, 0F}};
+        MutableQuadView quad = (MutableQuadView) Proxy.newProxyInstance(MutableQuadView.class.getClassLoader(),
+                new Class<?>[]{MutableQuadView.class}, (proxy, method, args) -> switch (method.getName()) {
+                    case "x" -> point[(int) args[0]][0];
+                    case "y" -> point[(int) args[0]][1];
+                    case "z" -> point[(int) args[0]][2];
+                    case "hasNormal" -> false;
+                    case "pos" -> {
+                        int vertex = (int) args[0];
+                        for (int axis = 0; axis < 3; axis++) point[vertex][axis] = (float) args[axis + 1];
+                        yield proxy;
+                    }
+                    case "cullFace", "nominalFace" -> args == null || args.length == 0 ? Direction.UP : proxy;
+                    default -> throw new AssertionError("Unexpected quad operation: " + method.getName());
+                });
+        assertTrue(CapitalOrientationTransform.forSize(CapitalOrientation.STRAIGHT,
+                CapitalBlock.Size.DOUBLE).transform(quad));
+        assertArrayEquals(new float[]{2F, 2F, 1F}, point[0]);
+    }
+
     @Test
     void rotatesPositionsAndNormalsWithoutTouchingUvsOrOtherVertexData() {
         double diagonal = Math.sqrt(0.5);

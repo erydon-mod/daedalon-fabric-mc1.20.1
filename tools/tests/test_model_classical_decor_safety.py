@@ -37,10 +37,10 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             for block_id in GENERATOR.family_block_ids(family)
         ]
 
-    def test_exact_4317_id_manifest(self) -> None:
+    def test_exact_4371_id_manifest(self) -> None:
         block_ids = all_block_ids()
-        self.assertEqual(4317, len(block_ids))
-        self.assertEqual(4317, len(set(block_ids)))
+        self.assertEqual(4371, len(block_ids))
+        self.assertEqual(4371, len(set(block_ids)))
         self.assertEqual(605, len(self.urn_ids))
         self.assertEqual(270, len(self.plinth_ids))
         self.assertIn("aganite_amphora_urn", block_ids)
@@ -54,7 +54,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
 
         expected_files = {f"{block_id}.json" for block_id in block_ids}
         self.assertEqual(
-            expected_files | {"fountain_basin_part.json", "monopteros_part.json"},
+            expected_files | {"capital_part.json", "fountain_basin_part.json", "monopteros_part.json"},
             {
                 path.name
                 for path in (DAEDALON_ASSETS / "blockstates").glob("*.json")
@@ -87,8 +87,8 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             },
         )
 
-    def test_exact_94_mesh_manifests_and_hashes(self) -> None:
-        self.assertEqual(94, len(MESH_EXPECTATIONS))
+    def test_exact_95_mesh_manifests_and_hashes(self) -> None:
+        self.assertEqual(95, len(MESH_EXPECTATIONS))
         self.assertEqual(
             {expectation["obj"] for expectation in MESH_EXPECTATIONS.values()},
             {path.name for path in MESH_ROOT.glob("*.obj")},
@@ -470,7 +470,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertEqual(5, plinth_block.count('"plinth_'))
         self.assertNotIn("GeorgianPlinth", registrations)
         self.assertIn("EXPECTED_BLOCK_COUNT", registrations)
-        self.assertIn("exactly 4317 decor blocks and items", registrations)
+        self.assertIn("exactly 4371 decor blocks and items", registrations)
 
     def test_urn_source_and_decimation_evidence_is_locked(self) -> None:
         evidence = load_json(REPO_ROOT / "docs/evidence/urn-batch-source.json")

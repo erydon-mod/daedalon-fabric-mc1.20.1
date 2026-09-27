@@ -5,6 +5,9 @@
   "name": "Daedalon fountain regression tests",
   "environment": "server",
   "entrypoints": {
+    "main": [
+      "com.oliver.daedalon.gametest.LargeColumnFixture"
+    ],
     "fabric-gametest": [
       "com.oliver.daedalon.gametest.DecorPreviewGameTests",
       "com.oliver.daedalon.gametest.PlinthGameTests",
@@ -18,7 +21,8 @@
       "com.oliver.daedalon.gametest.FriezeGameTests",
       "com.oliver.daedalon.gametest.IonicFriezeGameTests",
       "com.oliver.daedalon.gametest.GothicFriezeGameTests",
-      "com.oliver.daedalon.gametest.ByzantineFriezeGameTests"
+      "com.oliver.daedalon.gametest.ByzantineFriezeGameTests",
+      "com.oliver.daedalon.gametest.PanelGameTests"
     ]
   },
   "depends": {

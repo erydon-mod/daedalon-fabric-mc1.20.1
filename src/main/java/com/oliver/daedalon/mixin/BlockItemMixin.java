@@ -1,6 +1,7 @@
 package com.oliver.daedalon.mixin;
 
 import com.oliver.daedalon.block.FountainAssemblyPlacement;
+import com.oliver.daedalon.block.CapitalSupportPlacement;
 import com.oliver.daedalon.block.TallDecorPlacement;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -34,6 +35,7 @@ abstract class BlockItemMixin {
             argsOnly = true
     )
     private ItemPlacementContext daedalon$placeAboveTallDecor(ItemPlacementContext context) {
-        return TallDecorPlacement.redirect(context);
+        return CapitalSupportPlacement.redirect(TallDecorPlacement.redirect(context),
+                ((BlockItem) (Object) this).getBlock());
     }
 }

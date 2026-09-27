@@ -943,3 +943,5 @@ def expected_material_texture_names(
             }
         )
     return names
+
+MESH_EXPECTATIONS["gothic_panel"] = {'vertices': 6985, 'uvs': 0, 'normals': 26644, 'faces': 15510, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((0.0, 0.0, 0.0), (1.0, 1.0, 0.0902173)), 'definition': 'gothic_panel.json', 'obj': 'gothic_panel.obj', 'mtl': 'gothic_panel.mtl', 'display': 'gothic_panel_display.json', 'obj_sha256': 'a4ffa391c5db984aa44c3f163c8fb25c3c423768b26f4ea55722cb8279c7b11a', 'mtl_sha256': '6440a6b04ede85ee1b6226258debb33ccec536d86aa2f3bcdbac1180a597ea2e'}

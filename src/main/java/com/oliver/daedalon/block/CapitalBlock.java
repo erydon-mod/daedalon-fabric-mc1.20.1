@@ -4,29 +4,38 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.BlockMirror;
+import net.minecraft.util.Hand;
+import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 
-/** A fixed one-block column capital fitted over ERYDON's circular shaft. */
+/** A circular-shaft capital with standard and two-block-wide placement. */
 public class CapitalBlock extends Block {
     public static final EnumProperty<CapitalOrientation> ORIENTATION = EnumProperty.of(
             "capital_orientation", CapitalOrientation.class,
             CapitalOrientation.STRAIGHT, CapitalOrientation.DIAGONAL);
     public static final EnumProperty<CapitalOrientation> IONIC_ORIENTATION = EnumProperty.of(
             "capital_orientation", CapitalOrientation.class);
+    public static final EnumProperty<Size> SIZE = EnumProperty.of("size", Size.class);
     private final Style style;
 
     protected CapitalBlock(Settings settings, Style style) {
         super(settings);
         this.style = style;
         setDefaultState(getStateManager().getDefaultState()
-                .with(orientationProperty(), CapitalOrientation.STRAIGHT));
+                .with(orientationProperty(), CapitalOrientation.STRAIGHT)
+                .with(SIZE, Size.STANDARD));
     }
 
     public static CapitalBlock create(Settings settings, Style style) {
@@ -35,7 +44,7 @@ public class CapitalBlock extends Block {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(ORIENTATION);
+        builder.add(ORIENTATION, SIZE);
     }
 
     public EnumProperty<CapitalOrientation> orientationProperty() {
@@ -69,7 +78,7 @@ public class CapitalBlock extends Block {
 
         @Override
         protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-            builder.add(IONIC_ORIENTATION);
+            builder.add(IONIC_ORIENTATION, SIZE);
         }
     }
 
@@ -80,7 +89,7 @@ public class CapitalBlock extends Block {
             BlockPos pos,
             ShapeContext context
     ) {
-        return style.shape(orientation(state));
+        return shapeForCell(state, 0, 0, 0);
     }
 
     @Override
@@ -90,7 +99,7 @@ public class CapitalBlock extends Block {
             BlockPos pos,
             ShapeContext context
     ) {
-        return style.shape(orientation(state));
+        return shapeForCell(state, 0, 0, 0);
     }
 
     @Override
@@ -105,6 +114,82 @@ public class CapitalBlock extends Block {
 
     public Style style() {
         return style;
+    }
+
+    public enum Size implements StringIdentifiable {
+        STANDARD("standard"), DOUBLE("double");
+        private final String id;
+        Size(String id) { this.id = id; }
+        @Override public String asString() { return id; }
+    }
+
+    public VoxelShape shapeForCell(BlockState state, int x, int y, int z) {
+        if (state.get(SIZE) == Size.STANDARD) return style.shape(orientation(state));
+        VoxelShape source = style.shape(orientation(state));
+        // The fitted capital doubles about its original centre and occupies two vertical cells.
+        return source.getBoundingBoxes().stream().map(box -> VoxelShapes.cuboid(
+                        box.minX * 2 - x, box.minY * 2 - y, box.minZ * 2 - z,
+                        box.maxX * 2 - x, box.maxY * 2 - y, box.maxZ * 2 - z))
+                .reduce(VoxelShapes.empty(), VoxelShapes::union);
+    }
+
+    @Override public BlockState getPlacementState(ItemPlacementContext context) {
+        Size size = CapitalSupportPlacement.isLargeColumnTop(context.getWorld(), context.getBlockPos())
+                || context.getPlayer() != null && context.getPlayer().isSneaking()
+                ? Size.DOUBLE : Size.STANDARD;
+        BlockState state = getDefaultState().with(SIZE, size);
+        return size == Size.STANDARD || canOccupy(context.getWorld(), context.getBlockPos()) ? state : null;
+    }
+
+    private static boolean canOccupy(World world, BlockPos anchor) {
+        for (int y = 0; y < 2; y++) for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
+            if (x == 0 && y == 0 && z == 0) continue;
+            BlockPos pos = anchor.add(x, y, z);
+            if (world.isOutOfHeightLimit(pos) || !world.getWorldBorder().contains(pos)) return false;
+            BlockState found = world.getBlockState(pos);
+            if (!found.isAir() && !CapitalPartBlock.isOwnedBy(found, pos, anchor)) return false;
+        }
+        return true;
+    }
+
+    private static void sync(World world, BlockPos anchor, BlockState state) {
+        for (int y = 0; y < 2; y++) for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
+            if (x == 0 && y == 0 && z == 0) continue;
+            BlockPos pos = anchor.add(x, y, z);
+            if (state.get(SIZE) == Size.DOUBLE) {
+                world.setBlockState(pos, com.oliver.daedalon.registry.ModBlocks.capitalPart()
+                        .stateForOffset(x, y, z), Block.NOTIFY_ALL);
+            } else if (CapitalPartBlock.isOwnedBy(world.getBlockState(pos), pos, anchor)) {
+                world.removeBlock(pos, false);
+            }
+        }
+    }
+
+    @Override public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        super.onBlockAdded(state, world, pos, oldState, notify);
+        if (!world.isClient && state.get(SIZE) == Size.DOUBLE && canOccupy(world, pos)) sync(world, pos, state);
+    }
+
+    @Override public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState next, boolean moved) {
+        if (!world.isClient && next.isOf(this) && next.get(SIZE) == Size.DOUBLE
+                && state.get(SIZE) != Size.DOUBLE && !canOccupy(world, pos)) {
+            // Debug-stick edits bypass onUse; never let a size edit replace neighbouring blocks.
+            world.setBlockState(pos, state, Block.NOTIFY_ALL);
+        } else if (!world.isClient && (!next.isOf(this) || next.get(SIZE) != state.get(SIZE))) {
+            sync(world, pos, next.isOf(this) ? next : state.with(SIZE, Size.STANDARD));
+        }
+        super.onStateReplaced(state, world, pos, next, moved);
+    }
+
+    @Override public ActionResult onUse(BlockState state, World world, BlockPos pos,
+                                        PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!player.isSneaking() || !player.getStackInHand(hand).isEmpty()) return ActionResult.PASS;
+        Size next = state.get(SIZE) == Size.STANDARD ? Size.DOUBLE : Size.STANDARD;
+        if (next == Size.DOUBLE && !canOccupy(world, pos)) return ActionResult.FAIL;
+        if (!world.isClient) {
+            world.setBlockState(pos, state.with(SIZE, next), Block.NOTIFY_ALL);
+        }
+        return ActionResult.success(world.isClient);
     }
 
     public enum Style {

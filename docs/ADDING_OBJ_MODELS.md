@@ -280,6 +280,54 @@ interlace, cross, medallion, palm and palmette. Asset and server tests cover the
 complete repeat, both pillar sizes, dimensions, seams, normals, ends, corners,
 materials and source provenance.
 
+### Gothic wall and coffered ceiling panels
+
+`tools/prepare_gothic_panel.py` uses the same locked Blender invocation with
+`--input <source.obj> --output-dir src/main/resources/assets/daedalon/models/mesh
+--evidence docs/evidence/gothic-panel-source.json --preview-dir <directory>`.
+The supplied 15,510 triangles are retained, without decimation. Uniform scaling
+normalizes the complete source to one metre square; only the outer 1mm frame
+band and the back's 0.1mm band are snapped to clean mounting planes. Prepared
+30-degree smoothing preserves sharp carving edges. Source provenance and exact
+hashes are recorded in `docs/evidence/gothic-panel-source.json`.
+
+`<material>_gothic_wall_panel` is the single Gothic Panel block for both wall and
+ceiling mounting, with 27 stone and 27 aged finishes. The existing internal ID
+is retained. One shared `gothic_panel` OBJ serves all finishes and all three sizes: Small 1x1m, Medium 2x2m and
+Large 3x3m. Size and facing use the existing debug-stick controls. The source
+carving scales uniformly, including depth (approximately 9, 18 and 27cm).
+Placement defaults to Small. Gothic Panels face the clicked wall surface, or
+face down when placed against the underside of a block. The `ceiling` blockstate
+controls both the rendered mesh and collision shape, with four horizontal
+orientations. There is no separate ceiling block or item. The mounting back
+stays flush against the support boundary when size changes.
+
+Each panel is one static decor block with a cached full rectangular selection
+and collision shape, like the existing benches. The placed block anchors the surface centre; increasing size grows equally
+in both directions across the mounting plane. The 2m size extends half a block
+past each edge; the 3m size extends one block past each edge. It does not
+create helper cells or block entities. Builders select and edit its anchor;
+large designs can extend across neighbouring cells. These are surface ornaments,
+not replacements for their supporting wall or ceiling. The single base mesh is
+scaled and rotated at chunk mesh construction, including normals and texture
+density. UV scaling uses the source box-projection window at 0 or its mirrored
+edge at 1, before material phase mapping and sprite baking; it must never scale
+these edge windows around 0.5, which samples outside the sprite. Search includes panel, wall panel, ceiling, coffer, coffered ceiling,
+Gothic, tracery, ribbed and vault.
+
+Iris material setup classifies otherwise unmapped panels as Complementary's
+neutral non-solid material 5000, only when the shader's water/ladder material IDs
+match its vocabulary. Complementary otherwise voxelizes unknown terrain ID 0
+as a full reflection cube at the anchor, producing a square reflection boundary
+inside a larger surface ornament. The neutral ID excludes that false cube while
+retaining the same normal/specular textures and actual geometry shadows. Explicit
+shader mappings and other packs are preserved. No shader ZIP or texture is edited.
+
+Prepared text must be UTF-8 with LF line endings before computing hashes.
+`Path.write_text` calls explicitly set `newline="\n"` so Windows exports and
+Git's Linux checkouts have identical bytes. Tests verify this alongside the
+complete source, both material families, all sizes, facings and mounting planes.
+
 ### Width-selectable Exedra
 
 The Exedra pilot uses the decor preparation tool with

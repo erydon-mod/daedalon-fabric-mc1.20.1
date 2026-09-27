@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#daedalon:gothic_frieze"
+    "#daedalon:gothic_frieze",
+    "#daedalon:gothic_wall_panel"
   ]
 }

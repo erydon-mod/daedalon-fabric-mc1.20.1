@@ -3,11 +3,13 @@ package com.oliver.daedalon.registry;
 import com.oliver.daedalon.block.ClassicalStatueBlock;
 import com.oliver.daedalon.block.BustBlock;
 import com.oliver.daedalon.block.CapitalBlock;
+import com.oliver.daedalon.block.CapitalPartBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.ExedraBlock;
 import com.oliver.daedalon.block.HedraBlock;
 import com.oliver.daedalon.block.AnthophorosBlock;
 import com.oliver.daedalon.block.FriezeBlock;
+import com.oliver.daedalon.block.PanelBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
 import com.oliver.daedalon.block.MonopterosPartBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
@@ -50,7 +52,7 @@ public final class ModBlocks {
                     + CapitalBlock.Style.values().length
                     + FixedDecorBlock.Style.values().length
                     + FountainBasinBlock.Style.values().length
-                    + PlinthBlock.Style.values().length + 6 + FriezeBlock.Style.values().length;
+                    + PlinthBlock.Style.values().length + 7 + FriezeBlock.Style.values().length;
     private static final int BRONZE_FAMILY_COUNT =
             2 + UrnBlock.UrnStyle.values().length
                     + ClassicalStatueBlock.Style.values().length
@@ -83,6 +85,8 @@ public final class ModBlocks {
     private static MonopterosPartBlock monopterosPart;
     public static MonopterosPartBlock monopterosPart() { return monopterosPart; }
     private static FountainBasinPartBlock fountainBasinPart;
+    private static CapitalPartBlock capitalPart;
+    public static CapitalPartBlock capitalPart() { return capitalPart; }
     private static boolean registered;
 
     private ModBlocks() {
@@ -127,6 +131,7 @@ public final class ModBlocks {
         registerHedras();
         registerAnthophorosPlanters();
         registerFriezes();
+        registerPanels();
         registerMonopterosDomes();
 
         if (BY_ID.size() != EXPECTED_BLOCK_COUNT
@@ -134,7 +139,7 @@ public final class ModBlocks {
                 || SPARTAN_PROMACHOS_STATUES.size() != BRONZE_FAMILY_VARIANTS
                 || ZEUS_STATUES.size() != BRONZE_FAMILY_VARIANTS) {
             throw new IllegalStateException(
-                    "Daedalon must register exactly 4317 decor blocks and items"
+                    "Daedalon must register exactly 4371 decor blocks and items"
             );
         }
         for (UrnBlock.UrnStyle style : UrnBlock.UrnStyle.values()) {
@@ -273,6 +278,9 @@ public final class ModBlocks {
     }
 
     private static void registerInternalBlocks() {
+        capitalPart = Registry.register(Registries.BLOCK, id("capital_part"),
+                new CapitalPartBlock(AbstractBlock.Settings.create().strength(1.5F, 6.0F)
+                        .dropsNothing().nonOpaque().dynamicBounds().pistonBehavior(PistonBehavior.BLOCK)));
         monopterosPart = Registry.register(Registries.BLOCK, id("monopteros_part"),
                 new MonopterosPartBlock(AbstractBlock.Settings.create().strength(1.5F, 6.0F)
                         .dropsNothing().nonOpaque().dynamicBounds().pistonBehavior(PistonBehavior.BLOCK)));
@@ -543,6 +551,13 @@ public final class ModBlocks {
             }
         }
         registerBlock("bronze_anthophoros_planter", new AnthophorosBlock(decorSettings()));
+    }
+
+    private static void registerPanels() {
+        for (DecorMaterial material : DecorMaterial.values()) for (boolean aged : new boolean[]{false,true}) {
+            String prefix=material.id()+(aged?"_aged":"");
+            registerBlock(prefix+"_gothic_wall_panel",new PanelBlock(decorSettings()));
+        }
     }
 
     private static void registerFriezes() {

@@ -5,6 +5,7 @@ import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.BenchBlock;
 import com.oliver.daedalon.block.FriezeBlock;
+import com.oliver.daedalon.block.PanelBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
 import com.oliver.daedalon.block.FountainAssemblyLayout;
 import com.oliver.daedalon.block.FountainBasinBlock;
@@ -505,7 +506,9 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         } else if (state.getBlock() instanceof CorbelBlock) {
             positionTransform = CorbelTransform.forState(state);
         } else if (state.getBlock() instanceof CapitalBlock capital) {
-            positionTransform = CapitalOrientationTransform.forOrientation(capital.orientation(state));
+            positionTransform = CapitalOrientationTransform.forState(capital, state);
+        } else if (state.getBlock() instanceof PanelBlock) {
+            positionTransform = PanelMeshTransform.forState(state);
         } else if (state.getBlock() instanceof BenchBlock) {
             positionTransform = GroundScaleTransform.forBenchState(state);
         } else if (state.getBlock() instanceof FacingDecorBlock) {
