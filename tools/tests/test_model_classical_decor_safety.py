@@ -246,8 +246,14 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
                 )
 
         expected_plinth_refs = {f"daedalon:{block_id}" for block_id in self.plinth_ids}
+        for locale, fountain_word in (("en_us", "fountain"), ("de_de", "Brunnen"), ("es_es", "fuente")):
+            for key in ("search.daedalon.plinth.fountain", "tooltip.daedalon.plinth.fountain",
+                        "tooltip.daedalon.plinth.fountain_use"):
+                self.assertIn(fountain_word.lower(), languages[locale][key].lower(), (locale, key))
         for kind in ("blocks", "items"):
             tag_root = DAEDALON_DATA / f"tags/{kind}"
+            for synonym in ("fountain", "water_feature"):
+                self.assertIn("#daedalon:plinth", load_json(tag_root / f"{synonym}.json")["values"])
             self.assertEqual(
                 expected_plinth_refs,
                 set(load_json(tag_root / "plinth.json")["values"]),

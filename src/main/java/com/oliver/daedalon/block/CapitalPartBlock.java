@@ -38,16 +38,53 @@ public final class CapitalPartBlock extends Block {
         return pos.add(-state.get(X), -state.get(Y), -state.get(Z));
     }
 
+    /** Recover helper offsets changed by older debug sticks without borrowing a neighbouring assembly. */
+    public static BlockPos resolveAnchorPos(BlockView world, BlockPos pos, BlockState state) {
+        BlockPos expected = anchorPos(pos, state);
+        BlockState expectedState=world.getBlockState(expected);
+        if (expectedState.getBlock() instanceof CapitalBlock && expectedState.get(CapitalBlock.SIZE)==CapitalBlock.Size.DOUBLE) return expected;
+        BlockPos found = null;
+        for (int y=0;y<2;y++) for (int x=0;x<2;x++) for (int z=0;z<2;z++) {
+            BlockPos candidate=pos.add(-x,-y,-z);
+            if (!candidate.equals(expected) && isCompleteCapital(world,candidate)) {
+                if (found!=null) return null;
+                found=candidate;
+            }
+        }
+        return found;
+    }
+
+    private static boolean isCompleteCapital(BlockView world, BlockPos anchor) {
+        BlockState state=world.getBlockState(anchor);
+        if (!(state.getBlock() instanceof CapitalBlock) || state.get(CapitalBlock.SIZE)!=CapitalBlock.Size.DOUBLE) return false;
+        for (int y=0;y<2;y++) for (int x=0;x<2;x++) for (int z=0;z<2;z++)
+            if (x+y+z>0 && !(world.getBlockState(anchor.add(x,y,z)).getBlock() instanceof CapitalPartBlock)) return false;
+        return true;
+    }
+
+    public static void repairOffsets(net.minecraft.world.WorldAccess world,BlockPos anchor) {
+        for (int y=0;y<2;y++) for (int x=0;x<2;x++) for (int z=0;z<2;z++) {
+            if (x+y+z==0) continue;
+            BlockPos pos=anchor.add(x,y,z);
+            BlockState part=world.getBlockState(pos);
+            if (part.getBlock() instanceof CapitalPartBlock) {
+                BlockState corrected=part.with(X,x).with(Y,y).with(Z,z);
+                if (corrected!=part) world.setBlockState(pos,corrected,Block.NOTIFY_LISTENERS);
+            }
+        }
+    }
+
     public static boolean isOwnedBy(BlockState state, BlockPos pos, BlockPos anchor) {
         return state.getBlock() instanceof CapitalPartBlock && anchorPos(pos, state).equals(anchor);
     }
 
     @Override public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        BlockPos anchor = anchorPos(pos, state);
+        BlockPos anchor = resolveAnchorPos(world, pos, state);
+        if (anchor==null) return VoxelShapes.empty();
         BlockState anchorState = world.getBlockState(anchor);
         return anchorState.getBlock() instanceof CapitalBlock capital
                 && anchorState.get(CapitalBlock.SIZE) == CapitalBlock.Size.DOUBLE
-                ? capital.shapeForCell(anchorState, state.get(X), state.get(Y), state.get(Z))
+                ? capital.shapeForCell(anchorState, pos.getX()-anchor.getX(),pos.getY()-anchor.getY(),pos.getZ()-anchor.getZ())
                 : VoxelShapes.empty();
     }
 
@@ -64,13 +101,16 @@ public final class CapitalPartBlock extends Block {
     @Override public BlockRenderType getRenderType(BlockState state) { return BlockRenderType.INVISIBLE; }
 
     @Override public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        BlockState anchor = world.getBlockState(anchorPos(pos, state));
-        return anchor.getBlock() instanceof CapitalBlock ? anchor.getBlock().asItem().getDefaultStack() : ItemStack.EMPTY;
+        BlockPos anchorPos=resolveAnchorPos(world,pos,state);
+        BlockState anchor=anchorPos==null ? null : world.getBlockState(anchorPos);
+        return anchor!=null && anchor.getBlock() instanceof CapitalBlock ? anchor.getBlock().asItem().getDefaultStack() : ItemStack.EMPTY;
     }
 
     @Override public ActionResult onUse(BlockState state, World world, BlockPos pos,
                                         PlayerEntity player, Hand hand, BlockHitResult hit) {
-        BlockPos anchor = anchorPos(pos, state);
+        BlockPos anchor = resolveAnchorPos(world, pos, state);
+        if (anchor==null) return ActionResult.PASS;
+        if (!world.isClient) repairOffsets(world,anchor);
         BlockState anchorState = world.getBlockState(anchor);
         return anchorState.getBlock() instanceof CapitalBlock capital
                 && anchorState.get(CapitalBlock.SIZE) == CapitalBlock.Size.DOUBLE
@@ -80,7 +120,9 @@ public final class CapitalPartBlock extends Block {
 
     @Override public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient) {
-            BlockPos anchor = anchorPos(pos, state);
+            BlockPos anchor = resolveAnchorPos(world, pos, state);
+            if (anchor==null) { super.onBreak(world,pos,state,player); return; }
+            repairOffsets(world,anchor);
             BlockState anchorState = world.getBlockState(anchor);
             if (anchorState.getBlock() instanceof CapitalBlock
                     && anchorState.get(CapitalBlock.SIZE) == CapitalBlock.Size.DOUBLE) {

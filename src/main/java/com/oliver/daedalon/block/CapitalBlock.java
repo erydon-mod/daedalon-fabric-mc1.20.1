@@ -19,6 +19,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.text.Text;
 
 /** A circular-shaft capital with standard and two-block-wide placement. */
 public class CapitalBlock extends Block {
@@ -141,7 +143,7 @@ public class CapitalBlock extends Block {
         return size == Size.STANDARD || canOccupy(context.getWorld(), context.getBlockPos()) ? state : null;
     }
 
-    private static boolean canOccupy(World world, BlockPos anchor) {
+    public static boolean canOccupy(WorldAccess world, BlockPos anchor) {
         for (int y = 0; y < 2; y++) for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
             if (x == 0 && y == 0 && z == 0) continue;
             BlockPos pos = anchor.add(x, y, z);
@@ -150,6 +152,10 @@ public class CapitalBlock extends Block {
             if (!found.isAir() && !CapitalPartBlock.isOwnedBy(found, pos, anchor)) return false;
         }
         return true;
+    }
+
+    public boolean canChangeSize(WorldAccess world,BlockPos anchor,BlockState updatedState) {
+        return updatedState.get(SIZE)!=Size.DOUBLE || canOccupy(world,anchor);
     }
 
     private static void sync(World world, BlockPos anchor, BlockState state) {
@@ -185,7 +191,10 @@ public class CapitalBlock extends Block {
                                         PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!player.isSneaking() || !player.getStackInHand(hand).isEmpty()) return ActionResult.PASS;
         Size next = state.get(SIZE) == Size.STANDARD ? Size.DOUBLE : Size.STANDARD;
-        if (next == Size.DOUBLE && !canOccupy(world, pos)) return ActionResult.FAIL;
+        if (next == Size.DOUBLE && !canOccupy(world, pos)) {
+            if (!world.isClient) player.sendMessage(Text.translatable("message.daedalon.capital_size_blocked"),true);
+            return ActionResult.FAIL;
+        }
         if (!world.isClient) {
             world.setBlockState(pos, state.with(SIZE, next), Block.NOTIFY_ALL);
         }

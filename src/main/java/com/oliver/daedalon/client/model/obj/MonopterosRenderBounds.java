@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkSectionPos;
 
-/** Expands only sections which emitted a Monopteros mesh, never the global view distance.
+/** Expands only sections which emitted an overhanging decor mesh, never the global view distance.
  * Reads use an immutable primitive-key snapshot: no locks, allocations or world queries
  * during frustum checks. Stale bounds are conservatively retained until chunk unload.
  */
@@ -24,12 +24,38 @@ public final class MonopterosRenderBounds {
     public static synchronized void mark(BlockPos pos) {
         int x=pos.getX()>>4, y=pos.getY()>>4, z=pos.getZ()>>4;
         long key=ChunkSectionPos.asLong(x,y,z);
-        if (sections.containsKey(key)) return;
+        Box roof=new Box(x*16-4.125,y*16-1.125,z*16-4.125,
+                x*16+20.125,y*16+23.125,z*16+20.125);
+        Box previous=sections.get(key);
+        if(contains(previous,roof)) return;
         Long2ObjectMap<Box> updated=new Long2ObjectOpenHashMap<>(sections);
         // Cover the largest 8m roof at every owner position in this section.
-        updated.put(key,new Box(x*16-4.125,y*16-1.125,z*16-4.125,
-                x*16+20.125,y*16+23.125,z*16+20.125));
+        updated.put(key,previous==null ? roof : previous.union(roof));
         sections=updated;
+    }
+
+    public static synchronized void mark(BlockPos pos,Box localBounds) {
+        int x=pos.getX()>>4,y=pos.getY()>>4,z=pos.getZ()>>4;
+        long key=ChunkSectionPos.asLong(x,y,z);
+        Box actual=localBounds.offset(pos),previous=sections.get(key);
+        if(contains(previous,actual)) return;
+        Box section=previous==null ? new Box(x*16,y*16,z*16,x*16+16,y*16+16,z*16+16) : previous;
+        Long2ObjectMap<Box> updated=new Long2ObjectOpenHashMap<>(sections);
+        updated.put(key,section.union(actual));
+        sections=updated;
+    }
+
+    private static boolean contains(Box outer,Box inner) {
+        return outer!=null && outer.minX<=inner.minX && outer.minY<=inner.minY && outer.minZ<=inner.minZ
+                && outer.maxX>=inner.maxX && outer.maxY>=inner.maxY && outer.maxZ>=inner.maxZ;
+    }
+
+    /** Sodium's viewport takes integer centres; expand either side after rounding down. */
+    public static int frustumCentre(double min,double max) { return (int)Math.floor((min+max)*.5); }
+    public static float frustumExtent(double min,double max,int centre) {
+        double required=Math.max(max-centre,centre-min);
+        float extent=(float)required;
+        return extent<required ? Math.nextUp(extent) : extent;
     }
 
     public static Box get(int sectionX,int sectionY,int sectionZ) {

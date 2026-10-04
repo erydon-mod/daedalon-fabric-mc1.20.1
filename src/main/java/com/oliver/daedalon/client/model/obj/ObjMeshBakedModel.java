@@ -15,6 +15,8 @@ import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.SizedDecorBlock;
 import com.oliver.daedalon.block.StatueBlock;
 import com.oliver.daedalon.block.TwoSizeDecorBlock;
+import com.oliver.daedalon.block.FinialBlock;
+import com.oliver.daedalon.block.FinialSupport;
 import com.oliver.daedalon.block.UrnBlock;
 import com.oliver.daedalon.block.entity.FountainBasinBlockEntity;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
@@ -519,23 +521,30 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             positionTransform = BasinTransform.forState(state);
         } else if (state.getBlock() instanceof PlinthBlock) {
             positionTransform = PlinthTransform.forState(state, 0.0F);
+        } else if (state.getBlock() instanceof FinialBlock finial) {
+            MonopterosRenderBounds.mark(pos,state.getOutlineShape(blockView,pos).getBoundingBox());
+            positionTransform=FinialMeshTransform.forState(state,finial);
         } else if (state.getBlock() instanceof TwoSizeDecorBlock) {
             positionTransform = GroundScaleTransform.forState(state);
         }
 
         int worldPhaseIndex = friezeParts != null ? 0 : worldTexturePhase.index(pos.getX(), pos.getY(), pos.getZ());
         context.pushTransform(worldTextureTransforms[worldPhaseIndex]);
-        if (positionTransform != null) {
-            context.pushTransform(positionTransform);
-        }
+        boolean positionPushed=false;
         try {
+            if (state.getBlock() instanceof FinialBlock finial) {
+                // The base is already fitted in owner coordinates; only its material phase remains.
+                var fit=FinialSupport.fit(state,finial.style());
+                if(fit.mounted()) FinialBaseMesh.forFit(fit).outputTo(context.getEmitter());
+            }
+            if(positionTransform!=null) { context.pushTransform(positionTransform); positionPushed=true; }
             if (friezeParts != null && state.getBlock() instanceof FriezeBlock) {
                 friezeParts.emit(blockView, pos, state, context);
             } else {
                 mesh.outputTo(context.getEmitter());
             }
         } finally {
-            if (positionTransform != null) {
+            if (positionPushed) {
                 context.popTransform();
             }
             context.popTransform();

@@ -147,6 +147,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
                     "#daedalon:georgian_fountain_basin",
                     "#daedalon:gothic_fountain_basin",
                     "#daedalon:greek_fountain_basin",
+                    "#daedalon:plinth",
                     "#daedalon:krene_fountain",
                     "#daedalon:pege_fountain",
                 },

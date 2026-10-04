@@ -29,6 +29,11 @@ STATIC_LANGUAGE_ENTRIES = {
             "Not enough clear space for that fountain size"
         ),
         "message.daedalon.fountain_plinth_added": "Fountain plinth added",
+        "search.daedalon.plinth.fountain": "fountain fountains fountain plinth tiered fountain water feature",
+        "tooltip.daedalon.plinth.fountain": "Use to build larger, tiered fountains.",
+        "tooltip.daedalon.plinth.fountain_use": (
+            "Right-click a fountain basin repeatedly with the same plinth to add its base and bowls."
+        ),
         "message.daedalon.fountain_bowl_added": "Fountain bowl added",
         "message.daedalon.fountain_assembly_blocked": (
             "Not enough clear space for that fountain piece"
@@ -57,6 +62,11 @@ STATIC_LANGUAGE_ENTRIES = {
             "Nicht genug freier Platz für diese Brunnengröße"
         ),
         "message.daedalon.fountain_plinth_added": "Brunnensockel hinzugefügt",
+        "search.daedalon.plinth.fountain": "Brunnen Brunnensockel mehrstufiger Brunnen Wasserspiel",
+        "tooltip.daedalon.plinth.fountain": "Zum Bau größerer, mehrstufiger Brunnen.",
+        "tooltip.daedalon.plinth.fountain_use": (
+            "Klicke ein Brunnenbecken wiederholt mit demselben Sockel rechts an, um Sockel und Schalen hinzuzufügen."
+        ),
         "message.daedalon.fountain_bowl_added": "Brunnenschale hinzugefügt",
         "message.daedalon.fountain_assembly_blocked": (
             "Nicht genug freier Platz für dieses Brunnenteil"
@@ -85,6 +95,11 @@ STATIC_LANGUAGE_ENTRIES = {
             "No hay suficiente espacio libre para ese tamaño de fuente"
         ),
         "message.daedalon.fountain_plinth_added": "Pedestal de fuente añadido",
+        "search.daedalon.plinth.fountain": "fuente fuentes pedestal de fuente fuente de varios niveles juego de agua",
+        "tooltip.daedalon.plinth.fountain": "Úsalo para construir fuentes más grandes de varios niveles.",
+        "tooltip.daedalon.plinth.fountain_use": (
+            "Haz clic derecho varias veces en una pila de fuente con el mismo pedestal para añadir su base y cuencos."
+        ),
         "message.daedalon.fountain_bowl_added": "Cuenco de fuente añadido",
         "message.daedalon.fountain_assembly_blocked": (
             "No hay suficiente espacio libre para esa pieza de fuente"
@@ -887,17 +902,35 @@ def generate_languages(
         for key, message in zip(("on", "off"), sound_messages):
             entries[f"message.daedalon.fountain_sound.{key}"] = message
         orientation_labels = {
-            "en_us": ("Capital orientation", "Straight", "Diagonal (45°)", "Straight (90°)", "Diagonal (135°)"),
-            "de_de": ("Kapitellausrichtung", "Gerade", "Diagonal (45°)", "Gerade (90°)", "Diagonal (135°)"),
-            "es_es": ("Orientación del capitel", "Recta", "Diagonal (45°)", "Recta (90°)", "Diagonal (135°)"),
+            "en_us": ("Orientation", "Straight", "Diagonal (45°)", "Straight (90°)", "Diagonal (135°)"),
+            "de_de": ("Ausrichtung", "Gerade", "Diagonal (45°)", "Gerade (90°)", "Diagonal (135°)"),
+            "es_es": ("Orientación", "Recta", "Diagonal (45°)", "Recta (90°)", "Diagonal (135°)"),
         }[language]
         entries["property.daedalon.capital_orientation"] = orientation_labels[0]
         for orientation, label in zip(("straight", "diagonal", "straight_90", "diagonal_135"), orientation_labels[1:]):
             entries[f"option.daedalon.capital.orientation.{orientation}"] = label
+        size_labels = {
+            "en_us": ("Size", "Small", "Large"),
+            "de_de": ("Größe", "Klein", "Groß"),
+            "es_es": ("Tamaño", "Pequeño", "Grande"),
+        }[language]
+        entries["property.daedalon.capital_size"] = size_labels[0]
+        for size, label in zip(("standard", "double"), size_labels[1:]):
+            entries[f"option.daedalon.capital.size.{size}"] = label
+        entries["message.daedalon.capital_size_blocked"] = {
+            "en_us": "Not enough clear space for a Large capital (2×2×2 blocks).",
+            "de_de": "Nicht genug freier Platz für ein großes Kapitell (2×2×2 Blöcke).",
+            "es_es": "No hay espacio libre suficiente para un capitel grande (2×2×2 bloques).",
+        }[language]
         entries["message.daedalon.monopteros_size_blocked"] = {
             "en_us": "Not enough clear space for this dome diameter.",
             "de_de": "Nicht genug freier Platz für diesen Kuppeldurchmesser.",
             "es_es": "No hay suficiente espacio libre para este diámetro de cúpula.",
+        }[language]
+        entries["message.daedalon.finial_size_blocked"] = {
+            "en_us": "Not enough clear space for that finial size.",
+            "de_de": "Nicht genug freier Platz für diese Größe des Zierelements.",
+            "es_es": "No hay espacio libre suficiente para ese tamaño de remate.",
         }[language]
         for family in families:
             for material in MATERIALS:
@@ -1231,6 +1264,13 @@ def generate_tags(
             relation_tags["monument"] = [f"#{NAMESPACE}:obeliskos_monument"]
     if ornament_values:
         relation_tags["ornament"] = ornament_values
+
+    if plinth_families:
+        for synonym in ("fountain", "water_feature"):
+            values = relation_tags.setdefault(synonym, [])
+            plinth = f"#{NAMESPACE}:plinth"
+            if plinth not in values:
+                values.append(plinth)
 
     for material in MATERIALS:
         material_refs: list[str] = []

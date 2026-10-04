@@ -24,8 +24,162 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
+import com.mojang.authlib.GameProfile;
 
 public final class CapitalGameTests {
+    private static final class WarningPlayer extends ServerPlayerEntity {
+        private ItemStack held=ItemStack.EMPTY;
+        private boolean sneaking;
+        private Text message;
+        WarningPlayer(MinecraftServer server,ServerWorld world) {
+            super(server,world,new GameProfile(java.util.UUID.randomUUID(),"capital-warning"));
+        }
+        @Override public boolean isCreativeLevelTwoOp() { return true; }
+        @Override public boolean isSneaking() { return sneaking; }
+        @Override public boolean shouldCancelInteraction() { return false; }
+        @Override public ItemStack getStackInHand(Hand hand) { return held==null ? ItemStack.EMPTY : held; }
+        @Override public void sendMessage(Text message,boolean overlay) { this.message=message; }
+        @Override public void sendMessageToClient(Text message,boolean overlay) { this.message=message; }
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 400)
+    public void obstructedCapitalResizeWarnsWithoutChangingTheFootprint(TestContext context) {
+        var world=context.getWorld();
+        BlockPos anchor=context.getAbsolutePos(new BlockPos(2,2,2));
+        var player=new WarningPlayer(world.getServer(),world);
+        var stick=Items.DEBUG_STICK.getDefaultStack();
+        stick.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT,"size");
+        player.held=stick;
+        var hit=new BlockHitResult(Vec3d.ofCenter(anchor),Direction.UP,anchor,false);
+        var usage=new ItemUsageContext(player,Hand.MAIN_HAND,hit);
+        int checked=0;
+        for(var style:CapitalBlock.Style.values()) {
+            var capital=(CapitalBlock)Registries.BLOCK.get(new net.minecraft.util.Identifier("daedalon","aganite_"+style.name().toLowerCase(java.util.Locale.ROOT)+"_capital"));
+            for(int y=0;y<2;y++) for(int x=0;x<2;x++) for(int z=0;z<2;z++) {
+                if(x+y+z==0) continue;
+                world.setBlockState(anchor,capital.getDefaultState(),Block.NOTIFY_ALL);
+                BlockPos obstruction=anchor.add(x,y,z);
+                world.setBlockState(obstruction,Blocks.STONE.getDefaultState(),Block.NOTIFY_ALL);
+                java.util.Map<BlockPos,BlockState> before=new java.util.HashMap<>();
+                for(int py=0;py<2;py++) for(int px=0;px<2;px++) for(int pz=0;pz<2;pz++) {
+                    BlockPos pos=anchor.add(px,py,pz); before.put(pos,world.getBlockState(pos));
+                }
+                player.held=ItemStack.EMPTY; player.sneaking=true; player.message=null;
+                context.assertTrue(capital.onUse(world.getBlockState(anchor),world,anchor,player,Hand.MAIN_HAND,hit)==net.minecraft.util.ActionResult.FAIL,"Obstructed empty-hand resize must fail");
+                assertWarning(context,player.message);
+                before.forEach((pos,state) -> context.assertTrue(world.getBlockState(pos)==state,"Empty-hand failure changed the footprint"));
+                player.held=stick; player.sneaking=false; player.message=null;
+                context.assertTrue(Items.DEBUG_STICK.useOnBlock(usage).isAccepted(),"Blocked debug-stick edit must be handled");
+                assertWarning(context,player.message);
+                before.forEach((pos,state) -> context.assertTrue(world.getBlockState(pos)==state,"Debug-stick failure changed the footprint"));
+                world.removeBlock(obstruction,false);
+                Items.DEBUG_STICK.useOnBlock(usage);
+                context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SIZE)==CapitalBlock.Size.DOUBLE,"Clearing the obstruction must allow the same selected control to grow");
+                player.held=ItemStack.EMPTY; player.sneaking=true; player.message=null;
+                capital.onUse(world.getBlockState(anchor),world,anchor,player,Hand.MAIN_HAND,hit);
+                context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SIZE)==CapitalBlock.Size.STANDARD && player.message==null,"Successful shrink must remain silent and keep cycling");
+                world.removeBlock(anchor,false);
+                checked++;
+            }
+        }
+        context.assertTrue(checked==42,"Cover every obstructed cell in all six styles");
+        context.complete();
+    }
+
+    private static void assertWarning(TestContext context,Text message) {
+        context.assertTrue(message!=null && message.getContent() instanceof TranslatableTextContent text
+                && text.getKey().equals("message.daedalon.capital_size_blocked"),"Resize must send the localized capital warning");
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 400)
+    public void capitalSelectionHidesOffsetsAndRepairsOldEdits(TestContext context) {
+        var world=context.getWorld();
+        BlockPos anchor=context.getAbsolutePos(new BlockPos(2,2,2));
+        var player=context.createMockCreativeServerPlayerInWorld();
+        world.getServer().getPlayerManager().getOpList().add(new OperatorEntry(player.getGameProfile(),4,false));
+        player.changeGameMode(GameMode.CREATIVE);
+        var stick=Items.DEBUG_STICK.getDefaultStack();
+        player.setStackInHand(Hand.MAIN_HAND,stick);
+        int checked=0;
+        for (var style:CapitalBlock.Style.values()) {
+            var capital=(CapitalBlock)Registries.BLOCK.get(new net.minecraft.util.Identifier("daedalon","aganite_"+style.name().toLowerCase(java.util.Locale.ROOT)+"_capital"));
+            for (int y=0;y<2;y++) for (int x=0;x<2;x++) for (int z=0;z<2;z++)
+                for (var offset:java.util.List.of(CapitalPartBlock.X,CapitalPartBlock.Y,CapitalPartBlock.Z)) {
+                    world.setBlockState(anchor,capital.getDefaultState().with(CapitalBlock.SIZE,CapitalBlock.Size.DOUBLE),Block.NOTIFY_ALL);
+                    BlockPos clicked=anchor.add(x,y,z);
+                    if (x+y+z>0) {
+                        BlockState part=world.getBlockState(clicked);
+                        world.setBlockState(clicked,part.with(offset,1-part.get(offset)),Block.NOTIFY_ALL);
+                        context.assertTrue(anchor.equals(CapitalPartBlock.resolveAnchorPos(world,clicked,world.getBlockState(clicked))),"Corrupt offsets must resolve the same capital");
+                        context.assertTrue(!world.getBlockState(clicked).getOutlineShape(world,clicked).isEmpty(),"A corrupt helper must remain selectable");
+                    }
+                    stick.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT,offset.getName());
+                    stick.getOrCreateSubNbt("DebugProperty").putString("daedalon:capital_part",offset.getName());
+                    for (String selected:java.util.List.of("capital_orientation","size","capital_orientation","size")) {
+                        Items.DEBUG_STICK.canMine(world.getBlockState(clicked),world,clicked,player);
+                        context.assertTrue(selected.equals(stick.getOrCreateNbt().getString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT)),"Left-click selection must expose only Size and Orientation");
+                    }
+                    var usage=new ItemUsageContext(player,Hand.MAIN_HAND,new BlockHitResult(Vec3d.ofCenter(clicked),Direction.UP,clicked,false));
+                    Items.DEBUG_STICK.useOnBlock(usage);
+                    context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SIZE)==CapitalBlock.Size.STANDARD,"Selection then update must shrink the whole capital");
+                    for(int py=0;py<2;py++) for(int px=0;px<2;px++) for(int pz=0;pz<2;pz++)
+                        if(px+py+pz>0) context.assertTrue(world.getBlockState(anchor.add(px,py,pz)).isAir(),"Old corrupt cells must be removed on shrink");
+                    var anchorUsage=new ItemUsageContext(player,Hand.MAIN_HAND,new BlockHitResult(Vec3d.ofCenter(anchor),Direction.UP,anchor,false));
+                    Items.DEBUG_STICK.useOnBlock(anchorUsage);
+                    context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SIZE)==CapitalBlock.Size.DOUBLE,"Regrowing must still work after selecting at an outer cell");
+                    world.setBlockState(anchor,Blocks.AIR.getDefaultState(),Block.NOTIFY_ALL);
+                    checked++;
+                }
+        }
+        context.assertTrue(checked==144,"Cover six styles, eight clicked cells and every old offset control");
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void largeCapitalsCycleFromEveryOccupiedCell(TestContext context) {
+        var world=context.getWorld();
+        BlockPos anchor=context.getAbsolutePos(new BlockPos(2,2,2));
+        var player=context.createMockCreativeServerPlayerInWorld();
+        world.getServer().getPlayerManager().getOpList().add(new OperatorEntry(player.getGameProfile(),4,false));
+        player.changeGameMode(GameMode.CREATIVE);
+        var stick=Items.DEBUG_STICK.getDefaultStack();
+        player.setStackInHand(Hand.MAIN_HAND,stick);
+        int checked=0;
+        for(var style:CapitalBlock.Style.values()) {
+            var capital=(CapitalBlock)Registries.BLOCK.get(new net.minecraft.util.Identifier("daedalon","aganite_"+style.name().toLowerCase(java.util.Locale.ROOT)+"_capital"));
+            BlockState large=capital.getDefaultState().with(CapitalBlock.SIZE,CapitalBlock.Size.DOUBLE);
+            world.setBlockState(anchor,large,Block.NOTIFY_ALL);
+            for(int y=0;y<2;y++) for(int x=0;x<2;x++) for(int z=0;z<2;z++) {
+                BlockPos clicked=anchor.add(x,y,z);
+                var usage=new ItemUsageContext(player,Hand.MAIN_HAND,new BlockHitResult(Vec3d.ofCenter(clicked),Direction.UP,clicked,false));
+                stick.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT,"capital_orientation");
+                Items.DEBUG_STICK.useOnBlock(usage);
+                context.assertTrue(capital.orientation(world.getBlockState(anchor))==CapitalOrientation.DIAGONAL,"Every capital cell must edit its anchor orientation");
+                player.setSneaking(true); Items.DEBUG_STICK.useOnBlock(usage); player.setSneaking(false);
+                context.assertTrue(capital.orientation(world.getBlockState(anchor))==CapitalOrientation.STRAIGHT,"Reverse cycle must work from the same cell");
+                stick.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT,"size");
+                Items.DEBUG_STICK.useOnBlock(usage);
+                context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SIZE)==CapitalBlock.Size.STANDARD,"Every capital cell must shrink its anchor");
+                for(int py=0;py<2;py++) for(int px=0;px<2;px++) for(int pz=0;pz<2;pz++) {
+                    if(px+py+pz>0) context.assertTrue(world.getBlockState(anchor.add(px,py,pz)).isAir(),"Shrinking must clear every owned cell");
+                }
+                var anchorUsage=new ItemUsageContext(player,Hand.MAIN_HAND,new BlockHitResult(Vec3d.ofCenter(anchor),Direction.UP,anchor,false));
+                Items.DEBUG_STICK.useOnBlock(anchorUsage);
+                context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SIZE)==CapitalBlock.Size.DOUBLE,"Small and large sizes must continue cycling");
+                checked++;
+            }
+            world.setBlockState(anchor,Blocks.AIR.getDefaultState(),Block.NOTIFY_ALL);
+        }
+        context.assertTrue(checked==48,"Cover all eight cells and six capital styles");
+        context.complete();
+    }
+
     @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
     public void allCapitalsCyclePersistAndTransform(TestContext context) {
         var world = context.getWorld();

@@ -56,11 +56,13 @@ public final class FixedDecorBlock extends Block {
         private final String displayName;
         private final VoxelShape shape;
         private final TwoSizeDecorBlock.Profile twoSizeProfile;
+        private final double width,depth;
 
         Style(String idSuffix, String resourceStem, String displayName, double width, double height, double depth) {
             this.idSuffix = idSuffix;
             this.resourceStem = resourceStem;
             this.displayName = displayName;
+            this.width=width; this.depth=depth;
             this.shape = VoxelShapes.cuboid(
                     0.5 - width * 0.5, 0.0, 0.5 - depth * 0.5,
                     0.5 + width * 0.5, height, 0.5 + depth * 0.5
@@ -74,6 +76,19 @@ public final class FixedDecorBlock extends Block {
         public String resourceStem() { return resourceStem; }
         public String displayName() { return displayName; }
         public boolean isFinial() { return twoSizeProfile != null; }
+        public double width() { return width; }
+        public double depth() { return depth; }
+        /** Measured lower pedestal, excluding the wider ornament above it. */
+        public double finialFootWidth() {
+            return switch(this) {
+                case BALANOS_FINIAL -> .368761;
+                case KYNARA_FINIAL -> .331942;
+                case PHLOX_FINIAL -> .433910;
+                case SPHAIRA_FINIAL -> .605648;
+                case STROBILOS_FINIAL -> .401336;
+                default -> throw new IllegalStateException("Not a finial style");
+            };
+        }
         public TwoSizeDecorBlock.Profile twoSizeProfile() {
             if (twoSizeProfile == null) {
                 throw new IllegalStateException(idSuffix + " is not a two-size finial");

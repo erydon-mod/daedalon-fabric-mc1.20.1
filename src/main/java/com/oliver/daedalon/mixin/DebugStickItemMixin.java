@@ -2,6 +2,8 @@ package com.oliver.daedalon.mixin;
 
 import com.oliver.daedalon.Daedalon;
 import com.oliver.daedalon.block.CapitalBlock;
+import com.oliver.daedalon.block.CapitalPartBlock;
+import com.oliver.daedalon.block.FinialBlock;
 import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
@@ -49,6 +51,17 @@ abstract class DebugStickItemMixin {
     ) {
         BlockState targetState = state;
         BlockPos targetPos = pos;
+        if (state.getBlock() instanceof CapitalPartBlock) {
+            targetPos = CapitalPartBlock.resolveAnchorPos(world, pos, state);
+            if (targetPos==null) { callback.setReturnValue(false); return; }
+            targetState = world.getBlockState(targetPos);
+            if (!(targetState.getBlock() instanceof CapitalBlock)
+                    || targetState.get(CapitalBlock.SIZE) != CapitalBlock.Size.DOUBLE) {
+                callback.setReturnValue(false);
+                return;
+            }
+            CapitalPartBlock.repairOffsets(world,targetPos);
+        }
         if (state.getBlock() instanceof FountainBasinPartBlock) {
             BlockPos anchorPos = FountainBasinPartBlock.resolveAnchorPos(world, pos, state);
             if (anchorPos == null) {
@@ -113,6 +126,7 @@ abstract class DebugStickItemMixin {
             callback.setReturnValue(false);
             return;
         }
+        stack.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT,selected.getName());
 
         if (update) {
             BlockState updated = cycleState(
@@ -121,6 +135,20 @@ abstract class DebugStickItemMixin {
                     player.shouldCancelInteraction()
             );
             if (updated.getBlock() instanceof FriezeBlock) updated = FriezeBlock.refresh(world, targetPos, updated);
+            if (targetState.getBlock() instanceof FinialBlock finial
+                    && selected == FinialBlock.SIZE
+                    && !finial.canPlaceAt(updated,world,targetPos)) {
+                sendMessage(player,Text.translatable("message.daedalon.finial_size_blocked"));
+                callback.setReturnValue(true);
+                return;
+            }
+            if (targetState.getBlock() instanceof CapitalBlock capital
+                    && selected == CapitalBlock.SIZE
+                    && !capital.canChangeSize(world,targetPos,updated)) {
+                sendMessage(player,Text.translatable("message.daedalon.capital_size_blocked"));
+                callback.setReturnValue(true);
+                return;
+            }
             if (targetState.getBlock() instanceof FountainBasinBlock basin
                     && selected == FountainBasinBlock.SIZE
                     && !basin.canChangeSize(world, targetPos, updated)) {
@@ -313,14 +341,19 @@ abstract class DebugStickItemMixin {
     }
 
     private static Object displayPropertyName(BlockState state, Property<?> property) {
-        return state.getBlock() instanceof CapitalBlock
-                ? Text.translatable("property.daedalon.capital_orientation") : property.getName();
+        if (state.getBlock() instanceof CapitalBlock) {
+            if (property == CapitalBlock.SIZE) return Text.translatable("property.daedalon.capital_size");
+            if (property.getName().equals("capital_orientation")) return Text.translatable("property.daedalon.capital_orientation");
+        }
+        return property.getName();
     }
 
     private static Object displayValueName(BlockState state, Property<?> property) {
-        return state.getBlock() instanceof CapitalBlock
-                ? Text.translatable("option.daedalon.capital.orientation." + valueName(state, property))
-                : valueName(state, property);
+        if (state.getBlock() instanceof CapitalBlock) {
+            if (property == CapitalBlock.SIZE) return Text.translatable("option.daedalon.capital.size." + valueName(state, property));
+            if (property.getName().equals("capital_orientation")) return Text.translatable("option.daedalon.capital.orientation." + valueName(state, property));
+        }
+        return valueName(state, property);
     }
 
     private static void sendMessage(PlayerEntity player, Text message) {

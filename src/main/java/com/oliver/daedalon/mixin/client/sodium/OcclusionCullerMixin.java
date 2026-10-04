@@ -13,9 +13,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 abstract class OcclusionCullerMixin {
     @Inject(method="isWithinFrustum",at=@At("HEAD"),cancellable=true,remap=false)
     private static void daedalon$includePavilionRoof(Viewport viewport,RenderSection section,CallbackInfoReturnable<Boolean> callback) {
-        if (MonopterosRenderBounds.get(section.getChunkX(),section.getChunkY(),section.getChunkZ())!=null) {
-            callback.setReturnValue(viewport.isBoxVisible(section.getCenterX(),section.getCenterY()+3,section.getCenterZ(),
-                    12.125F,12.125F,12.125F));
+        var bounds=MonopterosRenderBounds.get(section.getChunkX(),section.getChunkY(),section.getChunkZ());
+        if (bounds!=null) {
+            int x=MonopterosRenderBounds.frustumCentre(bounds.minX,bounds.maxX),
+                    y=MonopterosRenderBounds.frustumCentre(bounds.minY,bounds.maxY),
+                    z=MonopterosRenderBounds.frustumCentre(bounds.minZ,bounds.maxZ);
+            callback.setReturnValue(viewport.isBoxVisible(x,y,z,
+                    MonopterosRenderBounds.frustumExtent(bounds.minX,bounds.maxX,x),
+                    MonopterosRenderBounds.frustumExtent(bounds.minY,bounds.maxY,y),
+                    MonopterosRenderBounds.frustumExtent(bounds.minZ,bounds.maxZ,z)));
         }
     }
 }

@@ -6,10 +6,12 @@
   "environment": "server",
   "entrypoints": {
     "main": [
-      "com.oliver.daedalon.gametest.LargeColumnFixture"
+      "com.oliver.daedalon.gametest.LargeColumnFixture",
+      "com.oliver.daedalon.gametest.FinialCopingFixture"
     ],
     "fabric-gametest": [
       "com.oliver.daedalon.gametest.DecorPreviewGameTests",
+      "com.oliver.daedalon.gametest.FinialGameTests",
       "com.oliver.daedalon.gametest.PlinthGameTests",
       "com.oliver.daedalon.gametest.FountainGameTests",
       "com.oliver.daedalon.gametest.CapitalGameTests",

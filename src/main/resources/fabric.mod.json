@@ -16,6 +16,9 @@
     ],
     "client": [
       "com.oliver.daedalon.DaedalonClient"
+    ],
+    "emi": [
+      "com.oliver.daedalon.compat.emi.DaedalonEmiPlugin"
     ]
   },
   "mixins": [

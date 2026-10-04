@@ -7,15 +7,19 @@
   "mixins": [
     "BlockItemMixin",
     "DebugStickItemMixin",
+    "FinialRaycastMixin",
+    "FinialChunkStateMixin",
     "EntityMixin",
     "ServerPlayerInteractionManagerMixin",
     "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
+    "client.FinialBreakParticlesMixin",
     "client.BuiltChunkMixin",
     "client.WorldRendererMixin",
     "client.sodium.OcclusionCullerMixin",
     "client.ItemRendererMixin",
+    "client.rei.PlinthTextSearchMixin",
     "client.axiom.BlockRenderCacheMixin",
     "client.axiom.AxiomWorldRenderContextAccessor",
     "client.axiom.ChunkedBlockRegionMixin",

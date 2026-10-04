@@ -20,6 +20,10 @@ public final class DaedalonDebugProperties {
 
     public static List<Property<?>> ordered(Collection<Property<?>> properties) {
         List<Property<?>> ordered = new ArrayList<>(properties);
+        boolean finial=ordered.stream().anyMatch(property -> property.getName().equals("finial_support"));
+        ordered.removeIf(property -> property.getName().equals("offset_x")
+                || property.getName().equals("offset_y") || property.getName().equals("offset_z")
+                || property.getName().startsWith("finial_") || finial && property.getName().equals("facing"));
         ordered.sort(PROPERTY_ORDER);
         return List.copyOf(ordered);
     }
@@ -86,8 +90,10 @@ public final class DaedalonDebugProperties {
             };
             case "size" -> switch (valueName) {
                 case "small" -> 0;
+                case "standard" -> 0;
                 case "medium" -> 1;
                 case "large" -> 2;
+                case "double" -> 2;
                 default -> 100;
             };
             case "offset" -> switch (valueName) {

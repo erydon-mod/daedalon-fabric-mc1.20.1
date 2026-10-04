@@ -1,6 +1,8 @@
 package com.oliver.daedalon.gametest;
 
 import com.oliver.daedalon.block.PlinthBlock;
+import com.oliver.daedalon.client.search.PlinthSearchVocabulary;
+import net.minecraft.client.item.TooltipContext;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,8 +13,11 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -21,6 +26,37 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 public final class PlinthGameTests {
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+    public void fountainSearchAndTooltipsCoverEveryPlinth(TestContext context) {
+        var fountain = TagKey.of(RegistryKeys.ITEM, new Identifier("daedalon", "fountain"));
+        var waterFeature = TagKey.of(RegistryKeys.ITEM, new Identifier("daedalon", "water_feature"));
+        int count = 0;
+        for (Block block : Registries.BLOCK) {
+            if (!(block instanceof PlinthBlock)) continue;
+            count++;
+            var stack = block.asItem().getDefaultStack();
+            context.assertTrue(stack.isIn(fountain) && stack.isIn(waterFeature),
+                    "Every plinth must appear in fountain and water feature tag searches");
+            var terms = PlinthSearchVocabulary.terms(stack);
+            context.assertTrue(terms.contains("fountain") && terms.contains("fountains"),
+                    "All browser aliases must include singular and plural fountain searches");
+            for (var tooltipContext : new TooltipContext[]{TooltipContext.BASIC, TooltipContext.BASIC.withCreative()}) {
+                var tooltip = stack.getTooltip(null, tooltipContext);
+                for (String key : new String[]{"tooltip.daedalon.plinth.fountain", "tooltip.daedalon.plinth.fountain_use"}) {
+                    context.assertTrue(tooltip.stream().anyMatch(line -> line.getContent() instanceof TranslatableTextContent text
+                                    && text.getKey().equals(key)),
+                            "Hover and Creative indexing must both include " + key);
+                }
+            }
+        }
+        context.assertTrue(count == 270, "Cover all five styles and 54 normal/aged finishes");
+        var unrelated = Items.STONE.getDefaultStack();
+        context.assertTrue(PlinthSearchVocabulary.terms(unrelated).isEmpty(), "Ordinary blocks must not gain fountain aliases");
+        context.assertTrue(PlinthSearchVocabulary.appendTerms("stone", unrelated).equals("stone"),
+                "Unrelated REI entries must keep their original search text");
+        context.complete();
+    }
+
     @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
     public void allPlinthStatesFillDrainAndPersist(TestContext context) {
         var world = context.getWorld();

@@ -5,10 +5,14 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -23,6 +27,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
+
+import java.util.List;
 
 /** Half-, one-, and two-metre plinths that can also control a fountain assembly. */
 public final class PlinthBlock extends Block implements Waterloggable {
@@ -51,6 +57,13 @@ public final class PlinthBlock extends Block implements Waterloggable {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(SIZE, OFFSET, FACING, WATERLOGGED);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, BlockView world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        tooltip.add(Text.translatable("tooltip.daedalon.plinth.fountain").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("tooltip.daedalon.plinth.fountain_use").formatted(Formatting.GRAY));
     }
 
     @Override
