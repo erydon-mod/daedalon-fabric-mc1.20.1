@@ -37,8 +37,8 @@ class FinialDecorSafetyTests(unittest.TestCase):
             for family in self.FAMILIES
             for block_id in GENERATOR.family_block_ids(family)
         ]
-        self.assertEqual(492, len(ids))
-        self.assertEqual(492, len(set(ids)))
+        self.assertEqual(497, len(ids))
+        self.assertEqual(497, len(set(ids)))
         self.assertTrue(set(ids).issubset(all_block_ids()))
         self.assertIn("aganite_balanos_finial", ids)
         self.assertIn("aganite_aged_balanos_finial", ids)
@@ -46,7 +46,8 @@ class FinialDecorSafetyTests(unittest.TestCase):
         self.assertIn("bronze_obeliskos_monument", ids)
         for family in GENERATOR.FINIAL_FAMILIES:
             self.assertIn("bronze_" + family, ids)
-            self.assertEqual(55, len(GENERATOR.family_block_ids(family)))
+            self.assertIn("silver_" + family, ids)
+            self.assertEqual(56, len(GENERATOR.family_block_ids(family)))
         self.assertNotIn("balanos_finial_aganite", ids)
         self.assertNotIn("aganite_balanos_finial_aged", ids)
 
@@ -147,7 +148,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
                     "#daedalon:georgian_fountain_basin",
                     "#daedalon:gothic_fountain_basin",
                     "#daedalon:greek_fountain_basin",
-                    "#daedalon:plinth",
+                    "#daedalon:fountain_plinth",
                     "#daedalon:krene_fountain",
                     "#daedalon:pege_fountain",
                 },
@@ -173,7 +174,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
         self.assertIn("FixedDecorBlock.Style.values()", mod_blocks)
         self.assertIn("registerKreneFountains()", mod_blocks)
         self.assertIn("registerObeliskosMonuments()", mod_blocks)
-        self.assertIn("exactly 4371 decor blocks and items", mod_blocks)
+        self.assertIn("exactly 4439 decor blocks and items", mod_blocks)
         self.assertIn("new FinialBlock(decorSettings(), style)", mod_blocks)
         self.assertIn("createDetailedVariants(style.idSuffix())", plugin)
         self.assertIn('createDetailedVariants("krene_fountain")', plugin)

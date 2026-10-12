@@ -55,6 +55,8 @@
     "daedalon:solistra_aged_astragalos_plinth",
     "daedalon:striatus_astragalos_plinth",
     "daedalon:striatus_aged_astragalos_plinth",
+    "daedalon:bronze_astragalos_plinth",
+    "daedalon:silver_astragalos_plinth",
     "daedalon:aganite_bathron_plinth",
     "daedalon:aganite_aged_bathron_plinth",
     "daedalon:aterzon_bathron_plinth",
@@ -109,6 +111,8 @@
     "daedalon:solistra_aged_bathron_plinth",
     "daedalon:striatus_bathron_plinth",
     "daedalon:striatus_aged_bathron_plinth",
+    "daedalon:bronze_bathron_plinth",
+    "daedalon:silver_bathron_plinth",
     "daedalon:aganite_kion_plinth",
     "daedalon:aganite_aged_kion_plinth",
     "daedalon:aterzon_kion_plinth",
@@ -163,6 +167,8 @@
     "daedalon:solistra_aged_kion_plinth",
     "daedalon:striatus_kion_plinth",
     "daedalon:striatus_aged_kion_plinth",
+    "daedalon:bronze_kion_plinth",
+    "daedalon:silver_kion_plinth",
     "daedalon:aganite_stephanos_plinth",
     "daedalon:aganite_aged_stephanos_plinth",
     "daedalon:aterzon_stephanos_plinth",
@@ -217,6 +223,8 @@
     "daedalon:solistra_aged_stephanos_plinth",
     "daedalon:striatus_stephanos_plinth",
     "daedalon:striatus_aged_stephanos_plinth",
+    "daedalon:bronze_stephanos_plinth",
+    "daedalon:silver_stephanos_plinth",
     "daedalon:aganite_triphyllon_plinth",
     "daedalon:aganite_aged_triphyllon_plinth",
     "daedalon:aterzon_triphyllon_plinth",
@@ -270,6 +278,8 @@
     "daedalon:solistra_triphyllon_plinth",
     "daedalon:solistra_aged_triphyllon_plinth",
     "daedalon:striatus_triphyllon_plinth",
-    "daedalon:striatus_aged_triphyllon_plinth"
+    "daedalon:striatus_aged_triphyllon_plinth",
+    "daedalon:bronze_triphyllon_plinth",
+    "daedalon:silver_triphyllon_plinth"
   ]
 }

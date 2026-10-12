@@ -36,6 +36,7 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public final class ModBlocks {
     public static final String MOD_ID = "daedalon";
@@ -44,6 +45,8 @@ public final class ModBlocks {
     private static final int BRONZE_VARIANTS_PER_SELECTED_FAMILY = 1;
     private static final int BRONZE_FAMILY_VARIANTS =
             STONE_VARIANTS_PER_FAMILY + BRONZE_VARIANTS_PER_SELECTED_FAMILY;
+    private static final int METAL_FAMILY_VARIANTS =
+            STONE_VARIANTS_PER_FAMILY + DecorMetal.values().length;
     private static final int FAMILY_COUNT =
             2 + UrnBlock.UrnStyle.values().length
                     + ClassicalStatueBlock.Style.values().length
@@ -53,13 +56,15 @@ public final class ModBlocks {
                     + FixedDecorBlock.Style.values().length
                     + FountainBasinBlock.Style.values().length
                     + PlinthBlock.Style.values().length + 7 + FriezeBlock.Style.values().length;
-    private static final int BRONZE_FAMILY_COUNT =
+    private static final int METAL_FAMILY_COUNT =
             2 + UrnBlock.UrnStyle.values().length
                     + ClassicalStatueBlock.Style.values().length
-                    + BustBlock.Style.values().length + 3
+                    + BustBlock.Style.values().length
+                    + CorbelBlock.Style.values().length
+                    + PlinthBlock.Style.values().length
                     + (int) java.util.Arrays.stream(FixedDecorBlock.Style.values()).filter(FixedDecorBlock.Style::isFinial).count();
     private static final int EXPECTED_BLOCK_COUNT =
-            STONE_VARIANTS_PER_FAMILY * FAMILY_COUNT + BRONZE_FAMILY_COUNT;
+            STONE_VARIANTS_PER_FAMILY * FAMILY_COUNT + DecorMetal.values().length * METAL_FAMILY_COUNT + 3;
 
     private static final Map<Identifier, Block> BY_ID = new LinkedHashMap<>();
     private static final List<Block> SPARTAN_PROMACHOS_STATUES = new ArrayList<>();
@@ -136,37 +141,37 @@ public final class ModBlocks {
 
         if (BY_ID.size() != EXPECTED_BLOCK_COUNT
                 || ModItems.blockItems().size() != EXPECTED_BLOCK_COUNT
-                || SPARTAN_PROMACHOS_STATUES.size() != BRONZE_FAMILY_VARIANTS
-                || ZEUS_STATUES.size() != BRONZE_FAMILY_VARIANTS) {
+                || SPARTAN_PROMACHOS_STATUES.size() != METAL_FAMILY_VARIANTS
+                || ZEUS_STATUES.size() != METAL_FAMILY_VARIANTS) {
             throw new IllegalStateException(
-                    "Daedalon must register exactly 4371 decor blocks and items"
+                    "Daedalon must register exactly 4439 decor blocks and items"
             );
         }
         for (UrnBlock.UrnStyle style : UrnBlock.UrnStyle.values()) {
-            if (urns(style).size() != BRONZE_FAMILY_VARIANTS) {
+            if (urns(style).size() != METAL_FAMILY_VARIANTS) {
                 throw new IllegalStateException(
-                        style.shapeId() + " urn must register exactly 55 variants"
+                        style.shapeId() + " urn must register exactly 56 variants"
                 );
             }
         }
         for (ClassicalStatueBlock.Style style : ClassicalStatueBlock.Style.values()) {
-            if (classicalStatues(style).size() != BRONZE_FAMILY_VARIANTS) {
+            if (classicalStatues(style).size() != METAL_FAMILY_VARIANTS) {
                 throw new IllegalStateException(
-                        style.subjectId() + " statue must register exactly 55 variants"
+                        style.subjectId() + " statue must register exactly 56 variants"
                 );
             }
         }
         for (BustBlock.Style style : BustBlock.Style.values()) {
-            if (busts(style).size() != BRONZE_FAMILY_VARIANTS) {
+            if (busts(style).size() != METAL_FAMILY_VARIANTS) {
                 throw new IllegalStateException(
-                        style.subjectId() + " bust must register exactly 55 variants"
+                        style.subjectId() + " bust must register exactly 56 variants"
                 );
             }
         }
         for (CorbelBlock.Style style : CorbelBlock.Style.values()) {
-            if (corbels(style).size() != STONE_VARIANTS_PER_FAMILY) {
+            if (corbels(style).size() != METAL_FAMILY_VARIANTS) {
                 throw new IllegalStateException(
-                        style.styleId() + " corbel must register exactly 54 variants"
+                        style.styleId() + " corbel must register exactly 56 variants"
                 );
             }
         }
@@ -178,8 +183,8 @@ public final class ModBlocks {
             }
         }
         for (FixedDecorBlock.Style style : FixedDecorBlock.Style.values()) {
-            if (fixedDecor(style).size() != STONE_VARIANTS_PER_FAMILY + (style.isFinial() ? 1 : 0)) {
-                throw new IllegalStateException(style.idSuffix() + " must register all stone finishes and bronze for finials");
+            if (fixedDecor(style).size() != STONE_VARIANTS_PER_FAMILY + (style.isFinial() ? DecorMetal.values().length : 0)) {
+                throw new IllegalStateException(style.idSuffix() + " must register all stone finishes and both metals for finials");
             }
         }
         for (FountainBasinBlock.Style style : FountainBasinBlock.Style.values()) {
@@ -188,8 +193,8 @@ public final class ModBlocks {
             }
         }
         for (PlinthBlock.Style style : PlinthBlock.Style.values()) {
-            if (plinths(style).size() != STONE_VARIANTS_PER_FAMILY) {
-                throw new IllegalStateException(style.styleId() + " plinth must register exactly 54 variants");
+            if (plinths(style).size() != METAL_FAMILY_VARIANTS) {
+                throw new IllegalStateException(style.styleId() + " plinth must register exactly 56 variants");
             }
         }
         if (KRENE_FOUNTAINS.size() != STONE_VARIANTS_PER_FAMILY
@@ -304,10 +309,8 @@ public final class ModBlocks {
             registerSpartanPromachosStatue(material, false);
             registerSpartanPromachosStatue(material, true);
         }
-        SPARTAN_PROMACHOS_STATUES.add(registerBlock(
-                "bronze_spartan_promachos_statue",
-                new SpartanStatueBlock(decorSettings())
-        ));
+        SPARTAN_PROMACHOS_STATUES.addAll(registerMetalBlocks(
+                "spartan_promachos_statue", () -> new SpartanStatueBlock(decorSettings())));
     }
 
     private static void registerSpartanPromachosStatue(
@@ -328,10 +331,8 @@ public final class ModBlocks {
             registerZeusStatue(material, false);
             registerZeusStatue(material, true);
         }
-        ZEUS_STATUES.add(registerBlock(
-                "bronze_zeus_statue",
-                new ZeusStatueBlock(decorSettings())
-        ));
+        ZEUS_STATUES.addAll(registerMetalBlocks(
+                "zeus_statue", () -> new ZeusStatueBlock(decorSettings())));
     }
 
     private static void registerZeusStatue(
@@ -352,13 +353,10 @@ public final class ModBlocks {
             registerClassicalStatue(material, false, style);
             registerClassicalStatue(material, true, style);
         }
-        Block bronze = registerBlock(
-                "bronze_" + style.subjectId() + "_statue",
-                new ClassicalStatueBlock(decorSettings(), style)
-        );
         CLASSICAL_STATUES_BY_STYLE
                 .computeIfAbsent(style, ignored -> new ArrayList<>())
-                .add(bronze);
+                .addAll(registerMetalBlocks(style.subjectId() + "_statue",
+                        () -> new ClassicalStatueBlock(decorSettings(), style)));
     }
 
     private static void registerClassicalStatue(
@@ -385,11 +383,9 @@ public final class ModBlocks {
             registerUrn(material, false, style);
             registerUrn(material, true, style);
         }
-        Block bronze = registerBlock(
-                "bronze_" + style.shapeId() + "_urn",
-                new UrnBlock(decorSettings(), style)
-        );
-        URNS_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>()).add(bronze);
+        URNS_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>())
+                .addAll(registerMetalBlocks(style.shapeId() + "_urn",
+                        () -> new UrnBlock(decorSettings(), style)));
     }
 
     private static void registerBusts(BustBlock.Style style) {
@@ -397,11 +393,9 @@ public final class ModBlocks {
             registerBust(material, false, style);
             registerBust(material, true, style);
         }
-        Block bronze = registerBlock(
-                "bronze_" + style.subjectId() + "_bust",
-                new BustBlock(decorSettings(), style)
-        );
-        BUSTS_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>()).add(bronze);
+        BUSTS_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>())
+                .addAll(registerMetalBlocks(style.subjectId() + "_bust",
+                        () -> new BustBlock(decorSettings(), style)));
     }
 
     private static void registerBust(
@@ -443,6 +437,8 @@ public final class ModBlocks {
             registerCorbel(material, false, style);
             registerCorbel(material, true, style);
         }
+        CORBELS_BY_STYLE.get(style).addAll(registerMetalBlocks(style.styleId() + "_corbel",
+                () -> new CorbelBlock(decorSettings(), style)));
     }
 
     private static void registerCorbel(
@@ -500,8 +496,8 @@ public final class ModBlocks {
             }
         }
         if (style.isFinial()) {
-            Block bronze = registerBlock("bronze_" + style.idSuffix(), new FinialBlock(decorSettings(), style));
-            FIXED_DECOR_BY_STYLE.get(style).add(bronze);
+            FIXED_DECOR_BY_STYLE.get(style).addAll(registerMetalBlocks(style.idSuffix(),
+                    () -> new FinialBlock(decorSettings(), style)));
         }
     }
 
@@ -531,6 +527,8 @@ public final class ModBlocks {
                 PLINTHS_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>()).add(block);
             }
         }
+        PLINTHS_BY_STYLE.get(style).addAll(registerMetalBlocks(style.styleId() + "_plinth",
+                () -> new PlinthBlock(decorSettings(), style)));
     }
 
     private static void registerMonopterosDomes() {
@@ -607,6 +605,14 @@ public final class ModBlocks {
                 "bronze_obeliskos_monument",
                 new SizedDecorBlock(decorSettings())
         ));
+    }
+
+    private static List<Block> registerMetalBlocks(String suffix, Supplier<Block> factory) {
+        List<Block> blocks = new ArrayList<>(DecorMetal.values().length);
+        for (DecorMetal metal : DecorMetal.values()) {
+            blocks.add(registerBlock(metal.id() + "_" + suffix, factory.get()));
+        }
+        return blocks;
     }
 
     static AbstractBlock.Settings decorSettings() {

@@ -13,6 +13,7 @@ import com.oliver.daedalon.block.FountainBowlModel;
 import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.UrnBlock;
 import com.oliver.daedalon.registry.ModBlocks;
+import com.oliver.daedalon.registry.DecorMetal;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.PreparableModelLoadingPlugin;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -86,6 +87,7 @@ public final class ObjMeshModelLoadingPlugin {
             "striatus"
     );
     private static final Identifier BRONZE_TEXTURE = id("block/bronze");
+    private static final Identifier SILVER_TEXTURE = id("block/silver");
     private static final Identifier WATER_STILL_TEXTURE = new Identifier(
             "minecraft",
             "block/water_still"
@@ -94,6 +96,10 @@ public final class ObjMeshModelLoadingPlugin {
     private static final List<MeshFamily> FAMILIES = createFamilies();
 
     private ObjMeshModelLoadingPlugin() {
+    }
+
+    static boolean usesMetalTexture(Identifier textureId) {
+        return BRONZE_TEXTURE.equals(textureId) || SILVER_TEXTURE.equals(textureId);
     }
 
     public static void register() {
@@ -196,11 +202,7 @@ public final class ObjMeshModelLoadingPlugin {
             variants.add(variant(SPARTAN_BLOCK_PREFIX + material, SPARTAN_BLOCK_PREFIX + material));
             variants.add(variant(SPARTAN_BLOCK_PREFIX + material + "_aged", SPARTAN_BLOCK_PREFIX + material + "_aged"));
         }
-        variants.add(bronzeVariant(
-                "bronze_spartan_promachos_statue",
-                WorldTexturePhase.detailedSurface()
-        ));
-        return List.copyOf(variants);
+        return withMetals(variants, "spartan_promachos_statue", WorldTexturePhase.detailedSurface());
     }
 
     private static List<MeshVariant> createZeusVariants() {
@@ -215,11 +217,7 @@ public final class ObjMeshModelLoadingPlugin {
                     SPARTAN_BLOCK_PREFIX + material + "_aged"
             ));
         }
-        variants.add(bronzeVariant(
-                "bronze_zeus_statue",
-                WorldTexturePhase.detailedSurface()
-        ));
-        return List.copyOf(variants);
+        return withMetals(variants, "zeus_statue", WorldTexturePhase.detailedSurface());
     }
 
     private static List<MeshFamily> createFamilies() {
@@ -279,7 +277,7 @@ public final class ObjMeshModelLoadingPlugin {
                             ? id("block/mesh/finial_display")
                             : id("block/mesh/decor_display"),
                     style.isFinial()
-                            ? withBronze(createDetailedVariants(style.idSuffix()), "bronze_" + style.idSuffix(), WorldTexturePhase.detailedSurface())
+                            ? withMetals(createDetailedVariants(style.idSuffix()), style.idSuffix(), WorldTexturePhase.detailedSurface())
                             : createDetailedVariants(style.idSuffix())
             ));
         }
@@ -320,7 +318,8 @@ public final class ObjMeshModelLoadingPlugin {
                     style.displayName() + " Plinth",
                     id("models/mesh/" + style.resourceStem() + ".json"),
                     id("block/mesh/plinth_display"),
-                    createDetailedVariants(style.styleId() + "_plinth")
+                    withMetals(createDetailedVariants(style.styleId() + "_plinth"),
+                            style.styleId() + "_plinth", WorldTexturePhase.detailedSurface())
             ));
         }
         for (int diameter : new int[]{4, 6, 8}) {
@@ -393,11 +392,7 @@ public final class ObjMeshModelLoadingPlugin {
                     SPARTAN_BLOCK_PREFIX + material + "_aged"
             ));
         }
-        variants.add(bronzeVariant(
-                "bronze_" + subjectId + "_statue",
-                WorldTexturePhase.detailedSurface()
-        ));
-        return List.copyOf(variants);
+        return withMetals(variants, subjectId + "_statue", WorldTexturePhase.detailedSurface());
     }
 
     private static List<MeshVariant> createBustVariants(String subjectId) {
@@ -412,11 +407,7 @@ public final class ObjMeshModelLoadingPlugin {
                     SPARTAN_BLOCK_PREFIX + material + "_aged"
             ));
         }
-        variants.add(bronzeVariant(
-                "bronze_" + subjectId + "_bust",
-                WorldTexturePhase.detailedSurface()
-        ));
-        return List.copyOf(variants);
+        return withMetals(variants, subjectId + "_bust", WorldTexturePhase.detailedSurface());
     }
 
     private static MeshFamily createUrnFamily(UrnBlock.UrnStyle style) {
@@ -440,11 +431,17 @@ public final class ObjMeshModelLoadingPlugin {
                     material + "_block_aged"
             ));
         }
-        variants.add(bronzeVariant(
-                "bronze_" + shapeId + "_urn",
-                WorldTexturePhase.urnSurface()
-        ));
-        return List.copyOf(variants);
+        return withMetals(variants, shapeId + "_urn", WorldTexturePhase.urnSurface());
+    }
+
+    private static List<MeshVariant> withMetals(List<MeshVariant> variants, String suffix,
+                                               WorldTexturePhase.Layout layout) {
+        List<MeshVariant> result = new ArrayList<>(variants.size() + DecorMetal.values().length);
+        result.addAll(variants);
+        for (DecorMetal metal : DecorMetal.values()) {
+            result.add(metalVariant(metal, metal.id() + "_" + suffix, layout));
+        }
+        return List.copyOf(result);
     }
 
     private static List<MeshVariant> withBronze(
@@ -462,13 +459,19 @@ public final class ObjMeshModelLoadingPlugin {
             String blockId,
             WorldTexturePhase.Layout layout
     ) {
+        return metalVariant(DecorMetal.BRONZE, blockId, layout);
+    }
+
+    private static MeshVariant metalVariant(DecorMetal metal, String blockId,
+                                            WorldTexturePhase.Layout layout) {
+        Identifier texture = metal == DecorMetal.BRONZE ? BRONZE_TEXTURE : SILVER_TEXTURE;
         return new MeshVariant(
                 id("mesh/" + blockId),
                 new ModelIdentifier(Daedalon.MOD_ID, blockId, "inventory"),
                 id("item/" + blockId),
                 id(blockId),
-                BRONZE_TEXTURE,
-                BRONZE_TEXTURE,
+                texture,
+                texture,
                 layout,
                 blockId,
                 true,
@@ -515,7 +518,7 @@ public final class ObjMeshModelLoadingPlugin {
                     SPARTAN_BLOCK_PREFIX + material + "_aged"
             ));
         }
-        return List.copyOf(variants);
+        return withMetals(variants, styleId + "_corbel", WorldTexturePhase.detailedSurface());
     }
 
     private static List<MeshVariant> createDetailedVariants(String idSuffix) {
@@ -829,7 +832,9 @@ public final class ObjMeshModelLoadingPlugin {
             List<Identifier> textureIds = new ArrayList<>(geometry.materialNames().size());
             List<Boolean> worldPhaseMaterials = new ArrayList<>(geometry.materialNames().size());
             for (String materialName : geometry.materialNames()) {
-                Identifier textureId = materialTexture(materialName);
+                // Whole-metal variants include named components such as Diota's handles.
+                // Stone variants retain their separately authored bronze handle texture.
+                Identifier textureId = usesMetalTexture(variantTextureId) ? null : materialTexture(materialName);
                 Identifier resolvedTextureId = textureId == null ? variantTextureId : textureId;
                 Sprite sprite = textureId == null
                         ? variantSprite

@@ -40,10 +40,15 @@ public final class PlinthBlock extends Block implements Waterloggable {
     private final Style style;
     private final String fountainMaterialKey;
 
+    /** Decorative metal plinths retain placement controls without fountain attachments. */
+    public PlinthBlock(Settings settings, Style style) {
+        this(settings, style, null);
+    }
+
     public PlinthBlock(Settings settings, Style style, String fountainMaterialKey) {
         super(settings.dynamicBounds());
         this.style = style;
-        if (fountainMaterialKey.isBlank()) {
+        if (fountainMaterialKey != null && fountainMaterialKey.isBlank()) {
             throw new IllegalArgumentException("Fountain material key must not be blank");
         }
         this.fountainMaterialKey = fountainMaterialKey;
@@ -62,6 +67,7 @@ public final class PlinthBlock extends Block implements Waterloggable {
     @Override
     public void appendTooltip(ItemStack stack, BlockView world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
+        if (!supportsFountains()) return;
         tooltip.add(Text.translatable("tooltip.daedalon.plinth.fountain").formatted(Formatting.GRAY));
         tooltip.add(Text.translatable("tooltip.daedalon.plinth.fountain_use").formatted(Formatting.GRAY));
     }
@@ -146,8 +152,14 @@ public final class PlinthBlock extends Block implements Waterloggable {
         return style;
     }
 
+    /** Only stone/aged plinths have an authored fountain bowl material. */
+    public boolean supportsFountains() {
+        return fountainMaterialKey != null;
+    }
+
     /** Selects the internal bowl material without creating bowl block or item IDs. */
     public String fountainMaterialKey() {
+        if (!supportsFountains()) throw new IllegalStateException("Decorative plinth has no fountain material");
         return fountainMaterialKey;
     }
 

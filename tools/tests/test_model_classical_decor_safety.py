@@ -37,12 +37,12 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             for block_id in GENERATOR.family_block_ids(family)
         ]
 
-    def test_exact_4371_id_manifest(self) -> None:
+    def test_exact_4439_id_manifest(self) -> None:
         block_ids = all_block_ids()
-        self.assertEqual(4371, len(block_ids))
-        self.assertEqual(4371, len(set(block_ids)))
-        self.assertEqual(605, len(self.urn_ids))
-        self.assertEqual(270, len(self.plinth_ids))
+        self.assertEqual(4439, len(block_ids))
+        self.assertEqual(4439, len(set(block_ids)))
+        self.assertEqual(616, len(self.urn_ids))
+        self.assertEqual(280, len(self.plinth_ids))
         self.assertIn("aganite_amphora_urn", block_ids)
         self.assertIn("aganite_aged_amphora_urn", block_ids)
         self.assertNotIn("aganite_urn_amphora", block_ids)
@@ -253,7 +253,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         for kind in ("blocks", "items"):
             tag_root = DAEDALON_DATA / f"tags/{kind}"
             for synonym in ("fountain", "water_feature"):
-                self.assertIn("#daedalon:plinth", load_json(tag_root / f"{synonym}.json")["values"])
+                self.assertIn("#daedalon:fountain_plinth", load_json(tag_root / f"{synonym}.json")["values"])
             self.assertEqual(
                 expected_plinth_refs,
                 set(load_json(tag_root / "plinth.json")["values"]),
@@ -292,7 +292,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             "urn_diota_bronze_handles.png",
             "urn_diota_bronze_handles_s.png",
         }
-        bronze_names = {"bronze.png", "bronze_s.png"}
+        bronze_names = {"bronze.png", "bronze_s.png", "silver.png", "silver_s.png"}
         self.assertEqual(
             root_material_names | statue_names | handle_names | bronze_names,
             {path.name for path in texture_root.glob("*.png")},
@@ -320,7 +320,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             GENERATOR.bronze_block_id(family)
             for family in GENERATOR.BRONZE_FAMILIES
         }
-        self.assertEqual(51, len(bronze_ids))
+        self.assertEqual(61, len(bronze_ids))
         self.assertTrue(bronze_ids <= set(all_block_ids()))
         self.assertFalse(any("aged" in block_id for block_id in bronze_ids))
         self.assertEqual(
@@ -346,11 +346,11 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
 
         texture_root = DAEDALON_ASSETS / "textures/block"
         self.assertEqual(
-            "25dd97c806087f63358edbdff2e4eb890d4d3f28d7dc9e96838bed3e141da4b7",
+            "2d032e11f5d62ed4bb391f29b51c6f0d44d926eebf3e02f17bddd53d22c6c89e",
             sha256(texture_root / "bronze.png"),
         )
         self.assertEqual(
-            "097f017c6ebe2dfc2ec986b6fd9d3ed0731390f1e0f1ea1a0fd7183832ffe86f",
+            "ec7ab9035d3184e2119dc1c90c6df4b5b0930844bca744042e236ce8f692bdb8",
             sha256(texture_root / "bronze_s.png"),
         )
         self.assertFalse((texture_root / "bronze_aged.png").exists())
@@ -363,11 +363,11 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
                 set(load_json(tag_root / "bronze.json")["values"]),
             )
             self.assertEqual(
-                ["#daedalon:bronze"],
+                ["#daedalon:bronze", "#daedalon:silver"],
                 load_json(tag_root / "metal.json")["values"],
             )
             self.assertEqual(
-                bronze_refs,
+                bronze_refs | set(load_json(tag_root / "silver.json")["values"]),
                 set(
                     load_json(
                         DAEDALON_DATA / f"../material/tags/{kind}/metal.json"
@@ -476,7 +476,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertEqual(5, plinth_block.count('"plinth_'))
         self.assertNotIn("GeorgianPlinth", registrations)
         self.assertIn("EXPECTED_BLOCK_COUNT", registrations)
-        self.assertIn("exactly 4371 decor blocks and items", registrations)
+        self.assertIn("exactly 4439 decor blocks and items", registrations)
 
     def test_urn_source_and_decimation_evidence_is_locked(self) -> None:
         evidence = load_json(REPO_ROOT / "docs/evidence/urn-batch-source.json")

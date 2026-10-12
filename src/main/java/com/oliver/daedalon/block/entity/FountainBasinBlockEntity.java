@@ -72,7 +72,7 @@ public final class FountainBasinBlockEntity extends BlockEntity {
 
     public synchronized AdditionResult addPlinthUse(BlockState requestedState) {
         if (world == null || world.isClient
-                || !(requestedState.getBlock() instanceof PlinthBlock)) {
+                || !(requestedState.getBlock() instanceof PlinthBlock plinth) || !plinth.supportsFountains()) {
             return AdditionResult.BLOCKED;
         }
 
@@ -111,7 +111,7 @@ public final class FountainBasinBlockEntity extends BlockEntity {
 
     public synchronized boolean replacePlinth(BlockState state) {
         if (world == null || world.isClient || plinthState == null
-                || !(state.getBlock() instanceof PlinthBlock)
+                || !(state.getBlock() instanceof PlinthBlock plinth) || !plinth.supportsFountains()
                 || !plinthState.isOf(state.getBlock())) {
             return false;
         }
@@ -244,7 +244,7 @@ public final class FountainBasinBlockEntity extends BlockEntity {
                     Registries.BLOCK.getReadOnlyWrapper(),
                     nbt.getCompound(PLINTH_NBT)
             );
-            if (state.getBlock() instanceof PlinthBlock) {
+            if (state.getBlock() instanceof PlinthBlock plinth && plinth.supportsFountains()) {
                 plinthState = FountainAssemblyLayout.normalizePlinth(state);
                 bowlCount = MathHelper.clamp(
                         nbt.getInt(BOWL_COUNT_NBT),
@@ -281,7 +281,7 @@ public final class FountainBasinBlockEntity extends BlockEntity {
                     Registries.BLOCK.getReadOnlyWrapper(),
                     component
             );
-            if (state.getBlock() instanceof PlinthBlock) {
+            if (state.getBlock() instanceof PlinthBlock plinth && plinth.supportsFountains()) {
                 if (plinthState == null) {
                     plinthState = FountainAssemblyLayout.normalizePlinth(state);
                 } else {

@@ -29,8 +29,8 @@ class ClassicalBustSafetyTests(unittest.TestCase):
 
     def test_canonical_ids_states_and_search_contract(self) -> None:
         self.assertEqual(12, len(self.families))
-        self.assertEqual(660, len(self.ids))
-        self.assertEqual(660, len(set(self.ids)))
+        self.assertEqual(672, len(self.ids))
+        self.assertEqual(672, len(set(self.ids)))
         expected_states = {
             f"size={size},facing={facing}"
             for size in ("small", "medium", "large")
@@ -45,7 +45,7 @@ class ClassicalBustSafetyTests(unittest.TestCase):
             ids = GENERATOR.family_block_ids(family)
             self.assertEqual(f"aganite_{subject}_bust", ids[0])
             self.assertEqual(f"aganite_aged_{subject}_bust", ids[1])
-            self.assertEqual(f"bronze_{subject}_bust", ids[-1])
+            self.assertEqual([f"bronze_{subject}_bust", f"silver_{subject}_bust"], ids[-2:])
             expected_refs = {f"daedalon:{block_id}" for block_id in ids}
             for kind in ("blocks", "items"):
                 tags = DAEDALON_DATA / f"tags/{kind}"

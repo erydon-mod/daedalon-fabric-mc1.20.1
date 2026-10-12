@@ -51,7 +51,8 @@ public final class FountainAssemblyLayout {
         double maximumY = FountainBasinGeometry.outlineShape(basinStyle, basinSize, filled)
                 .getMax(Direction.Axis.Y);
 
-        if (rawPlinthState == null || !(rawPlinthState.getBlock() instanceof PlinthBlock block)) {
+        if (rawPlinthState == null || !(rawPlinthState.getBlock() instanceof PlinthBlock block)
+                || !block.supportsFountains()) {
             return new FountainAssemblyLayout(
                     basinStyle,
                     basinSize,

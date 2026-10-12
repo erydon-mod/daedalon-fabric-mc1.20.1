@@ -34,10 +34,10 @@ class ClassicalStatueBatchSafetyTests(unittest.TestCase):
 
     def test_exact_material_first_batch_ids(self) -> None:
         self.assertEqual(18, len(self.families))
-        self.assertEqual(990, len(self.block_ids))
-        self.assertEqual(990, len(set(self.block_ids)))
-        self.assertEqual(4371, len(all_block_ids()))
-        self.assertEqual(4371, len(set(all_block_ids())))
+        self.assertEqual(1008, len(self.block_ids))
+        self.assertEqual(1008, len(set(self.block_ids)))
+        self.assertEqual(4439, len(all_block_ids()))
+        self.assertEqual(4439, len(set(all_block_ids())))
         for family in self.families:
             expected: list[str] = []
             for material in GENERATOR.MATERIALS:
@@ -48,6 +48,7 @@ class ClassicalStatueBatchSafetyTests(unittest.TestCase):
                     )
                 )
             expected.append(f"bronze_{family}_statue")
+            expected.append(f"silver_{family}_statue")
             self.assertEqual(expected, GENERATOR.family_block_ids(family))
 
     def test_meshes_and_uv_definitions_are_locked(self) -> None:
@@ -189,7 +190,7 @@ class ClassicalStatueBatchSafetyTests(unittest.TestCase):
         self.assertIn("return createProfile(", block)
         self.assertIn("new ClassicalStatueBlock(decorSettings(), style)", registrations)
         self.assertIn("ClassicalStatueBlock.Style.values()", registrations)
-        self.assertIn("exactly 4371 decor blocks and items", registrations)
+        self.assertIn("exactly 4439 decor blocks and items", registrations)
         self.assertIn("ClassicalStatueBlock.Style.values()", plugin)
         self.assertIn('id("block/mesh/zeus_statue_display")', plugin)
         self.assertIn("createClassicalStatueVariants(style.subjectId())", plugin)

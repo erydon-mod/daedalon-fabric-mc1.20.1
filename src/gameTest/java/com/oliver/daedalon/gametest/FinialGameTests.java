@@ -83,7 +83,7 @@ public final class FinialGameTests {
                     cases++;
                 }
         }
-        context.assertTrue(blocks==275 && cases==275*2*FinialSupport.Profile.values().length*4,"Missing material/finish/size coverage");
+        context.assertTrue(blocks==280 && cases==280*2*FinialSupport.Profile.values().length*4,"Missing material/finish/size coverage");
         context.complete();
     }
 

@@ -12,6 +12,11 @@
     "daedalon:bronze_rhabdos_urn",
     "daedalon:bronze_salpinx_urn",
     "daedalon:bronze_stamnos_urn",
+    "daedalon:bronze_baroque_corbel",
+    "daedalon:bronze_corinthian_corbel",
+    "daedalon:bronze_georgian_corbel",
+    "daedalon:bronze_ionic_corbel",
+    "daedalon:bronze_renaissance_corbel",
     "daedalon:bronze_aphrodite_bust",
     "daedalon:bronze_apollo_bust",
     "daedalon:bronze_ares_bust",
@@ -51,6 +56,11 @@
     "daedalon:bronze_perseus_statue",
     "daedalon:bronze_theseus_statue",
     "daedalon:bronze_lion_couchant_statue",
-    "daedalon:bronze_lion_statant_statue"
+    "daedalon:bronze_lion_statant_statue",
+    "daedalon:bronze_astragalos_plinth",
+    "daedalon:bronze_bathron_plinth",
+    "daedalon:bronze_kion_plinth",
+    "daedalon:bronze_stephanos_plinth",
+    "daedalon:bronze_triphyllon_plinth"
   ]
 }

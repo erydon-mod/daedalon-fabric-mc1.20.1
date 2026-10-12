@@ -31,9 +31,9 @@ class SpartanPromachosSafetyTests(unittest.TestCase):
 
     def test_exact_standard_and_aged_manifest(self) -> None:
         self.assertEqual(27, len(GENERATOR.MATERIALS))
-        self.assertEqual(55, len(self.block_ids))
-        self.assertEqual(55, len(set(self.block_ids)))
-        self.assertEqual("bronze_spartan_promachos_statue", self.block_ids[-1])
+        self.assertEqual(56, len(self.block_ids))
+        self.assertEqual(56, len(set(self.block_ids)))
+        self.assertEqual(["bronze_spartan_promachos_statue", "silver_spartan_promachos_statue"], self.block_ids[-2:])
         excluded = (
             "ashlar",
             "herringbone",

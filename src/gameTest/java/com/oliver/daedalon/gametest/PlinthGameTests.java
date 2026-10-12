@@ -32,7 +32,7 @@ public final class PlinthGameTests {
         var waterFeature = TagKey.of(RegistryKeys.ITEM, new Identifier("daedalon", "water_feature"));
         int count = 0;
         for (Block block : Registries.BLOCK) {
-            if (!(block instanceof PlinthBlock)) continue;
+            if (!(block instanceof PlinthBlock plinth) || !plinth.supportsFountains()) continue;
             count++;
             var stack = block.asItem().getDefaultStack();
             context.assertTrue(stack.isIn(fountain) && stack.isIn(waterFeature),
@@ -85,7 +85,7 @@ public final class PlinthGameTests {
                 context.assertTrue(world.getBlockState(pos) == dry, "Draining must leave the plinth intact");
             }
         }
-        context.assertTrue(count == 270, "All five styles and 54 finishes must be covered");
+        context.assertTrue(count == 280, "All five styles, 54 stone finishes and both metals must be covered");
         context.complete();
     }
 

@@ -46,7 +46,7 @@ class ArchitecturalDecorSafetyTests(unittest.TestCase):
         }
         for family in GENERATOR.CORBEL_FAMILIES:
             ids = GENERATOR.family_block_ids(family)
-            self.assertEqual(54, len(ids))
+            self.assertEqual(56, len(ids))
             self.assertEqual(f"aganite_{family}_corbel", ids[0])
             self.assertEqual(f"aganite_aged_{family}_corbel", ids[1])
             for block_id in ids:

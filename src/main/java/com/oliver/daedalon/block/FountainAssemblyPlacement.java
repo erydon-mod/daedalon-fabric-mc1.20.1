@@ -17,7 +17,7 @@ public final class FountainAssemblyPlacement {
 
     /** Returns null when normal BlockItem placement should continue. */
     public static ActionResult tryAttach(ItemUsageContext context, Block requestedBlock) {
-        if (!(requestedBlock instanceof PlinthBlock)) {
+        if (!(requestedBlock instanceof PlinthBlock plinth) || !plinth.supportsFountains()) {
             return null;
         }
 

@@ -13,7 +13,8 @@ public final class PlinthSearchVocabulary {
     private PlinthSearchVocabulary() { }
 
     public static List<String> terms(ItemStack stack) {
-        if (!(stack.getItem() instanceof BlockItem item) || !(item.getBlock() instanceof PlinthBlock)) {
+        if (!(stack.getItem() instanceof BlockItem item) || !(item.getBlock() instanceof PlinthBlock plinth)
+                || !plinth.supportsFountains()) {
             return List.of();
         }
         return List.of("fountain", "fountains", "fountain plinth", "tiered fountain", "water feature",

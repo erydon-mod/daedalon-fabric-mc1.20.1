@@ -55,6 +55,8 @@
     "daedalon:solistra_aged_baroque_corbel",
     "daedalon:striatus_baroque_corbel",
     "daedalon:striatus_aged_baroque_corbel",
+    "daedalon:bronze_baroque_corbel",
+    "daedalon:silver_baroque_corbel",
     "daedalon:aganite_corinthian_corbel",
     "daedalon:aganite_aged_corinthian_corbel",
     "daedalon:aterzon_corinthian_corbel",
@@ -109,6 +111,8 @@
     "daedalon:solistra_aged_corinthian_corbel",
     "daedalon:striatus_corinthian_corbel",
     "daedalon:striatus_aged_corinthian_corbel",
+    "daedalon:bronze_corinthian_corbel",
+    "daedalon:silver_corinthian_corbel",
     "daedalon:aganite_georgian_corbel",
     "daedalon:aganite_aged_georgian_corbel",
     "daedalon:aterzon_georgian_corbel",
@@ -163,6 +167,8 @@
     "daedalon:solistra_aged_georgian_corbel",
     "daedalon:striatus_georgian_corbel",
     "daedalon:striatus_aged_georgian_corbel",
+    "daedalon:bronze_georgian_corbel",
+    "daedalon:silver_georgian_corbel",
     "daedalon:aganite_ionic_corbel",
     "daedalon:aganite_aged_ionic_corbel",
     "daedalon:aterzon_ionic_corbel",
@@ -217,6 +223,8 @@
     "daedalon:solistra_aged_ionic_corbel",
     "daedalon:striatus_ionic_corbel",
     "daedalon:striatus_aged_ionic_corbel",
+    "daedalon:bronze_ionic_corbel",
+    "daedalon:silver_ionic_corbel",
     "daedalon:aganite_renaissance_corbel",
     "daedalon:aganite_aged_renaissance_corbel",
     "daedalon:aterzon_renaissance_corbel",
@@ -270,6 +278,8 @@
     "daedalon:solistra_renaissance_corbel",
     "daedalon:solistra_aged_renaissance_corbel",
     "daedalon:striatus_renaissance_corbel",
-    "daedalon:striatus_aged_renaissance_corbel"
+    "daedalon:striatus_aged_renaissance_corbel",
+    "daedalon:bronze_renaissance_corbel",
+    "daedalon:silver_renaissance_corbel"
   ]
 }

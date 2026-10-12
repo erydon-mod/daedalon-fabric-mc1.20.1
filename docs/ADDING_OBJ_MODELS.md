@@ -128,11 +128,18 @@ as urns; do not change that projection window merely to repack the texture.
 
 Register IDs with material first and form last: for example
 `<material>_balanos_finial`, `<material>_aged_balanos_finial`, and
-`<material>_obeliskos_monument`. All five finials also register a bronze finish using the existing shared mesh,
+`<material>_obeliskos_monument`. All five finials also register bronze and silver finishes using the existing shared mesh,
 texture and size transforms. Add only meaningful states: Krene has four
 facings, Obeliskos has sizes 1/2/3, while radial one-block decor has no state
 properties. Record concept images without a matching mesh as unavailable rather
 than inventing geometry from the preview.
+
+Urns, statues, busts, corbels and plinths also share the `DecorMetal` bronze/silver
+variants. Use `withMetals` in the family loader and the generator's
+`METAL_DECOR_FAMILIES` list; do not add a separate OBJ or material-specific mesh
+family. Metal plinths use the decorative constructor without a fountain material.
+See [metal decor finishes](METAL_DECOR_FINISHES.md) for texture provenance,
+component handling and verification.
 
 ## Verification
 

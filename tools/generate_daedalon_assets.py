@@ -141,6 +141,7 @@ MATERIALS = (
     "striatus",
 )
 BRONZE_MATERIAL = "bronze"
+SILVER_MATERIAL = "silver"
 NO_DROP_FAMILIES = frozenset(
     {
         "gothic_fountain_basin",
@@ -328,16 +329,25 @@ HERO_STATUE_FAMILIES = (
     "theseus",
 )
 LION_STATUE_FAMILIES = ("lion_couchant", "lion_statant")
-BRONZE_FAMILIES = (
+METAL_DECOR_FAMILIES = (
     *FINIAL_FAMILIES,
     "spartan",
     *CANONICAL_STATUE_FAMILIES,
     *URN_FAMILIES,
     *BUST_FAMILIES,
+    *CORBEL_FAMILIES,
+    *PLINTH_FAMILIES,
+)
+BRONZE_FAMILIES = (
+    *METAL_DECOR_FAMILIES,
     "obeliskos_monument",
     "monopteros_dome",
     "anthophoros_planter",
 )
+METAL_FAMILIES = {
+    BRONZE_MATERIAL: BRONZE_FAMILIES,
+    SILVER_MATERIAL: METAL_DECOR_FAMILIES,
+}
 STATUE_DISPLAY_MODELS = {
     "spartan": "statue_spartan_promachos",
     **{family: "zeus_statue" for family in CANONICAL_STATUE_FAMILIES},
@@ -378,23 +388,34 @@ def write(path: Path, content: bytes, check: bool, changed: list[Path]) -> None:
     changed.append(path)
 
 
-def bronze_block_id(family: str) -> str:
+def metal_block_id(family: str, metal: str) -> str:
+    if family not in METAL_FAMILIES.get(metal, ()):
+        raise ValueError(f"Family does not support the {metal.capitalize()} finish: {family}")
     if family == "spartan":
-        return "bronze_spartan_promachos_statue"
+        return f"{metal}_spartan_promachos_statue"
     if family in CANONICAL_STATUE_FAMILIES:
-        return f"bronze_{family}_statue"
+        return f"{metal}_{family}_statue"
     if family in URN_FAMILIES:
-        return f"bronze_{family}_urn"
+        return f"{metal}_{family}_urn"
     if family in BUST_FAMILIES:
-        return f"bronze_{BUST_FAMILIES[family][0]}_bust"
+        return f"{metal}_{BUST_FAMILIES[family][0]}_bust"
+    if family in CORBEL_FAMILIES:
+        return f"{metal}_{family}_corbel"
+    if family in PLINTH_FAMILIES:
+        return f"{metal}_{family}"
     if family in FINIAL_FAMILIES or family in ("obeliskos_monument", "monopteros_dome", "anthophoros_planter"):
-        return "bronze_" + family
-    raise ValueError(f"Family does not support the Bronze finish: {family}")
+        return metal + "_" + family
+    raise ValueError(f"Unknown metal decor family: {family}")
 
 
-def add_bronze(family: str, block_ids: list[str]) -> list[str]:
-    if family in BRONZE_FAMILIES:
-        block_ids.append(bronze_block_id(family))
+def bronze_block_id(family: str) -> str:
+    return metal_block_id(family, BRONZE_MATERIAL)
+
+
+def add_metals(family: str, block_ids: list[str]) -> list[str]:
+    for metal, families in METAL_FAMILIES.items():
+        if family in families:
+            block_ids.append(metal_block_id(family, metal))
     return block_ids
 
 
@@ -408,7 +429,7 @@ def family_block_ids(family: str) -> list[str]:
                     f"statue_spartan_promachos_{material}_aged",
                 )
             )
-        return add_bronze(family, result)
+        return add_metals(family, result)
 
     if family in CANONICAL_STATUE_FAMILIES:
         for material in MATERIALS:
@@ -418,7 +439,7 @@ def family_block_ids(family: str) -> list[str]:
                     f"{material}_aged_{family}_statue",
                 )
             )
-        return add_bronze(family, result)
+        return add_metals(family, result)
 
     if family in URN_FAMILIES:
         suffix = f"{family}_urn"
@@ -429,7 +450,7 @@ def family_block_ids(family: str) -> list[str]:
                     f"{material}_aged_{suffix}",
                 )
             )
-        return add_bronze(family, result)
+        return add_metals(family, result)
 
     if family in BUST_FAMILIES:
         subject = BUST_FAMILIES[family][0]
@@ -441,7 +462,7 @@ def family_block_ids(family: str) -> list[str]:
                     f"{material}_aged_{suffix}",
                 )
             )
-        return add_bronze(family, result)
+        return add_metals(family, result)
 
     if family in CORBEL_FAMILIES:
         suffix = f"{family}_corbel"
@@ -452,7 +473,7 @@ def family_block_ids(family: str) -> list[str]:
                     f"{material}_aged_{suffix}",
                 )
             )
-        return add_bronze(family, result)
+        return add_metals(family, result)
 
     if family in CAPITAL_FAMILIES:
         style = "corinthian" if family == "corinthian_capital" else family
@@ -464,17 +485,17 @@ def family_block_ids(family: str) -> list[str]:
                     f"{material}_aged_{suffix}",
                 )
             )
-        return add_bronze(family, result)
+        return add_metals(family, result)
 
     if family in NEW_DECOR_FAMILIES:
         for material in MATERIALS:
             result.extend((f"{material}_{family}", f"{material}_aged_{family}"))
-        return add_bronze(family, result)
+        return add_metals(family, result)
 
     if family in PLINTH_FAMILIES:
         for material in MATERIALS:
             result.extend((f"{material}_{family}", f"{material}_aged_{family}"))
-        return add_bronze(family, result)
+        return add_metals(family, result)
 
     raise ValueError(f"No ID grammar registered for family: {family}")
 
@@ -808,6 +829,8 @@ def generate_models_and_loot(
 def translated_name(language: str, family: str, material: str, aged: bool) -> str:
     material_name = (
         "Bronce" if material == BRONZE_MATERIAL and language == "es_es"
+        else "Silber" if material == SILVER_MATERIAL and language == "de_de"
+        else "Plata" if material == SILVER_MATERIAL and language == "es_es"
         else material.capitalize()
     )
     if family == "spartan":
@@ -943,11 +966,12 @@ def generate_languages(
                 entries[f"block.{NAMESPACE}.{aged}"] = translated_name(
                     language, family, material, True
                 )
-            if family in BRONZE_FAMILIES:
-                bronze = bronze_block_id(family)
-                entries[f"block.{NAMESPACE}.{bronze}"] = translated_name(
-                    language, family, BRONZE_MATERIAL, False
-                )
+            for metal, metal_families in METAL_FAMILIES.items():
+                if family in metal_families:
+                    block_id = metal_block_id(family, metal)
+                    entries[f"block.{NAMESPACE}.{block_id}"] = translated_name(
+                        language, family, metal, False
+                    )
         write(
             RESOURCES / f"assets/{NAMESPACE}/lang/{language}.json",
             json_bytes(entries),
@@ -991,22 +1015,28 @@ def generate_tags(
         for block_id in ids_by_family[family]
         if "_aged_" in block_id or block_id.endswith("_aged")
     ]
-    bronze_refs = [
-        f"{NAMESPACE}:{bronze_block_id(family)}"
-        for family in families
-        if family in BRONZE_FAMILIES
-    ]
-    stone_refs = [ref for ref in all_refs if ref not in bronze_refs]
+    refs_by_metal = {
+        metal: [
+            f"{NAMESPACE}:{metal_block_id(family, metal)}"
+            for family in families if family in metal_families
+        ]
+        for metal, metal_families in METAL_FAMILIES.items()
+    }
+    metal_refs = [ref for refs in refs_by_metal.values() for ref in refs]
+    metal_ref_set = set(metal_refs)
+    stone_refs = [ref for ref in all_refs if ref not in metal_ref_set]
 
     direct_tags: dict[str, list[str]] = {
         "daedalon_blocks": all_refs,
         "aged": aged_refs,
     }
     relation_tags: dict[str, list[str]] = {}
-    if bronze_refs:
-        direct_tags[BRONZE_MATERIAL] = bronze_refs
-        relation_tags["metal"] = [f"#{NAMESPACE}:{BRONZE_MATERIAL}"]
-        relation_tags["metallic"] = [f"#{NAMESPACE}:{BRONZE_MATERIAL}"]
+    for metal, refs in refs_by_metal.items():
+        if refs:
+            direct_tags[metal] = refs
+    if metal_refs:
+        relation_tags["metal"] = [f"#{NAMESPACE}:{metal}" for metal, refs in refs_by_metal.items() if refs]
+        relation_tags["metallic"] = list(relation_tags["metal"])
 
     urn_families = [family for family in families if family in URN_FAMILIES]
     if urn_families:
@@ -1266,9 +1296,15 @@ def generate_tags(
         relation_tags["ornament"] = ornament_values
 
     if plinth_families:
+        direct_tags["fountain_plinth"] = [
+            f"{NAMESPACE}:{block_id}"
+            for family in plinth_families
+            for block_id in ids_by_family[family]
+            if f"{NAMESPACE}:{block_id}" not in metal_ref_set
+        ]
         for synonym in ("fountain", "water_feature"):
             values = relation_tags.setdefault(synonym, [])
-            plinth = f"#{NAMESPACE}:plinth"
+            plinth = f"#{NAMESPACE}:fountain_plinth"
             if plinth not in values:
                 values.append(plinth)
 
@@ -1295,7 +1331,7 @@ def generate_tags(
 
     for kind in ("blocks", "items"):
         write_tag("material", kind, "stone", stone_refs, check, changed)
-        write_tag("material", kind, "metal", bronze_refs, check, changed)
+        write_tag("material", kind, "metal", metal_refs, check, changed)
     write_tag("minecraft", "blocks", "mineable/pickaxe", all_refs, check, changed)
 
 
