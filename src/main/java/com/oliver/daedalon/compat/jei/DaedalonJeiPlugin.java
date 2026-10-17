@@ -1,6 +1,6 @@
 package com.oliver.daedalon.compat.jei;
 
-import com.oliver.daedalon.client.search.PlinthSearchVocabulary;
+import com.oliver.daedalon.client.search.DaedalonSearchVocabulary;
 import com.oliver.daedalon.registry.ModItems;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -19,7 +19,7 @@ public final class DaedalonJeiPlugin implements IModPlugin {
     public void registerIngredientAliases(IIngredientAliasRegistration registration) {
         for (var item : ModItems.blockItems()) {
             var stack = item.getDefaultStack();
-            var terms = PlinthSearchVocabulary.terms(stack);
+            var terms = DaedalonSearchVocabulary.terms(stack);
             if (!terms.isEmpty()) registration.addAliases(VanillaTypes.ITEM_STACK, stack, terms);
         }
     }

@@ -905,11 +905,217 @@ def translated_name(language: str, family: str, material: str, aged: bool) -> st
     return f"{material_name} {'Aged ' if aged else ''}{shape_name} Urn"
 
 
+# Search keywords, rather than visible sentences: word-by-word forms also let
+# players search compound tags using either the English or translated wording.
+SEARCH_WORD_TRANSLATIONS = {
+    # word: (German, Spanish); proper names retain their established spelling.
+    "acanthus": ("Akanthus", "acanto"),
+    "aged": ("gealtert", "envejecido"),
+    "agate": ("Achat", "ágata"),
+    "alabaster": ("Alabaster", "alabastro"),
+    "animal": ("Tier", "animal"),
+    "architecture": ("Architektur", "arquitectura"),
+    "baroque": ("Barock", "barroco"),
+    "base": ("Basis", "base"),
+    "basin": ("Becken", "cuenca"),
+    "bench": ("Bank", "banco"),
+    "blue": ("blau", "azul"),
+    "box": ("Kasten", "caja"),
+    "bracket": ("Konsole", "ménsula"),
+    "bronze": ("Bronze", "bronce"),
+    "bust": ("Büste", "busto"),
+    "byzantine": ("byzantinisch", "bizantino"),
+    "capital": ("Kapitell", "capitel"),
+    "ceiling": ("Decke", "techo"),
+    "chariot": ("Streitwagen", "carro"),
+    "classical": ("klassisch", "clásico"),
+    "coffer": ("Kassette", "casetón"),
+    "coffered": ("kassettiert", "artesonado"),
+    "column": ("Säule", "columna"),
+    "composite": ("Komposit", "compuesto"),
+    "corbel": ("Konsole", "ménsula"),
+    "corinthian": ("korinthisch", "corintio"),
+    "couchant": ("liegend", "yacente"),
+    "cross": ("Kreuz", "cruz"),
+    "cupola": ("Kuppel", "cúpula"),
+    "curved": ("gebogen", "curvo"),
+    "decor": ("Dekor", "decoración"),
+    "decoration": ("Dekoration", "decoración"),
+    "decorative": ("dekorativ", "decorativo"),
+    "dome": ("Kuppel", "cúpula"),
+    "entablature": ("Gebälk", "entablamento"),
+    "finial": ("Zierelement", "remate"),
+    "feature": ("Gestaltung", "elemento"),
+    "flower": ("Blume", "flor"),
+    "flowerpot": ("Blumentopf", "maceta"),
+    "fountain": ("Brunnen", "fuente"),
+    "frieze": ("Fries", "friso"),
+    "furniture": ("Möbel", "muebles"),
+    "garden": ("Garten", "jardín"),
+    "gazebo": ("Pavillon", "cenador"),
+    "gemstone": ("Edelstein", "gema"),
+    "georgian": ("georgisch", "georgiano"),
+    "gothic": ("gotisch", "gótico"),
+    "greek": ("griechisch", "griego"),
+    "guilloche": ("Guilloche", "guilloché"),
+    "head": ("Kopf", "cabeza"),
+    "hero": ("Held", "héroe"),
+    "horse": ("Pferd", "caballo"),
+    "interlace": ("Flechtband", "entrelazado"),
+    "ionic": ("ionisch", "jónico"),
+    "labradorite": ("Labradorit", "labradorita"),
+    "lancet": ("Spitzbogen", "lanceta"),
+    "leaf": ("Blatt", "hoja"),
+    "limestone": ("Kalkstein", "caliza"),
+    "lion": ("Löwe", "león"),
+    "marble": ("Marmor", "mármol"),
+    "medallion": ("Medaillon", "medallón"),
+    "metal": ("Metall", "metal"),
+    "metallic": ("metallisch", "metálico"),
+    "monument": ("Denkmal", "monumento"),
+    "neoclassical": ("neoklassisch", "neoclásico"),
+    "obelisk": ("Obelisk", "obelisco"),
+    "olympian": ("olympisch", "olímpico"),
+    "onyx": ("Onyx", "ónice"),
+    "opal": ("Opal", "ópalo"),
+    "ornament": ("Ornament", "ornamento"),
+    "ornamental": ("ornamental", "ornamental"),
+    "ornate": ("verziert", "ornamentado"),
+    "palm": ("Palme", "palmera"),
+    "palmette": ("Palmette", "palmeta"),
+    "panel": ("Paneel", "panel"),
+    "pavilion": ("Pavillon", "pabellón"),
+    "pavillion": ("Pavillon", "pabellón"),
+    "pedestal": ("Sockel", "pedestal"),
+    "pillar": ("Pfeiler", "pilar"),
+    "pinnacle": ("Fiale", "pináculo"),
+    "plain": ("schlicht", "sencillo"),
+    "plant": ("Pflanze", "planta"),
+    "planter": ("Pflanzgefäß", "jardinera"),
+    "plinth": ("Sockel", "plinto"),
+    "portrait": ("Porträt", "retrato"),
+    "pot": ("Topf", "maceta"),
+    "pottery": ("Keramik", "cerámica"),
+    "procession": ("Prozession", "procesión"),
+    "quartzite": ("Quarzit", "cuarcita"),
+    "quatrefoil": ("Vierpass", "cuatrifolio"),
+    "regency": ("Regency", "regencia"),
+    "relief": ("Relief", "relieve"),
+    "renaissance": ("Renaissance", "renacimiento"),
+    "ribbed": ("gerippt", "acanalado"),
+    "rock": ("Gestein", "roca"),
+    "roman": ("römisch", "romano"),
+    "roof": ("Dach", "tejado"),
+    "rotunda": ("Rotunde", "rotonda"),
+    "sandstone": ("Sandstein", "arenisca"),
+    "sculpture": ("Skulptur", "escultura"),
+    "scroll": ("Volute", "voluta"),
+    "seat": ("Sitz", "asiento"),
+    "seating": ("Sitzmöbel", "asientos"),
+    "silver": ("Silber", "plata"),
+    "sodalite": ("Sodalith", "sodalita"),
+    "spartan": ("spartanisch", "espartano"),
+    "statue": ("Statue", "estatua"),
+    "statant": ("stehend", "de pie"),
+    "stone": ("Stein", "piedra"),
+    "straight": ("gerade", "recto"),
+    "tracery": ("Maßwerk", "tracería"),
+    "travertine": ("Travertin", "travertino"),
+    "tuscan": ("toskanisch", "toscano"),
+    "urn": ("Urne", "urna"),
+    "vase": ("Vase", "jarrón"),
+    "vault": ("Gewölbe", "bóveda"),
+    "vessel": ("Gefäß", "recipiente"),
+    "volute": ("Volute", "voluta"),
+    "wall": ("Wand", "pared"),
+    "water": ("Wasser", "agua"),
+    "weathered": ("verwittert", "desgastado"),
+    "worn": ("abgenutzt", "desgastado"),
+}
+
+
+def translated_search_tag(tag: str, language: str) -> str:
+    if language == "en_us":
+        return tag.replace("_", " ")
+    index = {"de_de": 0, "es_es": 1}[language]
+    names = dict(CANONICAL_STATUE_FAMILIES)
+    names.update({subject: (en, de, es) for subject, en, de, es in BUST_FAMILIES.values()})
+    return " ".join(
+        SEARCH_WORD_TRANSLATIONS[word][index] if word in SEARCH_WORD_TRANSLATIONS
+        else names[word][index + 1] if word in names
+        else word
+        for word in tag.split("_")
+    )
+
+
+def search_vocabulary(
+    families: tuple[str, ...], ids_by_family: dict[str, list[str]],
+    direct_tags: dict[str, list[str]], relation_tags: dict[str, list[str]],
+) -> dict[str, dict[str, list[str]]]:
+    """Share tag vocabulary with clients before any server/data-pack tag bind.
+
+    Factor it into family and material groups instead of repeating every alias
+    for thousands of items. Family terms must apply to *all* its finishes; the
+    client adds the fountain-capable stone-plinth exception separately.
+    """
+    tags = direct_tags | relation_tags
+    resolved: dict[str, set[str]] = {}
+
+    def members(tag: str, visiting: frozenset[str] = frozenset()) -> set[str]:
+        if tag in visiting:
+            raise ValueError(f"Cyclic Daedalon tag: {tag}")
+        if tag not in resolved:
+            refs: set[str] = set()
+            for value in tags[tag]:
+                if value.startswith(f"#{NAMESPACE}:"):
+                    refs.update(members(value.split(":", 1)[1], visiting | {tag}))
+                else:
+                    refs.add(value)
+            resolved[tag] = refs
+        return resolved[tag]
+
+    for tag in tags:
+        members(tag)
+
+    def common_terms(ids: list[str]) -> list[str]:
+        refs = {f"{NAMESPACE}:{block_id}" for block_id in ids}
+        return sorted(tag for tag, values in resolved.items()
+                      if tag != "daedalon_blocks" and refs and refs <= values)
+
+    material_ids = {
+        material: [block_id for ids in ids_by_family.values()
+                   for block_id in ids[index * 2:index * 2 + 2]]
+        for index, material in enumerate(MATERIALS)
+    }
+    material_ids.update({
+        metal: [metal_block_id(family, metal) for family in families
+                if family in metal_families]
+        for metal, metal_families in METAL_FAMILIES.items()
+    })
+    return {
+        "families": {
+            ("spartan_promachos_statue" if family == "spartan" else
+             ids_by_family[family][0].removeprefix(f"{MATERIALS[0]}_")):
+                common_terms(ids_by_family[family])
+            for family in families
+        },
+        "materials": {
+            material: common_terms(ids) for material, ids in material_ids.items() if ids
+        },
+    }
+
+
 def generate_languages(
-    families: tuple[str, ...], check: bool, changed: list[Path]
+    families: tuple[str, ...], check: bool, changed: list[Path],
+    search_vocabulary: dict[str, dict[str, list[str]]],
 ) -> None:
     for language in ("en_us", "de_de", "es_es"):
         entries = dict(STATIC_LANGUAGE_ENTRIES[language])
+        search_tags = {"aged", "weathered", "worn"}
+        for group in search_vocabulary.values():
+            search_tags.update(tag for tags in group.values() for tag in tags)
+        for tag in sorted(search_tags):
+            entries[f"search.daedalon.tag.{tag}"] = translated_search_tag(tag, language)
         particle_messages = {
             "en_us": ("Fountain droplets: Normal (1x). This computer only.", "Fountain droplets: High (4x). This computer only.", "Could not save the fountain particle setting; the previous setting is unchanged."),
             "de_de": ("Brunnentropfen: Normal (1x). Nur auf diesem Computer.", "Brunnentropfen: Hoch (4x). Nur auf diesem Computer.", "Die Brunnenpartikel-Einstellung konnte nicht gespeichert werden; die bisherige Einstellung bleibt erhalten."),
@@ -981,7 +1187,7 @@ def generate_languages(
 
 
 def tag_payload(values: list[str]) -> dict[str, object]:
-    return {"replace": False, "values": values}
+    return {"replace": False, "values": list(dict.fromkeys(values))}
 
 
 def write_tag(
@@ -1002,7 +1208,7 @@ def write_tag(
 
 def generate_tags(
     families: tuple[str, ...], check: bool, changed: list[Path]
-) -> None:
+) -> dict[str, dict[str, list[str]]]:
     ids_by_family = {family: family_block_ids(family) for family in families}
     all_refs = [
         f"{NAMESPACE}:{block_id}"
@@ -1029,8 +1235,15 @@ def generate_tags(
     direct_tags: dict[str, list[str]] = {
         "daedalon_blocks": all_refs,
         "aged": aged_refs,
+        "stone": stone_refs,
     }
-    relation_tags: dict[str, list[str]] = {}
+    relation_tags: dict[str, list[str]] = {
+        "rock": [f"#{NAMESPACE}:stone"],
+        "weathered": [f"#{NAMESPACE}:aged"],
+        "worn": [f"#{NAMESPACE}:aged"],
+        **{tag: [f"#{NAMESPACE}:daedalon_blocks"]
+           for tag in ("decor", "decoration", "decorative", "architecture")},
+    }
     for metal, refs in refs_by_metal.items():
         if refs:
             direct_tags[metal] = refs
@@ -1102,6 +1315,8 @@ def generate_tags(
         ]
         direct_tags["capital"] = capital_refs
         relation_tags["column_capital"] = [f"#{NAMESPACE}:capital"]
+        relation_tags["pillar_capital"] = [f"#{NAMESPACE}:capital"]
+        relation_tags["column_head"] = [f"#{NAMESPACE}:capital"]
         ornament_values.append(f"#{NAMESPACE}:capital")
         for family in capital_families:
             style = "corinthian" if family == "corinthian_capital" else family
@@ -1308,6 +1523,19 @@ def generate_tags(
             if plinth not in values:
                 values.append(plinth)
 
+    # Discoverability tags stay in our namespace: these decorations must not
+    # become vanilla flower pots, stone ingredients, or metal storage blocks.
+    pot_tags = [f"#{NAMESPACE}:urn"] if urn_families else []
+    if "anthophoros_planter" in families:
+        planter = f"#{NAMESPACE}:anthophoros_planter"
+        pot_tags.append(planter)
+        for tag in ("plant_pot", "flower_pot", "flowerpot"):
+            relation_tags[tag] = [planter]
+    if pot_tags:
+        relation_tags["pot"] = pot_tags
+    if "byzantine" in relation_tags:
+        relation_tags["guilloche"] = list(relation_tags["byzantine"])
+
     for material in MATERIALS:
         material_refs: list[str] = []
         for family in families:
@@ -1333,6 +1561,10 @@ def generate_tags(
         write_tag("material", kind, "stone", stone_refs, check, changed)
         write_tag("material", kind, "metal", metal_refs, check, changed)
     write_tag("minecraft", "blocks", "mineable/pickaxe", all_refs, check, changed)
+    vocabulary = search_vocabulary(families, ids_by_family, direct_tags, relation_tags)
+    write(RESOURCES / f"assets/{NAMESPACE}/search_vocabulary.json",
+          json_bytes(vocabulary), check, changed)
+    return vocabulary
 
 
 def generate(families: tuple[str, ...], check: bool = False) -> list[Path]:
@@ -1343,8 +1575,8 @@ def generate(families: tuple[str, ...], check: bool = False) -> list[Path]:
     remove_obsolete_unpublished_ceiling_panels(check, changed)
     remove_creative_only_loot(families, check, changed)
     generate_models_and_loot(families, check, changed)
-    generate_languages(families, check, changed)
-    generate_tags(families, check, changed)
+    vocabulary = generate_tags(families, check, changed)
+    generate_languages(families, check, changed, vocabulary)
     return changed
 
 

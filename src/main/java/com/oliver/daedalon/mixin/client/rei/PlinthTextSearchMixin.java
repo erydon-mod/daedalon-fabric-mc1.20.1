@@ -1,6 +1,6 @@
 package com.oliver.daedalon.mixin.client.rei;
 
-import com.oliver.daedalon.client.search.PlinthSearchVocabulary;
+import com.oliver.daedalon.client.search.DaedalonSearchVocabulary;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class PlinthTextSearchMixin {
     @Inject(method = "cacheData(Lme/shedaniel/rei/api/common/entry/EntryStack;)Ljava/lang/String;",
             at = @At("RETURN"), cancellable = true, require = 0, remap = false)
-    private void daedalon$appendFountainSearch(EntryStack<?> entry, CallbackInfoReturnable<String> callback) {
+    private void daedalon$appendCatalogueSearch(EntryStack<?> entry, CallbackInfoReturnable<String> callback) {
         if (entry.getValue() instanceof ItemStack stack) {
-            callback.setReturnValue(PlinthSearchVocabulary.appendTerms(callback.getReturnValue(), stack));
+            callback.setReturnValue(DaedalonSearchVocabulary.appendTerms(callback.getReturnValue(), stack));
         }
     }
 }

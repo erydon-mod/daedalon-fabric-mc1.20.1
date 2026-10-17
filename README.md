@@ -22,6 +22,20 @@ including clearing any remaining High-mode drops. No server work or network
 traffic is added. Minecraft's Decreased and Minimal particle settings still apply.
 Dome-breaking particles are disabled.
 
+## Finding decorations
+
+Creative search, REI, JEI and EMI share Daedalon's material, style and shape
+keywords. For example, search for `vase`, `sculpture`, `bench`, `pedestal`,
+`column capital`, `marble` or `weathered`; German and Spanish keywords work
+alongside English. Fountain searches include stone plinths that can build
+tiered fountains; decorative metal plinths remain outside that group.
+
+Matching block and item tags also support tools and browser tag searches.
+Daedalon's decorative stone, metal and flower-pot tags describe appearance;
+they do not make decorations into vanilla recipe ingredients or functional pots.
+The bundled search vocabulary is generated from the same tag catalogue, so
+ordinary search works before joining a server. REI, JEI and EMI are optional.
+
 ## Development validation
 
 Daedalon requires Java 17 and Python 3.13. Run the complete compilation, test,

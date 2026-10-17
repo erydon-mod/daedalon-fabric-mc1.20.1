@@ -1,6 +1,6 @@
 package com.oliver.daedalon.compat.emi;
 
-import com.oliver.daedalon.client.search.PlinthSearchVocabulary;
+import com.oliver.daedalon.client.search.DaedalonSearchVocabulary;
 import com.oliver.daedalon.registry.ModItems;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
@@ -12,7 +12,7 @@ public final class DaedalonEmiPlugin implements EmiPlugin {
     public void register(EmiRegistry registry) {
         for (var item : ModItems.blockItems()) {
             var stack = item.getDefaultStack();
-            for (String term : PlinthSearchVocabulary.terms(stack)) {
+            for (String term : DaedalonSearchVocabulary.terms(stack)) {
                 registry.addAlias(EmiStack.of(stack), Text.literal(term));
             }
         }
