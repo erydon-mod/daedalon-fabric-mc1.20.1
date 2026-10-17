@@ -3,7 +3,7 @@
 ERYDON Daedalon is ERYDON's standalone collection of detailed OBJ decor for
 Minecraft 1.20.1.
 
-Version 1.0.1 uses native 16x textures. The unified ERYDON Collection 32x and
+Version 1.0.0 uses native 16x textures. The unified ERYDON Collection 32x and
 64x resource packs support Daedalon, ERYDON, and ERYDON Themelios together.
 Daedalon does not require or bundle Continuity: its detailed OBJ models already
 use a built-in world-aligned repeat-phase renderer.
