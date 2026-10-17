@@ -11,7 +11,8 @@ final class FriezeWorldTransform implements RenderContext.QuadTransform {
     private final int steps, xTile, yTile, zTile;
 
     private FriezeWorldTransform(int steps,int xTile,int yTile,int zTile) {
-        this.steps=steps; this.xTile=xTile; this.yTile=yTile; this.zTile=zTile;
+        // ERYDON's side tile row is -blockY; keep the row cached and crop V within it.
+        this.steps=steps; this.xTile=xTile; this.yTile=Math.floorMod(-yTile,6); this.zTile=zTile;
     }
 
     private static FriezeWorldTransform[] createCache() {
@@ -37,7 +38,7 @@ final class FriezeWorldTransform implements RenderContext.QuadTransform {
             x+=.5F; z+=.5F; float y=quad.y(v);
             quad.pos(v,x,y,z);
             if (quad.hasNormal(v)) quad.normal(v,nx,quad.normalY(v),nz);
-            float u=(xTile+x)/6F, textureV=1F-(yTile+y)/6F;
+            float u=(xTile+x)/6F, textureV=(yTile+1-y)/6F;
             if (face != null) switch (face) {
                 case NORTH -> u=(5-xTile+1-x)/6F;
                 case EAST -> u=(5-zTile+1-z)/6F;
