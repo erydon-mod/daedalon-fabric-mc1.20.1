@@ -98,11 +98,12 @@ public final class FinialGameTests {
         for(var style:FixedDecorBlock.Style.values()) {
             if(!style.isFinial()) continue;
             var block=(FinialBlock)Registries.BLOCK.get(new Identifier("daedalon","bronze_"+style.idSuffix()));
+            for(var copingBlock:java.util.List.of(FinialCopingFixture.BLOCK,FinialCopingFixture.GRAND))
             for(var size:TwoSizeDecorBlock.Size.values()) for(var surface:FinialCopingFixture.Surface.values())
                 for(Direction facing:Direction.Type.HORIZONTAL) for(boolean offset:new boolean[]{false,true}) {
                     if(offset && surface!=FinialCopingFixture.Surface.STEEP_UPPER) continue;
                     world.removeBlock(owner,false);
-                    var coping=FinialCopingFixture.BLOCK.getDefaultState().with(FinialCopingFixture.SURFACE,surface)
+                    var coping=copingBlock.getDefaultState().with(FinialCopingFixture.SURFACE,surface)
                             .with(FinialCopingFixture.OFFSET,offset).with(Properties.HORIZONTAL_FACING,facing);
                     world.setBlockState(support,coping,Block.NOTIFY_ALL);
                     var stack=block.asItem().getDefaultStack();
@@ -112,7 +113,8 @@ public final class FinialGameTests {
                     var result=stack.useOnBlock(new ItemUsageContext(player,Hand.MAIN_HAND,hit));
                     var placed=world.getBlockState(owner);
                     context.assertTrue(result.isAccepted() && placed.isOf(block),"Side hit must place the finial above the coping: "+style+"/"+size+"/"+surface+"/"+facing+"/offset="+offset+" result="+result);
-                    var expected=offset ? FinialSupport.Profile.COPING_STEEP_UPPER_OFFSET : FinialSupport.Profile.find(surface.asString(),true);
+                    var expected=FinialSupport.Profile.find(offset ? "steep_upper_offset" : surface.asString(),
+                            true,copingBlock==FinialCopingFixture.GRAND);
                     context.assertTrue(placed.get(TwoSizeDecorBlock.SIZE)==size
                             && placed.get(FinialBlock.SUPPORT)==expected && placed.get(FinialBlock.FACING)==facing,
                             "Placement lost the coping profile or selected size");
@@ -125,6 +127,89 @@ public final class FinialGameTests {
                     context.assertTrue(world.getBlockState(owner).isOf(block),"An unsupported finial must retain its fitted state");
                 }
         }
+        world.removeBlock(owner,false);
+        context.complete();
+    }
+
+    @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=600)
+    public void slabsAndHalfLayersKeepEveryFinialOnTheirActualSurface(TestContext context) {
+        var world=context.getWorld();
+        var player=context.createMockCreativeServerPlayerInWorld();
+        BlockPos support=context.getAbsolutePos(new BlockPos(4,5,4)),owner=support.up();
+        var bottom=Blocks.STONE_SLAB.getDefaultState().with(net.minecraft.block.SlabBlock.TYPE,net.minecraft.block.enums.SlabType.BOTTOM);
+        var top=bottom.with(net.minecraft.block.SlabBlock.TYPE,net.minecraft.block.enums.SlabType.TOP);
+        var doubled=bottom.with(net.minecraft.block.SlabBlock.TYPE,net.minecraft.block.enums.SlabType.DOUBLE);
+        var layer=FinialCopingFixture.LAYER.getDefaultState();
+        var multiface=FinialCopingFixture.MULTIFACE_LAYER.getDefaultState();
+        var supports=java.util.List.of(bottom,top,doubled,layer,multiface);
+        player.setPosition(Vec3d.ofCenter(owner.add(5,4,5)));
+        for(int y=-2;y<=4;y++) for(int x=-3;x<=3;x++) for(int z=-3;z<=3;z++)
+            world.setBlockState(support.add(x,y,z),Blocks.AIR.getDefaultState(),Block.NOTIFY_LISTENERS);
+        int checked=0;
+        for(var style:FixedDecorBlock.Style.values()) {
+            if(!style.isFinial()) continue;
+            var finial=(FinialBlock)Registries.BLOCK.get(new Identifier("daedalon","bronze_"+style.idSuffix()));
+            for(var size:TwoSizeDecorBlock.Size.values()) for(var supportState:supports) for(Direction face:Direction.values()) {
+                world.removeBlock(owner,false);
+                world.setBlockState(support,supportState,Block.NOTIFY_ALL);
+                var stack=finial.asItem().getDefaultStack();
+                stack.getOrCreateSubNbt("BlockStateTag").putString("size",size.asString());
+                player.setStackInHand(Hand.MAIN_HAND,stack);
+                var hit=new BlockHitResult(Vec3d.ofCenter(support),face,support,false);
+                var result=stack.useOnBlock(new ItemUsageContext(player,Hand.MAIN_HAND,hit));
+                var placed=world.getBlockState(owner);
+                boolean half=supportState!=top && supportState!=doubled;
+                context.assertTrue(result.isAccepted() && placed.isOf(finial),"Slab/layer side placement lost its owner: "+supportState+"/"+face);
+                context.assertTrue(world.getBlockState(support)==supportState && placed.get(TwoSizeDecorBlock.SIZE)==size,
+                        "Mounting changed its supporting slab/layer or selected size");
+                context.assertTrue(placed.get(FinialBlock.SUPPORT)==(half ? FinialSupport.Profile.HALF_HEIGHT : FinialSupport.Profile.NONE),
+                        "Slab or layer chose the wrong persisted support height");
+                var fit=FinialSupport.fit(placed,style);
+                context.assertTrue(!fit.mounted() && Math.abs(fit.bodyY()-(half ? -.5 : 0))<1e-8,
+                        "A horizontal slab must keep the ornament upright without adding a pedestal");
+                context.assertTrue(FinialSupportPlacement.isClear(placed,world,owner),"Slab contact was incorrectly blocked");
+                if(half) {
+                    var bounds=placed.getOutlineShape(world,owner).getBoundingBox();
+                    Vec3d start=Vec3d.of(owner).add(bounds.minX-.25,bounds.minY+.125,fit.centreZ());
+                    Vec3d end=Vec3d.of(owner).add(bounds.maxX+.25,bounds.minY+.125,fit.centreZ());
+                    var expected=placed.getOutlineShape(world,owner).raycast(start,end,owner);
+                    context.assertTrue(expected!=null && BlockPos.ofFloored(expected.getPos()).getY()==support.getY(),
+                            "Outside-body ray must meet the lowered ornament below its owner cell");
+                    var selected=world.raycastBlock(start,end,support,
+                            supportState.getOutlineShape(world,support,ShapeContext.absent()),supportState);
+                    context.assertTrue(selected!=null && selected.getBlockPos().equals(owner),"Lowered ornament cannot select its saved owner");
+                    context.assertTrue(selected.getPos().squaredDistanceTo(expected.getPos())<1e-10,
+                            "Lowered ornament selection differs from its actual collision geometry");
+                    world.setBlockState(support,top,Block.NOTIFY_ALL);
+                    context.assertTrue(world.getBlockState(owner).get(FinialBlock.SUPPORT)==FinialSupport.Profile.NONE,
+                            "Changing a bottom slab to a top slab did not refresh the saved height");
+                    world.setBlockState(support,bottom,Block.NOTIFY_ALL);
+                    world.removeBlock(support,false);
+                    context.assertTrue(world.getBlockState(owner).get(FinialBlock.SUPPORT)==FinialSupport.Profile.HALF_HEIGHT,
+                            "Removing a support must retain the saved lowered pose");
+                }
+                checked++;
+            }
+            world.removeBlock(owner,false);
+            for(var invalid:java.util.List.of(layer.with(FinialCopingFixture.LAYERS,3),layer.with(FinialCopingFixture.TOP,true),
+                    multiface.with(Properties.EAST,true),multiface.with(Properties.DOWN,false).with(Properties.UP,true))) {
+                world.setBlockState(support,invalid,Block.NOTIFY_ALL);
+                context.assertTrue(FinialSupportPlacement.fitted(finial.getDefaultState(),world,support).get(FinialBlock.SUPPORT)==FinialSupport.Profile.NONE,
+                        "Unsupported layer arrangement acquired a half-height fit");
+            }
+            for(Direction facing:java.util.List.of(Direction.NORTH,Direction.WEST)) {
+                world.removeBlock(owner,false);
+                world.setBlockState(support,bottom,Block.NOTIFY_ALL);
+                world.setBlockState(owner,finial.getDefaultState().with(FinialBlock.FACING,facing)
+                        .with(FinialBlock.SUPPORT,FinialSupport.Profile.HALF_HEIGHT),Block.NOTIFY_ALL);
+                for(var changedSupport:java.util.List.of(top,doubled,bottom,layer,multiface)) {
+                    world.setBlockState(support,changedSupport,Block.NOTIFY_ALL);
+                    context.assertTrue(world.getBlockState(owner).get(FinialBlock.FACING)==facing,
+                            "Slab/layer refit reset a copied or mirrored finial's saved facing");
+                }
+            }
+        }
+        context.assertTrue(checked==300,"Cover five styles, both sizes, five supports and all six clicked faces");
         world.removeBlock(owner,false);
         context.complete();
     }

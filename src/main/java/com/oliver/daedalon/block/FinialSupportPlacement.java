@@ -3,6 +3,8 @@ package com.oliver.daedalon.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.block.enums.SlabType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Property;
@@ -50,11 +52,16 @@ public final class FinialSupportPlacement {
     public static BlockState fitted(BlockState finial,BlockView world,BlockPos support) {
         BlockState found=world.getBlockState(support);
         Matched fit=matched(found,world,support);
-        if(fit==null) return finial;
+        if(fit==null) {
+            return finial.get(FinialBlock.SUPPORT)==FinialSupport.Profile.HALF_HEIGHT
+                    && Block.isFaceFullSquare(found.getCollisionShape(world,support),Direction.UP)
+                    ? finial.with(FinialBlock.SUPPORT,FinialSupport.Profile.NONE) : finial;
+        }
         FinialSupport.Profile profile=fit.profile();
-        Direction facing=fit.facing();
-        if(profile==FinialSupport.Profile.COPING_STEEP_UPPER && named(found,"offset").equals("true"))
-            profile=FinialSupport.Profile.COPING_STEEP_UPPER_OFFSET;
+        Direction facing=profile==FinialSupport.Profile.NONE || profile==FinialSupport.Profile.HALF_HEIGHT
+                ? finial.get(FinialBlock.FACING) : fit.facing();
+        if(profile.coping && !profile.offset && profile.start==.5 && named(found,"offset").equals("true"))
+            profile=FinialSupport.Profile.find("steep_upper_offset",true,profile.grand());
         if(profile==FinialSupport.Profile.STEEP_UPPER && finial.get(FinialBlock.SUPPORT)==FinialSupport.Profile.STEEP_UPPER_OFFSET)
             profile=FinialSupport.Profile.STEEP_UPPER_OFFSET;
         return finial.with(FinialBlock.SUPPORT,profile).with(FinialBlock.FACING,facing);
@@ -67,6 +74,11 @@ public final class FinialSupportPlacement {
 
     private record Matched(FinialSupport.Profile profile,Direction facing) { }
     private static Matched matched(BlockState state,BlockView world,BlockPos pos) {
+        if(state.getBlock() instanceof SlabBlock) {
+            return new Matched(state.get(SlabBlock.TYPE)==SlabType.BOTTOM
+                    ? FinialSupport.Profile.HALF_HEIGHT : FinialSupport.Profile.NONE,Direction.EAST);
+        }
+        if(isHalfHeightLayer(state)) return new Matched(FinialSupport.Profile.HALF_HEIGHT,Direction.EAST);
         FinialSupport.Profile profile=profile(state);
         if(profile!=null) return new Matched(profile,direction(state));
         var id=Registries.BLOCK.getId(state.getBlock());
@@ -102,9 +114,9 @@ public final class FinialSupportPlacement {
 
     private static FinialSupport.Profile profile(BlockState state) {
         var id=Registries.BLOCK.getId(state.getBlock());
-        if(id.getNamespace().equals("erydon") && id.getPath().endsWith("_coping_georgian")) {
+        if(isCoping(state)) {
             String surface=named(state,"surface");
-            FinialSupport.Profile profile=FinialSupport.Profile.find(surface,true);
+            FinialSupport.Profile profile=FinialSupport.Profile.find(surface,true,id.getPath().endsWith("_coping_georgian_grand"));
             return profile==FinialSupport.Profile.NONE ? null : profile;
         }
         if(!id.getNamespace().equals("erydon") && !id.getNamespace().equals("themelios")) return null;
@@ -114,6 +126,23 @@ public final class FinialSupportPlacement {
             if(path.endsWith("_slope_"+surface) || path.endsWith("_"+surface+"_slope"))
                 return FinialSupport.Profile.find(surface,false);
         return path.endsWith("_slope") ? FinialSupport.Profile.SLOPE : null;
+    }
+
+    private static boolean isCoping(BlockState state) {
+        var id=Registries.BLOCK.getId(state.getBlock());
+        return id.getNamespace().equals("erydon") && (id.getPath().endsWith("_coping_georgian")
+                || id.getPath().endsWith("_coping_georgian_grand"));
+    }
+
+    private static boolean isHalfHeightLayer(BlockState state) {
+        var id=Registries.BLOCK.getId(state.getBlock());
+        if((!id.getNamespace().equals("erydon") && !id.getNamespace().equals("themelios"))
+                || !named(state,"layers").equals("4")) return false;
+        if(id.getPath().endsWith("_layer")) return named(state,"top").equals("false");
+        if(!id.getPath().endsWith("_layer_multiface") || !named(state,"down").equals("true")) return false;
+        for(String face:new String[]{"up","north","south","east","west"})
+            if(!named(state,face).equals("false")) return false;
+        return true;
     }
 
     private static Direction direction(BlockState state) {
@@ -154,8 +183,7 @@ public final class FinialSupportPlacement {
 
     private static boolean coplanarCoping(BlockState finial,BlockView world,BlockPos owner,BlockPos cell,FinialSupport.Fit fit) {
         BlockState found=world.getBlockState(cell);
-        var id=Registries.BLOCK.getId(found.getBlock());
-        if(!id.getNamespace().equals("erydon") || !id.getPath().endsWith("_coping_georgian")) return false;
+        if(!isCoping(found)) return false;
         var state=fitted(finial,world,cell);
         var other=FinialSupport.fit(state,((FinialBlock)finial.getBlock()).style());
         if(!other.mounted() || Math.abs(other.gradientX()-fit.gradientX())>1e-6

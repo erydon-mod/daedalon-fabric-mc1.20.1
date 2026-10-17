@@ -69,10 +69,12 @@ public final class FinialBlock extends TwoSizeDecorBlock {
     @Override public VoxelShape getCollisionShape(BlockState state,BlockView world,BlockPos pos,ShapeContext context) {
         return getOutlineShape(state,world,pos,context);
     }
-    /** One particle box caps vanilla debris at64 instead of multiplying it by base slices. */
+    /** Keep fitted-base slices out of the outline used by the shared break-particle budget. */
     public VoxelShape getBreakParticleShape(BlockState state) {
         VoxelShape outline=getOutlineShape(state,EmptyBlockView.INSTANCE,BlockPos.ORIGIN,ShapeContext.absent());
-        return state.get(SUPPORT)==FinialSupport.Profile.NONE ? outline : VoxelShapes.cuboid(outline.getBoundingBox());
+        FinialSupport.Profile profile=state.get(SUPPORT);
+        return profile==FinialSupport.Profile.NONE || profile==FinialSupport.Profile.HALF_HEIGHT
+                ? outline : VoxelShapes.cuboid(outline.getBoundingBox());
     }
     @Override public BlockState rotate(BlockState state,BlockRotation rotation) {
         return state.with(FACING,rotation.rotate(state.get(FACING)));

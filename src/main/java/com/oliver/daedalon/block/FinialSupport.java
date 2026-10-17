@@ -15,6 +15,7 @@ public final class FinialSupport {
     private FinialSupport() { }
     public static final String TEMPLATE = "/assets/daedalon/authoring_models/block/finial/support_base.json";
     public static final double COPING_THICKNESS = 3.6 / 16.0;
+    public static final double GRAND_COPING_THICKNESS = 8.0 / 16.0;
     private static final double[] BASE_DIMENSIONS = baseDimensions();
     public static final double BASE_THICKNESS = BASE_DIMENSIONS[1];
     public static final double BASE_WIDTH = BASE_DIMENSIONS[0];
@@ -51,38 +52,76 @@ public final class FinialSupport {
         COPING_SHALLOW_NARROW_RIGHT("coping_shallow_narrow_right",Alignment.SHALLOW_NARROW_RIGHT),
         COPING_SHALLOW_NARROW_LEFT("coping_shallow_narrow_left",Alignment.SHALLOW_NARROW_LEFT),
         COPING_SHALLOW_NARROW_THIN_RIGHT("coping_shallow_narrow_thin_right",Alignment.SHALLOW_NARROW_THIN_RIGHT),
-        COPING_SHALLOW_NARROW_THIN_LEFT("coping_shallow_narrow_thin_left",Alignment.SHALLOW_NARROW_THIN_LEFT);
+        COPING_SHALLOW_NARROW_THIN_LEFT("coping_shallow_narrow_thin_left",Alignment.SHALLOW_NARROW_THIN_LEFT),
+        COPING_FLAT_HALF("coping_flat_half",0,1,-.5,-.5,true),
+        HALF_HEIGHT("half_height",0,1,-.5,-.5,false),
+        COPING_GRAND_FLAT("coping_grand_flat",0,1,0,0,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SLOPE("coping_grand_slope",0,1,0,-1,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SHALLOW_LOWER("coping_grand_shallow_lower",0,1,-.5,-1,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SHALLOW_UPPER("coping_grand_shallow_upper",0,1,0,-.5,GRAND_COPING_THICKNESS),
+        COPING_GRAND_STEEP_LOWER("coping_grand_steep_lower",0,.5,0,-1,GRAND_COPING_THICKNESS),
+        COPING_GRAND_STEEP_UPPER("coping_grand_steep_upper",.5,1,0,-1,GRAND_COPING_THICKNESS),
+        COPING_GRAND_STEEP_UPPER_OFFSET("coping_grand_steep_upper_offset",.5,1,0,-1,GRAND_COPING_THICKNESS,true),
+        COPING_GRAND_DIAGONAL("coping_grand_diagonal",Alignment.DIAGONAL,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SHALLOW_BROAD_RIGHT("coping_grand_shallow_broad_right",Alignment.SHALLOW_BROAD_RIGHT,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SHALLOW_BROAD_LEFT("coping_grand_shallow_broad_left",Alignment.SHALLOW_BROAD_LEFT,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SHALLOW_BROAD_WIDE_RIGHT("coping_grand_shallow_broad_wide_right",Alignment.SHALLOW_BROAD_WIDE_RIGHT,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SHALLOW_BROAD_WIDE_LEFT("coping_grand_shallow_broad_wide_left",Alignment.SHALLOW_BROAD_WIDE_LEFT,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SHALLOW_NARROW_RIGHT("coping_grand_shallow_narrow_right",Alignment.SHALLOW_NARROW_RIGHT,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SHALLOW_NARROW_LEFT("coping_grand_shallow_narrow_left",Alignment.SHALLOW_NARROW_LEFT,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SHALLOW_NARROW_THIN_RIGHT("coping_grand_shallow_narrow_thin_right",Alignment.SHALLOW_NARROW_THIN_RIGHT,GRAND_COPING_THICKNESS),
+        COPING_GRAND_SHALLOW_NARROW_THIN_LEFT("coping_grand_shallow_narrow_thin_left",Alignment.SHALLOW_NARROW_THIN_LEFT,GRAND_COPING_THICKNESS),
+        COPING_GRAND_FLAT_HALF("coping_grand_flat_half",0,1,-.5,-.5,GRAND_COPING_THICKNESS);
 
         public final double start,end,high,low;
         public final boolean coping;
         public final boolean offset;
+        public final double copingThickness;
         public final Alignment alignment;
         private final String name;
         Profile(String name,double start,double end,double high,double low,boolean coping) {
-            this.name=name; this.start=start; this.end=end; this.high=high; this.low=low; this.coping=coping;
-            this.alignment=Alignment.AXIS; this.offset=false;
+            this(name,start,end,high,low,coping ? COPING_THICKNESS : 0,false);
         }
         Profile(String name,double start,double end,double high,double low,boolean coping,boolean offset) {
-            this.name=name; this.start=start; this.end=end; this.high=high; this.low=low; this.coping=coping;
+            this(name,start,end,high,low,coping ? COPING_THICKNESS : 0,offset);
+        }
+        Profile(String name,double start,double end,double high,double low,double thickness) {
+            this(name,start,end,high,low,thickness,false);
+        }
+        Profile(String name,double start,double end,double high,double low,double thickness,boolean offset) {
+            this.name=name; this.start=start; this.end=end; this.high=high; this.low=low; this.coping=thickness>0;
+            this.copingThickness=thickness;
             this.alignment=Alignment.AXIS; this.offset=offset;
         }
         Profile(String name,Alignment alignment) {
             this(name,alignment,true);
         }
         Profile(String name,Alignment alignment,boolean coping) {
-            this.name=name; this.start=0; this.end=1; this.high=0; this.low=0; this.coping=coping; this.alignment=alignment; this.offset=false;
+            this(name,alignment,coping ? COPING_THICKNESS : 0);
+        }
+        Profile(String name,Alignment alignment,double thickness) {
+            this.name=name; this.start=0; this.end=1; this.high=0; this.low=0; this.coping=thickness>0;
+            this.copingThickness=thickness; this.alignment=alignment; this.offset=false;
+        }
+        private static final java.util.Map<String,Profile> BY_NAME=byName();
+        private static java.util.Map<String,Profile> byName() {
+            var result=new java.util.HashMap<String,Profile>();
+            for(Profile value:values()) result.put(value.name,value);
+            return java.util.Map.copyOf(result);
         }
         @Override public String asString() { return name; }
         public double gradient() { return (high-low)/(end-start); }
         public double height(double x) { return high-(x-start)*gradient(); }
         public static Profile find(String surface,boolean coping) {
-            String name=(coping ? "coping_" : "")+surface;
-            for(Profile value:values()) if(value.name.equals(name)) return value;
-            return NONE;
+            return find(surface,coping,false);
         }
+        public static Profile find(String surface,boolean coping,boolean grand) {
+            return BY_NAME.getOrDefault((coping ? grand ? "coping_grand_" : "coping_" : "")+surface,NONE);
+        }
+        public boolean grand() { return copingThickness==GRAND_COPING_THICKNESS; }
         public Profile reflected() {
             return alignment==Alignment.AXIS || alignment==Alignment.DIAGONAL ? this
-                    : find(alignment.name.replace("right","temporary").replace("left","right").replace("temporary","left"),coping);
+                    : find(alignment.name.replace("right","temporary").replace("left","right").replace("temporary","left"),coping,grand());
         }
     }
 
@@ -128,7 +167,7 @@ public final class FinialSupport {
     private static Key key(BlockState state,FixedDecorBlock.Style style) {
         Profile profile=state.get(FinialBlock.SUPPORT);
         return new Key(style,state.get(TwoSizeDecorBlock.SIZE),profile,
-                profile==Profile.NONE ? Direction.EAST : state.get(FinialBlock.FACING));
+                profile==Profile.NONE || profile==Profile.HALF_HEIGHT ? Direction.EAST : state.get(FinialBlock.FACING));
     }
     public static Fit fit(BlockState state,FixedDecorBlock.Style style) {
         return FITS.computeIfAbsent(key(state,style),ignored -> createFit(state,style));
@@ -137,11 +176,12 @@ public final class FinialSupport {
         Profile profile=state.get(FinialBlock.SUPPORT);
         double scale=state.get(TwoSizeDecorBlock.SIZE)==TwoSizeDecorBlock.Size.SMALL ? 1 : 2;
         if(profile==Profile.NONE) return new Fit(.5,.5,0,0,0,0,0,0,false);
+        if(profile==Profile.HALF_HEIGHT) return new Fit(.5,.5,-.5,0,0,0,0,-.5,false);
         Direction facing=state.get(FinialBlock.FACING);
         double angle=quarterAngle(facing),cos=Math.cos(angle),sin=Math.sin(angle);
         Alignment alignment=profile.alignment;
         double normalLength=Math.sqrt(1+profile.gradient()*profile.gradient());
-        double thickness=profile.coping ? COPING_THICKNESS : 0;
+        double thickness=profile.copingThickness;
         double nativeX=(profile.start+profile.end)*.5+profile.gradient()*thickness/normalLength;
         double nativeZ=.5;
         if(alignment!=Alignment.AXIS) { nativeX=.5+alignment.offsetX; nativeZ=.5+alignment.offsetZ; }
