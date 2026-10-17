@@ -32,7 +32,7 @@
     "game_tests": 5,
     "jar_audit": {
       "status": "passed",
-      "jar": "C:\\Users\\olies\\IdeaProjects\\daedalon-fabric-mc1.20.1\\build\\libs\\daedalon-fabric-mc1.20.1-compat2-1.0.1.jar",
+      "jar": "build/libs/daedalon-fabric-mc1.20.1-compat2-1.0.1.jar",
       "jarBytes": 26271595,
       "jarSha256": "a59908cd6a46c2aca6cd444f8db9454bb91b8b51dea4c418a5ddc66190b2cac1",
       "metadata": {

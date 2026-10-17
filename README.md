@@ -8,9 +8,15 @@ Version 1.0.0 uses native 16x textures. The unified ERYDON Collection 32x and
 Daedalon does not require or bundle Continuity: its detailed OBJ models already
 use a built-in world-aligned repeat-phase renderer.
 
+Fabric API is required. Sodium and Iris are optional. If you use Sodium 0.5.x,
+also install a compatible Indium release so Daedalon's models can render.
+Without Sodium, Fabric API's bundled renderer provides that support.
+
 This repository is source-available under Oliver's restricted licence. It is
 not open-source software; see `LICENSE`. Third-party asset credits are retained
-under `src/main/resources/META-INF/THIRD_PARTY_NOTICES.md`.
+under `src/main/resources/META-INF/THIRD_PARTY_NOTICES.md`. Build-tool licences
+and attributions for the source repository are listed in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Fountain droplets
 
