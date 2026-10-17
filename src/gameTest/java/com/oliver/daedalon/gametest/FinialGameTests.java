@@ -145,7 +145,7 @@ public final class FinialGameTests {
         player.setPosition(Vec3d.ofCenter(owner.add(5,4,5)));
         for(int y=-2;y<=4;y++) for(int x=-3;x<=3;x++) for(int z=-3;z<=3;z++)
             world.setBlockState(support.add(x,y,z),Blocks.AIR.getDefaultState(),Block.NOTIFY_LISTENERS);
-        int checked=0;
+        int checked=0,loweredRays=0;
         for(var style:FixedDecorBlock.Style.values()) {
             if(!style.isFinial()) continue;
             var finial=(FinialBlock)Registries.BLOCK.get(new Identifier("daedalon","bronze_"+style.idSuffix()));
@@ -175,11 +175,21 @@ public final class FinialGameTests {
                     var expected=placed.getOutlineShape(world,owner).raycast(start,end,owner);
                     context.assertTrue(expected!=null && BlockPos.ofFloored(expected.getPos()).getY()==support.getY(),
                             "Outside-body ray must meet the lowered ornament below its owner cell");
-                    var selected=world.raycastBlock(start,end,support,
-                            supportState.getOutlineShape(world,support,ShapeContext.absent()),supportState);
-                    context.assertTrue(selected!=null && selected.getBlockPos().equals(owner),"Lowered ornament cannot select its saved owner");
-                    context.assertTrue(selected.getPos().squaredDistanceTo(expected.getPos())<1e-10,
-                            "Lowered ornament selection differs from its actual collision geometry");
+                    String detail=" style="+style+" size="+size+" support="+supportState+" clickedFace="+face;
+                    var indexed=FinialRaycast.closest(world,start,end,support,supportState,null);
+                    context.assertTrue(indexed!=null && indexed.getBlockPos().equals(owner)
+                                    && indexed.getPos().squaredDistanceTo(expected.getPos())<1e-10,
+                            "Lowered ornament index differs from its actual geometry"+detail);
+                    var supportOutline=supportState.getOutlineShape(world,support,ShapeContext.absent());
+                    var supportHit=supportOutline.raycast(start,end,support);
+                    boolean supportNearer=supportHit!=null
+                            && supportHit.getPos().squaredDistanceTo(start)<=expected.getPos().squaredDistanceTo(start);
+                    var nearest=supportNearer ? supportHit : expected;
+                    var selected=world.raycastBlock(start,end,support,supportOutline,supportState);
+                    context.assertTrue(selected!=null && selected.getBlockPos().equals(nearest.getBlockPos())
+                                    && selected.getPos().squaredDistanceTo(nearest.getPos())<1e-10,
+                            "Lowered selection must retain the physically nearer support or finial"+detail);
+                    loweredRays++;
                     world.setBlockState(support,top,Block.NOTIFY_ALL);
                     context.assertTrue(world.getBlockState(owner).get(FinialBlock.SUPPORT)==FinialSupport.Profile.NONE,
                             "Changing a bottom slab to a top slab did not refresh the saved height");
@@ -210,8 +220,44 @@ public final class FinialGameTests {
             }
         }
         context.assertTrue(checked==300,"Cover five styles, both sizes, five supports and all six clicked faces");
+        context.assertTrue(loweredRays==180,"Cover every lowered slab/layer ray without skipping a support");
         world.removeBlock(owner,false);
+        assertMultifacePostOccludesIndexedOverhang(context,support,bottom,multiface);
         context.complete();
+    }
+
+    private static void assertMultifacePostOccludesIndexedOverhang(TestContext context,BlockPos support,
+            net.minecraft.block.BlockState bottom,net.minecraft.block.BlockState multiface) {
+        var world=context.getWorld();
+        BlockPos owner=support.east().up();
+        var finial=(FinialBlock)Registries.BLOCK.get(new Identifier("daedalon","bronze_sphaira_finial"));
+        var large=finial.getDefaultState().with(TwoSizeDecorBlock.SIZE,TwoSizeDecorBlock.Size.LARGE)
+                .with(FinialBlock.SUPPORT,FinialSupport.Profile.HALF_HEIGHT);
+        world.setBlockState(support,multiface,Block.NOTIFY_ALL);
+        world.setBlockState(support.east(),bottom,Block.NOTIFY_ALL);
+        context.assertTrue(FinialSupportPlacement.isClear(large,world,owner),
+                "The adversarial finial overhang must fit without intersecting either half-layer collision");
+        world.setBlockState(owner,large,Block.NOTIFY_ALL);
+        Vec3d start=Vec3d.of(support).add(-.25,.625,.5),end=start.add(3,0,0);
+        var expected=large.getOutlineShape(world,owner).raycast(start,end,owner);
+        context.assertTrue(expected!=null && BlockPos.ofFloored(expected.getPos()).equals(support),
+                "The finial must extend into the same cell as the multiface targeting post");
+        var indexed=FinialRaycast.closest(world,start,end,support,multiface,null);
+        context.assertTrue(indexed!=null && indexed.getBlockPos().equals(owner)
+                        && indexed.getPos().squaredDistanceTo(expected.getPos())<1e-10,
+                "The adversarial ray must discover the indexed finial behind the targeting post");
+        var supportOutline=multiface.getOutlineShape(world,support,ShapeContext.absent());
+        var postHit=supportOutline.raycast(start,end,support);
+        context.assertTrue(postHit!=null && postHit.getPos().y>support.getY()+.5
+                        && postHit.getPos().squaredDistanceTo(start)<expected.getPos().squaredDistanceTo(start),
+                "The authentic multiface targeting post must be strictly nearer than the indexed overhang");
+        var selected=world.raycastBlock(start,end,support,supportOutline,multiface);
+        context.assertTrue(selected!=null && selected.getBlockPos().equals(support)
+                        && selected.getPos().squaredDistanceTo(postHit.getPos())<1e-10,
+                "An indexed finial must not be selected through a nearer multiface targeting post");
+        world.removeBlock(owner,false);
+        world.removeBlock(support.east(),false);
+        world.removeBlock(support,false);
     }
 
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE)

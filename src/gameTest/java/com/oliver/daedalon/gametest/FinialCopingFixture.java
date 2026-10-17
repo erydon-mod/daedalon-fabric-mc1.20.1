@@ -49,6 +49,9 @@ public final class FinialCopingFixture implements ModInitializer {
         LAYER=Registry.register(Registries.BLOCK,new Identifier("erydon","test_layer"),new Block(Block.Settings.create().nonOpaque()) {
             { setDefaultState(getDefaultState().with(LAYERS,4).with(TOP,false)); }
             @Override protected void appendProperties(StateManager.Builder<Block,BlockState> builder) { builder.add(LAYERS,TOP); }
+            @Override public VoxelShape getOutlineShape(BlockState state,BlockView world,BlockPos pos,ShapeContext context) {
+                return getCollisionShape(state,world,pos,context);
+            }
             @Override public VoxelShape getCollisionShape(BlockState state,BlockView world,BlockPos pos,ShapeContext context) {
                 double height=state.get(LAYERS)/8.0;
                 return VoxelShapes.cuboid(0,state.get(TOP) ? 1-height : 0,0,1,state.get(TOP) ? 1 : height,1);
