@@ -257,7 +257,8 @@ public final class ObjMeshModelLoadingPlugin {
             families.add(new MeshFamily(
                     style.displayName() + " Bust",
                     id("models/mesh/" + style.resourceStem() + ".json"),
-                    id("block/mesh/bust_display"),
+                    // Hestia's prepared mesh faces north; the other busts face south.
+                    id("block/mesh/" + (style == BustBlock.Style.HESTIA ? "bust_hestia_display" : "bust_display")),
                     createBustVariants(style.subjectId())
             ));
         }

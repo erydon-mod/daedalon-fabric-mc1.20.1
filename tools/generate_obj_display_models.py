@@ -2,8 +2,8 @@
 """Generate the shared Daedalon OBJ item-display models.
 
 Keeping the display transforms in one manifest makes the GUI, held, dropped,
-and fixed sizes reproducible across the large material catalogue. Corbels are
-the sole facing exception because their supplied front was already approved.
+and fixed sizes reproducible across the large material catalogue. Corbels keep
+their approved front, and Hestia's north-facing bust has its own GUI view.
 """
 
 from __future__ import annotations
@@ -187,6 +187,10 @@ def expected_files() -> dict[str, bytes]:
         "bust_display.json": payload(
             "daedalon:block/statue_spartan_promachos_aganite",
             three_block_display([20, 335, 0]),
+        ),
+        "bust_hestia_display.json": payload(
+            "daedalon:block/statue_spartan_promachos_aganite",
+            three_block_display([20, 155, 0]),
         ),
         "zeus_statue_display.json": payload(
             "daedalon:block/statue_spartan_promachos_aganite",

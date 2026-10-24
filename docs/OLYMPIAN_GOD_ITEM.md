@@ -30,6 +30,8 @@ The original sources face south; the later Hermes, Hephaestus and Hestia
 statues and Hestia bust were normalized to north during preparation. The shared
 transform accounts for that difference, so the physical front follows the
 selected eight-way facing through side-click swaps and debug-stick turns.
+Hestia's bust also uses a separate shared GUI display turned 180 degrees from
+the older bust view, showing her face without changing placed orientation.
 Fresh placement points these corrected sculptures back towards the player;
 it uses the opposite of the player's horizontal look direction and retains
 the existing default size, straight pose and disabled offset. Explicit

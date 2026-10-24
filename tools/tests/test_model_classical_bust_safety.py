@@ -42,6 +42,7 @@ class ClassicalBustSafetyTests(unittest.TestCase):
         }
         for family in self.families:
             subject = GENERATOR.BUST_FAMILIES[family][0]
+            expected_display = ("bust_hestia_display" if subject == "hestia" else "bust_display")
             ids = GENERATOR.family_block_ids(family)
             self.assertEqual(f"aganite_{subject}_bust", ids[0])
             self.assertEqual(f"aganite_aged_{subject}_bust", ids[1])
@@ -61,7 +62,7 @@ class ClassicalBustSafetyTests(unittest.TestCase):
                 state = load_json(DAEDALON_ASSETS / f"blockstates/{block_id}.json")
                 self.assertEqual(expected_states, set(state["variants"]), block_id)
                 self.assertEqual(
-                    "daedalon:block/mesh/bust_display",
+                    f"daedalon:block/mesh/{expected_display}",
                     load_json(DAEDALON_ASSETS / f"models/item/{block_id}.json")["parent"],
                 )
                 self.assertEqual(
@@ -132,7 +133,10 @@ class ClassicalBustSafetyTests(unittest.TestCase):
         self.assertIn("new BustBlock(decorSettings(), style)", registrations)
         self.assertIn("BustBlock.Style.values()", registrations)
         self.assertIn("BustBlock.Style.values()", plugin)
-        self.assertIn('id("block/mesh/bust_display")', plugin)
+        bust_family = plugin[plugin.index("for (BustBlock.Style style : BustBlock.Style.values())"):
+                             plugin.index("for (UrnBlock.UrnStyle style : UrnBlock.UrnStyle.values())")]
+        self.assertRegex(bust_family,
+                         r'style\s*==\s*BustBlock\.Style\.HESTIA\s*\?\s*"bust_hestia_display"\s*:\s*"bust_display"')
         self.assertIn("createBustVariants(style.subjectId())", plugin)
         self.assertIn('BooleanProperty.of("offset")', statue)
         self.assertIn('EnumProperty.of("size", StatueSize.class)', statue)

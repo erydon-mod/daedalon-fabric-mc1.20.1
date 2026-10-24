@@ -152,6 +152,31 @@ class OlympianCompletionSafetyTests(unittest.TestCase):
                                                 for face in face_refs for pair in face)).hexdigest()
                 self.assertEqual(locked["face_position_normal_stream_sha256"], digest)
 
+    def test_hestia_bust_icon_uses_the_prepared_front_without_rotating_world_geometry(self) -> None:
+        display_root = DAEDALON_ASSETS / "models/block/mesh"
+        self.assertEqual("bust_hestia_display.json", MESH_EXPECTATIONS["bust_hestia"]["display"])
+        original = load_json(display_root / "bust_display.json")
+        hestia = load_json(display_root / "bust_hestia_display.json")
+        original_gui = original["display"]["gui"]
+        hestia_gui = hestia["display"]["gui"]
+        self.assertEqual(180, (hestia_gui["rotation"][1] - original_gui["rotation"][1]) % 360)
+        self.assertEqual(original_gui["rotation"][::2], hestia_gui["rotation"][::2])
+        self.assertEqual({key: value for key, value in original_gui.items() if key != "rotation"},
+                         {key: value for key, value in hestia_gui.items() if key != "rotation"})
+        for context, transform in original["display"].items():
+            if context != "gui":
+                self.assertEqual(transform, hestia["display"][context])
+        for family in GENERATOR.BUST_FAMILIES:
+            expected_parent = "daedalon:block/mesh/" + (
+                "bust_hestia_display" if family == "bust_hestia" else "bust_display")
+            self.assertEqual(expected_parent, GENERATOR.display_parent(family))
+            for block_id in GENERATOR.family_block_ids(family):
+                self.assertEqual(expected_parent,
+                                 load_json(DAEDALON_ASSETS / f"models/item/{block_id}.json")["parent"])
+        mesh = self.evidence["models"]["bust_hestia"]
+        self.assertEqual("north", mesh["runtime_facing"])
+        self.assertEqual(mesh["runtime_obj_sha256"], sha256(MESH_ROOT / "bust_hestia.obj"))
+
     def test_one_shared_mesh_keeps_uv_policy_and_material_variants_separate(self) -> None:
         for stem in OLYMPIAN_COMPLETION_MESHES:
             expected = MESH_EXPECTATIONS[stem]

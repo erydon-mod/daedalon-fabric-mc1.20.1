@@ -204,7 +204,9 @@
     "bust_hestia": {
       "obj": "bust_hestia.obj",
       "sha256": "2bca499b4e20a66452c5577d5c8c5d6c5832d3c9d196f9b3b714c116706051bb",
-      "source_front": "north"
+      "source_front": "north",
+      "gui_rotation_y_degrees": 155,
+      "gui_source_alignment_note": "Player icon review on 24 October 2026 confirmed the shared south-facing bust GUI view displayed the back of this north-facing prepared mesh. The Hestia-only shared display adds 180 degrees around Y, retaining the runtime OBJ, measured NORTH world profile, normals, UVs and collision."
     },
     "bust_poseidon": {
       "obj": "bust_poseidon.obj",

@@ -845,7 +845,7 @@ def display_parent(family: str) -> str:
     if family in STATUE_DISPLAY_MODELS:
         name = STATUE_DISPLAY_MODELS[family]
     elif family in BUST_FAMILIES:
-        name = "bust"
+        name = "bust_hestia" if family == "bust_hestia" else "bust"
     elif family in CORBEL_FAMILIES:
         name = "corbel"
     elif family in CAPITAL_FAMILIES:

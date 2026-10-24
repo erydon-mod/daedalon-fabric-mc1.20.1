@@ -539,7 +539,8 @@ for _stem, _mesh in OLYMPIAN_COMPLETION_MESHES.items():
         "definition": f"{_stem}.json" if _stem.startswith("bust_") else f"{_stem}_statue.json",
         "obj": f"{_stem}.obj",
         "mtl": None,
-        "display": "bust_display.json" if _stem.startswith("bust_") else "zeus_statue_display.json",
+        "display": ("bust_hestia_display.json" if _stem == "bust_hestia"
+                    else "bust_display.json" if _stem.startswith("bust_") else "zeus_statue_display.json"),
         "face_sizes": {3},
         "face_index_styles": {"v/vt/vn"} if _mesh["uvs"] else {"v//vn"},
         "mtl_sha256": None,
