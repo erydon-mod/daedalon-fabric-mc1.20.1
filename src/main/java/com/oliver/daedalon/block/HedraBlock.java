@@ -8,8 +8,8 @@ import net.minecraft.world.BlockView;
 
 /** Straight bench; only its seat length and support spacing change with width. */
 public final class HedraBlock extends BenchBlock {
-    public static final double HEIGHT = 1.0;
-    public static final double DEPTH = 0.861762;
+    public static final double HEIGHT = 0.6;
+    public static final double DEPTH = 0.517058;
     private static final VoxelShape[][] SHAPES = createShapes(HedraShape.BOXES);
     private static final VoxelShape[][] OUTLINES = createShapes(outlineBoxes());
 

@@ -57,7 +57,7 @@ public final class HedraGameTests {
                         double spanX = bounds.maxX - bounds.minX;
                         double spanZ = bounds.maxZ - bounds.minZ;
                         context.assertTrue(Math.abs((alongX ? spanX : spanZ) - width) < 1.0E-6, "Collision width mismatch");
-                        context.assertTrue(Math.abs(bounds.maxY - 1.0) < 1.0E-6 && Math.abs(bounds.minY) < 1.0E-6, "Height/ground must stay fixed");
+                        context.assertTrue(Math.abs(bounds.maxY - 0.6) < 1.0E-6 && Math.abs(bounds.minY) < 1.0E-6, "Seat must stay 0.6m high and grounded");
                         double expectedDepth = HedraBlock.DEPTH;
                         context.assertTrue(Math.abs((alongX ? spanZ : spanX) - expectedDepth) < 2.0E-6,
                                 "Depth must stay fixed across widths");
@@ -72,8 +72,8 @@ public final class HedraGameTests {
                         double selectionDepth = alongX ? selectionZ : selectionX;
                         context.assertTrue(Math.abs(selectionWidth-width) < 1.0E-6
                                 && Math.abs(selectionDepth-1.0) < 1.0E-6
-                                && Math.abs(selection.maxY-selection.minY-1.0) < 1.0E-6,
-                                "Selection must cover the complete width and a one-block height/depth");
+                                && Math.abs(selection.maxY-selection.minY-0.6) < 1.0E-6,
+                                "Selection must cover the complete width, 0.6m height and one-block depth");
                         context.assertTrue(outline != shape, "Selection must remain separate from collision");
                         if (sharedOutlines[width-2][f] == null) sharedOutlines[width-2][f] = outline;
                         context.assertTrue(sharedOutlines[width-2][f] == outline, "Materials must share cached selection shapes");
@@ -83,8 +83,8 @@ public final class HedraGameTests {
         }
         Block block = Registries.BLOCK.get(new Identifier("daedalon", "aganite_hedra"));
         world.setBlockState(anchor, block.getDefaultState(), Block.NOTIFY_ALL);
-        Vec3d throughGapStart = Vec3d.of(anchor).add(0.5, 0.4, 2.0);
-        Vec3d throughGapEnd = Vec3d.of(anchor).add(0.5, 0.4, -1.0);
+        Vec3d throughGapStart = Vec3d.of(anchor).add(0.5, 0.24, 2.0);
+        Vec3d throughGapEnd = Vec3d.of(anchor).add(0.5, 0.24, -1.0);
         BlockState defaultState = block.getDefaultState();
         context.assertTrue(defaultState.getOutlineShape(world, anchor).raycast(throughGapStart, throughGapEnd, anchor) != null,
                 "The space below the seat must be easy to select");
