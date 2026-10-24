@@ -142,7 +142,7 @@ class ZeusStatueSafetyTests(unittest.TestCase):
         self.assertIn("MODEL_SUPPORT_CENTER_X = 0.5041394F", block)
         self.assertIn("MODEL_SUPPORT_CENTER_Z = 0.4360307F", block)
         self.assertIn("MODEL_GROUND_CONTACT_Y = 0.0F", block)
-        self.assertIn("Direction.NORTH", block)
+        self.assertIn("Direction.SOUTH", block)
         self.assertIn("private static final Profile PROFILE", block)
         self.assertIn("super(settings, PROFILE)", block)
         self.assertIn('SMALL("small", 1)', shared_block)

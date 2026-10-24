@@ -4,18 +4,18 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
-/** A north-authored, pedestal-supported Zeus statue. */
+/** A south-authored, pedestal-supported Zeus statue. */
 public final class ZeusStatueBlock extends StatueBlock {
     public static final float MODEL_SUPPORT_CENTER_X = 0.5041394F;
     public static final float MODEL_SUPPORT_CENTER_Z = 0.4360307F;
     public static final float MODEL_GROUND_CONTACT_Y = 0.0F;
 
     /*
-     * The fitted source faces north. Boxes are deliberately layered around
+     * The fitted source faces south. Boxes are deliberately layered around
      * the pedestal, figure, staff and thunderbolt instead of using one broad
      * bounding box. Coordinates precede runtime support-point recentering.
      */
-    private static final VoxelShape THREE_HIGH_NORTH_SHAPE = VoxelShapes.union(
+    private static final VoxelShape THREE_HIGH_SOURCE_SHAPE = VoxelShapes.union(
             VoxelShapes.cuboid(0.034, 0.00, 0.056, 0.974, 0.32, 0.816),
             VoxelShapes.cuboid(0.164, 0.28, 0.116, 0.904, 1.55, 0.736),
             VoxelShapes.cuboid(0.124, 1.45, 0.116, 0.914, 2.35, 0.746),
@@ -27,11 +27,11 @@ public final class ZeusStatueBlock extends StatueBlock {
     );
 
     private static final Profile PROFILE = createProfile(
-            Direction.NORTH,
+            Direction.SOUTH,
             MODEL_SUPPORT_CENTER_X,
             MODEL_GROUND_CONTACT_Y,
             MODEL_SUPPORT_CENTER_Z,
-            THREE_HIGH_NORTH_SHAPE
+            THREE_HIGH_SOURCE_SHAPE
     );
 
     public ZeusStatueBlock(Settings settings) {

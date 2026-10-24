@@ -1,0 +1,221 @@
+{
+  "coordinate_frame": {
+    "north": [
+      0,
+      0,
+      -1
+    ],
+    "east": [
+      1,
+      0,
+      0
+    ],
+    "south": [
+      0,
+      0,
+      1
+    ],
+    "west": [
+      -1,
+      0,
+      0
+    ]
+  },
+  "review": "Orthographic north/south views of all 36 runtime meshes were reviewed against facial/chest/animal-front features; Spartan Promachos was also checked from east/west. All 23 full statues and 13 busts are covered. These are source directions before the shared placed-state transform.",
+  "policy": "Only the shared source-facing profiles of the 35 unreleased sculptures change. The published Spartan retains its exact EAST profile/render path and public helper. All OBJ positions, normals, indices, authored UVs, support pivots and size/offset values remain unchanged. Positive fit scale and translation preserve each measured source-front vector.",
+  "normalized_north_sources": [
+    "hermes",
+    "hephaestus",
+    "hestia",
+    "bust_hestia"
+  ],
+  "saved_state_effect": "The 35 unreleased sculptures retain their saved facing values and align their physical front with the selected cardinal or diagonal facing; offsets remain in that selected direction. The published Spartan retains its existing world orientation and collision in every saved pose, including the legacy 90-degree physical-front offset from its facing label.",
+  "models": {
+    "spartan": {
+      "obj": "spartan_siplified.obj",
+      "sha256": "e2f4a7486a8a9f438cd3607b172ed27afd7bf1c54c50efd054f4ae935cd189d9",
+      "source_front": "south",
+      "published_profile_facing": "east",
+      "retained_physical_front_clockwise_offset_degrees": 90,
+      "legacy_profile_source": "src/main/java/com/oliver/daedalon/block/SpartanStatueBlock.java",
+      "legacy_profile_source_lf_sha256": "1afa83e21e8901e0692aaa8248a39519e3100df8a0249f7de11181c1a9f41915",
+      "compatibility_policy": "The actual OBJ body front points south, but the published EAST source-frame convention is retained without changing the profile class, render geometry, collision boxes or rotationStepsFromEast API."
+    },
+    "zeus": {
+      "obj": "zeus.obj",
+      "sha256": "65c89a0567c73d38641965b9b1b17bf1f5387ed27e9f1f2e9dfa0bfed1571064",
+      "source_front": "south"
+    },
+    "aphrodite": {
+      "obj": "aphrodite.obj",
+      "sha256": "3a464219fa5d2b5972df0d4f5d40c54e9c938c9cb52e6cd07f0b6f9feb794b2f",
+      "source_front": "south"
+    },
+    "apollo": {
+      "obj": "apollo.obj",
+      "sha256": "c3bd3c0ef29c25a5870f898fbf5351bc4c35d3a75006c44ca009b25e8d4e97e2",
+      "source_front": "south"
+    },
+    "ares": {
+      "obj": "ares.obj",
+      "sha256": "e6bb7f514f35e4a3085868dbbb6ae8b56399b188943514567beb2834f6b2b1fa",
+      "source_front": "south"
+    },
+    "artemis": {
+      "obj": "artemis.obj",
+      "sha256": "77e02ff29ee593853c6c66587692fc3304b1d4448c830e74101bec4f18f88e84",
+      "source_front": "south"
+    },
+    "athena": {
+      "obj": "athena.obj",
+      "sha256": "d8604dc7237b5ae50c86b903c73e65d7508d12d680e7bd49c2a512e14b3eecb3",
+      "source_front": "south"
+    },
+    "demeter": {
+      "obj": "demeter.obj",
+      "sha256": "d4e025c1c380e7e45e7f43e03a22ffec75411b73ace20fb3e58342d2a7256dda",
+      "source_front": "south"
+    },
+    "dionysus": {
+      "obj": "dionysus.obj",
+      "sha256": "5e23445fca7cf66ecc4e090a45cf171686a001d34bfe5af23ed55edb24ac8825",
+      "source_front": "south"
+    },
+    "helios": {
+      "obj": "helios.obj",
+      "sha256": "bdfcfab9b25a10da36be6208e4a3f8f7715b5dcac9eb8e17455b0ff61a08d000",
+      "source_front": "south"
+    },
+    "hephaestus": {
+      "obj": "hephaestus.obj",
+      "sha256": "8e62ea0222b9cf74645648cc8fc873ad6da8e72d3974e79fc1bd386aba619d71",
+      "source_front": "north"
+    },
+    "hera": {
+      "obj": "hera.obj",
+      "sha256": "2062e2c46bd205460a6b7508de418c93797fcd5b09d57d57d48850e34acdbcf0",
+      "source_front": "south"
+    },
+    "hermes": {
+      "obj": "hermes.obj",
+      "sha256": "e1f86dff34997f29f3cbc90e54c9c5931877835d07b6577a428ceaff13650dd1",
+      "source_front": "north"
+    },
+    "hestia": {
+      "obj": "hestia.obj",
+      "sha256": "ec43452c1f05dbb9144a9d6554a43a71a1377e692bef0535baf4dade4298ac43",
+      "source_front": "north"
+    },
+    "phaeton": {
+      "obj": "phaeton.obj",
+      "sha256": "503f782384e579171344298c6e60d820ef0c9c633453556ee09808547c4eb73f",
+      "source_front": "south"
+    },
+    "poseidon": {
+      "obj": "poseidon.obj",
+      "sha256": "4480a09093eedacb1db8d058b89daa4675779012867dd2d8f796abcc0e3a5361",
+      "source_front": "south"
+    },
+    "bellerophon": {
+      "obj": "bellerophon.obj",
+      "sha256": "e1e3f7b4bccf18b988f2373d51b7186360fdb3024af2e829229a2471a678aa02",
+      "source_front": "south"
+    },
+    "heracles": {
+      "obj": "heracles.obj",
+      "sha256": "06d91d387367586c02c46a424c5f5afb92176083d5a38f6b7f299c8feab27436",
+      "source_front": "south"
+    },
+    "orpheus": {
+      "obj": "orpheus.obj",
+      "sha256": "08f84e990bb343dc3ac4ff8e3f35e3e0a5771334d1f2b957f687ec5623f2823d",
+      "source_front": "south"
+    },
+    "perseus": {
+      "obj": "perseus.obj",
+      "sha256": "9f1053c4eecda2d2133728c25b65e08d5c9a0118cdc60a46c1e6bc667ebf24a1",
+      "source_front": "south"
+    },
+    "theseus": {
+      "obj": "theseus.obj",
+      "sha256": "f89d1bb990c41c0a4cecfcb88e1cf844ad6f76c56aec92ad4570578574242a6f",
+      "source_front": "south"
+    },
+    "lion_couchant": {
+      "obj": "lion_couchant.obj",
+      "sha256": "f906dc612fef7ae056d3a3a6604e3369320ec8ecc31460c36ce78e6e1dd89a92",
+      "source_front": "south"
+    },
+    "lion_statant": {
+      "obj": "lion_statant.obj",
+      "sha256": "840ffa27010fa40d727ddc0010fd366d5e90754d53063625487f89e130694a25",
+      "source_front": "south"
+    },
+    "bust_aphrodite": {
+      "obj": "bust_aphrodite.obj",
+      "sha256": "1e7fe0f624aa3c6899611c941f5594d803076d7275042c5d368e296bb8d0cd29",
+      "source_front": "south"
+    },
+    "bust_apollo": {
+      "obj": "bust_apollo.obj",
+      "sha256": "2a34f269622f259b3492a2be089a54338ae704904abbb2cc3caf6ca0d0af64e7",
+      "source_front": "south"
+    },
+    "bust_ares": {
+      "obj": "bust_ares.obj",
+      "sha256": "6e36a1a6086e7795bc1928be2a967826a227e788e53803419ccee688edcb75d7",
+      "source_front": "south"
+    },
+    "bust_artemis": {
+      "obj": "bust_artemis.obj",
+      "sha256": "0dd97fde0d76e09cd5d2f78ae7532b6e730fc1fa1b18388335f5ac546fb4a115",
+      "source_front": "south"
+    },
+    "bust_athena": {
+      "obj": "bust_athena.obj",
+      "sha256": "7d0c52ade1219c93c2d907c41cccccaf2b8fb4891cce6583fd7fb2ecbbd86767",
+      "source_front": "south"
+    },
+    "bust_demeter": {
+      "obj": "bust_demeter.obj",
+      "sha256": "59e3f35e518c392a0ba791c8313e63bb747355e8e5a125012cc396e490dff826",
+      "source_front": "south"
+    },
+    "bust_dionysus": {
+      "obj": "bust_dionysus.obj",
+      "sha256": "c011890a5d09dec6cd097fa4f07d5f346ad8248b683fe5dd16e3bb129ae36bbc",
+      "source_front": "south"
+    },
+    "bust_hephaestus": {
+      "obj": "bust_hephaestus.obj",
+      "sha256": "a6bec87214262238b69cf17cdba981eb9e2555a6c4c0ddfeab96ddd638935fa1",
+      "source_front": "south"
+    },
+    "bust_hera": {
+      "obj": "bust_hera.obj",
+      "sha256": "ab81048c96367f5c3e18a1fd267f7934d05d20bc91a1e419d8a4a0219f4d24cf",
+      "source_front": "south"
+    },
+    "bust_hermes": {
+      "obj": "bust_hermes.obj",
+      "sha256": "1b7ebf5011e169c3973d32ba4a00bbbe76a91e4dbe4269ad76ef99422e6d2c42",
+      "source_front": "south"
+    },
+    "bust_hestia": {
+      "obj": "bust_hestia.obj",
+      "sha256": "2bca499b4e20a66452c5577d5c8c5d6c5832d3c9d196f9b3b714c116706051bb",
+      "source_front": "north"
+    },
+    "bust_poseidon": {
+      "obj": "bust_poseidon.obj",
+      "sha256": "f279c7e4b138706b361b184408a7baf7cac3446c38adf5a9b5f2ae3b70fe14b9",
+      "source_front": "south"
+    },
+    "bust_zeus": {
+      "obj": "bust_zeus.obj",
+      "sha256": "83f3c3b5cf6f2ab248277477523f9f964fce70b51cd38363af7f0c890899e508",
+      "source_front": "south"
+    }
+  },
+  "placement_policy": "Fresh placements of the 35 corrected unreleased sculptures save the opposite of the horizontal player look direction so their measured physical front faces the player. Default states, sizes, offsets and explicit BlockStateTag overrides are unchanged. Published Spartan placements continue saving the horizontal player look direction, preserving their existing rendered world orientation."
+}

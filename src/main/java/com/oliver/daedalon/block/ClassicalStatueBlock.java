@@ -235,14 +235,15 @@ public final class ClassicalStatueBlock extends StatueBlock {
                 String displayName,
                 float modelSupportCenterX,
                 float modelSupportCenterZ,
-                VoxelShape threeHighNorthShape
+                VoxelShape threeHighSourceShape
         ) {
             this.subjectId = subjectId;
             this.displayName = displayName;
             this.profile = createStyleProfile(
+                    subjectId,
                     modelSupportCenterX,
                     modelSupportCenterZ,
-                    threeHighNorthShape
+                    threeHighSourceShape
             );
         }
 
@@ -260,16 +261,24 @@ public final class ClassicalStatueBlock extends StatueBlock {
     }
 
     private static Profile createStyleProfile(
+            String subjectId,
             float modelSupportCenterX,
             float modelSupportCenterZ,
-            VoxelShape threeHighNorthShape
+            VoxelShape threeHighSourceShape
     ) {
+        // The original Meshy batch faces south. These three later additions
+        // were rigidly normalized to north during preparation; retain both
+        // source conventions and let the shared profile align the placed front.
+        Direction sourceFacing = switch (subjectId) {
+            case "hermes", "hephaestus", "hestia" -> Direction.NORTH;
+            default -> Direction.SOUTH;
+        };
         return createProfile(
-                Direction.NORTH,
+                sourceFacing,
                 modelSupportCenterX,
                 0.0F,
                 modelSupportCenterZ,
-                threeHighNorthShape
+                threeHighSourceShape
         );
     }
 

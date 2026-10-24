@@ -3,12 +3,14 @@ package com.oliver.daedalon.gametest;
 import com.oliver.daedalon.block.DecorOrientation;
 import com.oliver.daedalon.block.DecorShapeTransforms;
 import com.oliver.daedalon.block.ExedraBlock;
+import com.oliver.daedalon.block.SpartanStatueBlock;
 import com.oliver.daedalon.block.StatueBlock;
 import com.oliver.daedalon.item.DaedalonDebugProperties;
 import com.oliver.daedalon.item.DecorRotationControl;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -19,6 +21,7 @@ import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -26,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.GameMode;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -66,6 +70,7 @@ public final class DiagonalDecorGameTests {
             for (int step = 1; step <= 8; step++) {
                 context.assertTrue(Items.DEBUG_STICK.useOnBlock(usage).isAccepted(), "Orientation edit was not handled");
                 var state = world.getBlockState(anchor);
+                if (state.getBlock() instanceof StatueBlock) assertRenderedFront(context, state);
                 context.assertTrue(DecorRotationControl.valueName(state).equals(directions[step % 8]),
                         "Debug stick must turn clockwise by 45 degrees: " + block + " / " + step + " / " + state);
                 context.assertTrue(state.with(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.NORTH)
@@ -79,7 +84,9 @@ public final class DiagonalDecorGameTests {
             player.setSneaking(true);
             for (int step = 1; step <= 8; step++) {
                 Items.DEBUG_STICK.useOnBlock(usage);
-                context.assertTrue(DecorRotationControl.valueName(world.getBlockState(anchor)).equals(directions[Math.floorMod(-step, 8)]),
+                var state = world.getBlockState(anchor);
+                if (state.getBlock() instanceof StatueBlock) assertRenderedFront(context, state);
+                context.assertTrue(DecorRotationControl.valueName(state).equals(directions[Math.floorMod(-step, 8)]),
                         "Crouch must reverse every 45-degree step: " + block + " / " + step);
                 edits++;
             }
@@ -91,7 +98,7 @@ public final class DiagonalDecorGameTests {
                     "Selecting the next control must not expose a second orientation attribute");
             world.removeBlock(anchor, false);
         }
-        context.assertTrue(profiles.size() > 20 && edits == blocks.size() * 16, "Cover every statue/bust mesh profile and Exedra");
+        context.assertTrue(profiles.size() == 36 && edits == blocks.size() * 16, "Cover all 36 statue/bust mesh profiles and Exedra");
         System.out.println("DAEDALON_EIGHT_WAY_DEBUG passed profiles=" + profiles.size() + " edits=" + edits);
         context.complete();
     }
@@ -110,8 +117,12 @@ public final class DiagonalDecorGameTests {
             for (var size : StatueBlock.StatueSize.values()) {
                 for (Direction facing : FACINGS) {
                     BlockState cardinal = block.getDefaultState().with(StatueBlock.SIZE, size).with(StatueBlock.FACING, facing);
+                    assertRenderedFront(context, cardinal);
                     var straight = shape(context, cardinal);
                     BlockState diagonal = cardinal.with(StatueBlock.ORIENTATION, DecorOrientation.DIAGONAL);
+                    assertRenderedFront(context, diagonal);
+                    assertRenderedFront(context, cardinal.with(StatueBlock.OFFSET, true));
+                    assertRenderedFront(context, diagonal.with(StatueBlock.OFFSET, true));
                     var turned = shape(context, diagonal);
                     checkDiagonalBounds(context, straight, turned);
                     context.assertTrue(shape(context, diagonal) == turned, "Diagonal shapes must be cached");
@@ -127,7 +138,141 @@ public final class DiagonalDecorGameTests {
                 }
             }
         }
-        context.assertTrue(blocks > 1000 && profiles.size() > 20, "Must cover every statue/bust material and mesh profile");
+        context.assertTrue(blocks == 2016 && profiles.size() == 36, "Must cover all 36 statue/bust meshes in all 56 finishes");
+        context.complete();
+    }
+
+    /**
+     * Applies the renderer's actual profile transform to the independently
+     * reviewed OBJ front vector, rather than trusting the saved facing label.
+     * The four normalized meshes, all source hashes and the published
+     * Spartan's retained east-profile convention are recorded in
+     * docs/evidence/statue-source-facing.json.
+     */
+    static void assertRenderedFront(TestContext context, BlockState state) {
+        Vec3d front = renderedFront(state);
+        Direction facing = state.get(StatueBlock.FACING);
+        int halfStep = state.get(StatueBlock.ORIENTATION).ordinal();
+        double angle = switch (facing) {
+            case NORTH -> 0;
+            case EAST -> Math.PI / 2;
+            case SOUTH -> Math.PI;
+            case WEST -> Math.PI * 1.5;
+            default -> throw new AssertionError("Statue facing must be horizontal");
+        } + halfStep * Math.PI / 4;
+        // Published Spartans keep their existing 90-degree physical-front
+        // offset from the saved facing; no world rotation is migrated here.
+        if (state.getBlock() instanceof SpartanStatueBlock) angle += Math.PI / 2;
+        near(context, Math.sin(angle), front.x, "Rendered front X must match the selected pose: " + state);
+        near(context, -Math.cos(angle), front.z, "Rendered front Z must match the selected pose: " + state);
+    }
+
+    private static Vec3d renderedFront(BlockState state) {
+        String path = Registries.BLOCK.getId(state.getBlock()).getPath();
+        boolean northSource = path.endsWith("_hermes_statue") || path.endsWith("_hephaestus_statue")
+                || path.endsWith("_hestia_statue") || path.endsWith("_hestia_bust");
+        float sourceFrontZ = northSource ? -1.0F : 1.0F;
+        Direction facing = state.get(StatueBlock.FACING);
+        int halfStep = state.get(StatueBlock.ORIENTATION).ordinal();
+        int renderedTurns = ((StatueBlock) state.getBlock()).rotationStepsFromSource(facing) * 2 + halfStep;
+        float frontX = DecorOrientation.rotateX(0, sourceFrontZ, renderedTurns);
+        float frontZ = DecorOrientation.rotateZ(0, sourceFrontZ, renderedTurns);
+        return new Vec3d(frontX, 0, frontZ);
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void realSculpturePlacementsFacePlayerAndPublishedSpartanKeepsItsConvention(TestContext context) {
+        var world = context.getWorld();
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(30, 3, 30));
+        var player = context.createMockCreativeServerPlayerInWorld();
+        var profiles = Collections.newSetFromMap(new IdentityHashMap<StatueBlock.Profile, Boolean>());
+        int facingPlayer = 0;
+        int legacyPlacements = 0;
+        world.setBlockState(anchor.down(), Blocks.STONE.getDefaultState(), Block.NOTIFY_ALL);
+        for (Block block : Registries.BLOCK) {
+            if (!(block instanceof StatueBlock statue) || !profiles.add(statue.statueProfile())) continue;
+            for (Direction look : FACINGS) {
+                world.removeBlock(anchor, false);
+                player.refreshPositionAndAngles(anchor.getX() + .5 - look.getOffsetX() * 3,
+                        anchor.getY(), anchor.getZ() + .5 - look.getOffsetZ() * 3, look.asRotation(), 0);
+                context.assertTrue(player.getHorizontalFacing() == look, "Mock player must look towards the placement");
+                ItemStack stack = block.asItem().getDefaultStack();
+                player.setStackInHand(Hand.MAIN_HAND, stack);
+                var usage = new ItemUsageContext(player, Hand.MAIN_HAND,
+                        new BlockHitResult(Vec3d.of(anchor.down()).add(.5, 1, .5), Direction.UP, anchor.down(), false));
+                context.assertTrue(stack.useOnBlock(usage).isAccepted(), "Actual sculpture item placement must succeed: " + block);
+                BlockState placed = world.getBlockState(anchor);
+                Direction expectedFacing = block instanceof SpartanStatueBlock ? look : look.getOpposite();
+                context.assertTrue(placed == block.getDefaultState().with(StatueBlock.FACING, expectedFacing),
+                        "Placement must retain default size/offset/orientation and the intended facing: " + block);
+                assertRenderedFront(context, placed);
+                if (block instanceof SpartanStatueBlock) {
+                    legacyPlacements++;
+                } else {
+                    Vec3d front = renderedFront(placed);
+                    near(context, -look.getOffsetX(), front.x, "Fresh sculpture front must face the player on X");
+                    near(context, -look.getOffsetZ(), front.z, "Fresh sculpture front must face the player on Z");
+                    facingPlayer++;
+                }
+            }
+        }
+        context.assertTrue(profiles.size() == 36 && facingPlayer == 140 && legacyPlacements == 4,
+                "Place all 35 corrected meshes towards the player and retain all four published Spartan facings");
+        world.removeBlock(anchor, false);
+        world.removeBlock(anchor.down(), false);
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void publishedSpartanRetainsEveryLegacyPoseCollisionAndRenderFrame(TestContext context) throws Exception {
+        // Frozen pre-correction collision fixture. The production Spartan
+        // profile and public helper deliberately retain their published EAST
+        // convention, although the inspected OBJ body front points south.
+        double[][] boxes = {
+                {-.16, 0, -.48, 1, .28, .24}, {-.12, .24, -.43, .80, .78, .30},
+                {-.06, .72, -.38, .74, 1.30, .41}, {-.12, 1.20, -.34, .88, 2.24, .40},
+                {-.08, 2.16, -.34, .94, 2.72, .36}, {.12, 2.66, -.26, .66, 2.96, .28},
+                {.45, 1.30, -.79, 1.16, 1.58, -.33}, {.34, 1.52, -.87, 1.21, 2.13, -.29},
+                {.28, 2.07, -.60, .87, 2.35, -.29}, {-.22, 1.55, .28, .27, 2.22, .96},
+                {-.10, .82, .31, .20, 1.24, .46}, {-.10, 1.16, .37, .20, 1.58, .60},
+                {-.10, 1.50, .49, .20, 1.92, .82}, {-.08, 1.84, .70, .22, 2.24, 1.08},
+                {0, 2.16, 1, .27, 2.51, 1.48}, {.08, 2.44, 1.36, .29, 2.77, 1.72},
+                {.15, 2.70, 1.64, .31, 3.02, 1.88}
+        };
+        VoxelShape source = VoxelShapes.empty();
+        for (double[] box : boxes) source = VoxelShapes.union(source,
+                VoxelShapes.cuboid(box[0], box[1], box[2], box[3], box[4], box[5]));
+        var constructor = StatueBlock.Profile.class.getDeclaredConstructor(Direction.class,
+                float.class, float.class, float.class, VoxelShape.class);
+        constructor.setAccessible(true);
+        var legacy = constructor.newInstance(Direction.EAST, .41134763F, .0625F, -.14984404F, source);
+        var collision = StatueBlock.Profile.class.getDeclaredMethod("collisionShapeFor",
+                StatueBlock.StatueSize.class, boolean.class, Direction.class, DecorOrientation.class);
+        collision.setAccessible(true);
+        int finishes = 0;
+        int poses = 0;
+        int[] legacyQuarterTurns = {3, 0, 1, 2};
+        for (Block block : Registries.BLOCK) {
+            if (!(block instanceof SpartanStatueBlock statue)) continue;
+            finishes++;
+            context.assertTrue(statue.modelSupportCenterX() == .41134763F
+                            && statue.modelGroundContactY() == .0625F && statue.modelSupportCenterZ() == -.14984404F,
+                    "Published Spartan render pivot must remain unchanged");
+            for (BlockState state : block.getStateManager().getStates()) {
+                Direction facing = state.get(StatueBlock.FACING);
+                int index = java.util.List.of(FACINGS).indexOf(facing);
+                context.assertTrue(statue.rotationStepsFromSource(facing) == legacyQuarterTurns[index]
+                                && SpartanStatueBlock.rotationStepsFromEast(facing) == legacyQuarterTurns[index],
+                        "Published Spartan renderer and public helper must retain their legacy turns");
+                VoxelShape expected = (VoxelShape) collision.invoke(legacy, state.get(StatueBlock.SIZE),
+                        state.get(StatueBlock.OFFSET), facing, state.get(StatueBlock.ORIENTATION));
+                context.assertTrue(!VoxelShapes.matchesAnywhere(shape(context, state), expected, BooleanBiFunction.NOT_SAME),
+                        "Published Spartan collision boxes must remain equivalent in every legacy pose: " + state);
+                assertRenderedFront(context, state);
+                poses++;
+            }
+        }
+        context.assertTrue(finishes == 56 && poses == 2688, "Cover all published Spartan materials and 48 poses");
         context.complete();
     }
 

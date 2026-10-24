@@ -193,31 +193,42 @@ public final class OlympianGodItemGameTests {
         player.setStackInHand(Hand.OFF_HAND, tool);
         NbtCompound heldBefore = tool.writeNbt(new NbtCompound());
         int swaps = 0;
+        int finishes = 0;
+        Direction[] facings = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
         for (Item item : ModItems.olympianGodItems()) {
             String path = Registries.ITEM.getId(item).getPath();
             String prefix = path.substring(0, path.length() - ("_" + OlympianGodItem.ID_SUFFIX).length());
             var first = Registries.BLOCK.get(new Identifier("daedalon", prefix + "_zeus_statue"));
-            var size = StatueBlock.StatueSize.values()[swaps / 12 % 3];
-            Direction facing = Direction.fromHorizontal(swaps / 12 % 4);
-            boolean offset = swaps / 12 % 2 == 0;
-            var orientation = swaps / 12 / 4 % 2 == 0 ? DecorOrientation.DIAGONAL : DecorOrientation.STRAIGHT;
-            world.setBlockState(anchor, first.getDefaultState().with(StatueBlock.SIZE, size)
-                    .with(StatueBlock.FACING, facing).with(StatueBlock.OFFSET, offset)
-                    .with(StatueBlock.ORIENTATION, orientation), Block.NOTIFY_ALL);
-            for (int step = 1; step <= 12; step++) {
-                context.assertTrue(useSide(player, Hand.OFF_HAND, anchor).isAccepted(), "A side click must swap " + prefix);
-                var after = world.getBlockState(anchor);
-                String expected = prefix + "_" + OlympianGodCycle.subject(step % 12) + "_statue";
-                context.assertTrue(Registries.BLOCK.getId(after.getBlock()).getPath().equals(expected)
-                                && after.get(StatueBlock.SIZE) == size && after.get(StatueBlock.FACING) == facing
-                                && after.get(StatueBlock.OFFSET) == offset && after.get(StatueBlock.ORIENTATION) == orientation,
-                        "Swapping must retain finish, size, offset and eight-way facing: " + expected);
-                context.assertTrue(heldBefore.equals(tool.writeNbt(new NbtCompound())),
-                        "Editing must not consume or advance the independent placement selector");
-                swaps++;
+            for (int pose = 0; pose < 8; pose++) {
+                var size = StatueBlock.StatueSize.values()[(finishes + pose) % 3];
+                Direction facing = facings[pose / 2];
+                boolean offset = (finishes + pose) % 2 == 0;
+                var orientation = pose % 2 == 0 ? DecorOrientation.STRAIGHT : DecorOrientation.DIAGONAL;
+                world.setBlockState(anchor, first.getDefaultState().with(StatueBlock.SIZE, size)
+                        .with(StatueBlock.FACING, facing).with(StatueBlock.OFFSET, offset)
+                        .with(StatueBlock.ORIENTATION, orientation), Block.NOTIFY_ALL);
+                DiagonalDecorGameTests.assertRenderedFront(context, world.getBlockState(anchor));
+                for (boolean backwards : new boolean[]{false, true}) {
+                    player.setSneaking(backwards);
+                    for (int step = 1; step <= 12; step++) {
+                        context.assertTrue(useSide(player, Hand.OFF_HAND, anchor).isAccepted(), "A side click must swap " + prefix);
+                        var after = world.getBlockState(anchor);
+                        String expected = prefix + "_" + OlympianGodCycle.subject(Math.floorMod(backwards ? -step : step, 12)) + "_statue";
+                        context.assertTrue(Registries.BLOCK.getId(after.getBlock()).getPath().equals(expected)
+                                        && after.get(StatueBlock.SIZE) == size && after.get(StatueBlock.FACING) == facing
+                                        && after.get(StatueBlock.OFFSET) == offset && after.get(StatueBlock.ORIENTATION) == orientation,
+                                "Swapping must retain finish, size, offset and eight-way facing: " + expected);
+                        DiagonalDecorGameTests.assertRenderedFront(context, after);
+                        context.assertTrue(heldBefore.equals(tool.writeNbt(new NbtCompound())),
+                                "Editing must not consume or advance the independent placement selector");
+                        swaps++;
+                    }
+                }
             }
+            finishes++;
         }
-        context.assertTrue(swaps == 672, "Exercise a full in-place cycle in every finish");
+        context.assertTrue(finishes == 56 && swaps == 10752,
+                "Exercise forward/reverse cycles in all eight directions and every finish");
         world.removeBlock(anchor, false);
         System.out.println("DAEDALON_OLYMPIAN_SIDE_SWAP passed finishes=56 swaps=" + swaps);
         context.complete();

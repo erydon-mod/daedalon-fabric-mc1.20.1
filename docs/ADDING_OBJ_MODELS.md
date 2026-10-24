@@ -14,6 +14,17 @@ materials, aged variants, sizes, facings, texture density, and geometry caches.
    source genuinely uses one. Add one shared item-display model.
 3. For a statue, add one `StatueBlock.Profile` with the measured facing, pivot,
    and three-block collision shape. Never allocate profiles per material.
+   Measure the actual runtime OBJ front; do not assume every source faces north.
+   The original statue/bust batches (including Zeus and Spartan Promachos)
+   face south. Only the normalized Hermes, Hephaestus and Hestia statues and
+   Hestia bust face north. The profile aligns both mesh and collision while
+   offset remains relative to the selected placed facing. The complete audit
+   and unchanged source hashes are in `docs/evidence/statue-source-facing.json`.
+   Spartan Promachos is a published compatibility exception: retain its EAST
+   profile convention, public helper and existing world/collision orientation,
+   including its 90-degree offset between the saved facing and physical front.
+   Corrected unreleased sculptures place facing the player (opposite the player's
+   horizontal look direction); Spartan retains its published placement value.
 4. Declare one mesh family, then register its 27 standard and 27 aged material
    IDs, plus the shared Bronze and Silver finishes where supported. New IDs use
    `<material>_aged_<descriptors>_<form>` for aged variants.

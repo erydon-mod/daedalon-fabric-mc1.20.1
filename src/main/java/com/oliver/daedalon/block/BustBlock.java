@@ -6,7 +6,7 @@ import net.minecraft.util.shape.VoxelShapes;
 
 /** Shared placed-state implementation for the classical bust collection. */
 public final class BustBlock extends StatueBlock {
-    private static final VoxelShape THREE_HIGH_NORTH_SHAPE = shape(
+    private static final VoxelShape THREE_HIGH_SOURCE_SHAPE = shape(
             -1.020, 0.000, -0.400, 2.020, 1.125, 1.400,
             -0.850, 1.125, -0.400, 1.850, 1.500, 1.400,
             -0.400, 1.500, -0.400, 1.400, 2.625, 1.400,
@@ -56,7 +56,7 @@ public final class BustBlock extends StatueBlock {
                 float modelSupportCenterZ
         ) {
             this(subjectId, displayName, modelSupportCenterX, modelSupportCenterZ,
-                    THREE_HIGH_NORTH_SHAPE);
+                    THREE_HIGH_SOURCE_SHAPE);
         }
 
         Style(
@@ -69,7 +69,9 @@ public final class BustBlock extends StatueBlock {
             this.subjectId = subjectId;
             this.displayName = displayName;
             this.profile = createProfile(
-                    Direction.NORTH,
+                    // Hestia was normalized to north during preparation;
+                    // the original twelve supplied busts face south.
+                    subjectId.equals("hestia") ? Direction.NORTH : Direction.SOUTH,
                     modelSupportCenterX,
                     0.0F,
                     modelSupportCenterZ,

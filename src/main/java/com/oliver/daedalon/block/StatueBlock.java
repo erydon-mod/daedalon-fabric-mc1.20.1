@@ -59,10 +59,12 @@ public abstract class StatueBlock extends Block {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return getDefaultState().with(
-                FACING,
-                context.getHorizontalPlayerFacing()
-        );
+        Direction look = context.getHorizontalPlayerFacing();
+        // Corrected source profiles give FACING its physical meaning. Fresh
+        // sculptures face the player; the published Spartan keeps its saved
+        // placement convention as well as its unchanged legacy render frame.
+        return getDefaultState().with(FACING,
+                this instanceof SpartanStatueBlock ? look : look.getOpposite());
     }
 
     public final StatueSize effectiveSize(BlockState state) {
