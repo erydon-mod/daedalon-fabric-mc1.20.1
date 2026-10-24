@@ -54,20 +54,19 @@ class MetalDecorSafetyTests(unittest.TestCase):
             tags = DAEDALON_DATA / f"tags/{kind}"
             bronze = set(load_json(tags / "bronze.json")["values"])
             silver = set(load_json(tags / "silver.json")["values"])
-            gold = set(load_json(tags / "gold.json")["values"])
             self.assertEqual(70, len(bronze))
-            self.assertEqual(62, len(silver))
-            self.assertEqual(5, len(gold))
-            self.assertEqual(bronze | silver | gold, set(load_json(DAEDALON_DATA / f"../material/tags/{kind}/metal.json")["values"]))
-            self.assertTrue((bronze | silver | gold).isdisjoint(load_json(DAEDALON_DATA / f"../material/tags/{kind}/stone.json")["values"]))
+            self.assertEqual(67, len(silver))
+            self.assertEqual(bronze | silver, set(load_json(DAEDALON_DATA / f"../material/tags/{kind}/metal.json")["values"]))
+            self.assertTrue((bronze | silver).isdisjoint(load_json(DAEDALON_DATA / f"../material/tags/{kind}/stone.json")["values"]))
+            self.assertFalse((tags / "gold.json").exists())
             fountain_plinths = set(load_json(tags / "fountain_plinth.json")["values"])
             self.assertEqual(270, len(fountain_plinths))
-            self.assertTrue((bronze | silver | gold).isdisjoint(fountain_plinths))
+            self.assertTrue((bronze | silver).isdisjoint(fountain_plinths))
             for synonym in ("fountain", "water_feature"):
                 self.assertIn("#daedalon:fountain_plinth", load_json(tags / f"{synonym}.json")["values"])
                 self.assertNotIn("#daedalon:plinth", load_json(tags / f"{synonym}.json")["values"])
         for family in GENERATOR.ALL_FAMILIES:
-            if family not in GENERATOR.METAL_DECOR_FAMILIES:
+            if family not in GENERATOR.METAL_FAMILIES[GENERATOR.SILVER_MATERIAL]:
                 self.assertFalse(any(block_id.startswith("silver_") for block_id in GENERATOR.family_block_ids(family)), family)
 
     def test_native_metals_match_the_erydon_gloss_sources(self) -> None:

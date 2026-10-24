@@ -4,7 +4,7 @@ package com.oliver.daedalon.registry;
 public enum ArchitecturalFinish {
     WHITE("white"),
     BRONZE("bronze"),
-    GOLD("gold");
+    SILVER("silver");
 
     private final String id;
 

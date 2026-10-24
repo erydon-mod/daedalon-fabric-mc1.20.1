@@ -1,4 +1,7 @@
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 from PIL import Image
 
@@ -8,6 +11,7 @@ from daedalon_test_support import DAEDALON_ASSETS, DAEDALON_DATA, GENERATOR, loa
 class ArchitecturalFinishesSafetyTests(unittest.TestCase):
     def test_every_carved_family_has_three_complete_plain_finishes(self):
         self.assertEqual(5, len(GENERATOR.ARCHITECTURAL_FINISH_FAMILIES))
+        self.assertEqual(("white", "bronze", "silver"), GENERATOR.ARCHITECTURAL_FINISHES)
         finishes = set()
         languages = {locale: load_json(DAEDALON_ASSETS / f"lang/{locale}.json")
                      for locale in ("en_us", "de_de", "es_es")}
@@ -33,11 +37,12 @@ class ArchitecturalFinishesSafetyTests(unittest.TestCase):
                     self.assertEqual(finish != "white", ref in metal)
         self.assertEqual(15, len(finishes))
 
-    def test_plain_native_palette_and_authored_gold_metal_mask(self):
+    def test_plain_native_palette_reuses_the_existing_bronze_and_silver(self):
         expected = {
             "white.png": ("8cce60052e08828a3bafc5a74665510101e25ccfd1544950762385a0c94ce9dc", (255, 255, 255, 255)),
-            "gold.png": ("a7c17c1b42a93eb7d841c515085b211c42b32793d318f9e70589eec292b07948", (255, 220, 96, 255)),
-            "gold_s.png": ("ec7ab9035d3184e2119dc1c90c6df4b5b0930844bca744042e236ce8f692bdb8", (255, 255, 0, 255)),
+            "bronze.png": ("2d032e11f5d62ed4bb391f29b51c6f0d44d926eebf3e02f17bddd53d22c6c89e", (229, 160, 29, 255)),
+            "silver.png": ("45558c4ddc67c752d825c811af1427b801778f75c57529a299ca1023e666e8f4", (206, 206, 206, 255)),
+            "silver_s.png": ("c14c09fd53aa64d6a47323f79a760f7f97eec337f1da155b87a6acc480568cfe", (255, 255, 0, 255)),
         }
         for name, (digest, color) in expected.items():
             path = DAEDALON_ASSETS / f"textures/block/{name}"
@@ -47,6 +52,35 @@ class ArchitecturalFinishesSafetyTests(unittest.TestCase):
                 rgba = image.convert("RGBA")
                 self.assertEqual({color}, {rgba.getpixel((x, y)) for y in range(16) for x in range(16)}, name)
         self.assertFalse((DAEDALON_ASSETS / "textures/block/white_s.png").exists())
+
+    def test_only_unpublished_architectural_gold_assets_are_removed(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            resources = root / "src/main/resources"
+            targets = []
+            for family in GENERATOR.ARCHITECTURAL_FINISH_FAMILIES:
+                targets.extend((
+                    resources / f"assets/daedalon/blockstates/gold_{family}.json",
+                    resources / f"assets/daedalon/models/item/gold_{family}.json",
+                    resources / f"data/daedalon/loot_tables/blocks/gold_{family}.json",
+                ))
+            targets.extend(resources / f"assets/daedalon/textures/block/{name}" for name in ("gold.png", "gold_s.png"))
+            targets.extend(resources / f"data/daedalon/tags/{kind}/gold.json" for kind in ("blocks", "items"))
+            preserved = [resources / f"assets/daedalon/textures/block/{name}" for name in ("white.png", "bronze.png", "silver.png")]
+            preserved.append(resources / "assets/daedalon/blockstates/gold_unrelated_family.json")
+            for path in targets + preserved:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("fixture", encoding="utf-8")
+            changed = []
+            with patch.object(GENERATOR, "ROOT", root), patch.object(GENERATOR, "RESOURCES", resources):
+                with self.assertRaisesRegex(ValueError, "Obsolete unpublished architectural gold"):
+                    GENERATOR.remove_obsolete_unpublished_architectural_gold_assets(True, changed)
+                self.assertTrue(all(path.exists() for path in targets + preserved))
+                GENERATOR.remove_obsolete_unpublished_architectural_gold_assets(False, changed)
+            self.assertEqual(19, len(changed))
+            self.assertEqual(set(targets), set(changed))
+            self.assertFalse(any(path.exists() for path in targets))
+            self.assertTrue(all(path.exists() for path in preserved))
 
 
 if __name__ == "__main__":

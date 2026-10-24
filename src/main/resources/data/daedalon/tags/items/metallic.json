@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "#daedalon:bronze",
-    "#daedalon:silver",
-    "#daedalon:gold"
+    "#daedalon:silver"
   ]
 }

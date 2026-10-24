@@ -142,7 +142,6 @@ MATERIALS = (
 )
 BRONZE_MATERIAL = "bronze"
 SILVER_MATERIAL = "silver"
-GOLD_MATERIAL = "gold"
 WHITE_FINISH = "white"
 NO_DROP_FAMILIES = frozenset(
     {
@@ -277,7 +276,7 @@ ARCHITECTURAL_FINISH_FAMILIES = (
     "gothic_wall_panel", "byzantine_frieze", "gothic_frieze",
     "corinthian_frieze", "ionic_frieze",
 )
-ARCHITECTURAL_FINISHES = (WHITE_FINISH, BRONZE_MATERIAL, GOLD_MATERIAL)
+ARCHITECTURAL_FINISHES = (WHITE_FINISH, BRONZE_MATERIAL, SILVER_MATERIAL)
 NEW_DECOR_FAMILIES = {
     "gothic_wall_panel": ("gothic_panel", "Gothic Panel", "Gotisches Paneel", "Panel Gótico"),
     "byzantine_frieze": ("byzantine_frieze", "Byzantine Frieze", "Byzantinischer Fries", "Friso Bizantino"),
@@ -359,8 +358,7 @@ BRONZE_FAMILIES = (
 )
 METAL_FAMILIES = {
     BRONZE_MATERIAL: BRONZE_FAMILIES,
-    SILVER_MATERIAL: METAL_DECOR_FAMILIES,
-    GOLD_MATERIAL: ARCHITECTURAL_FINISH_FAMILIES,
+    SILVER_MATERIAL: (*METAL_DECOR_FAMILIES, *ARCHITECTURAL_FINISH_FAMILIES),
 }
 STATUE_DISPLAY_MODELS = {
     "spartan": "statue_spartan_promachos",
@@ -558,6 +556,33 @@ def remove_obsolete_unpublished_urn_assets(
                 "Obsolete unpublished urn asset remains: "
                 f"{path.relative_to(ROOT)}"
             )
+        path.unlink()
+        changed.append(path)
+
+
+def remove_obsolete_unpublished_architectural_gold_assets(
+    check: bool, changed: list[Path]
+) -> None:
+    # The five gold IDs existed only in the unpublished local cc6b840d change.
+    # The approved finish is silver; no published identifier is renamed here.
+    obsolete_paths: list[Path] = []
+    for family in ARCHITECTURAL_FINISH_FAMILIES:
+        block_id = f"gold_{family}"
+        obsolete_paths.extend((
+            RESOURCES / f"assets/{NAMESPACE}/blockstates/{block_id}.json",
+            RESOURCES / f"assets/{NAMESPACE}/models/item/{block_id}.json",
+            RESOURCES / f"data/{NAMESPACE}/loot_tables/blocks/{block_id}.json",
+        ))
+    for name in ("gold.png", "gold_s.png"):
+        obsolete_paths.append(RESOURCES / f"assets/{NAMESPACE}/textures/block/{name}")
+    for kind in ("blocks", "items"):
+        obsolete_paths.append(RESOURCES / f"data/{NAMESPACE}/tags/{kind}/gold.json")
+    for path in obsolete_paths:
+        if not path.exists():
+            continue
+        if check:
+            raise ValueError("Obsolete unpublished architectural gold asset remains: "
+                             f"{path.relative_to(ROOT)}")
         path.unlink()
         changed.append(path)
 
@@ -855,7 +880,6 @@ def translated_name(language: str, family: str, material: str, aged: bool) -> st
         "Bronce" if material == BRONZE_MATERIAL and language == "es_es"
         else "Silber" if material == SILVER_MATERIAL and language == "de_de"
         else "Plata" if material == SILVER_MATERIAL and language == "es_es"
-        else "Oro" if material == GOLD_MATERIAL and language == "es_es"
         else "Weiß" if material == WHITE_FINISH and language == "de_de"
         else "Blanco" if material == WHITE_FINISH and language == "es_es"
         else material.capitalize()
@@ -1738,6 +1762,7 @@ def generate_tags(
 def generate(families: tuple[str, ...], check: bool = False) -> list[Path]:
     changed: list[Path] = []
     remove_obsolete_unpublished_urn_assets(check, changed)
+    remove_obsolete_unpublished_architectural_gold_assets(check, changed)
     remove_obsolete_unpublished_georgian_plinth_assets(check, changed)
     remove_obsolete_unpublished_fountain_bowl_ids(check, changed)
     remove_obsolete_unpublished_ceiling_panels(check, changed)

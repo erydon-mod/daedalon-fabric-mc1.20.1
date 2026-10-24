@@ -292,8 +292,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             "urn_diota_bronze_handles.png",
             "urn_diota_bronze_handles_s.png",
         }
-        finish_names = {"bronze.png", "bronze_s.png", "silver.png", "silver_s.png",
-                        "white.png", "gold.png", "gold_s.png"}
+        finish_names = {"bronze.png", "bronze_s.png", "silver.png", "silver_s.png", "white.png"}
         self.assertEqual(
             root_material_names | statue_names | handle_names | finish_names,
             {path.name for path in texture_root.glob("*.png")},
@@ -364,12 +363,11 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
                 set(load_json(tag_root / "bronze.json")["values"]),
             )
             self.assertEqual(
-                ["#daedalon:bronze", "#daedalon:silver", "#daedalon:gold"],
+                ["#daedalon:bronze", "#daedalon:silver"],
                 load_json(tag_root / "metal.json")["values"],
             )
             self.assertEqual(
-                bronze_refs | set(load_json(tag_root / "silver.json")["values"])
-                | set(load_json(tag_root / "gold.json")["values"]),
+                bronze_refs | set(load_json(tag_root / "silver.json")["values"]),
                 set(
                     load_json(
                         DAEDALON_DATA / f"../material/tags/{kind}/metal.json"

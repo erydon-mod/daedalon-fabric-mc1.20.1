@@ -27,10 +27,10 @@ Stone fountain behaviour and its internal bowl models are unchanged.
 Existing bronze-only monuments, the Monopteros dome and the Anthophoros planter
 retain their existing finishes; other families are outside this addition.
 
-## White, bronze and gold carved architecture
+## White, bronze and silver carved architecture
 
 The Corinthian, Ionic, Gothic and Byzantine friezes and the Gothic panel also
-offer plain white, bronze and gold finishes. These 15 additional blocks reuse
+offer plain white, bronze and silver finishes. These 15 additional blocks reuse
 their existing shared geometry, placement controls, sizes, corner sections and
 world texture phase. `ArchitecturalFinish` limits this finish set to the five
 carved families; the existing 62-family `DecorMetal` bronze/silver set is unchanged.
@@ -39,19 +39,25 @@ variants.
 
 Native `white.png` is an exact copy of ERYDON's 16x `cover_white_matte.png`,
 with opaque white `(255,255,255)` and no metal specular map. Bronze uses the
-existing shared bronze sprite. Gold is a new authored plain colour
-`(255,220,96)`, distinct from bronze, with an exact copy of the existing
-`bronze_s.png` metal mask under `gold_s.png`. The three finish sprites are shared
+existing shared bronze sprite. Silver uses the existing `(206,206,206)` sprite
+and its shared `silver_s.png` metal map. The three finish sprites are shared
 across all five carved families. No per-material OBJ, runtime detector or
 Collection-pack source changes are needed. Optional packs fall back to these
 native sprites unless they explicitly override them.
 
-White is a nonmetal stone finish; bronze and gold enter the metal material tags.
+White is a nonmetal stone finish; bronze and silver enter the metal material tags.
 Both block and item tags and all three translations include the new finishes.
-ERYDON's namespace-based sprite lookup reads gold's authored metal mask and
-preserves its albedo without applying the bronze or silver alloy override.
-White has zero metal coverage. The exact shader reflections still require client
+ERYDON's namespace-based sprite lookup applies the established bronze and silver
+alloy treatment. White has zero metal coverage. Exact shader reflections require client
 visual acceptance; source classification does not establish the rendered result.
+
+An unpublished local draft in `cc6b840d` used gold for these five architectural
+variants. The change is absent from remote and tag refs at the correction review,
+and those IDs are absent from the publication migration record, so they are
+corrected directly to silver. The generator removes only those five obsolete
+blockstate/item/loot sets, the two unused gold sprites and the two gold tags.
+All earlier stone, aged, bronze and silver IDs remain registered. The catalogue
+contains 30 material groups: 27 stones, white, bronze and silver.
 
 ERYDON's shared metal sprite lookup already accepts the `daedalon` namespace.
 When ERYDON and a supported Complementary profile are installed, both metals

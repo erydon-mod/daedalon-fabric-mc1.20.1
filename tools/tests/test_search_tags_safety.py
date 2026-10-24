@@ -67,13 +67,13 @@ class SearchTagSafetyTests(unittest.TestCase):
         self.assertEqual(self.public_refs, stone | metal)
         self.assertEqual(stone, self.members("rock"))
         self.assertEqual(metal, self.members("metallic"))
-        self.assertEqual(metal, self.members("bronze") | self.members("silver") | self.members("gold"))
+        self.assertEqual(metal, self.members("bronze") | self.members("silver"))
         for kind in ("blocks", "items"):
             for name, expected in (("stone", stone), ("metal", metal)):
                 shared = load_json(DAEDALON_DATA / f"../material/tags/{kind}/{name}.json")
                 self.assertEqual(expected, set(shared["values"]), (kind, name))
-        self.assertTrue(all(value.split(":")[1].startswith(("bronze_", "silver_", "gold_")) for value in metal))
-        self.assertFalse(any(value.split(":")[1].startswith(("bronze_", "silver_", "gold_")) for value in stone))
+        self.assertTrue(all(value.split(":")[1].startswith(("bronze_", "silver_")) for value in metal))
+        self.assertFalse(any(value.split(":")[1].startswith(("bronze_", "silver_")) for value in stone))
         self.assertEqual(5, len(self.members("white")))
         self.assertTrue(self.members("white") <= stone)
 
@@ -225,7 +225,7 @@ class SearchTagSafetyTests(unittest.TestCase):
         self.assertEqual({"families", "materials"}, set(vocabulary))
         families = vocabulary["families"]
         materials = vocabulary["materials"]
-        self.assertEqual(31, len(materials))
+        self.assertEqual(30, len(materials))
         self.assertNotIn("aged", materials)
         reached_families: set[str] = set()
         for block_id in sorted(self.public_ids):
