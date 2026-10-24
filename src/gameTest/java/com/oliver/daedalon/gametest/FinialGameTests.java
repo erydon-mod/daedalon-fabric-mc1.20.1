@@ -16,7 +16,10 @@ import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
+import net.minecraft.network.packet.c2s.play.TeleportConfirmC2SPacket;
 import net.minecraft.registry.Registries;
+import net.minecraft.server.OperatorEntry;
 import net.minecraft.state.property.Properties;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
@@ -32,6 +35,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.GameMode;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import com.mojang.authlib.GameProfile;
@@ -129,6 +133,140 @@ public final class FinialGameTests {
         }
         world.removeBlock(owner,false);
         context.complete();
+    }
+
+    @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=1200)
+    public void installedErydonCopingAcceptsFirstUseFromActualOutlineHits(TestContext context) {
+        var ordinary=new Identifier("erydon","aganite_coping_georgian");
+        if(!Registries.BLOCK.containsId(ordinary)) {
+            context.assertTrue(!Boolean.getBoolean("daedalon.test.requireErydon"),"Requested real ERYDON integration but its coping is not installed");
+            System.out.println("DAEDALON_ERYDON_FINIAL_INTEGRATION unavailable (standalone fixture run)");
+            context.complete();
+            return;
+        }
+        var world=context.getWorld();
+        var player=context.createMockCreativeServerPlayerInWorld();
+        BlockPos support=context.getAbsolutePos(new BlockPos(4,5,4)),owner=support.up();
+        player.setPosition(Vec3d.ofCenter(owner.add(8,6,8)));
+        for(int y=-3;y<=5;y++) for(int x=-4;x<=4;x++) for(int z=-4;z<=4;z++)
+            world.setBlockState(support.add(x,y,z),Blocks.AIR.getDefaultState(),Block.NOTIFY_LISTENERS);
+        var finial=(FinialBlock)Registries.BLOCK.get(new Identifier("daedalon","bronze_sphaira_finial"));
+        int cases=0;
+        for(String path:new String[]{"aganite_coping_georgian","aganite_coping_georgian_grand"}) {
+            var id=new Identifier("erydon",path);
+            context.assertTrue(Registries.BLOCK.containsId(id),"Real grand coping is missing from the integration runtime");
+            var copingBlock=Registries.BLOCK.get(id);
+            context.assertTrue(copingBlock.getClass().getName().equals("com.oliver.erydon.block.CopingBlock"),"Integration must exercise the real ERYDON implementation");
+            for(var coping:copingBlock.getStateManager().getStates()) {
+                String surface=FinialSupportPlacement.named(coping,"surface");
+                boolean offset=FinialSupportPlacement.named(coping,"offset").equals("true");
+                if(FinialSupportPlacement.named(coping,"waterlogged").equals("true") || offset && !surface.equals("steep_upper")) continue;
+                world.setBlockState(support,coping,Block.NOTIFY_LISTENERS);
+                var outline=coping.getOutlineShape(world,support,ShapeContext.absent());
+                Vec3d centre=outline.getBoundingBox().getCenter().add(Vec3d.of(support));
+                for(var size:TwoSizeDecorBlock.Size.values()) for(Direction approach:Direction.values()) {
+                    world.removeBlock(owner,false);
+                    var stack=finial.asItem().getDefaultStack();
+                    stack.getOrCreateSubNbt("BlockStateTag").putString("size",size.asString());
+                    player.setStackInHand(Hand.MAIN_HAND,stack);
+                    Vec3d start=centre.add(approach.getOffsetX()*4,approach.getOffsetY()*4,approach.getOffsetZ()*4);
+                    var hit=outline.raycast(start,centre,support);
+                    String detail=path+"/"+surface+"/"+FinialSupportPlacement.named(coping,"facing")+"/offset="+offset+"/"+size+"/"+approach;
+                    context.assertTrue(hit!=null,"Actual coping outline was not reached: "+detail);
+                    var result=stack.useOnBlock(new ItemUsageContext(player,Hand.MAIN_HAND,hit));
+                    var placed=world.getBlockState(owner);
+                    context.assertTrue(result.isAccepted() && placed.isOf(finial),"First actual outline hit rejected: "+detail+" / "+result);
+                    var expected=FinialSupport.Profile.find(offset ? "steep_upper_offset" : surface,true,path.endsWith("_grand"));
+                    context.assertTrue(placed.get(FinialBlock.SUPPORT)==expected && placed.get(TwoSizeDecorBlock.SIZE)==size,
+                            "Real coping placement selected the wrong saved fit: "+detail);
+                    cases++;
+                }
+                world.removeBlock(owner,false);
+                world.removeBlock(support,false);
+            }
+        }
+        context.assertTrue(cases==1632,"Real coping matrix must cover 16 surfaces, all facings, offset steep uppers, both designs/sizes and six approach rays: "+cases);
+        System.out.println("DAEDALON_ERYDON_FINIAL_INTEGRATION passed cases="+cases);
+        context.complete();
+    }
+
+    @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=600)
+    public void copingOverhangHitsPassTheRealServerPacketCheckOnlyForFinials(TestContext context) {
+        var world=context.getWorld();
+        var player=context.createMockCreativeServerPlayerInWorld();
+        world.getServer().getPlayerManager().getOpList().add(new OperatorEntry(player.getGameProfile(),4,false));
+        player.changeGameMode(GameMode.CREATIVE);
+        player.networkHandler.onTeleportConfirm(new TeleportConfirmC2SPacket(1));
+        BlockPos support=context.getAbsolutePos(new BlockPos(4,5,4)),owner=support.up();
+        for(int y=-3;y<=5;y++) for(int x=-4;x<=4;x++) for(int z=-4;z<=4;z++)
+            world.setBlockState(support.add(x,y,z),Blocks.AIR.getDefaultState(),Block.NOTIFY_LISTENERS);
+        var finial=(FinialBlock)Registries.BLOCK.get(new Identifier("daedalon","bronze_sphaira_finial"));
+        int sequence=0,placements=0,invalid=0;
+        var copings=new java.util.ArrayList<Block>(java.util.List.of(FinialCopingFixture.BLOCK,FinialCopingFixture.GRAND));
+        for(String path:new String[]{"aganite_coping_georgian","aganite_coping_georgian_grand"}) {
+            var id=new Identifier("erydon",path);
+            if(Registries.BLOCK.containsId(id)) copings.add(Registries.BLOCK.get(id));
+        }
+        for(var copingBlock:copings)
+            for(Direction facing:Direction.Type.HORIZONTAL) {
+                var property=copingBlock.getStateManager().getProperty("surface");
+                var coping=withNamed(copingBlock.getDefaultState(),property,"diagonal").with(Properties.HORIZONTAL_FACING,facing);
+                world.setBlockState(support,coping,Block.NOTIFY_LISTENERS);
+                var outline=coping.getOutlineShape(world,support,ShapeContext.absent());
+                var hit=overhangHit(outline,support);
+                context.assertTrue(hit!=null,"The diagonal coping must expose a genuine hit outside vanilla's owner-centre tolerance");
+                Vec3d eye=hit.getPos().add(hit.getSide().getOffsetX()*2,1,hit.getSide().getOffsetZ()*2);
+                player.setPosition(eye.x,eye.y-player.getEyeHeight(player.getPose()),eye.z);
+                context.assertTrue(player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(support))<36,"Packet regression must stay within ordinary reach");
+                for(var size:TwoSizeDecorBlock.Size.values()) for(var hand:Hand.values()) {
+                    world.removeBlock(owner,false);
+                    var stack=finial.asItem().getDefaultStack();
+                    stack.getOrCreateSubNbt("BlockStateTag").putString("size",size.asString());
+                    player.setStackInHand(Hand.MAIN_HAND,ItemStack.EMPTY);
+                    player.setStackInHand(Hand.OFF_HAND,ItemStack.EMPTY);
+                    player.setStackInHand(hand,stack);
+                    player.networkHandler.onPlayerInteractBlock(new PlayerInteractBlockC2SPacket(hand,hit,sequence++));
+                    context.assertTrue(world.getBlockState(owner).isOf(finial)
+                                    && world.getBlockState(owner).get(TwoSizeDecorBlock.SIZE)==size,
+                            "Valid coping overhang packet must place on the first use: "+copingBlock+"/"+facing+"/"+size+"/"+hand);
+                    placements++;
+                    world.removeBlock(owner,false);
+                    var spoofed=new BlockHitResult(hit.getPos().add(0,2,0),hit.getSide(),support,false);
+                    player.networkHandler.onPlayerInteractBlock(new PlayerInteractBlockC2SPacket(hand,spoofed,sequence++));
+                    context.assertTrue(world.getBlockState(owner).isAir(),"An off-outline packet must retain vanilla rejection");
+                    invalid++;
+                }
+                // A finial in the other hand must not grant an unrelated item an exception.
+                player.setStackInHand(Hand.MAIN_HAND,Items.STONE.getDefaultStack());
+                player.setStackInHand(Hand.OFF_HAND,finial.asItem().getDefaultStack());
+                player.networkHandler.onPlayerInteractBlock(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND,hit,sequence++));
+                context.assertTrue(world.getBlockState(owner).isAir()
+                                && world.getBlockState(hit.getBlockPos().offset(hit.getSide())).isAir(),
+                        "An unrelated packet hand must retain vanilla's hit-location validation");
+                invalid++;
+                world.removeBlock(support,false);
+            }
+        context.assertTrue(placements==copings.size()*16 && invalid==copings.size()*20,
+                "Cover both coping designs, all facings, both sizes and both packet hands");
+        System.out.println("DAEDALON_FINIAL_PACKETS passed placements="+placements+" invalid="+invalid);
+        context.complete();
+    }
+
+    private static <T extends Comparable<T>> net.minecraft.block.BlockState withNamed(net.minecraft.block.BlockState state,
+            net.minecraft.state.property.Property<T> property,String value) {
+        return state.with(property,property.parse(value).orElseThrow());
+    }
+
+    private static BlockHitResult overhangHit(net.minecraft.util.shape.VoxelShape outline,BlockPos support) {
+        Vec3d ownerCentre=Vec3d.ofCenter(support);
+        for(var box:outline.getBoundingBoxes()) for(Direction approach:Direction.Type.HORIZONTAL) {
+            Vec3d centre=box.getCenter().add(Vec3d.of(support));
+            var hit=outline.raycast(centre.add(approach.getOffsetX()*4,0,approach.getOffsetZ()*4),centre,support);
+            if(hit==null) continue;
+            var delta=hit.getPos().subtract(ownerCentre);
+            if(Math.abs(delta.x)>1.001 || Math.abs(delta.y)>1.001 || Math.abs(delta.z)>1.001) return hit;
+        }
+        return null;
     }
 
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=600)

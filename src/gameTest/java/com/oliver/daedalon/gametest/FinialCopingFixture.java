@@ -17,7 +17,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-/** Saved public coping state contract, without requiring ERYDON on the test server. */
+/** Saved public coping state and collision contract, without requiring ERYDON on the test server. */
 public final class FinialCopingFixture implements ModInitializer {
     public enum Surface implements StringIdentifiable {
         FLAT,SLOPE,SHALLOW_LOWER,SHALLOW_UPPER,STEEP_LOWER,STEEP_UPPER,DIAGONAL,
@@ -88,16 +88,78 @@ public final class FinialCopingFixture implements ModInitializer {
         }
     }
     private static Block registerCoping(String path) {
+        boolean grand=path.endsWith("_grand");
         return Registry.register(Registries.BLOCK,new Identifier("erydon",path),
-                new Block(Block.Settings.create().nonOpaque()) {
+                new Block(Block.Settings.create().nonOpaque().dynamicBounds()) {
+                    private final java.util.Map<BlockState,VoxelShape> shapes=new java.util.HashMap<>();
                     { setDefaultState(getDefaultState().with(POST,false).with(OFFSET,false).with(SURFACE,Surface.FLAT)
                             .with(Properties.HORIZONTAL_FACING,net.minecraft.util.math.Direction.EAST)); }
                     @Override protected void appendProperties(StateManager.Builder<Block,BlockState> builder) {
                         builder.add(SURFACE,OFFSET,POST,Properties.HORIZONTAL_FACING);
                     }
                     @Override public VoxelShape getCollisionShape(BlockState state,BlockView world,BlockPos pos,ShapeContext context) {
-                        return state.get(POST) ? VoxelShapes.cuboid(0,.3,0,1,1,1) : VoxelShapes.empty();
+                        var shape=shapes.computeIfAbsent(state,key -> copingShape(key,grand));
+                        return state.get(POST) ? VoxelShapes.union(shape,VoxelShapes.cuboid(0,.3,0,1,1,1)) : shape;
+                    }
+                    @Override public VoxelShape getOutlineShape(BlockState state,BlockView world,BlockPos pos,ShapeContext context) {
+                        return getCollisionShape(state,world,pos,context);
                     }
                 });
+    }
+
+    /** Matches ERYDON CopingBlock's conservative 1/32 collision sampling, including its normal extrusion. */
+    private static VoxelShape copingShape(BlockState state,boolean grand) {
+        var profile=com.oliver.daedalon.block.FinialSupport.Profile.find(state.get(SURFACE).asString(),true,grand);
+        var facing=state.get(Properties.HORIZONTAL_FACING);
+        double thickness=grand ? .5 : 3.6/16,overhang=grand ? 2.7/16 : .125;
+        VoxelShape shape=VoxelShapes.empty();
+        if(profile.alignment!=com.oliver.daedalon.block.FinialSupport.Alignment.AXIS) {
+            var alignment=profile.alignment;
+            double x=.5+alignment.offsetX,z=.5+alignment.offsetZ;
+            int turns=switch(facing) { case SOUTH -> 1; case WEST -> 2; case NORTH -> 3; default -> 0; };
+            for(int turn=0;turn<turns;turn++) { double next=1-z; z=x; x=next; }
+            double angle=alignment.yaw+turns*Math.PI/2,cos=Math.cos(angle),sin=Math.sin(angle);
+            double runLength=switch(alignment) {
+                case DIAGONAL -> Math.sqrt(2);
+                case SHALLOW_BROAD_RIGHT,SHALLOW_BROAD_LEFT,SHALLOW_BROAD_WIDE_RIGHT,SHALLOW_BROAD_WIDE_LEFT -> 3/Math.sqrt(5);
+                default -> 2.5/Math.sqrt(5);
+            };
+            double width=switch(alignment) {
+                case DIAGONAL -> Math.sqrt(.5);
+                case SHALLOW_BROAD_WIDE_RIGHT,SHALLOW_BROAD_WIDE_LEFT -> 3/Math.sqrt(5);
+                case SHALLOW_NARROW_THIN_RIGHT,SHALLOW_NARROW_THIN_LEFT -> 1/Math.sqrt(5);
+                default -> 2/Math.sqrt(5);
+            };
+            double run=runLength/2+overhang,cross=width/2+overhang;
+            double radius=Math.abs(sin)*run+Math.abs(cos)*cross,step=1/32.0;
+            for(int row=(int)Math.floor((z-radius)/step);row<(int)Math.ceil((z+radius)/step);row++) {
+                double localZ=(row+.5)*step-z;
+                double a=(-run-sin*localZ)/cos,b=(run-sin*localZ)/cos;
+                double c=(-cross-cos*localZ)/-sin,d=(cross-cos*localZ)/-sin;
+                double low=Math.max(Math.min(a,b),Math.min(c,d)),high=Math.min(Math.max(a,b),Math.max(c,d));
+                if(low>=high) continue;
+                double margin=step/2*Math.max(Math.abs(sin/cos),Math.abs(cos/sin));
+                shape=VoxelShapes.union(shape,VoxelShapes.cuboid(x+low-margin,0,row*step,x+high+margin,thickness,(row+1)*step));
+            }
+        } else {
+            double gradient=profile.gradient(),length=Math.sqrt(1+gradient*gradient);
+            double normalX=gradient/length,normalY=1/length;
+            int padding=grand ? (int)Math.ceil(overhang*32/(profile.end-profile.start)) : 4;
+            for(int step=0;step<32+2*padding;step++) {
+                double a=profile.start+(profile.end-profile.start)*(step-padding)/32;
+                double b=profile.start+(profile.end-profile.start)*(step-padding+1)/32;
+                double x1=a,x2=b+normalX*thickness,y1=profile.height(b),y2=profile.height(a)+normalY*thickness;
+                double z1=-overhang,z2=1+overhang;
+                var box=switch(facing) {
+                    case SOUTH -> VoxelShapes.cuboid(1-z2,y1,x1,1-z1,y2,x2);
+                    case WEST -> VoxelShapes.cuboid(1-x2,y1,1-z2,1-x1,y2,1-z1);
+                    case NORTH -> VoxelShapes.cuboid(z1,y1,1-x2,z2,y2,1-x1);
+                    default -> VoxelShapes.cuboid(x1,y1,z1,x2,y2,z2);
+                };
+                shape=VoxelShapes.union(shape,box);
+            }
+            if(state.get(OFFSET)) shape=shape.offset(-facing.getOffsetX(),0,-facing.getOffsetZ());
+        }
+        return shape.simplify();
     }
 }

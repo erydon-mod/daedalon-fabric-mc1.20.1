@@ -11,6 +11,7 @@ import net.minecraft.state.property.Property;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.world.BlockView;
@@ -132,6 +133,18 @@ public final class FinialSupportPlacement {
         var id=Registries.BLOCK.getId(state.getBlock());
         return id.getNamespace().equals("erydon") && (id.getPath().endsWith("_coping_georgian")
                 || id.getPath().endsWith("_coping_georgian_grand"));
+    }
+
+    /** A valid coping overhang can exceed vanilla's one-block hit-to-owner allowance. */
+    public static Vec3d serverValidationDelta(BlockView world,Vec3d hit,Vec3d registeredBlockCenter,Vec3d original) {
+        if(Math.abs(original.x)<1.0000001 && Math.abs(original.y)<1.0000001 && Math.abs(original.z)<1.0000001)
+            return original;
+        BlockPos pos=BlockPos.ofFloored(registeredBlockCenter);
+        BlockState state=world.getBlockState(pos);
+        if(!isCoping(state)) return original;
+        var outline=state.getOutlineShape(world,pos,ShapeContext.absent());
+        return !outline.isEmpty() && TallDecorPlacement.containsHit(outline,pos,hit)
+                ? TallDecorPlacement.clampForVanillaPacketCheck(original) : original;
     }
 
     private static boolean isHalfHeightLayer(BlockState state) {
