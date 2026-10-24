@@ -61,6 +61,25 @@ public final class BlockBreakParticlesLaunchChecks {
             require(fragmented.getBoundingBoxes().size() > 16, "Fragmented regression fixture is trivial");
             require(count(manager, fixture("daedalon", "fragmented", fragmented)) <= 16,
                     "Separate outline boxes multiplied the event budget");
+            int urnStates = 0, mostUrnBoxes = 0, largestUrnBurst = 0;
+            for (var urnStyle : com.oliver.daedalon.block.UrnBlock.UrnStyle.values()) {
+                var urn = Registry.register(Registries.BLOCK,
+                        new Identifier("daedalon", "break_budget_probe_urn_" + urnStyle.name().toLowerCase(java.util.Locale.ROOT)),
+                        new com.oliver.daedalon.block.UrnBlock(Block.Settings.copy(Blocks.STONE), urnStyle));
+                for (BlockState state : urn.getStateManager().getStates()) {
+                    var outline = state.getOutlineShape(null, new BlockPos(10, 70, -30));
+                    mostUrnBoxes = Math.max(mostUrnBoxes, outline.getBoundingBoxes().size());
+                    int emitted = count(manager, state);
+                    require(emitted > 0 && emitted <= BlockBreakParticleBudget.MAX_PARTICLES,
+                            "An actual urn break bypassed the total event budget: " + urnStyle + " / " + state + " / " + emitted);
+                    largestUrnBurst = Math.max(largestUrnBurst, emitted);
+                    urnStates++;
+                }
+            }
+            require(urnStates == 264, "Cover every actual urn style, size, offset and facing");
+            require(mostUrnBoxes > 16, "Actual urn regression must include nontrivial fragmented outlines");
+            System.out.println("DAEDALON_URN_BREAK_PARTICLES_OK: " + urnStates + " actual urn states; maxBurst="
+                    + largestUrnBurst + "; maxOutlineBoxes=" + mostUrnBoxes + "; same-owner extended/offset break events");
             var style = java.util.Arrays.stream(com.oliver.daedalon.block.FixedDecorBlock.Style.values())
                     .filter(com.oliver.daedalon.block.FixedDecorBlock.Style::isFinial).findFirst().orElseThrow();
             var finial = Registry.register(Registries.BLOCK, new Identifier("daedalon", "break_budget_probe_finial"),

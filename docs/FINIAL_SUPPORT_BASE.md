@@ -53,8 +53,9 @@ and extent follow the fitted state, while the actual placed mesh and outline
 include the square stub. AIR overhangs and bases below the owner remain selectable
 through a sparse occupied-cell index, updated on both client and server state
 changes and rebuilt only for chunks whose palette contains finials.
-Fitted finials use one box for breaking debris, limiting vanilla particles to 64;
-the detailed base outline remains available for selection and collision.
+The shared Daedalon break-particle hook emits at most 16 debris particles for the
+whole outline, including fitted bases. Detailed selection and collision remain
+available without multiplying debris by the number of outline boxes.
 
 The base follows the pedestal footprint. A Large Sphaira pedestal is wider than
 one block, so a base on a half-width steep piece can overhang that individual
