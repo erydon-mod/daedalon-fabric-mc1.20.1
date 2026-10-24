@@ -95,10 +95,10 @@ public final class FountainGameTests {
                 System.out.printf("FountainGameTest %s %s: 64 debug water toggles %.3f ms%n",
                         style, size, (System.nanoTime() - start) / 1_000_000.0);
 
-                // Ordinary left-click still selects the next control after repeated water edits.
+                // Waterlogged is last, so ordinary left-click wraps to the primary Basin Size control.
                 Items.DEBUG_STICK.canMine(world.getBlockState(rim), world, rim, player);
-                context.assertTrue("facing".equals(stick.getOrCreateNbt()
-                        .getString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT)), "Control selection must still work");
+                context.assertTrue("basin_size".equals(stick.getOrCreateNbt()
+                        .getString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT)), "Waterlogged selection must wrap to Basin Size");
                 for (String control : new String[]{"plinth_size", "tiers", "basin_size"}) {
                     stick.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT, control);
                     Items.DEBUG_STICK.useOnBlock(new ItemUsageContext(player, Hand.MAIN_HAND, hit));

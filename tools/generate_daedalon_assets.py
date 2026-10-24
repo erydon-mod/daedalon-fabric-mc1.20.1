@@ -29,6 +29,8 @@ STATIC_LANGUAGE_ENTRIES = {
             "Not enough clear space for that fountain size"
         ),
         "message.daedalon.fountain_plinth_added": "Fountain plinth added",
+        "tooltip.daedalon.fountain.raised_base": "Debug stick: Raised base lifts the whole fountain by one block.",
+        "tooltip.daedalon.fountain.raised_base_water": "When waterlogged, water can surround the lower base.",
         "search.daedalon.plinth.fountain": "fountain fountains fountain plinth tiered fountain water feature",
         "tooltip.daedalon.plinth.fountain": "Use to build larger, tiered fountains.",
         "tooltip.daedalon.plinth.fountain_use": (
@@ -62,6 +64,8 @@ STATIC_LANGUAGE_ENTRIES = {
             "Nicht genug freier Platz für diese Brunnengröße"
         ),
         "message.daedalon.fountain_plinth_added": "Brunnensockel hinzugefügt",
+        "tooltip.daedalon.fountain.raised_base": "Debug-Stab: Erhöhter Sockel hebt den ganzen Brunnen um einen Block.",
+        "tooltip.daedalon.fountain.raised_base_water": "Bei Wasserfüllung kann Wasser den unteren Sockel umgeben.",
         "search.daedalon.plinth.fountain": "Brunnen Brunnensockel mehrstufiger Brunnen Wasserspiel",
         "tooltip.daedalon.plinth.fountain": "Zum Bau größerer, mehrstufiger Brunnen.",
         "tooltip.daedalon.plinth.fountain_use": (
@@ -95,6 +99,8 @@ STATIC_LANGUAGE_ENTRIES = {
             "No hay suficiente espacio libre para ese tamaño de fuente"
         ),
         "message.daedalon.fountain_plinth_added": "Pedestal de fuente añadido",
+        "tooltip.daedalon.fountain.raised_base": "Palo de depuración: Base elevada sube toda la fuente un bloque.",
+        "tooltip.daedalon.fountain.raised_base_water": "Si está anegada, el agua puede rodear la base inferior.",
         "search.daedalon.plinth.fountain": "fuente fuentes pedestal de fuente fuente de varios niveles juego de agua",
         "tooltip.daedalon.plinth.fountain": "Úsalo para construir fuentes más grandes de varios niveles.",
         "tooltip.daedalon.plinth.fountain_use": (

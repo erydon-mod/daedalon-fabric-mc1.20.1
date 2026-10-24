@@ -33,9 +33,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 /** Makes Daedalon model controls consistent without changing vanilla blocks. */
-@Mixin(DebugStickItem.class)
+// Run before ERYDON's older companion fallback so current Daedalon owns all of its controls.
+@Mixin(value = DebugStickItem.class, priority = 800)
 abstract class DebugStickItemMixin {
     private static final String BASIN_SIZE_CONTROL = "basin_size";
+    private static final String RAISED_BASE_CONTROL = "raised_base";
     private static final String PLINTH_SIZE_CONTROL = "plinth_size";
     private static final String TIER_CONTROL = "tiers";
     private static final String WATERLOGGED_CONTROL = "waterlogged";
@@ -105,21 +107,10 @@ abstract class DebugStickItemMixin {
             return;
         }
 
-        boolean manualFrieze = targetState.getBlock() instanceof FriezeBlock
-                && targetState.get(FriezeBlock.MANUAL_CORNER);
-        boolean repeatingFrieze = !(targetState.getBlock() instanceof FriezeBlock frieze)
-                || frieze.style().sections()>1;
-        List<Property<?>> properties = DaedalonDebugProperties.ordered(
-                targetState.getBlock().getStateManager().getProperties().stream()
-                        .filter(property -> property != FriezeBlock.JOIN
-                                || manualFrieze)
-                        .filter(property -> property != FriezeBlock.PATTERN
-                                || repeatingFrieze).toList()
-        );
-        String rememberedName = stack.getOrCreateNbt().getString(
-                DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT
-        );
-        Property<?> selected = DaedalonDebugProperties.rememberedOrFirst(properties, rememberedName);
+        List<Property<?>> properties = DaedalonDebugProperties.ordered(targetState);
+        String rememberedName = rememberedName(stack, targetState, state);
+        Property<?> selected = DaedalonDebugProperties.selectControl(properties,
+                DaedalonDebugProperties.remembered(properties, rememberedName), update, player.shouldCancelInteraction());
         if (selected == null) {
             sendMessage(player, Text.translatable(
                     "item.minecraft.debug_stick.empty",
@@ -128,7 +119,7 @@ abstract class DebugStickItemMixin {
             callback.setReturnValue(false);
             return;
         }
-        stack.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT,selected.getName());
+        rememberProperty(stack, targetState, state, selected.getName());
 
         if (update) {
             BlockState updated = cycleState(
@@ -152,7 +143,7 @@ abstract class DebugStickItemMixin {
                 return;
             }
             if (targetState.getBlock() instanceof FountainBasinBlock basin
-                    && selected == FountainBasinBlock.SIZE
+                    && (selected == FountainBasinBlock.SIZE || selected == FountainBasinBlock.RAISED_BASE)
                     && !basin.canChangeSize(world, targetPos, updated)) {
                 sendMessage(player, Text.translatable(
                         "message.daedalon.fountain_basin_size_blocked"
@@ -172,15 +163,6 @@ abstract class DebugStickItemMixin {
                     displayValueName(updated, selected)
             ));
         } else {
-            selected = DaedalonDebugProperties.cycle(
-                    properties,
-                    selected,
-                    player.shouldCancelInteraction()
-            );
-            stack.getOrCreateNbt().putString(
-                    DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT,
-                    selected.getName()
-            );
             sendMessage(player, Text.translatable(
                     "item.minecraft.debug_stick.select",
                     displayPropertyName(targetState, selected),
@@ -201,22 +183,11 @@ abstract class DebugStickItemMixin {
                                      FountainBasinBlockEntity basin,
                                      CallbackInfoReturnable<Boolean> callback) {
         BlockState plinth = basin.plinthState();
-        List<String> controls = plinth == null
-                ? List.of(BASIN_SIZE_CONTROL, WATERLOGGED_CONTROL)
-                : List.of(
-                        BASIN_SIZE_CONTROL,
-                        PLINTH_SIZE_CONTROL,
-                        TIER_CONTROL,
-                        WATERLOGGED_CONTROL,
-                        FACING_CONTROL
-                );
-        String rememberedName = stack.getOrCreateNbt().getString(
-                DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT
-        );
+        List<String> controls = DaedalonDebugProperties.fountainControls(plinth != null);
+        String rememberedName = rememberedName(stack, basinState, basinState);
         rememberedName = rememberedFountainControl(rememberedName, plinth != null);
-        String selected = controls.contains(rememberedName)
-                ? rememberedName
-                : controls.get(0);
+        String selected = DaedalonDebugProperties.selectControl(controls, rememberedName, update, backwards);
+        stack.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT, selected);
 
         if (update) {
             String updatedValue;
@@ -237,6 +208,11 @@ abstract class DebugStickItemMixin {
                     }
                     replaced = world.setBlockState(pos, updated, 18);
                     updatedValue = valueName(updated, FountainBasinBlock.SIZE);
+                }
+                case RAISED_BASE_CONTROL -> {
+                    BlockState updated = cycleState(basinState, FountainBasinBlock.RAISED_BASE, backwards);
+                    replaced = basinBlock.canChangeSize(world, pos, updated) && world.setBlockState(pos, updated, 18);
+                    updatedValue = valueName(updated, FountainBasinBlock.RAISED_BASE);
                 }
                 case PLINTH_SIZE_CONTROL -> {
                     BlockState updated = cycleState(plinth, PlinthBlock.SIZE, backwards);
@@ -285,11 +261,6 @@ abstract class DebugStickItemMixin {
                     updatedValue
             ));
         } else {
-            selected = DaedalonDebugProperties.cycle(controls, selected, backwards);
-            stack.getOrCreateNbt().putString(
-                    DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT,
-                    selected
-            );
             sendMessage(player, Text.translatable(
                     "item.minecraft.debug_stick.select",
                     selected,
@@ -297,6 +268,22 @@ abstract class DebugStickItemMixin {
             ));
         }
         callback.setReturnValue(true);
+    }
+
+    private static String rememberedName(ItemStack stack, BlockState owner, BlockState clicked) {
+        String remembered = stack.getOrCreateNbt().getString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT);
+        if (!remembered.isEmpty()) return remembered;
+        var vanilla = stack.getSubNbt("DebugProperty");
+        if (vanilla == null) return "";
+        remembered = vanilla.getString(Registries.BLOCK.getId(owner.getBlock()).toString());
+        return remembered.isEmpty() ? vanilla.getString(Registries.BLOCK.getId(clicked.getBlock()).toString()) : remembered;
+    }
+
+    private static void rememberProperty(ItemStack stack, BlockState owner, BlockState clicked, String name) {
+        stack.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT, name);
+        var vanilla = stack.getOrCreateSubNbt("DebugProperty");
+        vanilla.putString(Registries.BLOCK.getId(owner.getBlock()).toString(), name);
+        vanilla.putString(Registries.BLOCK.getId(clicked.getBlock()).toString(), name);
     }
 
     private static String rememberedFountainControl(String rememberedName, boolean hasPlinth) {
@@ -315,6 +302,7 @@ abstract class DebugStickItemMixin {
                                             String control) {
         return switch (control) {
             case BASIN_SIZE_CONTROL -> valueName(basinState, FountainBasinBlock.SIZE);
+            case RAISED_BASE_CONTROL -> valueName(basinState, FountainBasinBlock.RAISED_BASE);
             case PLINTH_SIZE_CONTROL -> valueName(plinth, PlinthBlock.SIZE);
             case TIER_CONTROL -> basin.tierCount().asString();
             case WATERLOGGED_CONTROL -> valueName(

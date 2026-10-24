@@ -16,6 +16,7 @@ import java.util.List;
 public final class FountainAssemblyLayout {
     private final FountainBasinBlock.Style basinStyle;
     private final FountainBasinBlock.Size basinSize;
+    private final boolean raised;
     private final PlacedPlinth plinth;
     private final List<PlacedBowl> bowls;
     private final VoxelShape[] collisionParts;
@@ -24,6 +25,7 @@ public final class FountainAssemblyLayout {
 
     private FountainAssemblyLayout(FountainBasinBlock.Style basinStyle,
                                    FountainBasinBlock.Size basinSize,
+                                   boolean raised,
                                    PlacedPlinth plinth,
                                    List<PlacedBowl> bowls,
                                    VoxelShape[] collisionParts,
@@ -31,6 +33,7 @@ public final class FountainAssemblyLayout {
                                    double maximumY) {
         this.basinStyle = basinStyle;
         this.basinSize = basinSize;
+        this.raised = raised;
         this.plinth = plinth;
         this.bowls = List.copyOf(bowls);
         this.collisionParts = collisionParts;
@@ -43,12 +46,19 @@ public final class FountainAssemblyLayout {
                                                 boolean filled,
                                                 BlockState rawPlinthState,
                                                 int requestedBowlCount) {
+        return create(basinStyle, basinSize, filled, false, rawPlinthState, requestedBowlCount);
+    }
+
+    public static FountainAssemblyLayout create(FountainBasinBlock.Style basinStyle,
+                                                FountainBasinBlock.Size basinSize,
+                                                boolean filled, boolean raised,
+                                                BlockState rawPlinthState, int requestedBowlCount) {
         VoxelShape[] collisionParts =
-                FountainBasinGeometry.copyCollisionPartShapes(basinStyle, basinSize);
+                FountainBasinGeometry.copyCollisionPartShapes(basinStyle, basinSize, raised);
         VoxelShape[] outlineParts =
-                FountainBasinGeometry.copyOutlinePartShapes(basinStyle, basinSize, filled);
+                FountainBasinGeometry.copyOutlinePartShapes(basinStyle, basinSize, filled, raised);
         List<PlacedBowl> bowls = new ArrayList<>(3);
-        double maximumY = FountainBasinGeometry.outlineShape(basinStyle, basinSize, filled)
+        double maximumY = FountainBasinGeometry.outlineShape(basinStyle, basinSize, filled, raised)
                 .getMax(Direction.Axis.Y);
 
         if (rawPlinthState == null || !(rawPlinthState.getBlock() instanceof PlinthBlock block)
@@ -56,6 +66,7 @@ public final class FountainAssemblyLayout {
             return new FountainAssemblyLayout(
                     basinStyle,
                     basinSize,
+                    raised,
                     null,
                     bowls,
                     collisionParts,
@@ -65,7 +76,7 @@ public final class FountainAssemblyLayout {
         }
 
         BlockState plinthState = normalizePlinth(rawPlinthState);
-        double baseY = basinStyle.basinFloorY(basinSize);
+        double baseY = (raised ? 1 : 0) + basinStyle.basinFloorY(basinSize);
         double connectionY = baseY + block.connectionRise(plinthState);
         VoxelShape plinthCollision = block.assemblyCollisionShape(plinthState)
                 .offset(0.0D, baseY, 0.0D);
@@ -102,6 +113,7 @@ public final class FountainAssemblyLayout {
         return new FountainAssemblyLayout(
                 basinStyle,
                 basinSize,
+                raised,
                 placedPlinth,
                 bowls,
                 collisionParts,
@@ -120,7 +132,7 @@ public final class FountainAssemblyLayout {
     /** Water changes selection surfaces only, never collision or tier placement. */
     public FountainAssemblyLayout withWaterlogged(boolean filled) {
         VoxelShape[] updatedOutline = FountainBasinGeometry.copyOutlinePartShapes(
-                basinStyle, basinSize, filled);
+                basinStyle, basinSize, filled, raised);
         if (plinth != null) {
             PlinthBlock block = (PlinthBlock) plinth.state().getBlock();
             mergeIntoParts(updatedOutline, block.assemblyOutlineShape(plinth.state(), filled)
@@ -130,7 +142,7 @@ public final class FountainAssemblyLayout {
             mergeIntoParts(updatedOutline, FountainBowlModel.outlineShape(bowl.style(), bowl.size(), filled)
                     .offset(0.0D, bowl.baseY(), 0.0D), true);
         }
-        return new FountainAssemblyLayout(basinStyle, basinSize, plinth, bowls,
+        return new FountainAssemblyLayout(basinStyle, basinSize, raised, plinth, bowls,
                 collisionParts, updatedOutline, maximumY);
     }
 

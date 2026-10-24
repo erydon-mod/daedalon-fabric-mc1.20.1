@@ -14,7 +14,7 @@ final class FountainBasinGeometry {
     static final int PART_RADIUS = 2;
     static final int PART_DIAMETER = PART_RADIUS * 2 + 1;
     /** The shallow basin plus the fixed Large -> Medium -> Small stack reaches cell six. */
-    static final int MAX_PART_Y = 5;
+    static final int MAX_PART_Y = 6;
     static final int PART_SHAPE_COUNT = PART_DIAMETER * PART_DIAMETER * (MAX_PART_Y + 1);
 
     private static final int OCTAGON_SLOPE_STEPS = 16;
@@ -30,6 +30,14 @@ final class FountainBasinGeometry {
             createOutlinePartShapes(DRY_OUTLINE_SHAPES);
     private static final VoxelShape[][][] WET_OUTLINE_PART_SHAPES =
             createOutlinePartShapes(WET_OUTLINE_SHAPES);
+    private static final VoxelShape[][] RAISED_COLLISION_SHAPES = createRaisedShapes(COLLISION_SHAPES);
+    private static final VoxelShape[][] RAISED_DRY_OUTLINE_SHAPES = createRaisedShapes(DRY_OUTLINE_SHAPES);
+    private static final VoxelShape[][] RAISED_WET_OUTLINE_SHAPES = createRaisedShapes(WET_OUTLINE_SHAPES);
+    private static final VoxelShape[][][] BASE_PART_SHAPES = createBasePartShapes();
+    private static final VoxelShape[][][] RAISED_COLLISION_PART_SHAPES = createRaisedPartShapes(COLLISION_PART_SHAPES);
+    private static final VoxelShape[][][] RAISED_DRY_OUTLINE_PART_SHAPES = createRaisedPartShapes(DRY_OUTLINE_PART_SHAPES);
+    private static final VoxelShape[][][] RAISED_WET_OUTLINE_PART_SHAPES = createRaisedPartShapes(WET_OUTLINE_PART_SHAPES);
+    private static final boolean[][][] RAISED_WATER_PARTS = createRaisedWaterParts();
 
     private FountainBasinGeometry() {
     }
@@ -37,6 +45,101 @@ final class FountainBasinGeometry {
     static void initialize() {
         // Calling this during block registration moves the one-time shape bake
         // out of the player's first placement or collision check.
+    }
+
+    static VoxelShape collisionShape(FountainBasinBlock.Style style, FountainBasinBlock.Size size, boolean raised) {
+        return (raised ? RAISED_COLLISION_SHAPES : COLLISION_SHAPES)[style.ordinal()][size.ordinal()];
+    }
+
+    static VoxelShape outlineShape(FountainBasinBlock.Style style, FountainBasinBlock.Size size,
+                                   boolean filled, boolean raised) {
+        return (raised ? filled ? RAISED_WET_OUTLINE_SHAPES : RAISED_DRY_OUTLINE_SHAPES
+                : filled ? WET_OUTLINE_SHAPES : DRY_OUTLINE_SHAPES)[style.ordinal()][size.ordinal()];
+    }
+
+    static VoxelShape collisionPartShape(FountainBasinBlock.Style style, FountainBasinBlock.Size size,
+                                         boolean raised, int x, int y, int z) {
+        return (raised ? RAISED_COLLISION_PART_SHAPES : COLLISION_PART_SHAPES)
+                [style.ordinal()][size.ordinal()][partIndex(x, y, z)];
+    }
+
+    static VoxelShape outlinePartShape(FountainBasinBlock.Style style, FountainBasinBlock.Size size,
+                                       boolean filled, boolean raised, int x, int y, int z) {
+        return (raised ? filled ? RAISED_WET_OUTLINE_PART_SHAPES : RAISED_DRY_OUTLINE_PART_SHAPES
+                : filled ? WET_OUTLINE_PART_SHAPES : DRY_OUTLINE_PART_SHAPES)
+                [style.ordinal()][size.ordinal()][partIndex(x, y, z)];
+    }
+
+    static VoxelShape[] copyCollisionPartShapes(FountainBasinBlock.Style style,
+                                                FountainBasinBlock.Size size, boolean raised) {
+        return (raised ? RAISED_COLLISION_PART_SHAPES : COLLISION_PART_SHAPES)
+                [style.ordinal()][size.ordinal()].clone();
+    }
+
+    static VoxelShape[] copyOutlinePartShapes(FountainBasinBlock.Style style,
+                                              FountainBasinBlock.Size size, boolean filled, boolean raised) {
+        return (raised ? filled ? RAISED_WET_OUTLINE_PART_SHAPES : RAISED_DRY_OUTLINE_PART_SHAPES
+                : filled ? WET_OUTLINE_PART_SHAPES : DRY_OUTLINE_PART_SHAPES)
+                [style.ordinal()][size.ordinal()].clone();
+    }
+
+    private static VoxelShape[][] createRaisedShapes(VoxelShape[][] originals) {
+        VoxelShape[][] result = new VoxelShape[originals.length][FountainBasinBlock.Size.values().length];
+        for (FountainBasinBlock.Style style : FountainBasinBlock.Style.values())
+            for (FountainBasinBlock.Size size : FountainBasinBlock.Size.values())
+                result[style.ordinal()][size.ordinal()] = VoxelShapes.union(
+                        originals[style.ordinal()][size.ordinal()].offset(0, 1, 0),
+                        FountainRaisedBaseGeometry.collision(style, size));
+        return result;
+    }
+
+    static boolean allowsSurroundingWater(FountainBasinBlock.Style style, FountainBasinBlock.Size size,
+                                           int x, int y, int z) {
+        return y == 0 && RAISED_WATER_PARTS[style.ordinal()][size.ordinal()][partIndex(x, y, z)];
+    }
+
+    private static VoxelShape[][][] createBasePartShapes() {
+        VoxelShape[][][] result = new VoxelShape[FountainBasinBlock.Style.values().length]
+                [FountainBasinBlock.Size.values().length][PART_SHAPE_COUNT];
+        for (FountainBasinBlock.Style style : FountainBasinBlock.Style.values())
+            for (FountainBasinBlock.Size size : FountainBasinBlock.Size.values()) {
+                VoxelShape[] parts = result[style.ordinal()][size.ordinal()];
+                Arrays.fill(parts, VoxelShapes.empty());
+                VoxelShape base = FountainRaisedBaseGeometry.collision(style, size);
+                for (int x = -PART_RADIUS; x <= PART_RADIUS; x++)
+                    for (int z = -PART_RADIUS; z <= PART_RADIUS; z++)
+                        parts[partIndex(x, 0, z)] = clipToPart(base, x, 0, z).simplify();
+            }
+        return result;
+    }
+
+    /** Raising by an integer cell reuses every existing basin-local shape. */
+    private static VoxelShape[][][] createRaisedPartShapes(VoxelShape[][][] originals) {
+        VoxelShape[][][] result = new VoxelShape[originals.length][FountainBasinBlock.Size.values().length][PART_SHAPE_COUNT];
+        for (FountainBasinBlock.Style style : FountainBasinBlock.Style.values())
+            for (FountainBasinBlock.Size size : FountainBasinBlock.Size.values())
+                for (int y = 0; y <= MAX_PART_Y; y++)
+                    for (int x = -PART_RADIUS; x <= PART_RADIUS; x++)
+                        for (int z = -PART_RADIUS; z <= PART_RADIUS; z++)
+                            result[style.ordinal()][size.ordinal()][partIndex(x, y, z)] = y == 0
+                                    ? BASE_PART_SHAPES[style.ordinal()][size.ordinal()][partIndex(x, 0, z)]
+                                    : originals[style.ordinal()][size.ordinal()][partIndex(x, y - 1, z)];
+        return result;
+    }
+
+    private static boolean[][][] createRaisedWaterParts() {
+        boolean[][][] result = new boolean[FountainBasinBlock.Style.values().length]
+                [FountainBasinBlock.Size.values().length][PART_SHAPE_COUNT];
+        for (FountainBasinBlock.Style style : FountainBasinBlock.Style.values())
+            for (FountainBasinBlock.Size size : FountainBasinBlock.Size.values())
+                for (int x = -PART_RADIUS; x <= PART_RADIUS; x++)
+                    for (int z = -PART_RADIUS; z <= PART_RADIUS; z++) {
+                        int index = partIndex(x, 0, z);
+                        VoxelShape stone = RAISED_COLLISION_PART_SHAPES[style.ordinal()][size.ordinal()][index];
+                        result[style.ordinal()][size.ordinal()][index] = !stone.isEmpty()
+                                && VoxelShapes.matchesAnywhere(VoxelShapes.fullCube(), stone, BooleanBiFunction.ONLY_FIRST);
+                    }
+        return result;
     }
 
     static VoxelShape collisionShape(FountainBasinBlock.Size size) {

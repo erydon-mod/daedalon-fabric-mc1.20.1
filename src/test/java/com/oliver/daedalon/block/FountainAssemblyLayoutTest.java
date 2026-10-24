@@ -86,7 +86,17 @@ final class FountainAssemblyLayoutTest {
                 );
             }
         }
-        assertEquals(5, FountainBasinGeometry.MAX_PART_Y);
+        assertEquals(6, FountainBasinGeometry.MAX_PART_Y);
+        for (FountainBasinBlock.Style basinStyle : FountainBasinBlock.Style.values()) {
+            double connection = 1 + basinStyle.basinFloorY(FountainBasinBlock.Size.LARGE)
+                    + PlinthBlock.Size.LARGE.height();
+            for (FountainBowlModel.Size size : FountainBowlModel.sequence(FountainBowlModel.TierCount.THREE)) {
+                double base = connection;
+                connection += basinStyle.bowlStyle().connectionRise(size);
+                assertTrue(base + basinStyle.bowlStyle().modelHeight(size) <= FountainBasinGeometry.MAX_PART_Y + 1,
+                        "Raised " + basinStyle + " stack must fit the bounded grid");
+            }
+        }
     }
 
     @Test

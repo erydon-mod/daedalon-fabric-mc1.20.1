@@ -8,6 +8,8 @@
   "message.erydon_family.resource_packs.open_curseforge": "Open the ERYDON CurseForge projects page",
   "message.daedalon.fountain_basin_size_blocked": "Not enough clear space for that fountain size",
   "message.daedalon.fountain_plinth_added": "Fountain plinth added",
+  "tooltip.daedalon.fountain.raised_base": "Debug stick: Raised base lifts the whole fountain by one block.",
+  "tooltip.daedalon.fountain.raised_base_water": "When waterlogged, water can surround the lower base.",
   "search.daedalon.plinth.fountain": "fountain fountains fountain plinth tiered fountain water feature",
   "tooltip.daedalon.plinth.fountain": "Use to build larger, tiered fountains.",
   "tooltip.daedalon.plinth.fountain_use": "Right-click a fountain basin repeatedly with the same plinth to add its base and bowls.",

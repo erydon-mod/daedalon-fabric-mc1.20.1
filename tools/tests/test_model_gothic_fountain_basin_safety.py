@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import math
 import re
+import struct
 import unittest
+from collections import Counter
 
 from daedalon_test_support import (
     DAEDALON_ASSETS,
@@ -107,6 +109,8 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
                 set(state["variants"]),
             )
             self.assertEqual(1, len({entry["model"] for entry in state["variants"].values()}))
+            self.assertTrue(all("raised_base" not in key for key in state["variants"]),
+                            "The shared runtime wrapper handles both raised values without duplicate asset bindings")
             self.assertEqual(
                 "daedalon:block/mesh/fountain_basin_display",
                 load_json(DAEDALON_ASSETS / f"models/item/{block_id}.json")["parent"],
@@ -146,7 +150,7 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
         self.assertNotIn("Block.dropStack", basin)
         self.assertNotIn("giveItemStack", basin)
 
-    def test_bucket_state_is_real_but_never_exposes_a_world_fluid(self) -> None:
+    def test_bucket_keeps_bowl_water_contained_and_only_wets_partial_raised_base_cells(self) -> None:
         block = (JAVA_ROOT / "block/FountainBasinBlock.java").read_text(
             encoding="utf-8"
         )
@@ -188,12 +192,16 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
         self.assertIn("implements Waterloggable", block)
         self.assertIn('EnumProperty.of("size", Size.class)', block)
         self.assertIn("Properties.WATERLOGGED", block)
-        self.assertIn("builder.add(SIZE, WATERLOGGED)", block)
+        self.assertIn("builder.add(SIZE, RAISED_BASE, WATERLOGGED)", block)
+        self.assertIn('BooleanProperty.of("raised_base")', block)
+        self.assertIn("with(RAISED_BASE, false)", block)
         self.assertIn("with(SIZE, Size.MEDIUM)", block)
         self.assertIn("tryFillWithFluid", block)
         self.assertIn("state.with(WATERLOGGED, true)", block)
         self.assertNotIn("public FluidState getFluidState", block)
-        self.assertNotIn("scheduleFluidTick", block)
+        bucket_fill = block[block.index("public boolean tryFillWithFluid"):block.index("public VoxelShape getOutlineShape")]
+        self.assertNotIn("scheduleFluidTick", bucket_fill)
+        self.assertIn("anchorState.get(RAISED_BASE) && anchorState.get(WATERLOGGED)", block)
         self.assertIn('SMALL("small", 3.0F)', block)
         self.assertIn('MEDIUM("medium", MEDIUM_MODEL_SCALE)', block)
         self.assertIn('LARGE("large", LARGE_MODEL_SCALE)', block)
@@ -221,7 +229,7 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
         self.assertIn("nearestX + nearestZ", geometry)
         self.assertIn('IntProperty.of("offset_x", 0, 4)', part)
         self.assertIn('"offset_y", 0, FountainBasinGeometry.MAX_PART_Y', part)
-        self.assertIn("MAX_PART_Y = 5", geometry)
+        self.assertIn("MAX_PART_Y = 6", geometry)
         self.assertIn('IntProperty.of("offset_z", 0, 4)', part)
         self.assertIn("HORIZONTAL_OFFSET_BIAS = 2", part)
         self.assertIn("BlockRenderType.INVISIBLE", part)
@@ -249,8 +257,10 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
         self.assertIn(".canFillWithFluid(world, anchor.pos(), anchor.state(), fluid)", part)
         self.assertIn(".tryFillWithFluid(world, anchor.pos(), anchor.state(), fluid)", part)
         self.assertIn(".tryDrainFluid(world, anchor.pos(), anchor.state())", part)
-        self.assertNotIn("scheduleFluidTick", part)
-        self.assertNotIn("public FluidState getFluidState", part)
+        self.assertIn("if (state.get(WATERLOGGED)) world.scheduleFluidTick", part)
+        self.assertIn("public FluidState getFluidState", part)
+        self.assertIn("Properties.WATERLOGGED", part)
+        self.assertIn("state.get(WATERLOGGED) ? Fluids.WATER.getStill(false)", part)
         self.assertIn("serverBreakingDistanceSquared", breaking_mixin)
         self.assertIn("outline.getClosestPointTo(localEye)", tall_placement)
         self.assertNotIn("containsOwnedBasinLevelPartHit", tall_placement)
@@ -292,6 +302,104 @@ class GothicFountainBasinSafetyTests(unittest.TestCase):
             'registerBlock("fountain_basin_part"',
             mod_blocks,
         )
+
+    def test_all_authored_base_footprints_are_hash_locked_closed_and_inside_existing_widths(self) -> None:
+        for style in ("gothic", "georgian", "greek"):
+            with self.subTest(style=style):
+                data = load_json(DAEDALON_DATA / f"fountain_base/{style}.json")
+                source = MESH_ROOT / f"fountain_{style}_basin.obj"
+                mesh = parse_obj(source)
+                self.assertEqual(sha256(source), data["source_sha256"])
+                self.assertEqual(mesh["faces"], data["source_faces"])
+                self.assertGreater(data["selected_bottom_faces"], 0)
+                self.assertLess(data["selected_bottom_faces"], mesh["faces"])
+                points, triangles = data["points"], data["triangles"]
+                self.assertGreater(len(points), 8, "Keep the authored outline rather than a rectangle/octagon substitute")
+                self.assertEqual(len(points) - 2, len(triangles))
+                polygon_area = sum(a[0] * b[1] - a[1] * b[0]
+                                   for a, b in zip(points, points[1:] + points[:1])) / 2
+                self.assertGreater(polygon_area, 0)
+                triangle_area = 0
+                edges = Counter()
+                for triangle in triangles:
+                    self.assertEqual(3, len(set(triangle)))
+                    a, b, c = (points[index] for index in triangle)
+                    area = ((b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])) / 2
+                    self.assertGreater(area, 0, "Caps must retain consistent winding")
+                    triangle_area += area
+                    edges.update(tuple(sorted(pair)) for pair in zip(triangle, triangle[1:] + triangle[:1]))
+                self.assertAlmostEqual(polygon_area, triangle_area, delta=1e-10)
+                boundary = {tuple(sorted((i, (i + 1) % len(points)))) for i in range(len(points))}
+                self.assertEqual(boundary, {edge for edge, count in edges.items() if count == 1})
+                self.assertTrue(all(count in (1, 2) for count in edges.values()))
+                for scale in (3, 4, 5):
+                    for axis in (0, 1):
+                        low, high = min(point[axis] for point in points), max(point[axis] for point in points)
+                        self.assertGreaterEqual(0.5 + low * scale, 0.5 - scale / 2 - 1e-6)
+                        self.assertLessEqual(0.5 + high * scale, 0.5 + scale / 2 + 1e-6)
+                        self.assertGreater(high - low, 0.9, "The continuation must retain the basin's full authored base width")
+
+    def test_every_raised_base_top_vertex_meets_the_actual_float_fitted_underside(self) -> None:
+        def f32(value: float) -> float:
+            return struct.unpack("<f", struct.pack("<f", value))[0]
+
+        checked = 0
+        for style in ("gothic", "georgian", "greek"):
+            with self.subTest(style=style):
+                profile = load_json(DAEDALON_DATA / f"fountain_base/{style}.json")
+                definition = load_json(MESH_ROOT / f"fountain_{style}_basin.json")
+                self.assertTrue(definition["fit_to_block"])
+                self.assertEqual([5.0, 5.0, 5.0], definition["scale"])
+                self.assertEqual([0.0, 0.0, 0.0], definition["translate"])
+                vertices, faces = [], []
+                for line in (MESH_ROOT / f"fountain_{style}_basin.obj").read_text(encoding="utf-8").splitlines():
+                    fields = line.split()
+                    if fields and fields[0] == "v":
+                        vertices.append(tuple(f32(float(value)) for value in fields[1:4]))
+                    elif fields and fields[0] == "f":
+                        faces.append(tuple(int(value.split("/")[0]) - 1 for value in fields[1:]))
+
+                low = tuple(min(vertex[axis] for vertex in vertices) for axis in range(3))
+                high = tuple(max(vertex[axis] for vertex in vertices) for axis in range(3))
+                span = max(f32(high[axis] - low[axis]) for axis in range(3))
+                fit = f32(1.0 / span)
+                center_x = f32(f32(low[0] + high[0]) * 0.5)
+                center_z = f32(f32(low[2] + high[2]) * 0.5)
+                # Replay Java's float operations, rather than importing the
+                # authoring tool or trusting its stored hash/height metadata.
+                fitted = [
+                    (
+                        f32(f32(f32(f32(x - center_x) * fit) * 5.0) + 0.5),
+                        f32(f32(f32(y - low[1]) * fit) * 5.0),
+                        f32(f32(f32(f32(z - center_z) * fit) * 5.0) + 0.5),
+                    )
+                    for x, y, z in vertices
+                ]
+                bottom_indices = {
+                    index for face in faces
+                    if all(vertices[index][1] <= low[1] + span / 400 for index in face)
+                    for index in face
+                }
+                underside = [fitted[index] for index in bottom_indices]
+                self.assertEqual(len(profile["points"]), len(profile["top_y"]))
+                self.assertTrue(underside)
+                for index, ((x, z), top_y) in enumerate(zip(profile["points"], profile["top_y"])):
+                    expected_x, expected_z = 0.5 + x * 5, 0.5 + z * 5
+                    matching = [vertex[1] for vertex in underside
+                                if abs(vertex[0] - expected_x) < 1e-8
+                                and abs(vertex[2] - expected_z) < 1e-8]
+                    self.assertTrue(matching, f"{style} boundary vertex {index} lost its authored underside join")
+                    original_y = min(matching)
+                    self.assertAlmostEqual(top_y * 5, original_y, delta=1e-9,
+                                           msg=f"{style} boundary vertex {index} leaves a gap or penetrates the basin")
+                    for size in (3.0, 4.0, 5.0):
+                        # Compare the final emitted floats at all three sizes:
+                        # original BasinTransform versus the new foundation.
+                        raised_y = f32(f32(original_y * f32(size / 5.0)) + 1.0)
+                        support_y = f32(1.0 + top_y * size)
+                        self.assertAlmostEqual(raised_y, support_y, delta=2e-7)
+                    checked += 1
+        self.assertEqual(349, checked, "Exercise every authored boundary height across all three basin styles")
 
     def test_rendered_water_outline_stays_inside_the_measured_bowl(self) -> None:
         block = (JAVA_ROOT / "block/FountainBasinBlock.java").read_text(

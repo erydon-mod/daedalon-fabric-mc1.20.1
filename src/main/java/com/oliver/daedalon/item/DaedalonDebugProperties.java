@@ -1,7 +1,11 @@
 package com.oliver.daedalon.item;
 
 import com.oliver.daedalon.block.DecorOrientation;
-import net.minecraft.state.property.Properties;
+import com.oliver.daedalon.block.CapitalPartBlock;
+import com.oliver.daedalon.block.FountainBasinPartBlock;
+import com.oliver.daedalon.block.FriezeBlock;
+import com.oliver.daedalon.block.MonopterosPartBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Property;
 
 import java.util.ArrayList;
@@ -20,10 +24,27 @@ public final class DaedalonDebugProperties {
     private DaedalonDebugProperties() {
     }
 
+    /** The actual player-visible controls, excluding automatic and helper-only state. */
+    public static List<Property<?>> ordered(BlockState state) {
+        if (state.getBlock() instanceof CapitalPartBlock || state.getBlock() instanceof FountainBasinPartBlock
+                || state.getBlock() instanceof MonopterosPartBlock) return List.of();
+        boolean manual = state.getBlock() instanceof FriezeBlock && state.get(FriezeBlock.MANUAL_CORNER);
+        boolean repeating = !(state.getBlock() instanceof FriezeBlock frieze) || frieze.style().sections() > 1;
+        return ordered(state.getBlock().getStateManager().getProperties().stream()
+                .filter(property -> property != FriezeBlock.JOIN || manual)
+                .filter(property -> property != FriezeBlock.PATTERN || repeating).toList());
+    }
+
+    public static List<String> fountainControls(boolean hasPlinth) {
+        return hasPlinth ? List.of("basin_size", "raised_base", "plinth_size", "tiers", "facing", "waterlogged")
+                : List.of("basin_size", "raised_base", "waterlogged");
+    }
+
     public static List<Property<?>> ordered(Collection<Property<?>> properties) {
         List<Property<?>> ordered = new ArrayList<>(properties);
         boolean finial=ordered.stream().anyMatch(property -> property.getName().equals("finial_support"));
-        boolean eightWay = ordered.contains(Properties.HORIZONTAL_FACING) && ordered.contains(DecorOrientation.PROPERTY);
+        boolean eightWay = ordered.stream().anyMatch(property -> property.getName().equals("facing"))
+                && ordered.contains(DecorOrientation.PROPERTY);
         ordered.removeIf(property -> property.getName().equals("offset_x")
                 || property.getName().equals("offset_y") || property.getName().equals("offset_z")
                 || property.getName().equals("capital_support")
@@ -34,14 +55,26 @@ public final class DaedalonDebugProperties {
     }
 
     public static Property<?> rememberedOrFirst(List<Property<?>> properties, String rememberedName) {
-        if ("orientation".equals(rememberedName) && properties.contains(Properties.HORIZONTAL_FACING)
+        Property<?> remembered = remembered(properties, rememberedName);
+        return remembered != null ? remembered : properties.isEmpty() ? null : properties.get(0);
+    }
+
+    public static Property<?> remembered(List<Property<?>> properties, String rememberedName) {
+        if ("orientation".equals(rememberedName) && properties.stream().anyMatch(property -> property.getName().equals("facing"))
                 && !properties.contains(DecorOrientation.PROPERTY)) rememberedName = "facing";
         for (Property<?> property : properties) {
             if (property.getName().equals(rememberedName)) {
                 return property;
             }
         }
-        return properties.isEmpty() ? null : properties.get(0);
+        return null;
+    }
+
+    /** A new stick selects the primary control first; a remembered one keeps cycling normally. */
+    public static <T> T selectControl(List<T> controls, T remembered, boolean update, boolean backwards) {
+        if (controls.isEmpty()) return null;
+        int index = remembered == null ? -1 : controls.indexOf(remembered);
+        return index < 0 ? controls.get(0) : update ? controls.get(index) : cycle(controls, remembered, backwards);
     }
 
     /**
@@ -53,7 +86,7 @@ public final class DaedalonDebugProperties {
         if (values.isEmpty()) {
             throw new IllegalArgumentException("Cannot cycle an empty value list");
         }
-        int index = values.indexOf(current);
+        int index = current == null ? -1 : values.indexOf(current);
         if (index < 0) {
             return backwards ? values.get(values.size() - 1) : values.get(0);
         }
@@ -78,15 +111,23 @@ public final class DaedalonDebugProperties {
     private static int priority(Property<?> property) {
         return switch (property.getName()) {
             case "size" -> 0;
-            case "width", "diameter" -> 0;
-            case "offset" -> 1;
-            case "facing" -> 2;
-            default -> 3;
+            case "width" -> 1;
+            case "diameter" -> 2;
+            case "raised_base" -> 3;
+            case "offset" -> 4;
+            case "ceiling" -> 5;
+            case "facing", "orientation", "capital_orientation" -> 6;
+            case "pattern" -> 7;
+            case "manual_corner" -> 8;
+            case "join" -> 9;
+            case "waterlogged" -> 100;
+            default -> 50;
         };
     }
 
     private static <T extends Comparable<T>> int valuePriority(Property<T> property, T value) {
         String valueName = property.name(value);
+        if (value instanceof Boolean flag) return flag ? 1 : 0;
         return switch (property.getName()) {
             case "orientation", "capital_orientation" -> switch (valueName) {
                 case "straight" -> 0;
@@ -103,9 +144,20 @@ public final class DaedalonDebugProperties {
                 case "double" -> 2;
                 default -> 100;
             };
-            case "offset" -> switch (valueName) {
-                case "false" -> 0;
-                case "true" -> 1;
+            case "width", "diameter", "pattern" -> Integer.parseInt(valueName);
+            case "join" -> switch (valueName) {
+                case "straight" -> 0;
+                case "inner_left" -> 1;
+                case "inner_right" -> 2;
+                case "outer_left" -> 3;
+                case "outer_right" -> 4;
+                default -> 100;
+            };
+            case "tiers" -> switch (valueName) {
+                case "none" -> 0;
+                case "one" -> 1;
+                case "two" -> 2;
+                case "three" -> 3;
                 default -> 100;
             };
             case "facing" -> switch (valueName) {

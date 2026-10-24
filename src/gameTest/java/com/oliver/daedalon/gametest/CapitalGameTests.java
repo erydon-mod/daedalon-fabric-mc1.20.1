@@ -95,15 +95,11 @@ public final class CapitalGameTests {
     }
 
     private static void assertWarning(TestContext context,WarningPlayer player,boolean debugStick) {
-        // Installed ERYDON deliberately owns its older-companion debug-stick
-        // compatibility handler; both keys display the same localized warning.
-        boolean companionWarning=debugStick
-                && net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("erydon");
+        // Current Daedalon owns its controls before the older companion fallback.
         Text message=player.message;
         context.assertTrue(player.messageCount==1,"Rejected resize must send exactly one warning");
         context.assertTrue(message!=null && message.getContent() instanceof TranslatableTextContent text
-                && (text.getKey().equals("message.daedalon.capital_size_blocked")
-                || companionWarning && text.getKey().equals("message.erydon.companion_capital_size_blocked")),
+                && text.getKey().equals("message.daedalon.capital_size_blocked"),
                 "Resize must send the localized capital warning: "+message);
     }
 
@@ -131,7 +127,7 @@ public final class CapitalGameTests {
                     }
                     stick.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT,offset.getName());
                     stick.getOrCreateSubNbt("DebugProperty").putString("daedalon:capital_part",offset.getName());
-                    for (String selected:java.util.List.of("capital_orientation","size","capital_orientation","size")) {
+                    for (String selected:java.util.List.of("size","capital_orientation","size","capital_orientation","size")) {
                         Items.DEBUG_STICK.canMine(world.getBlockState(clicked),world,clicked,player);
                         context.assertTrue(selected.equals(stick.getOrCreateNbt().getString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT)),"Left-click selection must expose only Size and Orientation");
                     }

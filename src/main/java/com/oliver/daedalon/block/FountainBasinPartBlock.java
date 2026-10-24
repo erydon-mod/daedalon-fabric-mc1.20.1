@@ -8,15 +8,19 @@ import net.minecraft.block.Waterloggable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -38,6 +42,7 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
             "offset_y", 0, FountainBasinGeometry.MAX_PART_Y
     );
     public static final IntProperty OFFSET_Z = IntProperty.of("offset_z", 0, 4);
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public FountainBasinPartBlock(Settings settings) {
         // The visible owner emits material-correct debris when broken. These
@@ -46,12 +51,25 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
         setDefaultState(getStateManager().getDefaultState()
                 .with(OFFSET_X, HORIZONTAL_OFFSET_BIAS)
                 .with(OFFSET_Y, 0)
-                .with(OFFSET_Z, HORIZONTAL_OFFSET_BIAS));
+                .with(OFFSET_Z, HORIZONTAL_OFFSET_BIAS)
+                .with(WATERLOGGED, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(OFFSET_X, OFFSET_Y, OFFSET_Z);
+        builder.add(OFFSET_X, OFFSET_Y, OFFSET_Z, WATERLOGGED);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighbor,
+                                                 WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        return super.getStateForNeighborUpdate(state, direction, neighbor, world, pos, neighborPos);
     }
 
     public BlockState stateForOffset(int offsetX, int offsetY, int offsetZ) {
@@ -158,7 +176,8 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
     }
 
     // Keep the hit in its real cell until vanilla validates reach. The anchor
-    // stores the water; proxy cells never gain fluid state or schedule ticks.
+    // stores contained bowl water. Only the raised base's open edge cells carry
+    // ordinary surrounding water; upper interaction cells remain fluid-free.
     @Override
     public boolean canFillWithFluid(BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
         Anchor anchor = resolveAnchor(world, pos, state);

@@ -21,6 +21,32 @@ from daedalon_test_support import (
 class GothicFountainBowlSafetyTests(unittest.TestCase):
     MESH = "fountain_gothic_bowl"
 
+    def test_raised_three_bowl_stacks_fit_seven_cells_using_authored_measurements(self) -> None:
+        tallest = 0
+        for style in ("gothic", "georgian", "greek"):
+            basin = load_json(REPO_ROOT / f"docs/evidence/{style}-fountain-basin-source.json")["placement"]
+            # The supplied Georgian and Greek basins intentionally use each
+            # other's bowl designs; use their recorded source rather than an enum assumption.
+            bowl_source = basin.get("bowl_source", f"fountain_{style}_bowl")
+            bowl_style = bowl_source.removeprefix("fountain_").removesuffix("_bowl")
+            bowls = load_json(REPO_ROOT / f"docs/evidence/{bowl_style}-fountain-bowl-source.json")["placement"]["sizes"]
+            for size, measured in basin["sizes"].items():
+                with self.subTest(style=style, size=size):
+                    normal_connection = measured["basin_floor_y"] + 2  # Large plinth.
+                    raised_connection = normal_connection + 1
+                    normal_top = measured["height_blocks"]
+                    raised_top = normal_top + 1
+                    for bowl_size in ("large", "medium", "small"):
+                        bowl = bowls[bowl_size]
+                        normal_top = max(normal_top, normal_connection + bowl["height_blocks"])
+                        raised_top = max(raised_top, raised_connection + bowl["height_blocks"])
+                        normal_connection += bowl["connection_rise"]
+                        raised_connection += bowl["connection_rise"]
+                    self.assertAlmostEqual(normal_top + 1, raised_top)
+                    self.assertLessEqual(raised_top, 7, "Raised paid components must not be clipped by the helper grid")
+                    tallest = max(tallest, raised_top)
+        self.assertGreater(tallest, 6, "This regression must cover the newly required seventh helper-cell level")
+
     def test_bowls_are_internal_models_without_block_or_item_ids(self) -> None:
         self.assertNotIn("gothic_fountain_bowl", GENERATOR.ALL_FAMILIES)
         self.assertFalse(
@@ -160,7 +186,7 @@ class GothicFountainBowlSafetyTests(unittest.TestCase):
         self.assertNotIn("List<BlockState> states", layout)
         self.assertIn("FountainBasinGeometry.copyCollisionPartShapes", layout)
         self.assertIn("mergeIntoParts", layout)
-        self.assertIn("MAX_PART_Y = 5", (JAVA_ROOT / "block/FountainBasinGeometry.java").read_text(encoding="utf-8"))
+        self.assertIn("MAX_PART_Y = 6", (JAVA_ROOT / "block/FountainBasinGeometry.java").read_text(encoding="utf-8"))
 
         self.assertIn('PLINTH_NBT = "Plinth"', block_entity)
         self.assertIn('BOWL_COUNT_NBT = "BowlCount"', block_entity)
@@ -214,18 +240,8 @@ class GothicFountainBowlSafetyTests(unittest.TestCase):
         self.assertIn("basin.allowedTierCounts()", debug_mixin)
         self.assertIn("basin.tierCount()", debug_mixin)
         self.assertIn("basin.replaceTierCount(updated)", debug_mixin)
-        self.assertLess(
-            debug_mixin.index("BASIN_SIZE_CONTROL,"),
-            debug_mixin.index("PLINTH_SIZE_CONTROL,"),
-        )
-        self.assertLess(
-            debug_mixin.index("PLINTH_SIZE_CONTROL,"),
-            debug_mixin.index("TIER_CONTROL,"),
-        )
-        self.assertLess(
-            debug_mixin.index("TIER_CONTROL,"),
-            debug_mixin.index("WATERLOGGED_CONTROL,"),
-        )
+        self.assertIn('RAISED_BASE_CONTROL = "raised_base"', debug_mixin)
+        self.assertIn("DaedalonDebugProperties.fountainControls(plinth != null)", debug_mixin)
 
     def test_remeasured_water_stays_inside_the_deeper_bowl_inset(self) -> None:
         source = (JAVA_ROOT / "block/FountainBowlModel.java").read_text(

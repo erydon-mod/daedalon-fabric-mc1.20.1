@@ -12,12 +12,17 @@ class DebugStickPropertyOrderSafetyTests(unittest.TestCase):
         mixins = load_json(RESOURCES / "daedalon.mixins.json")["mixins"]
 
         self.assertIn('case "size" -> 0', helper)
-        self.assertIn('case "offset" -> 1', helper)
-        self.assertIn('case "facing" -> 2', helper)
+        self.assertIn('case "raised_base" -> 3', helper)
+        self.assertIn('case "offset" -> 4', helper)
+        self.assertIn('case "facing", "orientation", "capital_orientation" -> 6', helper)
+        self.assertIn('case "waterlogged" -> 100', helper)
+        self.assertIn('case "manual_corner" -> 8', helper)
+        self.assertIn('case "join" -> 9', helper)
         self.assertIn('"DaedalonDebugProperty"', helper)
         self.assertIn("DebugStickItemMixin", mixins)
-        self.assertIn("getOrCreateNbt().getString(", mixin)
-        self.assertIn("getOrCreateNbt().putString(", mixin)
+        self.assertIn('getSubNbt("DebugProperty")', mixin)
+        self.assertIn('getOrCreateSubNbt("DebugProperty")', mixin)
+        self.assertIn("priority = 800", mixin)
         self.assertNotIn("Registries.BLOCK.getId(state.getBlock()).toString(),\n                    selected.getName()", mixin)
         self.assertIn("Daedalon.MOD_ID.equals", mixin)
         self.assertIn("DaedalonDebugProperties.orderedValues(property)", mixin)
@@ -27,7 +32,7 @@ class DebugStickPropertyOrderSafetyTests(unittest.TestCase):
         self.assertIn('"bowls".equals(rememberedName)', mixin)
         self.assertIn('"size".equals(rememberedName)', mixin)
         self.assertIn(
-            "DaedalonDebugProperties.cycle(controls, selected, backwards)",
+            "DaedalonDebugProperties.selectControl(controls, rememberedName, update, backwards)",
             mixin,
         )
         self.assertNotIn("Util.next(", mixin)
@@ -53,7 +58,7 @@ class DebugStickPropertyOrderSafetyTests(unittest.TestCase):
         self.assertIn("builder.add(SIZE, OFFSET, FACING, ORIENTATION)", statue)
         self.assertIn("builder.add(SIZE, OFFSET, FACING)", urn)
         self.assertIn("builder.add(SIZE, FACING)", corbel)
-        self.assertIn("builder.add(SIZE, WATERLOGGED)", fountain_basin)
+        self.assertRegex(fountain_basin, r"builder\.add\([^;]*\bSIZE\b[^;]*\bWATERLOGGED\b[^;]*\)")
         self.assertIn("builder.add(SIZE, OFFSET, FACING, WATERLOGGED)", plinth)
         self.assertIn("supportsOffsetAndFacing()", two_size)
 

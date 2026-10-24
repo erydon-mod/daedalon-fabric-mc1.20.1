@@ -567,6 +567,10 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 var fit=FinialSupport.fit(state,finial.style());
                 if(fit.mounted()) FinialBaseMesh.forFit(fit).outputTo(context.getEmitter());
             }
+            if (state.getBlock() instanceof FountainBasinBlock basin && FountainBasinBlock.baseRise(state) != 0) {
+                // The base is already one block high at the final size; only the original basin rises/scales.
+                FountainRaisedBaseMesh.emit(basin.style(), state.get(FountainBasinBlock.SIZE), pos, context);
+            }
             if(positionTransform!=null) { context.pushTransform(positionTransform); positionPushed=true; }
             if (friezeParts != null && state.getBlock() instanceof FriezeBlock) {
                 friezeParts.emit(blockView, pos, state, context);
@@ -579,7 +583,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             }
             context.popTransform();
         }
-        emitContainedWater(blockView, state, pos, context, 0.0F, false);
+        emitContainedWater(blockView, state, pos, context,
+                state.getBlock() instanceof FountainBasinBlock ? FountainBasinBlock.baseRise(state) : 0.0F, false);
         if (state.getBlock() instanceof FountainBasinBlock) {
             emitBasinComponents(blockView, state, pos, context);
         }
@@ -1414,13 +1419,20 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         }
     }
 
-    private record BasinTransform(float scale) implements RenderContext.QuadTransform {
-        private static final BasinTransform[] CACHE = Arrays.stream(FountainBasinBlock.Size.values())
-                .map(size -> new BasinTransform(size.renderScale()))
-                .toArray(BasinTransform[]::new);
+    private record BasinTransform(float scale, float baseY) implements RenderContext.QuadTransform {
+        private static final BasinTransform[][] CACHE = createCache();
+
+        private static BasinTransform[][] createCache() {
+            var sizes = FountainBasinBlock.Size.values();
+            BasinTransform[][] cache = new BasinTransform[sizes.length][2];
+            for (var size : sizes) for (int raised = 0; raised < 2; raised++) {
+                cache[size.ordinal()][raised] = new BasinTransform(size.renderScale(), raised);
+            }
+            return cache;
+        }
 
         private static BasinTransform forState(BlockState state) {
-            return CACHE[state.get(FountainBasinBlock.SIZE).ordinal()];
+            return CACHE[state.get(FountainBasinBlock.SIZE).ordinal()][FountainBasinBlock.baseRise(state) == 0 ? 0 : 1];
         }
 
         @Override
@@ -1429,7 +1441,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 quad.pos(
                         vertex,
                         0.5F + (quad.x(vertex) - 0.5F) * scale,
-                        quad.y(vertex) * scale,
+                        quad.y(vertex) * scale + baseY,
                         0.5F + (quad.z(vertex) - 0.5F) * scale
                 );
                 quad.uv(

@@ -10,12 +10,14 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -23,6 +25,8 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -33,9 +37,12 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.List;
+
 /** A scalable, hollow fountain basin with bucket-controlled, contained water. */
 public final class FountainBasinBlock extends Block implements Waterloggable, BlockEntityProvider {
     public static final EnumProperty<Size> SIZE = EnumProperty.of("size", Size.class);
+    public static final BooleanProperty RAISED_BASE = BooleanProperty.of("raised_base");
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final float MEDIUM_MODEL_SCALE = 4.0F;
     public static final float LARGE_MODEL_SCALE = 5.0F;
@@ -61,12 +68,20 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
         this.style = style;
         setDefaultState(getStateManager().getDefaultState()
                 .with(SIZE, Size.MEDIUM)
+                .with(RAISED_BASE, false)
                 .with(WATERLOGGED, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(SIZE, WATERLOGGED);
+        builder.add(SIZE, RAISED_BASE, WATERLOGGED);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, BlockView world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        tooltip.add(Text.translatable("tooltip.daedalon.fountain.raised_base").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("tooltip.daedalon.fountain.raised_base_water").formatted(Formatting.GRAY));
     }
 
     @Override
@@ -159,8 +174,8 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
         if (!world.isClient()) {
             return world.setBlockState(pos, filledState, Block.NOTIFY_ALL);
         }
-        // Deliberately do not schedule a fluid tick. The basin stores one bucket as
-        // block state and renders it inside the bowl, so it cannot spread outside.
+        // Upper bowl water stays contained. Raised-base edge helpers schedule
+        // their native water ticks when the controller state synchronizes.
         return true;
     }
 
@@ -184,7 +199,7 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
                                         ShapeContext context) {
         FountainBasinBlockEntity basin = blockEntity(world, pos);
         return basin == null || !basin.hasPlinth()
-                ? FountainBasinGeometry.collisionPartShape(style, state.get(SIZE), 0, 0, 0)
+                ? FountainBasinGeometry.collisionPartShape(style, state.get(SIZE), state.get(RAISED_BASE), 0, 0, 0)
                 : basin.collisionPartShape(state, 0, 0, 0);
     }
 
@@ -212,6 +227,10 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
 
     public Style style() {
         return style;
+    }
+
+    public static float baseRise(BlockState state) {
+        return state.get(RAISED_BASE) ? 1.0F : 0.0F;
     }
 
     /** Used by the debug stick so growing a basin never overwrites another build. */
@@ -244,7 +263,7 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
         FountainBasinBlockEntity basin = blockEntity(world, anchorPos);
         if (basin == null || !basin.hasPlinth()) {
             return FountainBasinGeometry.collisionPartShape(
-                    styleOf(anchorState), anchorState.get(SIZE), offsetX, offsetY, offsetZ
+                    styleOf(anchorState), anchorState.get(SIZE), anchorState.get(RAISED_BASE), offsetX, offsetY, offsetZ
             );
         }
         return basin.collisionPartShape(anchorState, offsetX, offsetY, offsetZ);
@@ -262,6 +281,7 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
                     styleOf(anchorState),
                     anchorState.get(SIZE),
                     anchorState.get(WATERLOGGED),
+                    anchorState.get(RAISED_BASE),
                     offsetX,
                     offsetY,
                     offsetZ
@@ -300,7 +320,7 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
 
         Box box = entityBox.contract(0.001D);
         double containedDepth = FountainBasinGeometry.containedWaterHeight(
-                anchorPos,
+                anchorPos.up((int) baseRise(anchorState)),
                 anchorBlock.style(),
                 anchorState.get(SIZE),
                 box
@@ -359,6 +379,7 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
                 styleOf(anchorState),
                 anchorState.get(SIZE),
                 anchorState.get(WATERLOGGED),
+                anchorState.get(RAISED_BASE),
                 plinthState,
                 bowlCount
         );
@@ -424,6 +445,7 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
                                     styleOf(anchorState),
                                     anchorState.get(SIZE),
                                     anchorState.get(WATERLOGGED),
+                                    anchorState.get(RAISED_BASE),
                                     offsetX,
                                     offsetY,
                                     offsetZ
@@ -462,16 +484,17 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
                     if (owned && !required[index]) {
                         world.setBlockState(
                                 partPos,
-                                Blocks.AIR.getDefaultState(),
+                                releasedPartState(existing),
                                 Block.NOTIFY_ALL | Block.SKIP_DROPS
                         );
-                    } else if (!owned && required[index]
-                            && (existing.isAir() || existing.isReplaceable())) {
-                        world.setBlockState(
-                                partPos,
-                                partBlock.stateForOffset(offsetX, offsetY, offsetZ),
-                                Block.NOTIFY_ALL | Block.SKIP_DROPS
-                        );
+                    } else if (required[index] && (owned || existing.isAir() || existing.isReplaceable())) {
+                        boolean wet = anchorState.get(RAISED_BASE) && anchorState.get(WATERLOGGED)
+                                && FountainBasinGeometry.allowsSurroundingWater(styleOf(anchorState),
+                                anchorState.get(SIZE), offsetX, offsetY, offsetZ);
+                        BlockState desired = partBlock.stateForOffset(offsetX, offsetY, offsetZ)
+                                .with(FountainBasinPartBlock.WATERLOGGED, wet);
+                        if (existing != desired) world.setBlockState(partPos, desired, Block.NOTIFY_ALL | Block.SKIP_DROPS);
+                        if (wet) world.scheduleFluidTick(partPos, Fluids.WATER, Fluids.WATER.getTickRate(world));
                     }
                 }
             }
@@ -505,14 +528,15 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
                         continue;
                     }
                     BlockPos partPos = anchorPos.add(offsetX, offsetY, offsetZ);
+                    BlockState partState = world.getBlockState(partPos);
                     if (FountainBasinPartBlock.isOwnedBy(
-                            world.getBlockState(partPos),
+                            partState,
                             partPos,
                             anchorPos
                     )) {
                         world.setBlockState(
                                 partPos,
-                                Blocks.AIR.getDefaultState(),
+                                releasedPartState(partState),
                                 Block.NOTIFY_ALL | Block.SKIP_DROPS
                         );
                     }
@@ -523,6 +547,11 @@ public final class FountainBasinBlock extends Block implements Waterloggable, Bl
 
     private static boolean isAnchorOffset(int offsetX, int offsetY, int offsetZ) {
         return offsetX == 0 && offsetY == 0 && offsetZ == 0;
+    }
+
+    private static BlockState releasedPartState(BlockState state) {
+        return state.contains(FountainBasinPartBlock.WATERLOGGED) && state.get(FountainBasinPartBlock.WATERLOGGED)
+                ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
     }
 
     private static Style styleOf(BlockState state) {

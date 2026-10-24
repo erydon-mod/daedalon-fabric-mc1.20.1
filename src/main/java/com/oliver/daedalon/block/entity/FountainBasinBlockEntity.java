@@ -333,6 +333,7 @@ public final class FountainBasinBlockEntity extends BlockEntity {
                 ((FountainBasinBlock) basinState.getBlock()).style(),
                 basinState.get(FountainBasinBlock.SIZE),
                 basinState.get(FountainBasinBlock.WATERLOGGED),
+                basinState.get(FountainBasinBlock.RAISED_BASE),
                 candidatePlinth,
                 candidateBowlCount
         );
@@ -343,6 +344,7 @@ public final class FountainBasinBlockEntity extends BlockEntity {
                 && cache != null
                 && cache.style() == basinBlock.style()
                 && cache.size() == basinState.get(FountainBasinBlock.SIZE)
+                && cache.raised() == basinState.get(FountainBasinBlock.RAISED_BASE)
                 && cache.plinth() == plinthState
                 && cache.bowlCount() == bowlCount;
     }
@@ -352,7 +354,7 @@ public final class FountainBasinBlockEntity extends BlockEntity {
         boolean matches = matchesStructure(previous, state);
         boolean filled = state.get(FountainBasinBlock.WATERLOGGED);
         cachedLayouts = new LayoutCache(((FountainBasinBlock) state.getBlock()).style(),
-                state.get(FountainBasinBlock.SIZE), plinthState, bowlCount,
+                state.get(FountainBasinBlock.SIZE), state.get(FountainBasinBlock.RAISED_BASE), plinthState, bowlCount,
                 filled ? (matches ? previous.dry() : null) : layout,
                 filled ? layout : (matches ? previous.wet() : null));
     }
@@ -361,7 +363,7 @@ public final class FountainBasinBlockEntity extends BlockEntity {
         cachedLayouts = null;
     }
 
-    private record LayoutCache(FountainBasinBlock.Style style, FountainBasinBlock.Size size,
+    private record LayoutCache(FountainBasinBlock.Style style, FountainBasinBlock.Size size, boolean raised,
                                BlockState plinth, int bowlCount,
                                FountainAssemblyLayout dry, FountainAssemblyLayout wet) {
         FountainAssemblyLayout select(boolean filled) {
