@@ -1,9 +1,7 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "particle": "daedalon:block/statue_spartan_promachos_aganite",
-    "relief_light": "daedalon:block/white",
-    "relief_dark": "daedalon:block/black"
+    "particle": "daedalon:block/statue_spartan_promachos_aganite"
   },
   "display": {
     "gui": {

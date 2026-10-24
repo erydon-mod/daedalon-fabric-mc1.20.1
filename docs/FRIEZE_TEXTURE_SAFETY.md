@@ -26,4 +26,5 @@ emitted primitives preserve their geometry, normals and interpolation, with no
 remaining outside-U-edge primitives. A private invisible OpenGL check also
 reproduces a neighbouring tile contaminating Silver albedo, flat normals and
 specular data at the old edge, then verifies the guarded samples retain their
-source values. These checks do not replace the next live shader inspection.
+source values. Oliver approved the live frieze corners on 24 October 2026 in
+the combined Daedalon/ERYDON review with Complementary Unbound and the 64x pack.

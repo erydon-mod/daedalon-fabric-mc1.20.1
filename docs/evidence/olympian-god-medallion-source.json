@@ -7,8 +7,8 @@
   "runtime_source": {
     "source_file": "god swap.obj",
     "resource": "assets/daedalon/models/mesh/olympian_god_medallion.obj",
-    "sha256": "ed95a52555ad23f6302860c2e041ba82175bbbf29a0899efed80efd0338693f2",
-    "bytes": 877184,
+    "sha256": "09ca7e114c9fe5a9eb491fbb44e7be8929b7aeb13b2660b51f5c072d142ec117",
+    "bytes": 795284,
     "vertices": 4799,
     "triangles": 9657,
     "normals": 12504,
@@ -17,10 +17,7 @@
       "Mesh_0"
     ],
     "mtl_references": [],
-    "material_references": [
-      "medallion_background",
-      "medallion_relief"
-    ],
+    "material_references": [],
     "bounds": {
       "min": [
         -0.951579,
@@ -38,10 +35,9 @@
         0.194565
       ]
     },
-    "changes": "Added deterministic usemtl assignments only; stripping them reproduces the byte-identical supplied OBJ, including positions, triangles, winding and authored normals",
+    "changes": "Byte-identical import; no decimation, normal smoothing, geometry edits or source rewrite",
     "uv_policy": "Existing bounded axis-stabilized box projection supplies missing UVs; authored normal indices remain intact",
-    "normalization": "fit_to_block normalizes the largest source dimension to one block; XY medallion remains proportional and centered, front faces +Z",
-    "supplied_obj_sha256": "09ca7e114c9fe5a9eb491fbb44e7be8929b7aeb13b2660b51f5c072d142ec117"
+    "normalization": "fit_to_block normalizes the largest source dimension to one block; XY medallion remains proportional and centered, front faces +Z"
   },
   "authoring_source": {
     "source_file": "god swap.blend",
@@ -67,12 +63,12 @@
     "public_blocks": 0,
     "gui": "Existing bounded shared raster template and per-material icon cache",
     "first_person": "Existing Daedalon hide-in-first-person rule retained",
-    "collection_packs": "Reuses existing stone repeat sheets, Bronze/Silver and white; adds one native 16px charcoal component texture, with no Collection pack edits",
-    "relief": "Selected stone/metal background; fixed white-on-dark or charcoal-on-light relief chosen from native/64x contrast evidence",
+    "collection_packs": "Uses existing stone repeat sheets and Bronze/Silver textures; no new pack texture paths",
     "gui_rotation": [
       0,
       20,
       0
-    ]
+    ],
+    "appearance": "The complete medallion uses the selected stone or metal finish"
   }
 }

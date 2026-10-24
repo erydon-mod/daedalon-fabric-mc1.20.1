@@ -468,11 +468,7 @@ def generate_olympian_god_items(check: bool, changed: list[Path]) -> None:
     write(RESOURCES / f"assets/{NAMESPACE}/models/item/olympian_god_display.json",
           json_bytes({
               "parent": "minecraft:block/block",
-              "textures": {
-                  "particle": f"{NAMESPACE}:block/statue_spartan_promachos_aganite",
-                  "relief_light": f"{NAMESPACE}:block/white",
-                  "relief_dark": f"{NAMESPACE}:block/black",
-              },
+              "textures": {"particle": f"{NAMESPACE}:block/statue_spartan_promachos_aganite"},
               "display": {
                   "gui": {"rotation": [0, 20, 0], "translation": [0, 0, 0], "scale": [0.8, 0.8, 0.8]},
                   "ground": {"translation": [0, 3, 0], "scale": [0.25, 0.25, 0.25]},

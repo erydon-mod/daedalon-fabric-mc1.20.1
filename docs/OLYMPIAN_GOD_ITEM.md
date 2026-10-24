@@ -9,33 +9,12 @@ available individually and is outside this twelve-statue cycle.
 The selector places the existing statue blocks in its selected material. Their
 normal size, pose, texture, picking, drops and editing behavior remain intact.
 It registers no duplicate world block and does not replace any statue's block
-item. The shared Creative image uses Oliver's supplied medallion mesh with the
-selected stone or metal on its recessed background. Its raised portrait, symbols
-and rims use white on darker backgrounds and charcoal-black on lighter ones;
-Bronze and Silver retain this contrast too. The GUI view turns 20 degrees around
-Y, and all finishes reuse one parsed mesh and projection template.
-
-The deterministic preparation adds material assignments to the existing 9,657
-triangles. Every original position, triangle, winding and authored normal stays
-byte-identical after those material directives are removed. A local depth-field
-estimate and connected face patches separate the raised ornament from the field.
-The [material evidence](evidence/olympian-medallion-materials.json) records the
-locked recipe and native/64x contrast comparison; the [preparation image](evidence/olympian-medallion-material-comparison.png)
-compares white, charcoal and bronze on light and dark stone. The [source depth image](evidence/olympian-medallion-depth.png)
-shows why small symbols need a local field estimate. Charcoal retains
-visible facial shading, while white or charcoal wins the minimum contrast score
-across both official texture sets. The component texture choice is fixed at
-model preparation and adds no work to the cached one-quad drawing path. The
-white and charcoal sprites are declared by the shared display model, and their
-`textures/block` paths use Minecraft's normal block-atlas directory source.
-The charcoal sprite is a new uniform native 16px component, with no pack edits.
-
-Reproduce the material preparation with
-`python tools/prepare_olympian_medallion_materials.py --write`, or verify its
-assignment without writing using `--check`. NumPy, Pillow and SciPy are authoring
-dependencies; the locked recipe and dependency versions are recorded in the
-evidence. This preparation image is separate from the production native raster
-and in-game shader checks.
+item. The shared Creative image uses Oliver's supplied medallion mesh entirely
+in the selected stone or metal finish. The GUI view turns 20 degrees around Y,
+and all finishes reuse one parsed mesh and projection template. The supplied OBJ
+is byte-identical, preserving all 9,657 triangles and authored normals. Its
+[source evidence](evidence/olympian-god-medallion-source.json) records the mesh,
+provenance and shared material policy.
 
 Right-clicking a side of an existing member of the twelve-statue cycle changes
 that statue to the next god. Sneaking reverses the order. The clicked statue
@@ -98,6 +77,8 @@ all 2,688 Spartan material/pose combinations against the legacy boxes.
 Actual item-placement tests also place all 35 corrected profiles from four
 player headings, checking the measured physical front points towards the player,
 and retain the published Spartan convention for the other four placements.
-Pure tests pin the approved twelve-member order and wrap behavior. Visual approval of the
-new contrasting medallion remains separate; the sharper catalogue icons and
-their performance changes have received Oliver's approval.
+Pure tests pin the approved twelve-member order and wrap behavior.
+
+Oliver approved in-game statue cycling on 24 October 2026. The medallion's
+20-degree view remains a separate visual check; the sharper catalogue icons and
+their performance changes have also received Oliver's approval.

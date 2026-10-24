@@ -1,10 +1,6 @@
 from __future__ import annotations
 
 import unittest
-import hashlib
-import re
-
-from PIL import Image
 
 from daedalon_test_support import (
     DAEDALON_ASSETS, DAEDALON_DATA, GENERATOR, JAVA_ROOT, MESH_ROOT,
@@ -15,16 +11,13 @@ from daedalon_test_support import (
 class OlympianMedallionSafetyTests(unittest.TestCase):
     def test_supplied_mesh_and_authored_normals_are_preserved(self) -> None:
         path = MESH_ROOT / "olympian_god_medallion.obj"
-        original = b"".join(line for line in path.read_bytes().splitlines(keepends=True)
-                            if not line.startswith((b"usemtl ", b"mtllib ")))
-        self.assertEqual("09ca7e114c9fe5a9eb491fbb44e7be8929b7aeb13b2660b51f5c072d142ec117",
-                         hashlib.sha256(original).hexdigest())
+        self.assertEqual("09ca7e114c9fe5a9eb491fbb44e7be8929b7aeb13b2660b51f5c072d142ec117", sha256(path))
         mesh = parse_obj(path)
         self.assertEqual((4799, 9657, 12504, 0),
                          tuple(mesh[key] for key in ("vertices", "faces", "normals", "uvs")))
         self.assertEqual({3}, mesh["face_sizes"])
         self.assertEqual({"v//vn"}, mesh["face_index_styles"])
-        self.assertEqual({"medallion_relief": 7610, "medallion_background": 2047}, mesh["material_faces"])
+        self.assertEqual({"": 9657}, mesh["material_faces"])
         self.assertEqual(((-0.951579, -0.952934, -0.094811),
                           (0.946720, 0.951355, 0.099754)), mesh["bounds"])
         evidence = load_json(REPO_ROOT / "docs/evidence/olympian-god-medallion-source.json")
@@ -43,7 +36,6 @@ class OlympianMedallionSafetyTests(unittest.TestCase):
         self.assertNotIn("mtl", definition)
         self.assertEqual("axis_stabilized_box", definition["uv_projection"])
         self.assertEqual([1.0, 1.0, 1.0], definition["scale"])
-        self.assertEqual({"medallion_relief": "daedalon:block/white"}, definition["materials"])
         low, high = parse_obj(MESH_ROOT / "olympian_god_medallion.obj")["bounds"]
         spans = [high[i] - low[i] for i in range(3)]
         fit = 1 / max(spans)
@@ -51,11 +43,9 @@ class OlympianMedallionSafetyTests(unittest.TestCase):
         self.assertAlmostEqual(0.99685447, spans[0] * fit, places=7)
         self.assertAlmostEqual(0.10217203, spans[2] * fit, places=7)
 
-    def test_gui_has_approved_twenty_degree_y_turn_and_one_shared_geometry_family(self) -> None:
+    def test_gui_has_twenty_degree_y_turn_and_one_shared_geometry_family(self) -> None:
         display = load_json(DAEDALON_ASSETS / "models/item/olympian_god_display.json")
         self.assertEqual([0, 20, 0], display["display"]["gui"]["rotation"])
-        self.assertEqual("daedalon:block/white", display["textures"]["relief_light"])
-        self.assertEqual("daedalon:block/black", display["textures"]["relief_dark"])
         normals = [tuple(map(float, line.split()[1:]))
                    for line in (MESH_ROOT / "olympian_god_medallion.obj").read_text().splitlines()
                    if line.startswith("vn ")]
@@ -85,30 +75,3 @@ class OlympianMedallionSafetyTests(unittest.TestCase):
         stale = []
         GENERATOR.generate_olympian_god_items(True, stale)
         self.assertEqual([], stale)
-
-    def test_contrasting_relief_is_finite_and_preserved_on_whole_metal_variants(self) -> None:
-        evidence = load_json(REPO_ROOT / "docs/evidence/olympian-medallion-materials.json")
-        self.assertEqual(56, len(evidence["material_choices"]))
-        helper = (JAVA_ROOT / "client/model/obj/MedallionReliefMaterials.java").read_text()
-        light = set(re.findall(r'"([a-z]+)"', helper[helper.index("LIGHT_BACKGROUNDS = Set.of("):helper.index("private MedallionReliefMaterials()")]))
-        for finish, metrics in evidence["material_choices"].items():
-            base = finish.removesuffix("_aged")
-            self.assertEqual("black" if base in light else "white", metrics["relief"], finish)
-            self.assertEqual(metrics["relief"], max(metrics["worst_pack_contrast"], key=metrics["worst_pack_contrast"].get))
-        plugin = (JAVA_ROOT / "client/model/obj/ObjMeshModelLoadingPlugin.java").read_text()
-        start = plugin.index("MedallionReliefMaterials.override(")
-        self.assertLess(start, plugin.index("if (textureId == null) textureId = usesMetalTexture", start))
-        self.assertIn('!MESH.equals(mesh) || !"medallion_relief".equals(material)', helper)
-        black = DAEDALON_ASSETS / "textures/block/black.png"
-        self.assertEqual(evidence["native_black_texture_sha256"], sha256(black))
-        with Image.open(black) as image:
-            self.assertEqual((16, 16), image.size)
-            rgba = image.convert("RGBA")
-            self.assertEqual({(48, 48, 48, 255)}, {rgba.getpixel((x, y)) for y in range(16) for x in range(16)})
-        path = MESH_ROOT / "olympian_god_medallion.obj"
-        assignment = bytearray()
-        material = ""
-        for line in path.read_text().splitlines():
-            if line.startswith("usemtl "): material = line.split()[1]
-            elif line.startswith("f "): assignment.append(int(material == "medallion_relief"))
-        self.assertEqual(evidence["face_material_assignment_sha256"], hashlib.sha256(assignment).hexdigest())
