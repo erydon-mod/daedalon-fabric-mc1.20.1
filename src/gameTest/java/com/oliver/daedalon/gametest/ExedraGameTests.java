@@ -1,6 +1,7 @@
 package com.oliver.daedalon.gametest;
 
 import com.oliver.daedalon.block.ExedraBlock;
+import com.oliver.daedalon.block.DecorOrientation;
 import com.oliver.daedalon.item.DaedalonDebugProperties;
 import com.oliver.daedalon.registry.DecorMaterial;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
@@ -85,7 +86,9 @@ public final class ExedraGameTests {
         Items.DEBUG_STICK.canMine(world.getBlockState(anchor), world, anchor, player);
         context.assertTrue("facing".equals(stick.getOrCreateNbt().getString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT)), "Left click must select facing");
         Items.DEBUG_STICK.useOnBlock(new ItemUsageContext(player, Hand.MAIN_HAND, hit));
-        context.assertTrue(world.getBlockState(anchor).get(ExedraBlock.FACING) == Direction.WEST, "Facing must rotate independently");
+        context.assertTrue(world.getBlockState(anchor).get(ExedraBlock.FACING) == Direction.SOUTH
+                && world.getBlockState(anchor).get(ExedraBlock.ORIENTATION) == DecorOrientation.DIAGONAL,
+                "Orientation must advance from South to South-west in one 45-degree step");
         for (BlockPos pos : BlockPos.iterate(anchor.add(-2,0,-2),anchor.add(2,0,2))) {
             if (!pos.equals(anchor)) context.assertTrue(world.getBlockState(pos).isAir(), "Width edits must not create proxy blocks");
         }

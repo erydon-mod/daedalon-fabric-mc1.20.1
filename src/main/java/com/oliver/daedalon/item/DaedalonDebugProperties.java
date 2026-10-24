@@ -1,5 +1,7 @@
 package com.oliver.daedalon.item;
 
+import com.oliver.daedalon.block.DecorOrientation;
+import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 
 import java.util.ArrayList;
@@ -21,14 +23,18 @@ public final class DaedalonDebugProperties {
     public static List<Property<?>> ordered(Collection<Property<?>> properties) {
         List<Property<?>> ordered = new ArrayList<>(properties);
         boolean finial=ordered.stream().anyMatch(property -> property.getName().equals("finial_support"));
+        boolean eightWay = ordered.contains(Properties.HORIZONTAL_FACING) && ordered.contains(DecorOrientation.PROPERTY);
         ordered.removeIf(property -> property.getName().equals("offset_x")
                 || property.getName().equals("offset_y") || property.getName().equals("offset_z")
-                || property.getName().startsWith("finial_") || finial && property.getName().equals("facing"));
+                || property.getName().startsWith("finial_") || finial && property.getName().equals("facing")
+                || eightWay && property == DecorOrientation.PROPERTY);
         ordered.sort(PROPERTY_ORDER);
         return List.copyOf(ordered);
     }
 
     public static Property<?> rememberedOrFirst(List<Property<?>> properties, String rememberedName) {
+        if ("orientation".equals(rememberedName) && properties.contains(Properties.HORIZONTAL_FACING)
+                && !properties.contains(DecorOrientation.PROPERTY)) rememberedName = "facing";
         for (Property<?> property : properties) {
             if (property.getName().equals(rememberedName)) {
                 return property;

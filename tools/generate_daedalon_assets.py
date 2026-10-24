@@ -1136,8 +1136,13 @@ def generate_languages(
             "es_es": ("Orientación", "Recta", "Diagonal (45°)", "Recta (90°)", "Diagonal (135°)"),
         }[language]
         entries["property.daedalon.orientation"] = orientation_labels[0]
-        entries["option.daedalon.orientation.straight"] = orientation_labels[1]
-        entries["option.daedalon.orientation.diagonal"] = orientation_labels[2]
+        compass_labels = {
+            "en_us": ("North", "North-east", "East", "South-east", "South", "South-west", "West", "North-west"),
+            "de_de": ("Nord", "Nordost", "Ost", "Südost", "Süd", "Südwest", "West", "Nordwest"),
+            "es_es": ("Norte", "Noreste", "Este", "Sureste", "Sur", "Suroeste", "Oeste", "Noroeste"),
+        }[language]
+        for direction, label in zip(("north", "north_east", "east", "south_east", "south", "south_west", "west", "north_west"), compass_labels):
+            entries[f"option.daedalon.orientation.{direction}"] = label
         entries["property.daedalon.capital_orientation"] = orientation_labels[0]
         for orientation, label in zip(("straight", "diagonal", "straight_90", "diagonal_135"), orientation_labels[1:]):
             entries[f"option.daedalon.capital.orientation.{orientation}"] = label

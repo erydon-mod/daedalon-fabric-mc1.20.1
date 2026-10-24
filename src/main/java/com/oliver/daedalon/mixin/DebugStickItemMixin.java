@@ -2,7 +2,6 @@ package com.oliver.daedalon.mixin;
 
 import com.oliver.daedalon.Daedalon;
 import com.oliver.daedalon.block.CapitalBlock;
-import com.oliver.daedalon.block.DecorOrientation;
 import com.oliver.daedalon.block.CapitalPartBlock;
 import com.oliver.daedalon.block.FinialBlock;
 import com.oliver.daedalon.block.FriezeBlock;
@@ -14,6 +13,7 @@ import com.oliver.daedalon.block.FountainBowlModel;
 import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.entity.FountainBasinBlockEntity;
 import com.oliver.daedalon.item.DaedalonDebugProperties;
+import com.oliver.daedalon.item.DecorRotationControl;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DebugStickItem;
@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Property;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldAccess;
@@ -327,6 +328,9 @@ abstract class DebugStickItemMixin {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static BlockState cycleState(BlockState state, Property property, boolean backwards) {
+        if (property == Properties.HORIZONTAL_FACING && DecorRotationControl.appliesTo(state)) {
+            return DecorRotationControl.cycle(state, backwards);
+        }
         Comparable current = state.get(property);
         Comparable next = (Comparable) DaedalonDebugProperties.cycle(
                 DaedalonDebugProperties.orderedValues(property),
@@ -342,7 +346,9 @@ abstract class DebugStickItemMixin {
     }
 
     private static Object displayPropertyName(BlockState state, Property<?> property) {
-        if (property == DecorOrientation.PROPERTY) return Text.translatable("property.daedalon.orientation");
+        if (property == Properties.HORIZONTAL_FACING && DecorRotationControl.appliesTo(state)) {
+            return Text.translatable("property.daedalon.orientation");
+        }
         if (state.getBlock() instanceof CapitalBlock) {
             if (property == CapitalBlock.SIZE) return Text.translatable("property.daedalon.capital_size");
             if (property.getName().equals("capital_orientation")) return Text.translatable("property.daedalon.capital_orientation");
@@ -351,7 +357,9 @@ abstract class DebugStickItemMixin {
     }
 
     private static Object displayValueName(BlockState state, Property<?> property) {
-        if (property == DecorOrientation.PROPERTY) return Text.translatable("option.daedalon.orientation." + valueName(state, property));
+        if (property == Properties.HORIZONTAL_FACING && DecorRotationControl.appliesTo(state)) {
+            return Text.translatable("option.daedalon.orientation." + DecorRotationControl.valueName(state));
+        }
         if (state.getBlock() instanceof CapitalBlock) {
             if (property == CapitalBlock.SIZE) return Text.translatable("option.daedalon.capital.size." + valueName(state, property));
             if (property.getName().equals("capital_orientation")) return Text.translatable("option.daedalon.capital.orientation." + valueName(state, property));

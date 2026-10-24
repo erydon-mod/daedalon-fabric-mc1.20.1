@@ -4,24 +4,97 @@ import com.oliver.daedalon.block.DecorOrientation;
 import com.oliver.daedalon.block.DecorShapeTransforms;
 import com.oliver.daedalon.block.ExedraBlock;
 import com.oliver.daedalon.block.StatueBlock;
+import com.oliver.daedalon.item.DaedalonDebugProperties;
+import com.oliver.daedalon.item.DecorRotationControl;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
+import net.minecraft.server.OperatorEntry;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.GameMode;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 
 public final class DiagonalDecorGameTests {
     private static final Direction[] FACINGS = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void actualDebugStickTurnsEveryProfileThroughOneEightPositionControl(TestContext context) {
+        var world = context.getWorld();
+        var anchor = context.getAbsolutePos(new BlockPos(3, 3, 3));
+        var player = context.createMockCreativeServerPlayerInWorld();
+        world.getServer().getPlayerManager().getOpList().add(new OperatorEntry(player.getGameProfile(), 4, false));
+        player.changeGameMode(GameMode.CREATIVE);
+        ItemStack stick = Items.DEBUG_STICK.getDefaultStack();
+        player.setStackInHand(Hand.MAIN_HAND, stick);
+        var usage = new ItemUsageContext(player, Hand.MAIN_HAND,
+                new BlockHitResult(Vec3d.ofCenter(anchor), Direction.UP, anchor, false));
+        var profiles = Collections.newSetFromMap(new IdentityHashMap<StatueBlock.Profile, Boolean>());
+        var blocks = new java.util.ArrayList<Block>();
+        blocks.add(Registries.BLOCK.get(new Identifier("daedalon", "aganite_exedra")));
+        for (var block : Registries.BLOCK) {
+            if (block instanceof StatueBlock statue && profiles.add(statue.statueProfile())) blocks.add(block);
+        }
+        String[] directions = {"north", "north_east", "east", "south_east", "south", "south_west", "west", "north_west"};
+        int edits = 0;
+        for (var block : blocks) {
+            var initial = block.getDefaultState().with(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.NORTH);
+            var controls = DaedalonDebugProperties.ordered(block.getStateManager().getProperties());
+            var controlNames = controls.stream().map(property -> property.getName()).toList();
+            context.assertTrue(controlNames.equals(block instanceof ExedraBlock
+                            ? java.util.List.of("width", "facing") : java.util.List.of("size", "offset", "facing")),
+                    "Only one rotation control may appear: " + block + " / " + controlNames);
+            world.setBlockState(anchor, initial, Block.NOTIFY_ALL);
+            // A stick that remembered the former separate half-step control must recover here.
+            stick.getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT, "orientation");
+            player.setSneaking(false);
+            for (int step = 1; step <= 8; step++) {
+                context.assertTrue(Items.DEBUG_STICK.useOnBlock(usage).isAccepted(), "Orientation edit was not handled");
+                var state = world.getBlockState(anchor);
+                context.assertTrue(DecorRotationControl.valueName(state).equals(directions[step % 8]),
+                        "Debug stick must turn clockwise by 45 degrees: " + block + " / " + step + " / " + state);
+                context.assertTrue(state.with(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.NORTH)
+                                .with(DecorOrientation.PROPERTY, DecorOrientation.STRAIGHT) == initial,
+                        "Orientation edits must retain every other selected control");
+                edits++;
+            }
+            context.assertTrue(world.getBlockState(anchor) == initial, "Eight right-clicks must restore the original pose");
+            context.assertTrue(stick.getOrCreateNbt().getString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT).equals("facing"),
+                    "The combined control must retain the existing remembered facing name");
+            player.setSneaking(true);
+            for (int step = 1; step <= 8; step++) {
+                Items.DEBUG_STICK.useOnBlock(usage);
+                context.assertTrue(DecorRotationControl.valueName(world.getBlockState(anchor)).equals(directions[Math.floorMod(-step, 8)]),
+                        "Crouch must reverse every 45-degree step: " + block + " / " + step);
+                edits++;
+            }
+            context.assertTrue(world.getBlockState(anchor) == initial, "Eight reverse edits must restore the original pose");
+            player.setSneaking(false);
+            Items.DEBUG_STICK.canMine(world.getBlockState(anchor), world, anchor, player);
+            context.assertTrue(stick.getOrCreateNbt().getString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT)
+                            .equals(block instanceof ExedraBlock ? "width" : "size"),
+                    "Selecting the next control must not expose a second orientation attribute");
+            world.removeBlock(anchor, false);
+        }
+        context.assertTrue(profiles.size() > 20 && edits == blocks.size() * 16, "Cover every statue/bust mesh profile and Exedra");
+        System.out.println("DAEDALON_EIGHT_WAY_DEBUG passed profiles=" + profiles.size() + " edits=" + edits);
+        context.complete();
+    }
 
     @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
     public void everyStatueProfileKeepsDiagonalShapesGroundedAndOffsetsAligned(TestContext context) {

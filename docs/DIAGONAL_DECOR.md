@@ -1,13 +1,14 @@
 # Exedra and statue diagonal positions
 
-The debug stick exposes an **Orientation** control after Facing. Choose
-**Straight** for the existing four cardinal positions or **Diagonal (45°)**
-for the four positions between them. Exedra keeps its 2m, 3m and 4m widths and
+The debug stick exposes one **Orientation** control. Right-click to turn
+clockwise by 45°, through North, North-east, East, South-east, South, South-west,
+West and North-west. Crouch to reverse the cycle; there is no separate Facing
+or Straight/Diagonal control. Exedra keeps its 2m, 3m and 4m widths and
 its existing one-metre height. Statues and busts keep their existing sizes;
 offset statues move along the chosen diagonal direction by the same distance
 as their straight counterparts.
 
-Old states default to Straight. No block IDs, versions, mesh geometry, item
+Existing saved poses are retained. No block IDs, versions, mesh geometry, item
 models or texture density change. All materials share the same geometry and
 cached transforms. Collision and selection use cached conservative rotations
 of the existing authored boxes. Axiom previews use those same state bounds.
