@@ -18,6 +18,8 @@ public final class LargeColumnFixture implements ModInitializer {
     public static final IntProperty Z = IntProperty.of("part_z", 0, 1);
     public static final EnumProperty<Section> SECTION = EnumProperty.of("section", Section.class);
     public static Block BLOCK;
+    public static Block SQUARE;
+    public static Block GOTHIC;
 
     @Override public void onInitialize() {
         BLOCK = Registry.register(Registries.BLOCK,
@@ -27,6 +29,10 @@ public final class LargeColumnFixture implements ModInitializer {
                         builder.add(X, Z, SECTION);
                     }
                 });
+        SQUARE = Registry.register(Registries.BLOCK, new Identifier("erydon", "test_column_square"),
+                new Block(AbstractBlock.Settings.create().strength(1.5F)));
+        GOTHIC = Registry.register(Registries.BLOCK, new Identifier("erydon", "test_column_gothic"),
+                new Block(AbstractBlock.Settings.create().strength(1.5F)));
     }
 
     public enum Section implements StringIdentifiable {

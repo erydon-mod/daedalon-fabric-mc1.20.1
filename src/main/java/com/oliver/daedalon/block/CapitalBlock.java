@@ -15,6 +15,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -30,6 +31,7 @@ public class CapitalBlock extends Block {
     public static final EnumProperty<CapitalOrientation> IONIC_ORIENTATION = EnumProperty.of(
             "capital_orientation", CapitalOrientation.class);
     public static final EnumProperty<Size> SIZE = EnumProperty.of("size", Size.class);
+    public static final EnumProperty<CapitalTransition> SUPPORT = EnumProperty.of("capital_support", CapitalTransition.class);
     private final Style style;
 
     protected CapitalBlock(Settings settings, Style style) {
@@ -37,7 +39,7 @@ public class CapitalBlock extends Block {
         this.style = style;
         setDefaultState(getStateManager().getDefaultState()
                 .with(orientationProperty(), CapitalOrientation.STRAIGHT)
-                .with(SIZE, Size.STANDARD));
+                .with(SIZE, Size.STANDARD).with(SUPPORT, CapitalTransition.NONE));
     }
 
     public static CapitalBlock create(Settings settings, Style style) {
@@ -46,7 +48,7 @@ public class CapitalBlock extends Block {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(ORIENTATION, SIZE);
+        builder.add(ORIENTATION, SIZE, SUPPORT);
     }
 
     public EnumProperty<CapitalOrientation> orientationProperty() {
@@ -80,7 +82,7 @@ public class CapitalBlock extends Block {
 
         @Override
         protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-            builder.add(IONIC_ORIENTATION, SIZE);
+            builder.add(IONIC_ORIENTATION, SIZE, SUPPORT);
         }
     }
 
@@ -126,21 +128,29 @@ public class CapitalBlock extends Block {
     }
 
     public VoxelShape shapeForCell(BlockState state, int x, int y, int z) {
-        if (state.get(SIZE) == Size.STANDARD) return style.shape(orientation(state));
-        VoxelShape source = style.shape(orientation(state));
-        // The fitted capital doubles about its original centre and occupies two vertical cells.
-        return source.getBoundingBoxes().stream().map(box -> VoxelShapes.cuboid(
-                        box.minX * 2 - x, box.minY * 2 - y, box.minZ * 2 - z,
-                        box.maxX * 2 - x, box.maxY * 2 - y, box.maxZ * 2 - z))
-                .reduce(VoxelShapes.empty(), VoxelShapes::union);
+        return style.shape(orientation(state), state.get(SUPPORT), state.get(SIZE), x, y, z);
     }
 
     @Override public BlockState getPlacementState(ItemPlacementContext context) {
         Size size = CapitalSupportPlacement.isLargeColumnTop(context.getWorld(), context.getBlockPos())
                 || context.getPlayer() != null && context.getPlayer().isSneaking()
                 ? Size.DOUBLE : Size.STANDARD;
-        BlockState state = getDefaultState().with(SIZE, size);
+        BlockState state = CapitalSupportPlacement.fitted(getDefaultState().with(SIZE, size),
+                context.getWorld(), context.getBlockPos());
         return size == Size.STANDARD || canOccupy(context.getWorld(), context.getBlockPos()) ? state : null;
+    }
+
+    @Override public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighbour,
+            WorldAccess world, BlockPos pos, BlockPos neighbourPos) {
+        return direction == Direction.DOWN ? CapitalSupportPlacement.fitted(state, world, pos) : state;
+    }
+
+    /** Placement, commands and helper support changes all use the same bounded refresh. */
+    public static void refreshSupport(WorldAccess world, BlockPos pos, BlockState state) {
+        if (world instanceof World level && !level.isClient && state.getBlock() instanceof CapitalBlock) {
+            BlockState fitted = CapitalSupportPlacement.fitted(state, world, pos);
+            if (fitted != state) world.setBlockState(pos, fitted, Block.NOTIFY_ALL);
+        }
     }
 
     public static boolean canOccupy(WorldAccess world, BlockPos anchor) {
@@ -173,6 +183,7 @@ public class CapitalBlock extends Block {
 
     @Override public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         super.onBlockAdded(state, world, pos, oldState, notify);
+        refreshSupport(world, pos, state);
         if (!world.isClient && state.get(SIZE) == Size.DOUBLE && canOccupy(world, pos)) sync(world, pos, state);
     }
 
@@ -185,6 +196,7 @@ public class CapitalBlock extends Block {
             sync(world, pos, next.isOf(this) ? next : state.with(SIZE, Size.STANDARD));
         }
         super.onStateReplaced(state, world, pos, next, moved);
+        if (!world.isClient && next.isOf(this) && world.getBlockState(pos) == next) refreshSupport(world, pos, next);
     }
 
     @Override public ActionResult onUse(BlockState state, World world, BlockPos pos,
@@ -196,7 +208,7 @@ public class CapitalBlock extends Block {
             return ActionResult.FAIL;
         }
         if (!world.isClient) {
-            world.setBlockState(pos, state.with(SIZE, next), Block.NOTIFY_ALL);
+            world.setBlockState(pos, CapitalSupportPlacement.fitted(state.with(SIZE, next), world, pos), Block.NOTIFY_ALL);
         }
         return ActionResult.success(world.isClient);
     }
@@ -212,20 +224,35 @@ public class CapitalBlock extends Block {
         private final String styleId;
         private final String displayName;
         private final String resourceStem;
-        private final VoxelShape[] shapes;
+        private final VoxelShape[][][][] shapes;
 
         Style(String styleId, String displayName, double width, double depth) {
             this.styleId = styleId;
             this.displayName = displayName;
             this.resourceStem = "capital_" + styleId;
-            this.shapes = new VoxelShape[CapitalOrientation.values().length];
+            this.shapes = new VoxelShape[CapitalOrientation.values().length][CapitalTransition.values().length][Size.values().length][8];
             for (CapitalOrientation orientation : CapitalOrientation.values()) {
                 double halfX = (Math.abs(orientation.cosine) * width + Math.abs(orientation.sine) * depth) * 0.5;
                 double halfZ = (Math.abs(orientation.sine) * width + Math.abs(orientation.cosine) * depth) * 0.5;
-                shapes[orientation.ordinal()] = VoxelShapes.cuboid(
+                VoxelShape capital = VoxelShapes.cuboid(
                         0.5 - halfX, 0.0, 0.5 - halfZ,
                         0.5 + halfX, 1.0, 0.5 + halfZ
                 );
+                for (CapitalTransition transition : CapitalTransition.values()) {
+                    double half = transition.baseWidth() * 0.5;
+                    VoxelShape source = transition == CapitalTransition.NONE ? capital : VoxelShapes.union(capital,
+                            VoxelShapes.cuboid(0.5 - half, 0, 0.5 - half, 0.5 + half, CapitalTransition.HEIGHT, 0.5 + half));
+                    for (Size size : Size.values()) for (int y = 0; y < 2; y++)
+                        for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
+                            double scale = size == Size.DOUBLE ? 2 : 1;
+                            final int cellX = x, cellY = y, cellZ = z;
+                            shapes[orientation.ordinal()][transition.ordinal()][size.ordinal()][x + 2 * y + 4 * z] =
+                                    source.getBoundingBoxes().stream().map(box -> VoxelShapes.cuboid(
+                                            box.minX * scale - cellX, box.minY * scale - cellY, box.minZ * scale - cellZ,
+                                            box.maxX * scale - cellX, box.maxY * scale - cellY, box.maxZ * scale - cellZ))
+                                            .reduce(VoxelShapes.empty(), VoxelShapes::union);
+                        }
+                }
             }
         }
 
@@ -241,8 +268,8 @@ public class CapitalBlock extends Block {
             return resourceStem;
         }
 
-        private VoxelShape shape(CapitalOrientation orientation) {
-            return shapes[orientation.ordinal()];
+        private VoxelShape shape(CapitalOrientation orientation, CapitalTransition transition, Size size, int x, int y, int z) {
+            return shapes[orientation.ordinal()][transition.ordinal()][size.ordinal()][x + 2 * y + 4 * z];
         }
     }
 }

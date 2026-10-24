@@ -13,10 +13,12 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 /** Invisible selection and collision cells belonging to a double capital. */
 public final class CapitalPartBlock extends Block {
@@ -99,6 +101,15 @@ public final class CapitalPartBlock extends Block {
     @Override public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) { return VoxelShapes.empty(); }
     @Override public int getOpacity(BlockState state, BlockView world, BlockPos pos) { return 0; }
     @Override public BlockRenderType getRenderType(BlockState state) { return BlockRenderType.INVISIBLE; }
+
+    @Override public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighbour,
+            WorldAccess world, BlockPos pos, BlockPos neighbourPos) {
+        if (direction == Direction.DOWN && state.get(Y) == 0) {
+            BlockPos anchor = resolveAnchorPos(world, pos, state);
+            if (anchor != null) CapitalBlock.refreshSupport(world, anchor, world.getBlockState(anchor));
+        }
+        return state;
+    }
 
     @Override public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         BlockPos anchorPos=resolveAnchorPos(world,pos,state);

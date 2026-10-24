@@ -26,6 +26,7 @@ public final class DaedalonDebugProperties {
         boolean eightWay = ordered.contains(Properties.HORIZONTAL_FACING) && ordered.contains(DecorOrientation.PROPERTY);
         ordered.removeIf(property -> property.getName().equals("offset_x")
                 || property.getName().equals("offset_y") || property.getName().equals("offset_z")
+                || property.getName().equals("capital_support")
                 || property.getName().startsWith("finial_") || finial && property.getName().equals("facing")
                 || eightWay && property == DecorOrientation.PROPERTY);
         ordered.sort(PROPERTY_ORDER);

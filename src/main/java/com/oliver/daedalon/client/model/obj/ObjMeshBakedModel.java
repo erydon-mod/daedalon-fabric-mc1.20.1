@@ -539,6 +539,12 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 var fit=FinialSupport.fit(state,finial.style());
                 if(fit.mounted()) FinialBaseMesh.forFit(fit).outputTo(context.getEmitter());
             }
+            if (state.getBlock() instanceof CapitalBlock
+                    && state.get(CapitalBlock.SUPPORT) != com.oliver.daedalon.block.CapitalTransition.NONE) {
+                // The collar already occupies owner coordinates; retain the shared material/normal pipeline.
+                CapitalTransitionMesh.forState(state.get(CapitalBlock.SUPPORT), state.get(CapitalBlock.SIZE))
+                        .outputTo(context.getEmitter());
+            }
             if(positionTransform!=null) { context.pushTransform(positionTransform); positionPushed=true; }
             if (friezeParts != null && state.getBlock() instanceof FriezeBlock) {
                 friezeParts.emit(blockView, pos, state, context);

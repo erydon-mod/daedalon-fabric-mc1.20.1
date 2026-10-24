@@ -3,6 +3,7 @@ package com.oliver.daedalon.gametest;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CapitalOrientation;
 import com.oliver.daedalon.block.CapitalPartBlock;
+import com.oliver.daedalon.block.CapitalTransition;
 import com.oliver.daedalon.item.DaedalonDebugProperties;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Block;
@@ -205,7 +206,9 @@ public final class CapitalGameTests {
             if (!(block instanceof CapitalBlock capital)) continue;
             count++;
             int variants = capital.style() == CapitalBlock.Style.GREEK_IONIC ? 4 : 2;
-            context.assertTrue(block.getStateManager().getStates().size() == variants * 2, "Orientation and size are the only capital states");
+            context.assertTrue(block.getStateManager().getStates().size() == variants * 2 * 3, "Orientation, size and automatic support are the capital states");
+            context.assertTrue(DaedalonDebugProperties.ordered(block.getStateManager().getProperties()).size() == 2,
+                    "Only size and orientation are player controls");
             BlockState original = block.getDefaultState();
             context.assertTrue(capital.orientation(original) == CapitalOrientation.STRAIGHT, "Old appearance must be the default");
             context.assertTrue(original.get(CapitalBlock.SIZE) == CapitalBlock.Size.STANDARD, "Legacy capitals remain standard size");
@@ -291,6 +294,72 @@ public final class CapitalGameTests {
             }
             world.setBlockState(anchor, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         }
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 400)
+    public void squareAndGothicTransitionsCoverEveryCapitalStyleSizeAndFinish(TestContext context) {
+        var world = context.getWorld();
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(2, 2, 2));
+        int checked = 0;
+        for (Block block : Registries.BLOCK) {
+            if (!(block instanceof CapitalBlock capital)) continue;
+            for (CapitalTransition transition : java.util.List.of(CapitalTransition.SQUARE, CapitalTransition.GOTHIC)) {
+                Block support = transition == CapitalTransition.SQUARE ? LargeColumnFixture.SQUARE : LargeColumnFixture.GOTHIC;
+                for (CapitalBlock.Size size : CapitalBlock.Size.values()) {
+                    int width = size == CapitalBlock.Size.DOUBLE ? 2 : 1;
+                    for (int x = 0; x < width; x++) for (int z = 0; z < width; z++)
+                        world.setBlockState(anchor.add(x, -1, z), support.getDefaultState(), Block.NOTIFY_ALL);
+                    world.setBlockState(anchor, capital.getDefaultState().with(CapitalBlock.SIZE, size), Block.NOTIFY_ALL);
+                    BlockState fitted = world.getBlockState(anchor);
+                    context.assertTrue(fitted.get(CapitalBlock.SUPPORT) == transition, "Commands and structure-style placements must fit automatically");
+                    var encoded = BlockState.CODEC.encodeStart(NbtOps.INSTANCE, fitted).result().orElseThrow();
+                    context.assertTrue(BlockState.CODEC.parse(NbtOps.INSTANCE, encoded).result().orElseThrow() == fitted,
+                            "Automatic support must survive save/load and structure copies");
+                    context.assertTrue(fitted.rotate(BlockRotation.CLOCKWISE_90).get(CapitalBlock.SUPPORT) == transition,
+                            "A tool rotation must preserve the automatic support profile");
+                    var shape = capital.shapeForCell(fitted, 0, 0, 0);
+                    context.assertTrue(shape == capital.shapeForCell(fitted, 0, 0, 0), "Collar shapes must be cached across lookups");
+                    context.assertTrue(shape.getMin(Direction.Axis.X) <= width * (0.5 - transition.baseWidth() * 0.5)
+                                    && shape.getMax(Direction.Axis.X) >= width * (0.5 + transition.baseWidth() * 0.5),
+                            "Selection and collision must include the collar footprint");
+                    world.setBlockState(anchor, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    for (int x = 0; x < width; x++) for (int z = 0; z < width; z++)
+                        world.setBlockState(anchor.add(x, -1, z), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                    checked++;
+                }
+            }
+        }
+        context.assertTrue(checked == 1296, "Test six capital styles, 54 finishes, two sizes and both support types");
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void transitionsRefreshWhenAnySupportCellChangesAndStayOffCircularColumns(TestContext context) {
+        var world = context.getWorld();
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(2, 2, 2));
+        var capital = (CapitalBlock) Registries.BLOCK.get(new net.minecraft.util.Identifier("daedalon", "aganite_tuscan_capital"));
+        for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++)
+            world.setBlockState(anchor.add(x, -1, z), LargeColumnFixture.SQUARE.getDefaultState(), Block.NOTIFY_ALL);
+        world.setBlockState(anchor, capital.getDefaultState().with(CapitalBlock.SIZE, CapitalBlock.Size.DOUBLE), Block.NOTIFY_ALL);
+        for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
+            BlockPos support = anchor.add(x, -1, z);
+            world.setBlockState(support, Blocks.STONE.getDefaultState(), Block.NOTIFY_ALL);
+            context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SUPPORT) == CapitalTransition.NONE,
+                    "Changing any of four support cells must remove the double collar");
+            world.setBlockState(support, LargeColumnFixture.SQUARE.getDefaultState(), Block.NOTIFY_ALL);
+            context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SUPPORT) == CapitalTransition.SQUARE,
+                    "Restoring the support must restore the collar without a tick or re-placement");
+        }
+        world.setBlockState(anchor, capital.getDefaultState(), Block.NOTIFY_ALL);
+        context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SUPPORT) == CapitalTransition.SQUARE,
+                "Shrinking must keep the standard square collar");
+        world.setBlockState(anchor.down(), LargeColumnFixture.BLOCK.getDefaultState(), Block.NOTIFY_ALL);
+        context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SUPPORT) == CapitalTransition.NONE,
+                "Circular columns must retain their original capital rim");
+        world.setBlockState(anchor.down(), LargeColumnFixture.GOTHIC.getDefaultState(), Block.NOTIFY_ALL);
+        context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SUPPORT) == CapitalTransition.GOTHIC,
+                "Existing placements must refit from a local downward neighbour update");
         context.complete();
     }
 }

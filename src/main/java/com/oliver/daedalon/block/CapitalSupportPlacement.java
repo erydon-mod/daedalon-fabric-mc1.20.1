@@ -16,7 +16,32 @@ import net.minecraft.world.BlockView;
 
 /** Optional ERYDON support detection without a compile-time dependency on ERYDON. */
 public final class CapitalSupportPlacement {
+    private static final java.util.Map<Block, CapitalTransition> TRANSITIONS =
+            new java.util.concurrent.ConcurrentHashMap<>();
     private CapitalSupportPlacement() {}
+
+    /** One support read, or four for a double capital; never a render/light-thread world query. */
+    public static BlockState fitted(BlockState capital, BlockView world, BlockPos anchor) {
+        int width = capital.get(CapitalBlock.SIZE) == CapitalBlock.Size.DOUBLE ? 2 : 1;
+        BlockState first = world.getBlockState(anchor.down());
+        CapitalTransition transition = TRANSITIONS.computeIfAbsent(first.getBlock(), CapitalSupportPlacement::transitionFor);
+        if (transition != CapitalTransition.NONE) {
+            for (int x = 0; x < width; x++) for (int z = 0; z < width; z++) {
+                if (x + z > 0 && !world.getBlockState(anchor.add(x, -1, z)).isOf(first.getBlock())) {
+                    transition = CapitalTransition.NONE;
+                }
+            }
+        }
+        return capital.with(CapitalBlock.SUPPORT, transition);
+    }
+
+    private static CapitalTransition transitionFor(Block block) {
+        Identifier id = Registries.BLOCK.getId(block);
+        if (!"erydon".equals(id.getNamespace())) return CapitalTransition.NONE;
+        if (id.getPath().endsWith("_column_square")) return CapitalTransition.SQUARE;
+        if (id.getPath().endsWith("_column_gothic")) return CapitalTransition.GOTHIC;
+        return CapitalTransition.NONE;
+    }
 
     public static ItemPlacementContext redirect(ItemPlacementContext context, Block block) {
         if (!(block instanceof CapitalBlock) || context.getSide() != Direction.UP) return context;
