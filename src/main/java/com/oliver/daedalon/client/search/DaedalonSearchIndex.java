@@ -41,6 +41,7 @@ public final class DaedalonSearchIndex {
         String family = entry.family();
         LinkedHashSet<String> keys = new LinkedHashSet<>();
         keys.add("daedalon");
+        keys.add("deadalon"); // Common player spelling of the mod name.
         keys.add(material);
         keys.addAll(materials.get(material));
         keys.add(family);

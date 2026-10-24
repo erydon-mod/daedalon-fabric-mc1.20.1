@@ -176,7 +176,7 @@ final class DaedalonSearchIndexTest {
                     new InputStreamReader(input, StandardCharsets.UTF_8));
             for (String family : List.of("byzantine_frieze", "gothic_frieze", "corinthian_frieze",
                     "ionic_frieze", "gothic_wall_panel")) {
-                for (String finish : List.of("white", "bronze", "gold")) {
+                for (String finish : List.of("white", "bronze", "silver")) {
                     String path = finish + "_" + family;
                     assertEquals(family, bundled.entry(path).family());
                     assertEquals(finish, bundled.entry(path).material());

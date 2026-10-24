@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /** Immutable browser groups, assembled once from the shared bundled catalogue. */
 public final class DaedalonCatalogue {
@@ -32,6 +33,24 @@ public final class DaedalonCatalogue {
 
     public static Text materialName(String material) {
         return Text.translatable("catalogue.daedalon.material." + material);
+    }
+
+    /** Only changes a newly built group's member list, never the registry or Creative order. */
+    public static <T> boolean preferAppendedGlacium(DaedalonSearchIndex index, List<T> group,
+                                                   Function<T, String> path) {
+        if (group.size() < 2) return false;
+        int last = group.size() - 1;
+        String candidatePath = path.apply(group.get(last));
+        // Most appends need no parsing or allocation. Published Spartan IDs are form-first.
+        if (candidatePath == null || !(candidatePath.startsWith("glacium_")
+                || candidatePath.startsWith("statue_spartan_promachos_glacium"))) return false;
+        var candidate = index.entry(candidatePath);
+        if (candidate == null || !candidate.material().equals("glacium") || candidate.aged()) return false;
+        var first = index.entry(path.apply(group.get(0)));
+        if (first == null || !first.family().equals(candidate.family())) return false;
+        T representative = group.remove(last);
+        group.add(0, representative);
+        return true;
     }
 
     public static String form(String family) {

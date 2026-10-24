@@ -16,6 +16,8 @@ import java.util.List;
 public final class DaedalonReiClientPlugin implements REIClientPlugin {
     @Override
     public void registerCollapsibleEntries(CollapsibleEntryRegistry registry) {
+        // This API supplies membership, not the displayed representative. The
+        // optional REI search-result hook promotes a matched fresh Glacium item.
         DaedalonCatalogue.groups().designs().forEach((family, stacks) -> {
             if (stacks.size() > 1) {
                 registry.group(new Identifier("daedalon", "rei_group_" + family),

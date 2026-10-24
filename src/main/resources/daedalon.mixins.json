@@ -23,6 +23,7 @@
     "client.ItemRendererMixin",
     "client.rei.PlinthTextSearchMixin",
     "client.rei.ReiGenericBlockArgumentMixin",
+    "client.rei.ReiGlaciumGroupRepresentativeMixin",
     "client.jei.JeiGenericBlockSearchMixin",
     "client.emi.EmiQueryTypeMixin",
     "client.emi.EmiCompiledQueryMixin",

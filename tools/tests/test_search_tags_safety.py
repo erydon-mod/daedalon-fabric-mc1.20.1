@@ -275,7 +275,7 @@ class SearchTagSafetyTests(unittest.TestCase):
 
     def test_every_browser_search_key_is_present_in_all_three_languages(self) -> None:
         vocabulary = load_json(DAEDALON_ASSETS / "search_vocabulary.json")
-        tags = {"aged", "weathered", "worn"}
+        tags = {"aged", "weathered", "worn", "daedalon", "deadalon"}
         for group in vocabulary.values():
             tags.update(tag for values in group.values() for tag in values)
         expected_keys = {f"search.daedalon.tag.{tag}" for tag in tags}

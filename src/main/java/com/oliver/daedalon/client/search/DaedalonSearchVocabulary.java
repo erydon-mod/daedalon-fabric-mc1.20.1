@@ -47,7 +47,10 @@ public final class DaedalonSearchVocabulary {
     }
 
     public static String appendTerms(String existing, ItemStack stack) {
-        List<String> terms = terms(stack);
+        return appendTerms(existing, terms(stack));
+    }
+
+    public static String appendTerms(String existing, List<String> terms) {
         if (terms.isEmpty()) return existing;
         return (existing == null ? "" : existing) + '\u0000'
                 + String.join("\u0000", terms).toLowerCase(Locale.ROOT);

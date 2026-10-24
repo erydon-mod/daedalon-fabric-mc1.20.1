@@ -1247,7 +1247,7 @@ def generate_languages(
 ) -> None:
     for language in ("en_us", "de_de", "es_es"):
         entries = dict(STATIC_LANGUAGE_ENTRIES[language])
-        search_tags = {"aged", "weathered", "worn"}
+        search_tags = {"aged", "weathered", "worn", "daedalon", "deadalon"}
         for group in search_vocabulary.values():
             search_tags.update(tag for tags in group.values() for tag in tags)
         for tag in sorted(search_tags):
