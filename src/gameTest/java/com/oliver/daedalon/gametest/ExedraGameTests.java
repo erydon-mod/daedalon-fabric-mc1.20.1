@@ -44,7 +44,7 @@ public final class ExedraGameTests {
                 Block block = Registries.BLOCK.get(new Identifier("daedalon", id));
                 context.assertTrue(block instanceof ExedraBlock, "Missing exedra " + id);
                 context.assertTrue(block.getDefaultState().get(ExedraBlock.WIDTH) == 3, "Default must be 3m");
-                context.assertTrue(block.getStateManager().getStates().size() == 12, "Only width and facing states are needed");
+                context.assertTrue(block.getStateManager().getStates().size() == 24, "Width, facing and diagonal orientation states are needed");
                 for (int width = 2; width <= 4; width++) {
                     for (int f = 0; f < facings.length; f++) {
                         Direction facing = facings[f];

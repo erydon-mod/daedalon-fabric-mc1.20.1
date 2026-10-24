@@ -265,7 +265,7 @@ class DecorOffsetShapeContractTests(unittest.TestCase):
     def test_statues_share_urn_offset_without_resizing(self) -> None:
         self.assertIn('BooleanProperty.of("offset")', self.statue)
         self.assertIn(".with(OFFSET, false)", self.statue)
-        self.assertIn("builder.add(SIZE, OFFSET, FACING)", self.statue)
+        self.assertIn("builder.add(SIZE, OFFSET, FACING, ORIENTATION)", self.statue)
         self.assertIn(
             "state.get(OFFSET) && context.isHolding(Items.DEBUG_STICK)",
             self.statue,
@@ -277,7 +277,7 @@ class DecorOffsetShapeContractTests(unittest.TestCase):
         self.assertIn(
             "Map<StatueBlock.Profile, StatueTransform[][][]>", self.baked
         )
-        self.assertIn("new StatueTransform[sizes.length][2][4]", self.baked)
+        self.assertIn("new StatueTransform[sizes.length][2][8]", self.baked)
         self.assertIn("state.get(StatueBlock.OFFSET) ? 1 : 0", self.baked)
         self.assertNotRegex(
             self.baked,

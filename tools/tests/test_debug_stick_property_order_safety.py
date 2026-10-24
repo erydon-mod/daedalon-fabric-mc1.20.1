@@ -50,7 +50,7 @@ class DebugStickPropertyOrderSafetyTests(unittest.TestCase):
         two_size = (JAVA_ROOT / "block/TwoSizeDecorBlock.java").read_text(encoding="utf-8")
         plinth = (JAVA_ROOT / "block/PlinthBlock.java").read_text(encoding="utf-8")
 
-        self.assertIn("builder.add(SIZE, OFFSET, FACING)", statue)
+        self.assertIn("builder.add(SIZE, OFFSET, FACING, ORIENTATION)", statue)
         self.assertIn("builder.add(SIZE, OFFSET, FACING)", urn)
         self.assertIn("builder.add(SIZE, FACING)", corbel)
         self.assertIn("builder.add(SIZE, WATERLOGGED)", fountain_basin)

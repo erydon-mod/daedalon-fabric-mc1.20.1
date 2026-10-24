@@ -62,18 +62,22 @@ a JAR; the test mod is separate from production sources.
 
 Exedra is available in all 27 standard and aged stone finishes. Place it at
 the default 3m width; the debug stick selects `width=2`, `width=3` or `width=4`,
-then `facing`. All widths stay 1m high; depth scales with width while preserving
+then `facing` and **Orientation** (Straight or Diagonal 45°). All widths stay 1m high; depth scales with width while preserving
 the original footprint proportions (about 1.07m, 1.60m and 2.13m deep). Search for Exedra,
 bench, seat or furniture.
 
 Each width uses a pre-sized Blender mesh shared across all materials, with
 consistent projected texture density. This is ordinary single-block decor:
-12 states, cached curved selection/collision shapes, no proxy blocks, no
+24 states covering all eight directions, cached curved selection/collision shapes, no proxy blocks, no
 block entity and no ticking. As with other oversized single-block decor,
 placement and editing belong to its centre block rather than every outer cell.
 
 Source provenance and exact measurements are recorded in
 `docs/evidence/exedra-source.json`.
+
+Statues and busts also offer Straight and Diagonal (45°) positions using the
+debug stick. Existing sizes, materials and straight placements are preserved;
+offset placement follows the chosen direction. See [diagonal decor](docs/DIAGONAL_DECOR.md).
 
 ## Fountain particle prototype
 

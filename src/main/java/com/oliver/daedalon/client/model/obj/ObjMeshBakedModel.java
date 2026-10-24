@@ -4,6 +4,8 @@ import com.oliver.daedalon.block.DecorShapeTransforms;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.BenchBlock;
+import com.oliver.daedalon.block.DecorOrientation;
+import com.oliver.daedalon.block.ExedraBlock;
 import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.PanelBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
@@ -1046,30 +1048,32 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                     StatueTransform::createCache
             );
             return transforms[size.ordinal()][state.get(StatueBlock.OFFSET) ? 1 : 0]
-                    [horizontalIndex(facing)];
+                    [horizontalIndex(facing) * 2 + state.get(StatueBlock.ORIENTATION).ordinal()];
         }
 
         private static StatueTransform[][][] createCache(StatueBlock.Profile profile) {
             StatueBlock.StatueSize[] sizes = StatueBlock.StatueSize.values();
-            StatueTransform[][][] cache = new StatueTransform[sizes.length][2][4];
+            StatueTransform[][][] cache = new StatueTransform[sizes.length][2][8];
             for (StatueBlock.StatueSize size : sizes) {
                 for (int offsetIndex = 0; offsetIndex < 2; offsetIndex++) {
                     boolean offset = offsetIndex == 1;
                     for (Direction facing : new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
-                        cache[size.ordinal()][offsetIndex][horizontalIndex(facing)] = new StatueTransform(
+                        for (DecorOrientation orientation : DecorOrientation.values()) {
+                        cache[size.ordinal()][offsetIndex][horizontalIndex(facing) * 2 + orientation.ordinal()] = new StatueTransform(
                                 size.scale(),
-                                profile.rotationStepsFromSource(facing),
+                                profile.rotationStepsFromSource(facing) * 2 + orientation.ordinal(),
                                 profile.modelSupportCenterX(),
                                 profile.modelGroundContactY(),
                                 profile.modelSupportCenterZ(),
                                 offset
-                                        ? facing.getOffsetX() * DecorShapeTransforms.OFFSET_DISTANCE
+                                        ? DecorOrientation.rotateX(facing.getOffsetX(), facing.getOffsetZ(), orientation.ordinal()) * DecorShapeTransforms.OFFSET_DISTANCE
                                         : 0.0F,
                                 offset ? DecorShapeTransforms.OFFSET_BASE_Y : 0.0F,
                                 offset
-                                        ? facing.getOffsetZ() * DecorShapeTransforms.OFFSET_DISTANCE
+                                        ? DecorOrientation.rotateZ(facing.getOffsetX(), facing.getOffsetZ(), orientation.ordinal()) * DecorShapeTransforms.OFFSET_DISTANCE
                                         : 0.0F
                         );
+                        }
                     }
                 }
             }
@@ -1118,34 +1122,16 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         }
 
         private float rotateX(float x, float z) {
-            return switch (clockwiseSteps) {
-                case 0 -> x;
-                case 1 -> -z;
-                case 2 -> -x;
-                case 3 -> z;
-                default -> throw new IllegalStateException("Invalid quarter-turn count " + clockwiseSteps);
-            };
+            return DecorOrientation.rotateX(x, z, clockwiseSteps);
         }
 
         private float rotateZ(float x, float z) {
-            return switch (clockwiseSteps) {
-                case 0 -> z;
-                case 1 -> x;
-                case 2 -> -z;
-                case 3 -> -x;
-                default -> throw new IllegalStateException("Invalid quarter-turn count " + clockwiseSteps);
-            };
+            return DecorOrientation.rotateZ(x, z, clockwiseSteps);
         }
 
         private Direction rotateFace(Direction face) {
-            if (face == Direction.UP || face == Direction.DOWN) {
-                return face;
-            }
-            Direction rotated = face;
-            for (int step = 0; step < clockwiseSteps; step++) {
-                rotated = rotated.rotateYClockwise();
-            }
-            return rotated;
+            return Direction.getFacing(rotateX(face.getOffsetX(), face.getOffsetZ()), face.getOffsetY(),
+                    rotateZ(face.getOffsetX(), face.getOffsetZ()));
         }
 
         private static int horizontalIndex(Direction direction) {
@@ -1641,7 +1627,10 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         private static final GroundScaleTransform[][][] MOVABLE_CACHE = createMovableCache();
         private static final GroundScaleTransform[] BENCH_CACHE = createBenchCache();
 
-        private static GroundScaleTransform forBenchState(BlockState state) {
+        private static RenderContext.QuadTransform forBenchState(BlockState state) {
+            if (state.getBlock() instanceof ExedraBlock && state.get(ExedraBlock.ORIENTATION) == DecorOrientation.DIAGONAL) {
+                return DecorOrientationTransform.forTurn(BenchBlock.rotationStepsFromSouth(state.get(BenchBlock.FACING)) * 2 + 1);
+            }
             return BENCH_CACHE[horizontalIndex(state.get(BenchBlock.FACING))];
         }
 

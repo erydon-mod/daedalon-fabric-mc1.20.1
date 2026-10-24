@@ -17,6 +17,7 @@
       "com.oliver.daedalon.gametest.FountainGameTests",
       "com.oliver.daedalon.gametest.CapitalGameTests",
       "com.oliver.daedalon.gametest.ExedraGameTests",
+      "com.oliver.daedalon.gametest.DiagonalDecorGameTests",
       "com.oliver.daedalon.gametest.HedraGameTests",
       "com.oliver.daedalon.gametest.AnthophorosGameTests",
       "com.oliver.daedalon.gametest.MonopterosGameTests",

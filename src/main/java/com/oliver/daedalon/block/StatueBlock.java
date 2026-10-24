@@ -27,6 +27,7 @@ import java.util.Objects;
  * and a hand-authored three-block collision shape.
  */
 public abstract class StatueBlock extends Block {
+    public static final EnumProperty<DecorOrientation> ORIENTATION = DecorOrientation.PROPERTY;
     public static final BooleanProperty OFFSET = BooleanProperty.of("offset");
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final EnumProperty<StatueSize> SIZE =
@@ -47,12 +48,13 @@ public abstract class StatueBlock extends Block {
         setDefaultState(getStateManager().getDefaultState()
                 .with(SIZE, StatueSize.MEDIUM)
                 .with(OFFSET, false)
+                .with(ORIENTATION, DecorOrientation.STRAIGHT)
                 .with(FACING, Direction.NORTH));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(SIZE, OFFSET, FACING);
+        builder.add(SIZE, OFFSET, FACING, ORIENTATION);
     }
 
     @Override
@@ -77,13 +79,13 @@ public abstract class StatueBlock extends Block {
         if (state.get(OFFSET) && context.isHolding(Items.DEBUG_STICK)) {
             return profile.debugEditOutlineShapeFor(
                     effectiveSize(state),
-                    state.get(FACING)
+                    state.get(FACING), state.get(ORIENTATION)
             );
         }
         return profile.outlineShapeFor(
                 effectiveSize(state),
                 state.get(OFFSET),
-                state.get(FACING)
+                state.get(FACING), state.get(ORIENTATION)
         );
     }
 
@@ -92,7 +94,7 @@ public abstract class StatueBlock extends Block {
         return profile.outlineShapeFor(
                 effectiveSize(state),
                 state.get(OFFSET),
-                state.get(FACING)
+                state.get(FACING), state.get(ORIENTATION)
         );
     }
 
@@ -106,7 +108,7 @@ public abstract class StatueBlock extends Block {
         return profile.collisionShapeFor(
                 effectiveSize(state),
                 state.get(OFFSET),
-                state.get(FACING)
+                state.get(FACING), state.get(ORIENTATION)
         );
     }
 
@@ -122,7 +124,7 @@ public abstract class StatueBlock extends Block {
 
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return rotate(state, mirror.getRotation(state.get(FACING)));
+        return state.with(FACING, state.get(ORIENTATION).mirrorFacing(state.get(FACING), mirror));
     }
 
     public final float modelSupportCenterX() {
@@ -190,7 +192,7 @@ public abstract class StatueBlock extends Block {
 
     /**
      * Immutable geometry profile shared by every material variant in one
-     * statue family. Its twelve collision shapes are built only once.
+     * statue family. Its straight and diagonal collision shapes are built only once.
      */
     public static final class Profile {
         private final Direction sourceFacing;
@@ -242,63 +244,61 @@ public abstract class StatueBlock extends Block {
         private VoxelShape collisionShapeFor(
                 StatueSize size,
                 boolean offset,
-                Direction facing
+                Direction facing, DecorOrientation orientation
         ) {
             return collisionShapes[size.ordinal()][offset ? 1 : 0]
-                    [horizontalIndex(facing)];
+                    [horizontalIndex(facing) * 2 + orientation.ordinal()];
         }
 
         private VoxelShape outlineShapeFor(
                 StatueSize size,
                 boolean offset,
-                Direction facing
+                Direction facing, DecorOrientation orientation
         ) {
             return outlineShapes[size.ordinal()][offset ? 1 : 0]
-                    [horizontalIndex(facing)];
+                    [horizontalIndex(facing) * 2 + orientation.ordinal()];
         }
 
         private VoxelShape debugEditOutlineShapeFor(
                 StatueSize size,
-                Direction facing
+                Direction facing, DecorOrientation orientation
         ) {
             return debugEditOutlineShapes[size.ordinal()][1]
-                    [horizontalIndex(facing)];
+                    [horizontalIndex(facing) * 2 + orientation.ordinal()];
         }
 
         private ShapeCaches createShapeCaches(VoxelShape threeHighSourceShape) {
             StatueSize[] sizes = StatueSize.values();
             VoxelShape[][][] collision =
-                    new VoxelShape[sizes.length][2][HORIZONTAL_DIRECTIONS.length];
+                    new VoxelShape[sizes.length][2][HORIZONTAL_DIRECTIONS.length * 2];
             VoxelShape[][][] outline =
-                    new VoxelShape[sizes.length][2][HORIZONTAL_DIRECTIONS.length];
+                    new VoxelShape[sizes.length][2][HORIZONTAL_DIRECTIONS.length * 2];
             VoxelShape[][][] debugEditOutline =
-                    new VoxelShape[sizes.length][2][HORIZONTAL_DIRECTIONS.length];
+                    new VoxelShape[sizes.length][2][HORIZONTAL_DIRECTIONS.length * 2];
             for (StatueSize size : sizes) {
                 VoxelShape scaled = scaleFromSupport(
                         threeHighSourceShape,
                         size.scale()
                 );
                 for (Direction direction : HORIZONTAL_DIRECTIONS) {
-                    int directionIndex = horizontalIndex(direction);
-                    VoxelShape centred = rotateFromSource(scaled, direction);
-                    VoxelShape offset = translate(
-                            centred,
-                            direction.getOffsetX() * DecorShapeTransforms.OFFSET_DISTANCE,
-                            DecorShapeTransforms.OFFSET_BASE_Y,
-                            direction.getOffsetZ() * DecorShapeTransforms.OFFSET_DISTANCE
-                    );
-                    collision[size.ordinal()][0][directionIndex] = centred;
-                    collision[size.ordinal()][1][directionIndex] = offset;
-                    outline[size.ordinal()][0][directionIndex] = centred;
-                    outline[size.ordinal()][1][directionIndex] = VoxelShapes.union(
-                            offset,
-                            DecorShapeTransforms.TARGET_POST
-                    ).simplify();
-                    debugEditOutline[size.ordinal()][0][directionIndex] = centred;
-                    debugEditOutline[size.ordinal()][1][directionIndex] = VoxelShapes.union(
-                            offset,
-                            DecorShapeTransforms.DEBUG_EDIT_TARGET
-                    ).simplify();
+                    VoxelShape cardinal = rotateFromSource(scaled, direction);
+                    for (DecorOrientation orientation : DecorOrientation.values()) {
+                        int directionIndex = horizontalIndex(direction) * 2 + orientation.ordinal();
+                        VoxelShape centred = orientation == DecorOrientation.DIAGONAL
+                                ? DecorShapeTransforms.diagonal(cardinal) : cardinal;
+                        float offsetX = DecorOrientation.rotateX(direction.getOffsetX(), direction.getOffsetZ(), orientation.ordinal());
+                        float offsetZ = DecorOrientation.rotateZ(direction.getOffsetX(), direction.getOffsetZ(), orientation.ordinal());
+                        VoxelShape offset = translate(centred,
+                                offsetX * DecorShapeTransforms.OFFSET_DISTANCE,
+                                DecorShapeTransforms.OFFSET_BASE_Y,
+                                offsetZ * DecorShapeTransforms.OFFSET_DISTANCE);
+                        collision[size.ordinal()][0][directionIndex] = centred;
+                        collision[size.ordinal()][1][directionIndex] = offset;
+                        outline[size.ordinal()][0][directionIndex] = centred;
+                        outline[size.ordinal()][1][directionIndex] = VoxelShapes.union(offset, DecorShapeTransforms.TARGET_POST).simplify();
+                        debugEditOutline[size.ordinal()][0][directionIndex] = centred;
+                        debugEditOutline[size.ordinal()][1][directionIndex] = VoxelShapes.union(offset, DecorShapeTransforms.DEBUG_EDIT_TARGET).simplify();
+                    }
                 }
             }
             return new ShapeCaches(collision, outline, debugEditOutline);

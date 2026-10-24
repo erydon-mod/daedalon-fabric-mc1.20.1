@@ -352,8 +352,9 @@ span below by the actual model extent for atlas safety.
 
 One mesh family per prepared width shares the geometry across all materials.
 Only 3m owns the inventory model and public block aliases. The other widths
-resolve internal model IDs; only a cached facing rotation runs during chunk
-meshing. `python tools/generate_exedra_shape.py --check` verifies the shared
+resolve internal model IDs; only a cached facing/orientation rotation runs during chunk
+meshing. `orientation=straight|diagonal` adds the four 45-degree diagonal poses
+without changing width, height, source meshes or texture density. `python tools/generate_exedra_shape.py --check` verifies the shared
 curved shape against triangle-clipped width strips and height bands.
 
 Exedra also opts into one shared `exedra_item` mesh for 3D item rendering.
@@ -473,6 +474,9 @@ bake per family rather than one per material variant.
 ## Shared behaviour to preserve
 
 - One immutable statue profile and one geometry bake per family.
+- Statues and busts share the Straight/Diagonal orientation control; old states
+  remain Straight. Rotations, offset directions and conservative collision boxes
+  agree across all eight poses. See [diagonal decor](DIAGONAL_DECOR.md).
 - Texture density remains constant across the one-, two-, and three-block sizes.
 - Every statue inherits the urn-style horizontal offset and remains flush with
   the block floor. Offset does not change the selected one-, two-, or

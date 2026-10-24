@@ -135,7 +135,7 @@ class ClassicalBustSafetyTests(unittest.TestCase):
         self.assertIn("createBustVariants(style.subjectId())", plugin)
         self.assertIn('BooleanProperty.of("offset")', statue)
         self.assertIn('EnumProperty.of("size", StatueSize.class)', statue)
-        self.assertIn("builder.add(SIZE, OFFSET, FACING)", statue)
+        self.assertIn("builder.add(SIZE, OFFSET, FACING, ORIENTATION)", statue)
         self.assertIn("super(settings, style.profile())", block)
         self.assertIn(".with(SIZE, StatueSize.SMALL)", block)
         self.assertNotIn("lockedSize", statue)

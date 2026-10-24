@@ -682,8 +682,8 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
             }
         }
     if family in STATUE_DISPLAY_MODELS:
-        # OFFSET deliberately remains a wildcard: both values use the same
-        # baked mesh, while StatueBlock applies the placement transform.
+        # OFFSET and orientation deliberately remain wildcards: every pose
+        # uses the same baked mesh and cached StatueBlock transform.
         return {
             "variants": {
                 f"size={size},facing={facing}": {"model": model}
@@ -1135,6 +1135,9 @@ def generate_languages(
             "de_de": ("Ausrichtung", "Gerade", "Diagonal (45°)", "Gerade (90°)", "Diagonal (135°)"),
             "es_es": ("Orientación", "Recta", "Diagonal (45°)", "Recta (90°)", "Diagonal (135°)"),
         }[language]
+        entries["property.daedalon.orientation"] = orientation_labels[0]
+        entries["option.daedalon.orientation.straight"] = orientation_labels[1]
+        entries["option.daedalon.orientation.diagonal"] = orientation_labels[2]
         entries["property.daedalon.capital_orientation"] = orientation_labels[0]
         for orientation, label in zip(("straight", "diagonal", "straight_90", "diagonal_135"), orientation_labels[1:]):
             entries[f"option.daedalon.capital.orientation.{orientation}"] = label

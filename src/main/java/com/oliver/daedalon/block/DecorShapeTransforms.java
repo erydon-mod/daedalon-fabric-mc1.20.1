@@ -122,6 +122,22 @@ public final class DecorShapeTransforms {
         };
     }
 
+    /** Rotate each authored collision box about the owner-cell centre.
+     * The boxes remain conservative, just like the original statue profiles.
+     */
+    static VoxelShape diagonal(VoxelShape shape) {
+        final VoxelShape[] rotated = {VoxelShapes.empty()};
+        double d = Math.sqrt(0.5);
+        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            double x0 = minX - 0.5, x1 = maxX - 0.5;
+            double z0 = minZ - 0.5, z1 = maxZ - 0.5;
+            rotated[0] = VoxelShapes.union(rotated[0], VoxelShapes.cuboid(
+                    0.5 + d * (x0 - z1), minY, 0.5 + d * (x0 + z0),
+                    0.5 + d * (x1 - z0), maxY, 0.5 + d * (x1 + z1)));
+        });
+        return rotated[0].simplify();
+    }
+
     private static VoxelShape rotateClockwise(VoxelShape shape) {
         final VoxelShape[] rotated = {VoxelShapes.empty()};
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) ->
