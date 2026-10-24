@@ -37,6 +37,7 @@ public final class CapitalGameTests {
         private ItemStack held=ItemStack.EMPTY;
         private boolean sneaking;
         private Text message;
+        private int messageCount;
         WarningPlayer(MinecraftServer server,ServerWorld world) {
             super(server,world,new GameProfile(java.util.UUID.randomUUID(),"capital-warning"));
         }
@@ -44,8 +45,8 @@ public final class CapitalGameTests {
         @Override public boolean isSneaking() { return sneaking; }
         @Override public boolean shouldCancelInteraction() { return false; }
         @Override public ItemStack getStackInHand(Hand hand) { return held==null ? ItemStack.EMPTY : held; }
-        @Override public void sendMessage(Text message,boolean overlay) { this.message=message; }
-        @Override public void sendMessageToClient(Text message,boolean overlay) { this.message=message; }
+        @Override public void sendMessage(Text message,boolean overlay) { this.message=message; messageCount++; }
+        @Override public void sendMessageToClient(Text message,boolean overlay) { this.message=message; messageCount++; }
     }
 
     @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 400)
@@ -70,13 +71,13 @@ public final class CapitalGameTests {
                 for(int py=0;py<2;py++) for(int px=0;px<2;px++) for(int pz=0;pz<2;pz++) {
                     BlockPos pos=anchor.add(px,py,pz); before.put(pos,world.getBlockState(pos));
                 }
-                player.held=ItemStack.EMPTY; player.sneaking=true; player.message=null;
+                player.held=ItemStack.EMPTY; player.sneaking=true; player.message=null; player.messageCount=0;
                 context.assertTrue(capital.onUse(world.getBlockState(anchor),world,anchor,player,Hand.MAIN_HAND,hit)==net.minecraft.util.ActionResult.FAIL,"Obstructed empty-hand resize must fail");
-                assertWarning(context,player.message);
+                assertWarning(context,player,false);
                 before.forEach((pos,state) -> context.assertTrue(world.getBlockState(pos)==state,"Empty-hand failure changed the footprint"));
-                player.held=stick; player.sneaking=false; player.message=null;
+                player.held=stick; player.sneaking=false; player.message=null; player.messageCount=0;
                 context.assertTrue(Items.DEBUG_STICK.useOnBlock(usage).isAccepted(),"Blocked debug-stick edit must be handled");
-                assertWarning(context,player.message);
+                assertWarning(context,player,true);
                 before.forEach((pos,state) -> context.assertTrue(world.getBlockState(pos)==state,"Debug-stick failure changed the footprint"));
                 world.removeBlock(obstruction,false);
                 Items.DEBUG_STICK.useOnBlock(usage);
@@ -92,9 +93,17 @@ public final class CapitalGameTests {
         context.complete();
     }
 
-    private static void assertWarning(TestContext context,Text message) {
+    private static void assertWarning(TestContext context,WarningPlayer player,boolean debugStick) {
+        // Installed ERYDON deliberately owns its older-companion debug-stick
+        // compatibility handler; both keys display the same localized warning.
+        boolean companionWarning=debugStick
+                && net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("erydon");
+        Text message=player.message;
+        context.assertTrue(player.messageCount==1,"Rejected resize must send exactly one warning");
         context.assertTrue(message!=null && message.getContent() instanceof TranslatableTextContent text
-                && text.getKey().equals("message.daedalon.capital_size_blocked"),"Resize must send the localized capital warning");
+                && (text.getKey().equals("message.daedalon.capital_size_blocked")
+                || companionWarning && text.getKey().equals("message.erydon.companion_capital_size_blocked")),
+                "Resize must send the localized capital warning: "+message);
     }
 
     @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 400)
