@@ -3,9 +3,10 @@
 Date: 24 October 2026. Result: **passed**.
 
 This audit covers Daedalon for Fabric/Minecraft 1.20.1, Java 17 and family
-compatibility generation 2. The mod version remains **1.0.0**. The reviewed
-product source is commit `94871789`; the following audit commit adds release
-checks and documentation. ERYDON remains a separately maintained project.
+compatibility generation 2. The mod version remains **1.0.0**. The original
+full audit checkpoint is commit `3ea55f30`; this document also records the
+subsequent requested Spartan icon correction. ERYDON remains a separately
+maintained project.
 
 ## Approval and final corrections
 
@@ -21,6 +22,13 @@ turned 180 degrees around Y now supplies all 168 finish variants. Actual OBJ
 comparison renders confirm their fronts; placed orientation, collision,
 source geometry and UVs are unchanged. Hestia's bust retains its approved
 separate corrected view.
+
+Oliver subsequently requested the Spartan icon turn 180 degrees around Y.
+Its shared GUI display changes from `[30,45,0]` to `[30,225,0]`, updating every
+finish through the existing cache. Only GUI Y changes: the other display
+contexts, published placed-state behavior, controls, source mesh and UVs retain
+their existing values. The standalone build and real-mesh icon comparisons
+were refreshed for this correction.
 
 The release JAR auditor also needed the current exact catalogue: four internal
 helpers, 56 item-only Olympian selectors, two shared selector item parents and
@@ -40,7 +48,7 @@ resources. Duplicate archive entries and development/probe classes are rejected.
 | Both resource generators with `--check` | Current; zero changes |
 | Standalone dedicated-server GameTests | All 95 required tests passed |
 | GameTests with the existing compatible ERYDON test companion | All 95 required tests passed |
-| Actual OBJ icon comparisons, native and Collection 64x | 228 renders passed at 64/128/256 pixels |
+| Actual OBJ icon comparisons, native and Collection 64x | 264 renders passed at 64/128/256 pixels, including Spartan's previous/corrected views |
 | Invisible native OpenGL checks | Upload, filtering, gutters, resource release and frieze edge samples passed |
 | Native break-particle and translated-name checks | Passed; own-block bursts remain limited to 16 |
 | Live REI catalogue | 4,734 items, 85 design groups, 130 subsets; JEI and EMI absent |
@@ -62,8 +70,8 @@ measurement of live REI frame rate.
 
 `daedalon-fabric-mc1.20.1-compat2-1.0.0.jar`
 
-- Size: **39,029,686 bytes**.
-- SHA-256: `a5e6a27fd046ad778963eb8ae088dc56d7dc62955c29aecd0fdd28599a0d6f9d`.
+- Size: **39,029,688 bytes**.
+- SHA-256: `811ceae5a8798e8d70a1258ce4ca16790c72a77b5a3d105c1ae041c3ed3c4671`.
 - Public blocks: 4,678; blockstate files: 4,682, including four internal helpers.
 - Item models: 4,737; loot tables: 4,516.
 - OBJ meshes and mesh definitions: 100 each; MTL files: 77; shared block display models: 34.

@@ -203,7 +203,7 @@ def expected_files() -> dict[str, bytes]:
         ),
         "statue_spartan_promachos_display.json": payload(
             "daedalon:block/statue_spartan_promachos_aganite",
-            three_block_display([30, 45, 0]),
+            three_block_display([30, 225, 0]),
         ),
     }
     for shape in (

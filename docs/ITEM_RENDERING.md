@@ -82,6 +82,10 @@ corrected the inventory fronts of Hermes, Hephaestus and Hestia full statues;
 placed rendering and the image-cache draw path remain unchanged. The complete
 publication checkpoint is in `PREPUBLICATION_AUDIT.md`.
 
+Spartan's shared icon view subsequently received Oliver's requested 180-degree
+Y turn (45 to 225 degrees). Its published world profile and every non-GUI
+display context remain unchanged; all finishes keep the same cached-image path.
+
 This supersedes the older per-family 3D held/dropped-item preparation notes.
 Existing optional item meshes remain compatible assets, but this item-rendering
 path does not draw them and new decorations do not need a separate 3D item mesh.
