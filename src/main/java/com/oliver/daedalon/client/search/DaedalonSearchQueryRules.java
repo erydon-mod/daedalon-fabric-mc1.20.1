@@ -1,6 +1,5 @@
 package com.oliver.daedalon.client.search;
 
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -52,7 +51,6 @@ public final class DaedalonSearchQueryRules {
 
     public static boolean isCatalogueItem(Item item) {
         return CATALOGUE_ITEMS.computeIfAbsent(item, candidate -> {
-            if (!(candidate instanceof BlockItem)) return false;
             var id = Registries.ITEM.getId(candidate);
             return "daedalon".equals(id.getNamespace())
                     && DaedalonSearchVocabulary.index().entry(id.getPath()) != null;

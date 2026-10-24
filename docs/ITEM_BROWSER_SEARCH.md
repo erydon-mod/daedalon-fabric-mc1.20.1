@@ -119,3 +119,29 @@ Also restrict default tag, tooltip, mod-name and identifier searches to explicit
 prefixes and check plain `daedalon`, `deadalon`, `jupiter` and `white gothic`.
 The two mod-name spellings must retain all 4,678 catalogue items in the native
 collapsed REI panel. This isolates the shared text cache from tag-based matches.
+
+## Olympian placement selectors
+
+Olympian God Statue selection items have their own design group with 56 stone,
+aged, Bronze and Silver finishes, including the usual fresh Glacium preview.
+They also appear under Statues and the matching material groups. They share the
+same Creative, REI, JEI and EMI vocabulary, including Olympian, god, cycle and
+sequence, while plain block searches exclude them.
+
+The selector places the existing statues; it does not register another world
+block or OBJ family. The `daedalon_blocks` tag retains the 4,678 placed-decor
+items, while `daedalon_items` includes all 4,734 catalogue items. Item-only tags
+include the selectors in relevant material, finish and sculpture categories
+without adding invalid block or mining entries. Their current Creative image is
+one shared Daedalon emblem placeholder, ready for Oliver's final image.
+
+Fresh stone selector names use the same captured Honed, Polished or Mirror
+setting as the statues they place. The cached language overlay now covers both
+block and item translation keys; aged, white and metal names keep their own
+finish descriptions. Changing finish preferences still requires a restart.
+
+Oliver approved the existing finish names in-game on 24 October 2026 with
+Daedalon and ERYDON, REI only, Complementary Unbound and the Collection 64x pack.
+The historical 84-group results above describe that earlier catalogue. The new
+selector group and its item-only Creative aliases still need their own live
+viewer acceptance; this approval does not cover the full JEI/EMI or shader matrix.

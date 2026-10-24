@@ -1277,6 +1277,25 @@
       "statue_base",
       "triphyllon",
       "triphyllon_plinth"
+    ],
+    "olympian_god_statue": [
+      "architecture",
+      "cycle",
+      "cycling",
+      "decor",
+      "decoration",
+      "decorative",
+      "deity",
+      "god",
+      "greek",
+      "olympian",
+      "olympian_god",
+      "olympian_god_statue",
+      "ornament",
+      "sculpture",
+      "sequence",
+      "statue",
+      "statue_cycle"
     ]
   },
   "materials": {

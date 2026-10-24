@@ -20,7 +20,7 @@ public final class DaedalonJeiPlugin implements IModPlugin {
 
     @Override
     public void registerIngredientAliases(IIngredientAliasRegistration registration) {
-        for (var item : ModItems.blockItems()) {
+        for (var item : ModItems.catalogueItems()) {
             var stack = item.getDefaultStack();
             var terms = DaedalonSearchVocabulary.terms(stack);
             if (!terms.isEmpty()) registration.addAliases(VanillaTypes.ITEM_STACK, stack, terms);

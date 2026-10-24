@@ -10,7 +10,7 @@ import net.minecraft.text.Text;
 public final class DaedalonEmiPlugin implements EmiPlugin {
     @Override
     public void register(EmiRegistry registry) {
-        for (var item : ModItems.blockItems()) {
+        for (var item : ModItems.catalogueItems()) {
             var stack = item.getDefaultStack();
             for (String term : DaedalonSearchVocabulary.terms(stack)) {
                 registry.addAlias(EmiStack.of(stack), Text.literal(term));

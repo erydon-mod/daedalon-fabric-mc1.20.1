@@ -24,12 +24,12 @@ class DaedalonStoneFinishLabelsPackTest {
         var languages = DaedalonStoneFinishLabelsPack.readLanguages();
         Map<String, String> finishes = new LinkedHashMap<>();
         for (String key : languages.get("en_us").keySet()) {
-            if (key.startsWith("block.daedalon.")) {
-                String path = key.substring("block.daedalon.".length());
+            if (key.startsWith("block.daedalon.") || key.startsWith("item.daedalon.")) {
+                String path = key.substring(key.indexOf("daedalon.") + "daedalon.".length());
                 if (index.isStandardStone(path)) finishes.put(path, "mirror");
             }
         }
-        assertEquals(2268, finishes.size());
+        assertEquals(2295, finishes.size());
         finishes.put("glacium_hedra", "honed");
         finishes.put("latmion_zeus_statue", "polished");
         // A malformed/overbroad optional provider must not rename unrelated finishes.
@@ -40,11 +40,11 @@ class DaedalonStoneFinishLabelsPackTest {
         var pack = DaedalonStoneFinishLabelsPack.create(index, languages, finishes);
         for (String language : List.of("en_us", "de_de", "es_es")) {
             JsonObject labels = labels(pack, language);
-            assertEquals(2268, labels.size());
+            assertEquals(2295, labels.size());
             var original = languages.get(language);
             for (var pair : Map.of("glacium_hedra", "honed", "latmion_zeus_statue", "polished",
-                    "statue_spartan_promachos_glacium", "mirror").entrySet()) {
-                String key = "block.daedalon." + pair.getKey();
+                    "statue_spartan_promachos_glacium", "mirror", "glacium_olympian_god_statue", "mirror").entrySet()) {
+                String key = DaedalonStoneFinishLabelsPack.translationKey(original, pair.getKey());
                 String name = original.get(key);
                 int boundary = name.indexOf(' ') + 1;
                 String expected = name.substring(0, boundary) + original.get("finish.daedalon." + pair.getValue())

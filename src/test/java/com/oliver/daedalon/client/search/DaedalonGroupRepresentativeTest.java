@@ -18,7 +18,7 @@ final class DaedalonGroupRepresentativeTest {
     void everyRealDesignUsesItsFreshGlaciumMemberWithoutChangingMembershipOrOtherOrder() throws Exception {
         DaedalonSearchIndex index = bundledIndex();
         List<String> registryOrder;
-        try (var input = getClass().getResourceAsStream("/data/daedalon/tags/items/daedalon_blocks.json")) {
+        try (var input = getClass().getResourceAsStream("/data/daedalon/tags/items/daedalon_items.json")) {
             assertNotNull(input);
             var root = JsonParser.parseReader(new InputStreamReader(input, StandardCharsets.UTF_8)).getAsJsonObject();
             registryOrder = new ArrayList<>();
@@ -32,7 +32,7 @@ final class DaedalonGroupRepresentativeTest {
             assertNotNull(entry, path);
             designs.computeIfAbsent(entry.family(), ignored -> new ArrayList<>()).add(path);
         }
-        assertEquals(84, designs.size());
+        assertEquals(85, designs.size());
         for (var design : designs.entrySet()) {
             List<String> source = List.copyOf(design.getValue());
             List<String> preferred = source.stream().filter(path -> {
@@ -58,7 +58,7 @@ final class DaedalonGroupRepresentativeTest {
             }
         }
         assertEquals(originalRegistryOrder, registryOrder);
-        assertEquals(4678, registryOrder.size());
+        assertEquals(4734, registryOrder.size());
     }
 
     @Test

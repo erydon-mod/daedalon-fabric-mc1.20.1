@@ -145,6 +145,25 @@ final class DaedalonSearchIndexTest {
     }
 
     @Test
+    void itemOnlyOlympianSelectorsHaveTheirOwnFiniteFamilyAndAllFinishAliases() throws Exception {
+        try (var input = getClass().getResourceAsStream("/assets/daedalon/search_vocabulary.json")) {
+            var bundled = DaedalonSearchIndex.read(new InputStreamReader(input, StandardCharsets.UTF_8));
+            for (String material : List.of("glacium", "glacium_aged", "bronze", "silver")) {
+                String path = material + "_olympian_god_statue";
+                assertEquals("olympian_god_statue", bundled.entry(path).family());
+                assertEquals("statues", DaedalonCatalogue.form(bundled.entry(path).family()));
+                assertTrue(bundled.terms(path).containsAll(List.of("olympian", "god", "statue", "cycle", "sequence")), path);
+                assertFalse(bundled.terms(path).contains("daedalon blocks"));
+                assertFalse(bundled.terms(path).contains("daedalon items"));
+                assertEquals(material.equals("glacium"), bundled.isStandardStone(path));
+            }
+            assertTrue(bundled.terms("glacium_olympian_god_statue").containsAll(List.of("honed", "polished", "mirror")));
+            for (String path : List.of("unknown_olympian_god_statue", "glacium_olympian_god_statue_aged",
+                    "olympian_god_statue", "obeliskos_part")) assertTrue(bundled.terms(path).isEmpty(), path);
+        }
+    }
+
+    @Test
     void catalogueDesignsKeepAllFinishesTogetherAndFormsSeparate() throws Exception {
         try (var input = getClass().getResourceAsStream("/assets/daedalon/search_vocabulary.json")) {
             assertNotNull(input);

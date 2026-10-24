@@ -51,7 +51,7 @@ public final class DaedalonStoneFinishLabelsPack implements ResourcePack {
             JsonObject labels = new JsonObject();
             finishes.forEach((path, finish) -> {
                 if (!index.isStandardStone(path)) return;
-                String key = "block.daedalon." + path;
+                String key = translationKey(original, path);
                 String name = original.get(key);
                 String label = original.get("finish.daedalon." + finish);
                 var entry = index.entry(path);
@@ -67,14 +67,19 @@ public final class DaedalonStoneFinishLabelsPack implements ResourcePack {
         return new DaedalonStoneFinishLabelsPack(resources);
     }
 
+    static String translationKey(Map<String, String> language, String path) {
+        String block = "block.daedalon." + path;
+        return language.containsKey(block) ? block : "item.daedalon." + path;
+    }
+
     private static DaedalonStoneFinishLabelsPack load() {
         try {
             var index = DaedalonSearchVocabulary.index();
             Map<String, Map<String, String>> languages = readLanguages();
             List<String> paths = languages.get("en_us").keySet().stream()
-                    .filter(key -> key.startsWith("block.daedalon."))
-                    .map(key -> key.substring("block.daedalon.".length()))
-                    .filter(index::isStandardStone).toList();
+                    .filter(key -> key.startsWith("block.daedalon.") || key.startsWith("item.daedalon."))
+                    .map(key -> key.substring(key.indexOf("daedalon.") + "daedalon.".length()))
+                    .filter(index::isStandardStone).distinct().toList();
             var finishes = ErydonStoneFinishBridge.read(DaedalonStoneFinishLabelsPack.class.getClassLoader(), paths);
             var result = create(index, languages, finishes);
             Daedalon.LOGGER.info("[daedalon] Stone finish names follow ERYDON's active preferences ({} eligible items; changes require restart)",

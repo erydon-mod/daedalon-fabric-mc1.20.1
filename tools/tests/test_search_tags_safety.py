@@ -17,36 +17,47 @@ class SearchTagSafetyTests(unittest.TestCase):
         }
         # Item models and placed blockstates provide an independent public-item
         # inventory: helper blocks have no item, while the emblem has no block.
-        cls.public_ids = {
+        cls.public_block_ids = {
             path.stem
             for path in (DAEDALON_ASSETS / "models/item").glob("*.json")
             if (DAEDALON_ASSETS / f"blockstates/{path.stem}.json").is_file()
         }
-        cls.public_refs = {f"daedalon:{block_id}" for block_id in cls.public_ids}
-        cls.resolved: dict[str, frozenset[str]] = {}
+        cls.selector_ids = {
+            path.stem for path in (DAEDALON_ASSETS / "models/item").glob("*_olympian_god_statue.json")
+        }
+        cls.public_ids = cls.public_block_ids | cls.selector_ids
+        cls.public_refs = {f"daedalon:{item_id}" for item_id in cls.public_ids}
+        cls.block_refs = {f"daedalon:{block_id}" for block_id in cls.public_block_ids}
+        cls.selector_refs = {f"daedalon:{item_id}" for item_id in cls.selector_ids}
+        cls.resolved: dict[tuple[str, str], frozenset[str]] = {}
 
-    def members(self, tag: str, visiting: tuple[str, ...] = ()) -> frozenset[str]:
-        self.assertIn(tag, self.tags["items"], f"Missing tag: {tag}")
+    def members(self, tag: str, visiting: tuple[str, ...] = (), kind: str = "items") -> frozenset[str]:
+        self.assertIn(tag, self.tags[kind], f"Missing {kind} tag: {tag}")
         self.assertNotIn(tag, visiting, f"Cyclic tag reference: {(*visiting, tag)}")
-        if tag in self.resolved:
-            return self.resolved[tag]
+        key = (kind, tag)
+        if key in self.resolved:
+            return self.resolved[key]
         values: set[str] = set()
-        for value in self.tags["items"][tag]["values"]:
+        for value in self.tags[kind][tag]["values"]:
             self.assertIsInstance(value, str, (tag, value))
             if value.startswith("#"):
                 self.assertTrue(value.startswith("#daedalon:"), (tag, value))
-                values.update(self.members(value.removeprefix("#daedalon:"), (*visiting, tag)))
+                values.update(self.members(value.removeprefix("#daedalon:"), (*visiting, tag), kind))
             else:
-                self.assertIn(value, self.public_refs, (tag, value))
+                self.assertIn(value, self.public_refs if kind == "items" else self.block_refs, (tag, value))
                 values.add(value)
         result = frozenset(values)
-        self.resolved[tag] = result
+        self.resolved[key] = result
         return result
 
     def test_tag_graph_has_parity_and_only_finite_public_memberships(self) -> None:
-        self.assertEqual(4678, len(self.public_refs))
-        self.assertEqual(self.tags["blocks"], self.tags["items"])
-        self.assertEqual(self.public_refs, self.members("daedalon_blocks"))
+        self.assertEqual(4678, len(self.block_refs))
+        self.assertEqual(56, len(self.selector_refs))
+        self.assertEqual(4734, len(self.public_refs))
+        self.assertEqual(self.block_refs, self.members("daedalon_blocks"))
+        self.assertEqual(self.public_refs, self.members("daedalon_items"))
+        for name in self.tags["blocks"]:
+            self.assertEqual(self.members(name, kind="blocks"), self.members(name) & self.block_refs, name)
         for name, tag in self.tags["items"].items():
             with self.subTest(tag=name):
                 self.assertIs(tag["replace"], False)
@@ -57,7 +68,7 @@ class SearchTagSafetyTests(unittest.TestCase):
         for name in ("decor", "decoration", "decorative", "architecture"):
             with self.subTest(tag=name):
                 self.assertEqual(self.public_refs, self.members(name))
-        for name in ("emblem", "fountain_basin_part", "capital_part", "monopteros_part"):
+        for name in ("emblem", "fountain_basin_part", "capital_part", "monopteros_part", "obeliskos_part"):
             self.assertNotIn(f"daedalon:{name}", self.public_refs)
 
     def test_material_categories_keep_stone_and_metals_separate(self) -> None:
@@ -71,7 +82,8 @@ class SearchTagSafetyTests(unittest.TestCase):
         for kind in ("blocks", "items"):
             for name, expected in (("stone", stone), ("metal", metal)):
                 shared = load_json(DAEDALON_DATA / f"../material/tags/{kind}/{name}.json")
-                self.assertEqual(expected, set(shared["values"]), (kind, name))
+                self.assertEqual(expected if kind == "items" else expected & self.block_refs,
+                                 set(shared["values"]), (kind, name))
         self.assertTrue(all(value.split(":")[1].startswith(("bronze_", "silver_")) for value in metal))
         self.assertFalse(any(value.split(":")[1].startswith(("bronze_", "silver_")) for value in stone))
         self.assertEqual(5, len(self.members("white")))
@@ -81,7 +93,7 @@ class SearchTagSafetyTests(unittest.TestCase):
         aged = frozenset(
             ref for ref in self.public_refs if "_aged_" in ref or ref.endswith("_aged")
         )
-        self.assertEqual(2268, len(aged))
+        self.assertEqual(2295, len(aged))
         for name in ("aged", "weathered", "worn"):
             self.assertEqual(aged, self.members(name), name)
         self.assertTrue(aged <= self.members("stone"))
@@ -151,7 +163,7 @@ class SearchTagSafetyTests(unittest.TestCase):
                     keys = set(vocabulary[f"{subject}_{form}"])
                     self.assertTrue({subject, *aliases} <= keys, (subject, form))
         self.assertEqual(1456, len(all_olympians))
-        self.assertEqual(all_olympians, self.members("olympian"))
+        self.assertEqual(all_olympians | self.selector_refs, self.members("olympian"))
 
         for subject, alias in (("helios", "sol"), ("heracles", "hercules"),
                                ("heracles", "herakles"), ("phaeton", "phaethon")):
@@ -163,7 +175,7 @@ class SearchTagSafetyTests(unittest.TestCase):
         self.assertFalse(self.members("helios") & self.members("olympian"))
         self.assertFalse(self.members("phaeton") & self.members("olympian"))
         self.assertEqual(
-            all_olympians | self.members("helios") | self.members("heracles"),
+            all_olympians | self.members("helios") | self.members("heracles") | self.selector_refs,
             self.members("deity"),
         )
         self.assertEqual(self.members("deity"), self.members("god"))

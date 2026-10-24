@@ -54,8 +54,10 @@ class MetalDecorSafetyTests(unittest.TestCase):
             tags = DAEDALON_DATA / f"tags/{kind}"
             bronze = set(load_json(tags / "bronze.json")["values"])
             silver = set(load_json(tags / "silver.json")["values"])
-            self.assertEqual(70, len(bronze))
-            self.assertEqual(67, len(silver))
+            self.assertEqual(71 if kind == "items" else 70, len(bronze))
+            self.assertEqual(68 if kind == "items" else 67, len(silver))
+            self.assertEqual(kind == "items", "daedalon:bronze_olympian_god_statue" in bronze)
+            self.assertEqual(kind == "items", "daedalon:silver_olympian_god_statue" in silver)
             self.assertEqual(bronze | silver, set(load_json(DAEDALON_DATA / f"../material/tags/{kind}/metal.json")["values"]))
             self.assertTrue((bronze | silver).isdisjoint(load_json(DAEDALON_DATA / f"../material/tags/{kind}/stone.json")["values"]))
             self.assertFalse((tags / "gold.json").exists())

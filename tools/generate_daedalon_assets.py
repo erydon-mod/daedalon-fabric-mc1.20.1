@@ -323,6 +323,14 @@ CANONICAL_STATUE_FAMILIES = {
     "lion_couchant": ("Lion Couchant", "Liegender Löwe", "León Recostado"),
     "lion_statant": ("Lion Statant", "Stehender Löwe", "León Erguido"),
 }
+# Placement selectors are items, never additional world-block or OBJ families.
+OLYMPIAN_GOD_ITEM_FAMILY = "olympian_god_statue"
+OLYMPIAN_GOD_CYCLE = (
+    "zeus", "hera", "poseidon", "demeter", "athena", "apollo", "artemis",
+    "ares", "aphrodite", "hephaestus", "hermes", "dionysus",
+)
+
+
 OLYMPIAN_STATUE_FAMILIES = (
     "zeus",
     "aphrodite",
@@ -443,6 +451,23 @@ def add_metals(family: str, block_ids: list[str]) -> list[str]:
         if family in families:
             block_ids.append(metal_block_id(family, metal))
     return block_ids
+
+
+def olympian_god_item_ids() -> list[str]:
+    return [
+        f"{material}{'_aged' if aged else ''}_{OLYMPIAN_GOD_ITEM_FAMILY}"
+        for material in MATERIALS for aged in (False, True)
+    ] + [f"{metal}_{OLYMPIAN_GOD_ITEM_FAMILY}" for metal in (BRONZE_MATERIAL, SILVER_MATERIAL)]
+
+
+def generate_olympian_god_items(check: bool, changed: list[Path]) -> None:
+    # One replaceable placeholder until Oliver supplies the final Creative image.
+    write(RESOURCES / f"assets/{NAMESPACE}/models/item/olympian_god.json",
+          json_bytes({"parent": "minecraft:item/generated", "textures": {"layer0": f"{NAMESPACE}:item/emblem"}}),
+          check, changed)
+    for item_id in olympian_god_item_ids():
+        write(RESOURCES / f"assets/{NAMESPACE}/models/item/{item_id}.json",
+              json_bytes({"parent": f"{NAMESPACE}:item/olympian_god"}), check, changed)
 
 
 def family_block_ids(family: str) -> list[str]:
@@ -890,6 +915,13 @@ def translated_name(language: str, family: str, material: str, aged: bool) -> st
         else "Blanco" if material == WHITE_FINISH and language == "es_es"
         else material.capitalize()
     )
+    if family == OLYMPIAN_GOD_ITEM_FAMILY:
+        if language == "de_de":
+            return f"{material_name} {'Gealterte ' if aged else ''}Olympische Götterstatue"
+        if language == "es_es":
+            return f"{material_name} Estatua de Dios Olímpico{' Envejecida' if aged else ''}"
+        return f"{material_name} {'Aged ' if aged else ''}Olympian God Statue"
+
     if family == "spartan":
         if language == "de_de":
             name = "Spartanische Promachos-Statue"
@@ -966,6 +998,9 @@ def translated_name(language: str, family: str, material: str, aged: bool) -> st
 # players search compound tags using either the English or translated wording.
 SEARCH_WORD_TRANSLATIONS = {
     # word: (German, Spanish); proper names retain their established spelling.
+    "cycle": ("Reihenfolge", "ciclo"),
+    "cycling": ("wechselnd", "cíclico"),
+    "sequence": ("Abfolge", "secuencia"),
     "honed": ("geschliffen", "apomazado"),
     "polished": ("poliert", "pulido"),
     "mirror": ("Spiegelglanz", "espejo"),
@@ -1202,7 +1237,7 @@ def search_vocabulary(
     def common_terms(ids: list[str]) -> list[str]:
         refs = {f"{NAMESPACE}:{block_id}" for block_id in ids}
         return sorted(tag for tag, values in resolved.items()
-                      if tag != "daedalon_blocks" and refs and refs <= values)
+                      if tag not in ("daedalon_blocks", "daedalon_items") and refs and refs <= values)
 
     material_ids = {
         material: [block_id for ids in ids_by_family.values()
@@ -1210,9 +1245,9 @@ def search_vocabulary(
         for index, material in enumerate(MATERIALS)
     }
     material_ids.update({
-        metal: [metal_block_id(family, metal) for family in families
-                if family in metal_families]
-        for metal, metal_families in METAL_FAMILIES.items()
+        metal: [item_id for ids in ids_by_family.values() for item_id in ids
+                if item_id.startswith(metal + "_")]
+        for metal in METAL_FAMILIES
     })
     material_ids[WHITE_FINISH] = [
         architectural_finish_block_id(family, WHITE_FINISH)
@@ -1365,6 +1400,23 @@ def generate_languages(
                 entries[f"block.{NAMESPACE}.{block_id}"] = translated_name(
                     language, family, WHITE_FINISH, False
                 )
+        entries[f"catalogue.daedalon.design.{OLYMPIAN_GOD_ITEM_FAMILY}"] = translated_name(
+            language, OLYMPIAN_GOD_ITEM_FAMILY, MATERIALS[0], False
+        ).removeprefix(MATERIALS[0].capitalize() + " ")
+        for material in (*MATERIALS, BRONZE_MATERIAL, SILVER_MATERIAL):
+            for aged in ((False, True) if material in MATERIALS else (False,)):
+                item_id = f"{material}{'_aged' if aged else ''}_{OLYMPIAN_GOD_ITEM_FAMILY}"
+                entries[f"item.{NAMESPACE}.{item_id}"] = translated_name(
+                    language, OLYMPIAN_GOD_ITEM_FAMILY, material, aged
+                )
+        entries["tooltip.daedalon.olympian_god.cycle"] = (
+            "Places the twelve Olympian statues in order, then repeats.",
+            "Platziert die zwölf olympischen Götterstatuen der Reihe nach und beginnt danach erneut.",
+            "Coloca las doce estatuas olímpicas en orden y luego vuelve a empezar.",
+        )[language_index]
+        entries["tooltip.daedalon.olympian_god.next"] = (
+            "Next: %s", "Als Nächstes: %s", "Siguiente: %s",
+        )[language_index]
         write(
             RESOURCES / f"assets/{NAMESPACE}/lang/{language}.json",
             json_bytes(entries),
@@ -1758,17 +1810,44 @@ def generate_tags(
         for material_tag in MATERIAL_TAGS[material]:
             direct_tags.setdefault(material_tag, []).extend(material_refs)
 
-    for kind in ("blocks", "items"):
-        for name, values in sorted(direct_tags.items()):
+    # Item-only selectors participate in the same vocabulary and material tags,
+    # without creating invalid block tags, mining rules or loot tables.
+    selector_ids = olympian_god_item_ids()
+    selector_refs = [f"{NAMESPACE}:{item_id}" for item_id in selector_ids]
+    item_direct = {name: list(values) for name, values in direct_tags.items()}
+    item_relations = {name: list(values) for name, values in relation_tags.items()}
+    item_direct[OLYMPIAN_GOD_ITEM_FAMILY] = selector_refs
+    item_direct["daedalon_items"] = all_refs + selector_refs
+    selector_stone = [ref for ref in selector_refs if not ref.split(":", 1)[1].startswith(("bronze_", "silver_"))]
+    selector_metal = [ref for ref in selector_refs if ref not in selector_stone]
+    item_direct.setdefault("statue", []).extend(selector_refs)
+    item_direct["stone"].extend(selector_stone)
+    item_direct["aged"].extend(ref for ref in selector_stone if "_aged_" in ref)
+    for material in (*MATERIALS, BRONZE_MATERIAL, SILVER_MATERIAL):
+        refs = [ref for ref in selector_refs if ref.startswith(f"{NAMESPACE}:{material}_")]
+        item_direct.setdefault(material, []).extend(refs)
+        if material in MATERIALS:
+            for material_tag in MATERIAL_TAGS[material]:
+                item_direct.setdefault(material_tag, []).extend(refs)
+    for tag in ("decor", "decoration", "decorative", "architecture"):
+        item_relations[tag] = [f"#{NAMESPACE}:daedalon_items"]
+    for tag in ("olympian", "greek", "deity"):
+        item_relations.setdefault(tag, []).append(f"#{NAMESPACE}:{OLYMPIAN_GOD_ITEM_FAMILY}")
+    for tag in ("olympian_god", "statue_cycle", "cycle", "cycling", "sequence"):
+        item_relations[tag] = [f"#{NAMESPACE}:{OLYMPIAN_GOD_ITEM_FAMILY}"]
+    for kind, direct, relations in (("blocks", direct_tags, relation_tags), ("items", item_direct, item_relations)):
+        for name, values in sorted(direct.items()):
             write_tag(NAMESPACE, kind, name, values, check, changed)
-        for name, values in sorted(relation_tags.items()):
+        for name, values in sorted(relations.items()):
             write_tag(NAMESPACE, kind, name, values, check, changed)
-
-    for kind in ("blocks", "items"):
-        write_tag("material", kind, "stone", stone_refs, check, changed)
-        write_tag("material", kind, "metal", metal_refs, check, changed)
+    write_tag("material", "blocks", "stone", stone_refs, check, changed)
+    write_tag("material", "blocks", "metal", metal_refs, check, changed)
+    write_tag("material", "items", "stone", stone_refs + selector_stone, check, changed)
+    write_tag("material", "items", "metal", metal_refs + selector_metal, check, changed)
     write_tag("minecraft", "blocks", "mineable/pickaxe", all_refs, check, changed)
-    vocabulary = search_vocabulary(families, ids_by_family, direct_tags, relation_tags)
+    vocabulary = search_vocabulary((*families, OLYMPIAN_GOD_ITEM_FAMILY),
+                                  ids_by_family | {OLYMPIAN_GOD_ITEM_FAMILY: selector_ids},
+                                  item_direct, item_relations)
     write(RESOURCES / f"assets/{NAMESPACE}/search_vocabulary.json",
           json_bytes(vocabulary), check, changed)
     return vocabulary
@@ -1783,6 +1862,7 @@ def generate(families: tuple[str, ...], check: bool = False) -> list[Path]:
     remove_obsolete_unpublished_ceiling_panels(check, changed)
     remove_creative_only_loot(families, check, changed)
     generate_models_and_loot(families, check, changed)
+    generate_olympian_god_items(check, changed)
     vocabulary = generate_tags(families, check, changed)
     generate_languages(families, check, changed, vocabulary)
     return changed

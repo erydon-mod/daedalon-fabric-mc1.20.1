@@ -16,6 +16,7 @@
   "client": [
     "client.StoneFinishResourceManagerMixin",
     "client.BlockItemSearchMixin",
+    "client.ItemSearchMixin",
     "client.BlockBreakParticlesMixin",
     "client.FinialBreakParticlesMixin",
     "client.BuiltChunkMixin",

@@ -1,6 +1,5 @@
 package com.oliver.daedalon.client.search;
 
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -24,7 +23,6 @@ public final class DaedalonSearchVocabulary {
     public static DaedalonSearchIndex index() { return IndexHolder.INDEX; }
 
     public static List<String> terms(ItemStack stack) {
-        if (!(stack.getItem() instanceof BlockItem)) return List.of();
         Identifier id = Registries.ITEM.getId(stack.getItem());
         if (id == null || !"daedalon".equals(id.getNamespace())) return List.of();
 

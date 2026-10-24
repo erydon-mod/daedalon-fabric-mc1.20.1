@@ -67,8 +67,13 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
                 for path in (DAEDALON_ASSETS / "models/item").glob("*.json")
             },
         )
+        selector_files = {
+            f"{block_id.removesuffix('_zeus_statue')}_olympian_god_statue.json"
+            for block_id in block_ids if block_id.endswith("_zeus_statue")
+        }
+        self.assertEqual(56, len(selector_files))
         self.assertEqual(
-            expected_files | {"emblem.json"},
+            expected_files | selector_files | {"emblem.json", "olympian_god.json"},
             {
                 path.name
                 for path in (DAEDALON_ASSETS / "models/item").glob("*.json")
@@ -358,6 +363,8 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         for kind in ("blocks", "items"):
             tag_root = DAEDALON_DATA / f"tags/{kind}"
             bronze_refs = {f"daedalon:{block_id}" for block_id in bronze_ids}
+            if kind == "items":
+                bronze_refs.add("daedalon:bronze_olympian_god_statue")
             self.assertEqual(
                 bronze_refs,
                 set(load_json(tag_root / "bronze.json")["values"]),

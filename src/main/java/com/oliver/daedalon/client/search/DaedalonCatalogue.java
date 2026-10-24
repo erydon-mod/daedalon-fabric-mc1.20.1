@@ -100,6 +100,6 @@ public final class DaedalonCatalogue {
                          Map<String, List<ItemStack>> forms, Map<String, List<ItemStack>> materials) { }
 
     private static final class Holder {
-        private static final Groups GROUPS = group(DaedalonSearchVocabulary.index(), ModItems.blockItems());
+        private static final Groups GROUPS = group(DaedalonSearchVocabulary.index(), ModItems.catalogueItems());
     }
 }

@@ -25,7 +25,7 @@ public final class ModItemGroups {
                         .icon(() -> new ItemStack(ModItems.EMBLEM))
                         .displayName(Text.translatable("itemGroup.daedalon"))
                         .entries((context, entries) ->
-                                ModItems.blockItems().forEach(entries::add))
+                                ModItems.catalogueItems().forEach(entries::add))
                         .build()
         );
     }
