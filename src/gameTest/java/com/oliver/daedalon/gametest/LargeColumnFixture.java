@@ -17,6 +17,8 @@ public final class LargeColumnFixture implements ModInitializer {
     public static final IntProperty X = IntProperty.of("part_x", 0, 1);
     public static final IntProperty Z = IntProperty.of("part_z", 0, 1);
     public static final EnumProperty<Section> SECTION = EnumProperty.of("section", Section.class);
+    public static final EnumProperty<Part> PART = EnumProperty.of("part", Part.class);
+    public static final EnumProperty<Capital> CAPITAL = EnumProperty.of("capital", Capital.class);
     public static Block BLOCK;
     public static Block SQUARE;
     public static Block GOTHIC;
@@ -30,9 +32,29 @@ public final class LargeColumnFixture implements ModInitializer {
                     }
                 });
         SQUARE = Registry.register(Registries.BLOCK, new Identifier("erydon", "test_column_square"),
-                new Block(AbstractBlock.Settings.create().strength(1.5F)));
+                new FixtureColumn());
         GOTHIC = Registry.register(Registries.BLOCK, new Identifier("erydon", "test_column_gothic"),
-                new Block(AbstractBlock.Settings.create().strength(1.5F)));
+                new FixtureColumn());
+    }
+
+    private static final class FixtureColumn extends Block {
+        private FixtureColumn() {
+            super(AbstractBlock.Settings.create().strength(1.5F));
+            setDefaultState(getDefaultState().with(PART, Part.CAPITAL).with(CAPITAL, Capital.GEORGIAN));
+        }
+        @Override protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+            builder.add(PART, CAPITAL);
+        }
+    }
+
+    public enum Part implements StringIdentifiable {
+        CAPITAL, PILLAR;
+        @Override public String asString() { return name().toLowerCase(java.util.Locale.ROOT); }
+    }
+
+    public enum Capital implements StringIdentifiable {
+        GEORGIAN, NONE;
+        @Override public String asString() { return name().toLowerCase(java.util.Locale.ROOT); }
     }
 
     public enum Section implements StringIdentifiable {

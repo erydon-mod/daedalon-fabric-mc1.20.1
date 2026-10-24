@@ -239,10 +239,11 @@ public class CapitalBlock extends Block {
                         0.5 + halfX, 1.0, 0.5 + halfZ
                 );
                 for (CapitalTransition transition : CapitalTransition.values()) {
-                    double half = transition.baseWidth() * 0.5;
-                    VoxelShape source = transition == CapitalTransition.NONE ? capital : VoxelShapes.union(capital,
-                            VoxelShapes.cuboid(0.5 - half, 0, 0.5 - half, 0.5 + half, CapitalTransition.HEIGHT, 0.5 + half));
-                    for (Size size : Size.values()) for (int y = 0; y < 2; y++)
+                    for (Size size : Size.values()) {
+                        var profile = transition == CapitalTransition.NONE ? null : transition.profile(size);
+                        VoxelShape source = transition == CapitalTransition.NONE ? capital : VoxelShapes.union(capital,
+                                VoxelShapes.cuboid(profile.minX(), 0, profile.minZ(), profile.maxX(), CapitalTransition.HEIGHT, profile.maxZ()));
+                        for (int y = 0; y < 2; y++)
                         for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
                             double scale = size == Size.DOUBLE ? 2 : 1;
                             final int cellX = x, cellY = y, cellZ = z;
@@ -252,6 +253,7 @@ public class CapitalBlock extends Block {
                                             box.maxX * scale - cellX, box.maxY * scale - cellY, box.maxZ * scale - cellZ))
                                             .reduce(VoxelShapes.empty(), VoxelShapes::union);
                         }
+                    }
                 }
             }
         }

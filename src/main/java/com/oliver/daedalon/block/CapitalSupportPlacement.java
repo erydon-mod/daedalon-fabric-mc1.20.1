@@ -16,7 +16,7 @@ import net.minecraft.world.BlockView;
 
 /** Optional ERYDON support detection without a compile-time dependency on ERYDON. */
 public final class CapitalSupportPlacement {
-    private static final java.util.Map<Block, CapitalTransition> TRANSITIONS =
+    private static final java.util.Map<Block, ColumnSupport> TRANSITIONS =
             new java.util.concurrent.ConcurrentHashMap<>();
     private CapitalSupportPlacement() {}
 
@@ -24,23 +24,41 @@ public final class CapitalSupportPlacement {
     public static BlockState fitted(BlockState capital, BlockView world, BlockPos anchor) {
         int width = capital.get(CapitalBlock.SIZE) == CapitalBlock.Size.DOUBLE ? 2 : 1;
         BlockState first = world.getBlockState(anchor.down());
-        CapitalTransition transition = TRANSITIONS.computeIfAbsent(first.getBlock(), CapitalSupportPlacement::transitionFor);
+        ColumnSupport column = TRANSITIONS.computeIfAbsent(first.getBlock(), CapitalSupportPlacement::transitionFor);
+        CapitalTransition transition = column.transition(first);
         if (transition != CapitalTransition.NONE) {
             for (int x = 0; x < width; x++) for (int z = 0; z < width; z++) {
-                if (x + z > 0 && !world.getBlockState(anchor.add(x, -1, z)).isOf(first.getBlock())) {
-                    transition = CapitalTransition.NONE;
+                if (x + z > 0) {
+                    BlockState next = world.getBlockState(anchor.add(x, -1, z));
+                    if (!next.isOf(first.getBlock()) || column.transition(next) != transition) transition = CapitalTransition.NONE;
                 }
             }
         }
         return capital.with(CapitalBlock.SUPPORT, transition);
     }
 
-    private static CapitalTransition transitionFor(Block block) {
+    private static ColumnSupport transitionFor(Block block) {
         Identifier id = Registries.BLOCK.getId(block);
-        if (!"erydon".equals(id.getNamespace())) return CapitalTransition.NONE;
-        if (id.getPath().endsWith("_column_square")) return CapitalTransition.SQUARE;
-        if (id.getPath().endsWith("_column_gothic")) return CapitalTransition.GOTHIC;
-        return CapitalTransition.NONE;
+        CapitalTransition head = !"erydon".equals(id.getNamespace()) ? CapitalTransition.NONE
+                : id.getPath().endsWith("_column_square") ? CapitalTransition.SQUARE
+                : id.getPath().endsWith("_column_gothic") ? CapitalTransition.GOTHIC : CapitalTransition.NONE;
+        return new ColumnSupport(head, block.getStateManager().getProperty("part"),
+                block.getStateManager().getProperty("capital"));
+    }
+
+    private record ColumnSupport(CapitalTransition head, Property<?> part, Property<?> capital) {
+        CapitalTransition transition(BlockState state) {
+            if (head == CapitalTransition.NONE) return head;
+            boolean shaft = part != null && !"capital".equals(namedValue(state, part))
+                    || capital != null && "none".equals(namedValue(state, capital));
+            return !shaft ? head : head == CapitalTransition.SQUARE
+                    ? CapitalTransition.SQUARE_SHAFT : CapitalTransition.GOTHIC_SHAFT;
+        }
+    }
+
+    private static String namedValue(BlockState state, Property<?> property) {
+        Object value = state.getEntries().get(property);
+        return value instanceof StringIdentifiable named ? named.asString() : "";
     }
 
     public static ItemPlacementContext redirect(ItemPlacementContext context, Block block) {

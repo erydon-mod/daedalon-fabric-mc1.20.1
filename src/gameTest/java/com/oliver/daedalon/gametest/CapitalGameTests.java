@@ -206,7 +206,7 @@ public final class CapitalGameTests {
             if (!(block instanceof CapitalBlock capital)) continue;
             count++;
             int variants = capital.style() == CapitalBlock.Style.GREEK_IONIC ? 4 : 2;
-            context.assertTrue(block.getStateManager().getStates().size() == variants * 2 * 3, "Orientation, size and automatic support are the capital states");
+            context.assertTrue(block.getStateManager().getStates().size() == variants * 2 * CapitalTransition.values().length, "Orientation, size and automatic support are the capital states");
             context.assertTrue(DaedalonDebugProperties.ordered(block.getStateManager().getProperties()).size() == 2,
                     "Only size and orientation are player controls");
             BlockState original = block.getDefaultState();
@@ -304,12 +304,17 @@ public final class CapitalGameTests {
         int checked = 0;
         for (Block block : Registries.BLOCK) {
             if (!(block instanceof CapitalBlock capital)) continue;
-            for (CapitalTransition transition : java.util.List.of(CapitalTransition.SQUARE, CapitalTransition.GOTHIC)) {
-                Block support = transition == CapitalTransition.SQUARE ? LargeColumnFixture.SQUARE : LargeColumnFixture.GOTHIC;
+            for (CapitalTransition transition : java.util.List.of(CapitalTransition.SQUARE, CapitalTransition.GOTHIC,
+                    CapitalTransition.SQUARE_SHAFT, CapitalTransition.GOTHIC_SHAFT)) {
+                Block support = transition == CapitalTransition.SQUARE || transition == CapitalTransition.SQUARE_SHAFT
+                        ? LargeColumnFixture.SQUARE : LargeColumnFixture.GOTHIC;
+                BlockState supportState = support.getDefaultState();
+                if (transition == CapitalTransition.SQUARE_SHAFT || transition == CapitalTransition.GOTHIC_SHAFT)
+                    supportState = supportState.with(LargeColumnFixture.CAPITAL, LargeColumnFixture.Capital.NONE);
                 for (CapitalBlock.Size size : CapitalBlock.Size.values()) {
                     int width = size == CapitalBlock.Size.DOUBLE ? 2 : 1;
                     for (int x = 0; x < width; x++) for (int z = 0; z < width; z++)
-                        world.setBlockState(anchor.add(x, -1, z), support.getDefaultState(), Block.NOTIFY_ALL);
+                        world.setBlockState(anchor.add(x, -1, z), supportState, Block.NOTIFY_ALL);
                     world.setBlockState(anchor, capital.getDefaultState().with(CapitalBlock.SIZE, size), Block.NOTIFY_ALL);
                     BlockState fitted = world.getBlockState(anchor);
                     context.assertTrue(fitted.get(CapitalBlock.SUPPORT) == transition, "Commands and structure-style placements must fit automatically");
@@ -320,8 +325,8 @@ public final class CapitalGameTests {
                             "A tool rotation must preserve the automatic support profile");
                     var shape = capital.shapeForCell(fitted, 0, 0, 0);
                     context.assertTrue(shape == capital.shapeForCell(fitted, 0, 0, 0), "Collar shapes must be cached across lookups");
-                    context.assertTrue(shape.getMin(Direction.Axis.X) <= width * (0.5 - transition.baseWidth() * 0.5)
-                                    && shape.getMax(Direction.Axis.X) >= width * (0.5 + transition.baseWidth() * 0.5),
+                    context.assertTrue(shape.getMin(Direction.Axis.X) <= width * transition.profile(size).minX()
+                                    && shape.getMax(Direction.Axis.X) >= width * transition.profile(size).maxX(),
                             "Selection and collision must include the collar footprint");
                     world.setBlockState(anchor, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
                     for (int x = 0; x < width; x++) for (int z = 0; z < width; z++)
@@ -330,7 +335,7 @@ public final class CapitalGameTests {
                 }
             }
         }
-        context.assertTrue(checked == 1296, "Test six capital styles, 54 finishes, two sizes and both support types");
+        context.assertTrue(checked == 2592, "Test six capital styles, 54 finishes, two sizes and all head/shaft supports");
         context.complete();
     }
 
@@ -361,5 +366,118 @@ public final class CapitalGameTests {
         context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SUPPORT) == CapitalTransition.GOTHIC,
                 "Existing placements must refit from a local downward neighbour update");
         context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void actualErydonColumnControlsRefitHeadsAndBareShaftsWithoutReplacingTheCapital(TestContext context) {
+        if (!hasRealErydon(context)) { context.complete(); return; }
+        var world = context.getWorld();
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(3, 4, 3));
+        var capital = (CapitalBlock) Registries.BLOCK.get(new net.minecraft.util.Identifier("daedalon", "aganite_tuscan_capital"));
+        var player = new WarningPlayer(world.getServer(), world);
+        for (String form : java.util.List.of("square", "gothic")) {
+            Block column = Registries.BLOCK.get(new net.minecraft.util.Identifier("erydon", "aganite_column_" + form));
+            context.assertTrue(!column.getDefaultState().isAir(), "The real ERYDON column must be installed");
+            world.setBlockState(anchor.down(2), column.getDefaultState(), Block.NOTIFY_ALL);
+            world.setBlockState(anchor.down(), column.getDefaultState(), Block.NOTIFY_ALL);
+            world.setBlockState(anchor, capital.getDefaultState(), Block.NOTIFY_ALL);
+            CapitalTransition head = form.equals("square") ? CapitalTransition.SQUARE : CapitalTransition.GOTHIC;
+            CapitalTransition shaft = form.equals("square") ? CapitalTransition.SQUARE_SHAFT : CapitalTransition.GOTHIC_SHAFT;
+            context.assertTrue(named(world.getBlockState(anchor.down()), "part").equals("capital"), "Real stack must expose its top capital part");
+            context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SUPPORT) == head, "Existing native heads must retain the original support value");
+            for (int click = 0; click < 3 && !named(world.getBlockState(anchor.down()), "capital").equals("none"); click++) {
+                clickColumn(column, world, anchor.down(), player);
+            }
+            context.assertTrue(named(world.getBlockState(anchor.down()), "capital").equals("none"), "Side clicks must reach the real Capital None option");
+            context.assertTrue(world.getBlockState(anchor).isOf(capital)
+                            && world.getBlockState(anchor).get(CapitalBlock.SUPPORT) == shaft,
+                    "The existing Daedalon capital must refit immediately after the real None control");
+            // A stored pillar is bare regardless of its remembered capital choice.
+            BlockState pillar = withNamed(world.getBlockState(anchor.down()), "part", "pillar");
+            pillar = withNamed(pillar, "capital", "georgian");
+            context.assertTrue(com.oliver.daedalon.block.CapitalSupportPlacement.fitted(
+                    capital.getDefaultState(), new SingleSupportView(world, anchor.down(), pillar), anchor)
+                    .get(CapitalBlock.SUPPORT) == shaft, "A real bare pillar must not be mistaken for its remembered head style");
+            clickColumn(column, world, anchor.down(), player);
+            context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SUPPORT) == head,
+                    "Cycling back to the native head must restore the legacy profile without a tick");
+            world.setBlockState(anchor, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+            world.setBlockState(anchor.down(), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+            world.setBlockState(anchor.down(2), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+        }
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void actualLargeErydonSupportsRequireFourMatchingProfilesNotOnlyTheSameBlock(TestContext context) {
+        if (!hasRealErydon(context)) { context.complete(); return; }
+        var world = context.getWorld();
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(3, 4, 3));
+        var capital = (CapitalBlock) Registries.BLOCK.get(new net.minecraft.util.Identifier("daedalon", "aganite_tuscan_capital"));
+        var player = new WarningPlayer(world.getServer(), world);
+        for (String form : java.util.List.of("square", "gothic")) {
+            Block column = Registries.BLOCK.get(new net.minecraft.util.Identifier("erydon", "aganite_column_" + form));
+            CapitalTransition head = form.equals("square") ? CapitalTransition.SQUARE : CapitalTransition.GOTHIC;
+            CapitalTransition shaft = form.equals("square") ? CapitalTransition.SQUARE_SHAFT : CapitalTransition.GOTHIC_SHAFT;
+            for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
+                world.setBlockState(anchor.add(x, -2, z), column.getDefaultState(), Block.NOTIFY_ALL);
+                world.setBlockState(anchor.add(x, -1, z), column.getDefaultState(), Block.NOTIFY_ALL);
+            }
+            world.setBlockState(anchor, capital.getDefaultState().with(CapitalBlock.SIZE, CapitalBlock.Size.DOUBLE), Block.NOTIFY_ALL);
+            context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SUPPORT) == head, "Four native heads must retain their existing large collar");
+            int changed = 0;
+            for (int x = 1; x >= 0; x--) for (int z = 1; z >= 0; z--) {
+                BlockPos support = anchor.add(x, -1, z);
+                for (int click = 0; click < 3 && !named(world.getBlockState(support), "capital").equals("none"); click++)
+                    clickColumn(column, world, support, player);
+                changed++;
+                context.assertTrue(world.getBlockState(anchor).get(CapitalBlock.SUPPORT)
+                                == (changed == 4 ? shaft : CapitalTransition.NONE),
+                        "Every helper must refresh profile agreement when a real supporting column changes");
+            }
+            for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++)
+                context.assertTrue(world.getBlockState(anchor.add(x, -1, z)).isOf(column), "Mixed-profile rejection must not rely on different block identities");
+            world.setBlockState(anchor, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+            for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
+                world.setBlockState(anchor.add(x, -1, z), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+                world.setBlockState(anchor.add(x, -2, z), Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+            }
+        }
+        context.complete();
+    }
+
+    private static void clickColumn(Block column, ServerWorld world, BlockPos pos, WarningPlayer player) {
+        column.onUse(world.getBlockState(pos), world, pos, player, Hand.MAIN_HAND,
+                new BlockHitResult(new Vec3d(pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ()), Direction.NORTH, pos, false));
+    }
+
+    private static boolean hasRealErydon(TestContext context) {
+        boolean loaded = net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("erydon");
+        context.assertTrue(loaded || !Boolean.getBoolean("daedalon.test.requireErydon"),
+                "This integration run requires the real ERYDON companion");
+        return loaded;
+    }
+
+    private static String named(BlockState state, String propertyName) {
+        var property = state.getBlock().getStateManager().getProperty(propertyName);
+        Object value = state.getEntries().get(property);
+        return value instanceof net.minecraft.util.StringIdentifiable named ? named.asString() : "";
+    }
+
+    private static <T extends Comparable<T>> BlockState withNamed(BlockState state, net.minecraft.state.property.Property<T> property, String value) {
+        return state.with(property, property.parse(value).orElseThrow());
+    }
+
+    private static BlockState withNamed(BlockState state, String property, String value) {
+        return withNamed(state, state.getBlock().getStateManager().getProperty(property), value);
+    }
+
+    private record SingleSupportView(net.minecraft.world.BlockView delegate, BlockPos position, BlockState state)
+            implements net.minecraft.world.BlockView {
+        @Override public net.minecraft.block.entity.BlockEntity getBlockEntity(BlockPos pos) { return delegate.getBlockEntity(pos); }
+        @Override public BlockState getBlockState(BlockPos pos) { return pos.equals(position) ? state : delegate.getBlockState(pos); }
+        @Override public net.minecraft.fluid.FluidState getFluidState(BlockPos pos) { return getBlockState(pos).getFluidState(); }
+        @Override public int getHeight() { return delegate.getHeight(); }
+        @Override public int getBottomY() { return delegate.getBottomY(); }
     }
 }

@@ -530,6 +530,13 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             positionTransform = GroundScaleTransform.forState(state);
         }
 
+        if (state.getBlock() instanceof CapitalBlock
+                && state.get(CapitalBlock.SUPPORT) != com.oliver.daedalon.block.CapitalTransition.NONE) {
+            // The collar resolves its own owner-cell world phase, independently of the carving's existing UVs.
+            context.pushTransform(worldTextureTransforms[0]);
+            try { CapitalTransitionMesh.emit(state.get(CapitalBlock.SUPPORT), state.get(CapitalBlock.SIZE), pos, context); }
+            finally { context.popTransform(); }
+        }
         int worldPhaseIndex = friezeParts != null ? 0 : worldTexturePhase.index(pos.getX(), pos.getY(), pos.getZ());
         context.pushTransform(worldTextureTransforms[worldPhaseIndex]);
         boolean positionPushed=false;
@@ -538,12 +545,6 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 // The base is already fitted in owner coordinates; only its material phase remains.
                 var fit=FinialSupport.fit(state,finial.style());
                 if(fit.mounted()) FinialBaseMesh.forFit(fit).outputTo(context.getEmitter());
-            }
-            if (state.getBlock() instanceof CapitalBlock
-                    && state.get(CapitalBlock.SUPPORT) != com.oliver.daedalon.block.CapitalTransition.NONE) {
-                // The collar already occupies owner coordinates; retain the shared material/normal pipeline.
-                CapitalTransitionMesh.forState(state.get(CapitalBlock.SUPPORT), state.get(CapitalBlock.SIZE))
-                        .outputTo(context.getEmitter());
             }
             if(positionTransform!=null) { context.pushTransform(positionTransform); positionPushed=true; }
             if (friezeParts != null && state.getBlock() instanceof FriezeBlock) {
