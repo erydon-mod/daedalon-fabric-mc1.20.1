@@ -20,7 +20,7 @@ individual tokens: `block | finial` can find finials, while `-block` keeps decor
 
 | Browser | Explicit tag search example | Group navigation |
 | --- | --- | --- |
-| REI 12.1.785 | `#daedalon:daedalon_blocks` | Collapsible design groups and subsets |
+| REI 12.1.785 | `$daedalon:daedalon_blocks` | Collapsible design groups and subsets |
 | JEI 15.16.2.73 | `$daedalon:daedalon_blocks` | Design information pages |
 | EMI 1.1.22 | `#daedalon:daedalon_blocks` | Native aliases and tags |
 
@@ -50,6 +50,18 @@ JUnit checks cover parsed-token policy, cache immutability, inversion, explicit
 query bypasses, thread isolation and real bundled family membership. Generated
 asset checks cover every public item, correct material tags and all three
 locales. These checks do not replace applying the mixins in a real client.
+
+REI 12.1.785 was checked in the Daedalon 1.0.0 + ERYDON 2.0.0 client on
+24 October 2026, with JEI and EMI confirmed absent. All 84 design groups
+registered automatically; the catalogue also supplied 15 form and 31 material
+subsets. With ordinary tag matching enabled, `block` and `blocks` matched no
+Daedalon decorations, `$daedalon:daedalon_blocks` matched all 4,678 items,
+and `finial`, `block | finial` and `finial -block` each matched 280. Jupiter
+matched 112 Zeus statues/busts, White Gothic matched the two white architectural
+designs, and vanilla Quartz Block remained searchable. The visible REI panel
+also showed the Gothic Frieze group with all 57 finishes. This is REI search and
+grouping proof; JEI/EMI live acceptance and shader/material appearance remain
+separate checks.
 
 For live acceptance, enable each browser's default tag search, then check
 `block`, `blocks`, `block | finial`, `finial -block`, the explicit tag query in
