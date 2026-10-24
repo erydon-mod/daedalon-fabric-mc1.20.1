@@ -58,7 +58,7 @@ public final class DaedalonStoneFinishLabelsPack implements ResourcePack {
                 String material = Character.toUpperCase(entry.material().charAt(0)) + entry.material().substring(1);
                 String prefix = material + " ";
                 if (name != null && label != null && name.startsWith(prefix)) {
-                    labels.addProperty(key, prefix + label + " " + name.substring(prefix.length()));
+                    labels.addProperty(key, name + " (" + label + ")");
                 }
             });
             if (labels.size() > 0) resources.put(new Identifier("daedalon", "lang/" + language + ".json"),

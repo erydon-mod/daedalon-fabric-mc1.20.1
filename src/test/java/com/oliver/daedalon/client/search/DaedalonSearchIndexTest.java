@@ -157,7 +157,7 @@ final class DaedalonSearchIndexTest {
                 assertFalse(bundled.terms(path).contains("daedalon items"));
                 assertEquals(material.equals("glacium"), bundled.isStandardStone(path));
             }
-            assertTrue(bundled.terms("glacium_olympian_god_statue").containsAll(List.of("honed", "polished", "mirror")));
+            assertTrue(bundled.terms("glacium_olympian_god_statue").containsAll(List.of("honed", "polished", "ganosis", "mirror")));
             for (String path : List.of("unknown_olympian_god_statue", "glacium_olympian_god_statue_aged",
                     "olympian_god_statue", "obeliskos_part")) assertTrue(bundled.terms(path).isEmpty(), path);
         }

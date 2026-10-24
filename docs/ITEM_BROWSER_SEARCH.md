@@ -39,13 +39,13 @@ Spanish. White is a plain nonmetal finish; bronze and silver are metal finishes.
 The five architectural designs receive white, bronze and silver finish search terms without
 acquiring aged/weathered aliases.
 
-Fresh named stone also accepts `honed`, `polished` and `mirror`, including their
-German and Spanish translations, in all four search surfaces. All three words
+Fresh named stone also accepts `honed`, `polished`, `ganosis` and legacy `mirror`, including their
+German and Spanish translations, in all four search surfaces. These finish words
 remain useful after changing the stone's finish. Aged stone, plain white and
 metal finishes do not acquire these aliases.
 
 When ERYDON is installed, fresh stone display names use its active per-stone
-finish, for example `Glacium Honed Hedra` or `Latmion Mirror Zeus Statue`.
+finish, for example `Glacium Hedra (Honed)` or `Latmion Zeus Statue (Ganosis)`.
 The names follow the same captured launch preference as rendering, so saved
 setting changes require a restart. Standalone Daedalon retains its original
 names. The optional adapter uses ERYDON's actual eligibility classifier,
@@ -128,20 +128,24 @@ They also appear under Statues and the matching material groups. They share the
 same Creative, REI, JEI and EMI vocabulary, including Olympian, god, cycle and
 sequence, while plain block searches exclude them.
 
-The selector places the existing statues; it does not register another world
-block or OBJ family. The `daedalon_blocks` tag retains the 4,678 placed-decor
+The selector places the existing statues without registering another world
+block. Its item-only medallion shares one OBJ family across every finish.
+The `daedalon_blocks` tag retains the 4,678 placed-decor
 items, while `daedalon_items` includes all 4,734 catalogue items. Item-only tags
 include the selectors in relevant material, finish and sculpture categories
-without adding invalid block or mining entries. Their current Creative image is
-one shared Daedalon emblem placeholder, ready for Oliver's final image.
+without adding invalid block or mining entries. Their Creative image uses
+Oliver's approved medallion entirely in the selected stone or metal finish,
+with the shared 128px cache and a 20-degree turn around Y.
 
-Fresh stone selector names use the same captured Honed, Polished or Mirror
+Fresh stone selector names use the same captured Honed, Polished or Ganosis
 setting as the statues they place. The cached language overlay now covers both
 block and item translation keys; aged, white and metal names keep their own
 finish descriptions. Changing finish preferences still requires a restart.
 
 Oliver approved the existing finish names in-game on 24 October 2026 with
 Daedalon and ERYDON, REI only, Complementary Unbound and the Collection 64x pack.
-The historical 84-group results above describe that earlier catalogue. The new
-selector group and its item-only Creative aliases still need their own live
-viewer acceptance; this approval does not cover the full JEI/EMI or shader matrix.
+The historical 84-group results above describe that earlier catalogue. The
+current REI run passed with 4,734 items, 85 design groups and 130 subsets,
+including the selector group and its item-only Creative aliases. Oliver
+approved all pre-publication edits on 24 October 2026. REI was the live review
+browser; this does not claim a separate live JEI/EMI or wider shader matrix.

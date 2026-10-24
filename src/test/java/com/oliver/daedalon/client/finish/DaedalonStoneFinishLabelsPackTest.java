@@ -42,13 +42,12 @@ class DaedalonStoneFinishLabelsPackTest {
             JsonObject labels = labels(pack, language);
             assertEquals(2295, labels.size());
             var original = languages.get(language);
+            assertEquals("Ganosis", original.get("finish.daedalon.mirror"));
             for (var pair : Map.of("glacium_hedra", "honed", "latmion_zeus_statue", "polished",
                     "statue_spartan_promachos_glacium", "mirror", "glacium_olympian_god_statue", "mirror").entrySet()) {
                 String key = DaedalonStoneFinishLabelsPack.translationKey(original, pair.getKey());
                 String name = original.get(key);
-                int boundary = name.indexOf(' ') + 1;
-                String expected = name.substring(0, boundary) + original.get("finish.daedalon." + pair.getValue())
-                        + " " + name.substring(boundary);
+                String expected = name + " (" + original.get("finish.daedalon." + pair.getValue()) + ")";
                 assertEquals(expected, labels.get(key).getAsString(), language + ": " + pair.getKey());
             }
             for (String path : List.of("glacium_aged_hedra", "white_gothic_wall_panel",

@@ -46,7 +46,7 @@ final class DaedalonSearchTextTest {
             index.add(path, DaedalonSearchVocabulary.appendTerms("", vocabulary.terms(path)));
         }
         index.build();
-        for (String word : List.of("honed", "polished", "mirror")) {
+        for (String word : List.of("honed", "polished", "ganosis", "mirror")) {
             assertEquals(Set.of("glacium_hedra", "statue_spartan_promachos_glacium"),
                     Set.copyOf(index.findAll(word)), word);
         }

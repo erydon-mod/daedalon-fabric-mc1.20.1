@@ -50,6 +50,7 @@ public final class DaedalonSearchIndex {
         if (isStandardStone(entry)) {
             keys.add("honed");
             keys.add("polished");
+            keys.add("ganosis");
             keys.add("mirror");
         }
         if (entry.aged()) {

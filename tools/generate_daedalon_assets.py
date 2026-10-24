@@ -1014,6 +1014,7 @@ SEARCH_WORD_TRANSLATIONS = {
     "honed": ("geschliffen", "apomazado"),
     "polished": ("poliert", "pulido"),
     "mirror": ("Spiegelglanz", "espejo"),
+    "ganosis": ("Ganosis", "Ganosis"),
     "acanthus": ("Akanthus", "acanto"),
     "aged": ("gealtert", "envejecido"),
     "agate": ("Achat", "ágata"),
@@ -1301,7 +1302,7 @@ def generate_languages(
 ) -> None:
     for language in ("en_us", "de_de", "es_es"):
         entries = dict(STATIC_LANGUAGE_ENTRIES[language])
-        search_tags = {"aged", "weathered", "worn", "daedalon", "deadalon", "honed", "polished", "mirror"}
+        search_tags = {"aged", "weathered", "worn", "daedalon", "deadalon", "honed", "polished", "mirror", "ganosis"}
         for group in search_vocabulary.values():
             search_tags.update(tag for tags in group.values() for tag in tags)
         for tag in sorted(search_tags):
@@ -1310,7 +1311,7 @@ def generate_languages(
         for finish, labels in {
             "honed": ("Honed", "Geschliffen", "Apomazado"),
             "polished": ("Polished", "Poliert", "Pulido"),
-            "mirror": ("Mirror", "Spiegelglanz", "Espejo"),
+            "mirror": ("Ganosis", "Ganosis", "Ganosis"),
         }.items():
             entries[f"finish.daedalon.{finish}"] = labels[language_index]
         for key, labels in {
