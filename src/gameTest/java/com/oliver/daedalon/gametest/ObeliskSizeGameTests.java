@@ -15,6 +15,8 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.OperatorEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -31,27 +33,33 @@ import net.minecraft.world.RaycastContext;
 /** Real shared-size, helper collision, blocked editing and placement regressions. */
 public final class ObeliskSizeGameTests {
     @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
-    public void allFinishesKeepExistingSizesAndShareCompleteFiveBlockInteractionCells(TestContext context) {
+    public void allFinishesUseThreeSizesAndShareCompleteFiveBlockInteractionCells(TestContext context) {
         ServerWorld world = context.getWorld();
         BlockPos anchor = context.getAbsolutePos(new BlockPos(3, 2, 3));
         int variants = 0;
         for (Block block : ModBlocks.blocks()) {
             if (!(block instanceof SizedDecorBlock)) continue;
             context.assertTrue(block.getDefaultState().get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.MEDIUM,
-                    "Existing obelisks must still default to two blocks");
-            context.assertTrue(block.getStateManager().getStates().size() == 4, "Every finish needs all four sizes");
-            for (var size : new SizedDecorBlock.Size[]{SizedDecorBlock.Size.SMALL, SizedDecorBlock.Size.MEDIUM, SizedDecorBlock.Size.LARGE}) {
+                    "Obelisks must default to the three-block Medium size");
+            context.assertTrue(block.getStateManager().getStates().size() == 3, "Every finish needs exactly three sizes");
+            var saved = NbtHelper.fromBlockState(block.getDefaultState());
+            saved.getCompound("Properties").putString("size", "extra_large");
+            var migrated = NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), saved);
+            context.assertTrue(migrated.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE
+                            && "large".equals(NbtHelper.fromBlockState(migrated).getCompound("Properties").getString("size")),
+                    "Unpublished Extra Large saves must read and resave as Large without a fourth choice");
+            for (var size : new SizedDecorBlock.Size[]{SizedDecorBlock.Size.SMALL, SizedDecorBlock.Size.MEDIUM}) {
                 BlockState state = block.getDefaultState().with(SizedDecorBlock.SIZE, size);
                 var collision = state.getCollisionShape(world, anchor);
-                context.assertTrue(collision == SizedDecorBlock.fullShape(size), "Legacy sizes retain their exact cached collision");
+                context.assertTrue(collision == SizedDecorBlock.fullShape(size), "Smaller sizes reuse their complete cached collision");
                 context.assertTrue(Math.abs(collision.getMax(Direction.Axis.Y) - 3 * size.scale()) < 1e-6,
-                        "Existing obelisk heights changed");
+                        "Small and Medium must use their approved two- and three-block heights");
             }
-            BlockState xl = block.getDefaultState().with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.EXTRA_LARGE);
+            BlockState xl = block.getDefaultState().with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.LARGE);
             clear(world, anchor);
             world.setBlockState(anchor, xl, Block.NOTIFY_ALL);
-            context.assertTrue(SizedDecorBlock.fullShape(SizedDecorBlock.Size.EXTRA_LARGE).getMax(Direction.Axis.Y) == 5,
-                    "Extra Large must be exactly five blocks high");
+            context.assertTrue(SizedDecorBlock.fullShape(SizedDecorBlock.Size.LARGE).getMax(Direction.Axis.Y) == 5,
+                    "Large must be exactly five blocks high");
             context.assertTrue(DecorAssemblySelection.cells(world, anchor).size() == 45,
                     "Axiom assembly selection must include the owner and all44 real interaction cells");
             double volume = 0;
@@ -64,7 +72,7 @@ public final class ObeliskSizeGameTests {
                 context.assertTrue(collision == ObeliskPartsGeometry.collision(offset.getX(), offset.getY(), offset.getZ()),
                         "All materials must reuse the same cached local collision");
                 context.assertTrue(state.getOutlineShape(world, pos) == collision,
-                        "XL outline rays must stay in the same local cell as physical collision");
+                        "Large outline rays must stay in the same local cell as physical collision");
                 var bounds = collision.getBoundingBox();
                 context.assertTrue(bounds.minX >= 0 && bounds.maxX <= 1 && bounds.minY == 0 && bounds.maxY == 1
                                 && bounds.minZ >= 0 && bounds.maxZ <= 1,
@@ -74,7 +82,7 @@ public final class ObeliskSizeGameTests {
                                 && state.getOpacity(null, pos) == 0 && state.isTransparent(null, pos),
                         "Invisible cells must be debris-free and safe for asynchronous lighting");
             }
-            double width = SizedDecorBlock.fullShape(SizedDecorBlock.Size.EXTRA_LARGE).getBoundingBox().getXLength();
+            double width = SizedDecorBlock.fullShape(SizedDecorBlock.Size.LARGE).getBoundingBox().getXLength();
             context.assertTrue(Math.abs(volume - width * width * 5) < 1e-9,
                     "The 45 cells must cover the complete scaled profile without duplicated collision volume");
             variants++;
@@ -90,19 +98,19 @@ public final class ObeliskSizeGameTests {
         BlockPos anchor = context.getAbsolutePos(new BlockPos(3, 2, 3));
         clear(world, anchor);
         var block = requireObelisk("aganite_obeliskos_monument");
-        BlockState large = block.getDefaultState().with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.LARGE);
-        world.setBlockState(anchor, large, Block.NOTIFY_ALL);
+        BlockState medium = block.getDefaultState().with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.MEDIUM);
+        world.setBlockState(anchor, medium, Block.NOTIFY_ALL);
         BlockPos obstruction = anchor.add(1, 4, 0);
         world.setBlockState(obstruction, Blocks.STONE.getDefaultState(), Block.NOTIFY_ALL);
         ServerPlayerEntity player = operator(context);
         player.setStackInHand(Hand.MAIN_HAND, Items.DEBUG_STICK.getDefaultStack());
         editSize(player, anchor);
-        context.assertTrue(world.getBlockState(anchor) == large && world.getBlockState(obstruction).isOf(Blocks.STONE),
+        context.assertTrue(world.getBlockState(anchor) == medium && world.getBlockState(obstruction).isOf(Blocks.STONE),
                 "Blocked enlargement must retain the original size and preserve neighbouring blocks");
         world.setBlockState(obstruction, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         editSize(player, anchor);
-        context.assertTrue(world.getBlockState(anchor).get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.EXTRA_LARGE,
-                "A clear enlargement must reach Extra Large");
+        context.assertTrue(world.getBlockState(anchor).get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE,
+                "A clear enlargement must reach the five-block Large size");
         BlockPos rim = anchor.add(1, 4, 0);
         context.assertTrue(DecorAssemblySelection.cells(world, rim).size() == 45,
                 "Selection from an upper overhanging cell must resolve the complete assembly");
@@ -124,12 +132,12 @@ public final class ObeliskSizeGameTests {
         editSize(player, rim);
         context.assertTrue(world.getBlockState(anchor).get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.SMALL,
                 "Debugging an upper cell must edit its owner and wrap to Small");
-        context.assertTrue(DecorAssemblySelection.cells(world, anchor).isEmpty(), "Legacy small obelisks stay owner-only");
+        context.assertTrue(DecorAssemblySelection.cells(world, anchor).isEmpty(), "Small obelisks stay owner-only");
         for (BlockPos offset : ObeliskPartsGeometry.offsets()) if (!offset.equals(BlockPos.ORIGIN)) {
             context.assertTrue(world.getBlockState(anchor.add(offset)).isAir(), "Shrinking must remove every owned helper");
         }
         BlockPos high = new BlockPos(anchor.getX(), world.getTopY() - 4, anchor.getZ());
-        context.assertTrue(!SizedDecorBlock.canChangeSize(world, high, large.with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.EXTRA_LARGE)),
+        context.assertTrue(!SizedDecorBlock.canChangeSize(world, high, medium.with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.LARGE)),
                 "The complete five-block model must fit inside world height");
         clear(world, anchor);
         context.complete();
@@ -143,11 +151,11 @@ public final class ObeliskSizeGameTests {
         BlockPos wet = anchor.add(1, 0, 0);
         world.setBlockState(wet, Blocks.WATER.getDefaultState(), Block.NOTIFY_ALL);
         BlockState first = requireObelisk("aganite_obeliskos_monument").getDefaultState()
-                .with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.EXTRA_LARGE);
+                .with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.LARGE);
         world.setBlockState(anchor, first, Block.NOTIFY_ALL);
         context.assertTrue(world.getFluidState(wet).getFluid() == Fluids.WATER, "A partial wet edge must preserve surrounding water");
         BlockState second = requireObelisk("glacium_aged_obeliskos_monument").getDefaultState()
-                .with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.EXTRA_LARGE);
+                .with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.LARGE);
         world.setBlockState(anchor, second, Block.NOTIFY_ALL);
         context.assertTrue(world.getBlockState(anchor) == second && DecorAssemblySelection.cells(world, anchor).size() == 45,
                 "A material/finish swap must retain its new owner and all 45 cells");
@@ -165,14 +173,14 @@ public final class ObeliskSizeGameTests {
     }
 
     @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
-    public void nbtExtraLargePlacementValidatesBeforeWritingAndSupportsBlocksOnItsCrown(TestContext context) {
+    public void nbtLargePlacementValidatesBeforeWritingAndSupportsBlocksOnItsCrown(TestContext context) {
         ServerWorld world = context.getWorld();
         BlockPos anchor = context.getAbsolutePos(new BlockPos(3, 2, 3));
         clear(world, anchor);
         world.setBlockState(anchor.down(), Blocks.STONE.getDefaultState(), Block.NOTIFY_ALL);
         ServerPlayerEntity player = operator(context);
         ItemStack stack = requireObelisk("aganite_obeliskos_monument").asItem().getDefaultStack();
-        stack.getOrCreateSubNbt("BlockStateTag").putString("size", "extra_large");
+        stack.getOrCreateSubNbt("BlockStateTag").putString("size", "large");
         player.setStackInHand(Hand.MAIN_HAND, stack);
         BlockPos obstruction = anchor.add(1, 4, 0);
         world.setBlockState(obstruction, Blocks.STONE.getDefaultState(), Block.NOTIFY_ALL);
@@ -180,9 +188,12 @@ public final class ObeliskSizeGameTests {
                 Vec3d.ofCenter(anchor.down()).add(0, .5, 0), Direction.UP, anchor.down(), false));
         context.assertTrue(!stack.getItem().useOnBlock(use).isAccepted() && world.getBlockState(anchor).isAir(),
                 "Blocked NBT placement must fail before writing an owner");
+        stack.getOrCreateSubNbt("BlockStateTag").putString("size", "extra_large");
+        context.assertTrue(!stack.getItem().useOnBlock(use).isAccepted() && world.getBlockState(anchor).isAir(),
+                "The unpublished size alias must obey the same blocked-placement check");
         world.setBlockState(obstruction, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         context.assertTrue(stack.getItem().useOnBlock(use).isAccepted(), "A clear NBT-selected five-block obelisk must place");
-        context.assertTrue(world.getBlockState(anchor).get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.EXTRA_LARGE
+        context.assertTrue(world.getBlockState(anchor).get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE
                         && DecorAssemblySelection.cells(world, anchor).size() == 45,
                 "NBT placement must build the complete selected-size assembly");
         player.setStackInHand(Hand.MAIN_HAND, Items.STONE.getDefaultStack());

@@ -12,13 +12,15 @@ import static com.oliver.daedalon.client.model.obj.ObeliskSizeMesh.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 final class ObeliskSizeMeshTest {
-    @Test void existingSizesAndTheirTransformsRemainExactlyTheSame() throws Exception {
-        assertEquals(List.of("small", "medium", "large", "extra_large"),
+    @Test void threeSizeChoicesUseTheApprovedTwoThreeAndFiveBlockProfiles() throws Exception {
+        assertEquals(List.of("small", "medium", "large"),
                 java.util.Arrays.stream(SizedDecorBlock.Size.values()).map(SizedDecorBlock.Size::asString).toList());
-        assertEquals(5, 3F * SizedDecorBlock.Size.EXTRA_LARGE.scale());
+        assertEquals(2, 3F * SizedDecorBlock.Size.SMALL.scale());
+        assertEquals(3, 3F * SizedDecorBlock.Size.MEDIUM.scale());
+        assertEquals(5, 3F * SizedDecorBlock.Size.LARGE.scale());
         var type = Class.forName(ObjMeshBakedModel.class.getName() + "$SizedDecorTransform");
         var constructor = type.getDeclaredConstructor(float.class); constructor.setAccessible(true);
-        for (var size : new SizedDecorBlock.Size[]{SizedDecorBlock.Size.SMALL, SizedDecorBlock.Size.MEDIUM, SizedDecorBlock.Size.LARGE}) {
+        for (var size : new SizedDecorBlock.Size[]{SizedDecorBlock.Size.SMALL, SizedDecorBlock.Size.MEDIUM}) {
             Quad quad = new Quad();
             ((RenderContext.QuadTransform) constructor.newInstance(size.scale())).transform(quad.view);
             for (int i = 0; i < 4; i++) {

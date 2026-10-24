@@ -18,9 +18,14 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-/** A ground-anchored obelisk available at one-, two-, three- and five-block heights. */
+/** A ground-anchored obelisk with Small, Medium and Large heights of two, three and five blocks. */
 public final class SizedDecorBlock extends Block {
-    public static final EnumProperty<Size> SIZE = EnumProperty.of("size", Size.class);
+    public static final EnumProperty<Size> SIZE = new EnumProperty<>("size", Size.class, java.util.List.of(Size.values())) {
+        @Override public java.util.Optional<Size> parse(String name) {
+            // The unpublished four-size review build used this value for the same five-block model.
+            return super.parse("extra_large".equals(name) ? "large" : name);
+        }
+    };
     private static final VoxelShape[] SHAPES = createShapes();
 
     public SizedDecorBlock(Settings settings) {
@@ -33,13 +38,13 @@ public final class SizedDecorBlock extends Block {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return state.get(SIZE) == Size.EXTRA_LARGE ? ObeliskPartsGeometry.outline(0, 0, 0)
+        return state.get(SIZE) == Size.LARGE ? ObeliskPartsGeometry.outline(0, 0, 0)
                 : SHAPES[state.get(SIZE).ordinal()];
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return state.get(SIZE) == Size.EXTRA_LARGE ? ObeliskPartsGeometry.collision(0, 0, 0)
+        return state.get(SIZE) == Size.LARGE ? ObeliskPartsGeometry.collision(0, 0, 0)
                 : getOutlineShape(state, world, pos, context);
     }
 
@@ -51,16 +56,16 @@ public final class SizedDecorBlock extends Block {
 
     @Override public BlockState getPlacementState(ItemPlacementContext context) {
         var properties = context.getStack().getSubNbt("BlockStateTag");
-        if (properties != null && Size.EXTRA_LARGE.asString().equals(properties.getString("size"))) {
-            BlockState candidate = getDefaultState().with(SIZE, Size.EXTRA_LARGE);
+        if (properties != null && SIZE.parse(properties.getString("size")).orElse(Size.MEDIUM) == Size.LARGE) {
+            BlockState candidate = getDefaultState().with(SIZE, Size.LARGE);
             return canChangeSize(context.getWorld(), context.getBlockPos(), candidate) ? candidate : null;
         }
         return getDefaultState();
     }
 
-    /** Existing sizes retain their owner-only behaviour; the five-block model reserves its actual cells. */
+    /** Small and Medium retain their owner-only behaviour; the five-block model reserves its actual cells. */
     public static boolean canChangeSize(WorldAccess world, BlockPos anchor, BlockState state) {
-        if (state.get(SIZE) != Size.EXTRA_LARGE) return true;
+        if (state.get(SIZE) != Size.LARGE) return true;
         for (BlockPos offset : ObeliskPartsGeometry.offsets()) {
             BlockPos part = anchor.add(offset);
             if (world.isOutOfHeightLimit(part) || !world.getWorldBorder().contains(part)) return false;
@@ -75,20 +80,20 @@ public final class SizedDecorBlock extends Block {
 
     @Override public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState previous, boolean notify) {
         super.onBlockAdded(state, world, pos, previous, notify);
-        if (!world.isClient && !previous.isOf(this) && state.get(SIZE) == Size.EXTRA_LARGE) syncParts(world, pos, state);
+        if (!world.isClient && !previous.isOf(this) && state.get(SIZE) == Size.LARGE) syncParts(world, pos, state);
     }
 
     @Override public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState next, boolean moved) {
-        if (!world.isClient && (state.get(SIZE) == Size.EXTRA_LARGE
-                || next.getBlock() instanceof SizedDecorBlock && next.get(SIZE) == Size.EXTRA_LARGE)) {
+        if (!world.isClient && (state.get(SIZE) == Size.LARGE
+                || next.getBlock() instanceof SizedDecorBlock && next.get(SIZE) == Size.LARGE)) {
             if (next.getBlock() instanceof SizedDecorBlock) syncParts(world, pos, next);
-            else if (state.get(SIZE) == Size.EXTRA_LARGE) clearParts(world, pos);
+            else if (state.get(SIZE) == Size.LARGE) clearParts(world, pos);
         }
         super.onStateReplaced(state, world, pos, next, moved);
     }
 
     private static void syncParts(World world, BlockPos anchor, BlockState state) {
-        if (state.get(SIZE) != Size.EXTRA_LARGE) {
+        if (state.get(SIZE) != Size.LARGE) {
             clearParts(world, anchor);
             return;
         }
@@ -125,17 +130,16 @@ public final class SizedDecorBlock extends Block {
             double width = 0.758984466 * size.scale();
             result[size.ordinal()] = VoxelShapes.cuboid(
                     0.5 - width * 0.5, 0.0, 0.5 - width * 0.5,
-                    0.5 + width * 0.5, size == Size.EXTRA_LARGE ? 5.0 : 3.0 * size.scale(), 0.5 + width * 0.5
+                    0.5 + width * 0.5, size == Size.LARGE ? 5.0 : 3.0 * size.scale(), 0.5 + width * 0.5
             );
         }
         return result;
     }
 
     public enum Size implements StringIdentifiable {
-        SMALL("small", 1.0F / 3.0F),
-        MEDIUM("medium", 2.0F / 3.0F),
-        LARGE("large", 1.0F),
-        EXTRA_LARGE("extra_large", 5.0F / 3.0F);
+        SMALL("small", 2.0F / 3.0F),
+        MEDIUM("medium", 1.0F),
+        LARGE("large", 5.0F / 3.0F);
         private final String name;
         private final float scale;
         Size(String name, float scale) { this.name = name; this.scale = scale; }

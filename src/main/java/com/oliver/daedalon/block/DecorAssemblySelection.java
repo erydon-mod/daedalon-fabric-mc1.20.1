@@ -24,7 +24,7 @@ public final class DecorAssemblySelection {
         if (anchor == null) return List.of();
         BlockState owner = world.getBlockState(anchor);
         boolean dome = owner.getBlock() instanceof MonopterosBlock;
-        boolean obelisk = owner.getBlock() instanceof SizedDecorBlock && owner.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.EXTRA_LARGE;
+        boolean obelisk = owner.getBlock() instanceof SizedDecorBlock && owner.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE;
         if (!dome && !obelisk && !(owner.getBlock() instanceof FountainBasinBlock)) return List.of();
 
         int radius = dome ? MonopterosGeometry.RADIUS : obelisk ? ObeliskPartsGeometry.RADIUS : FountainBasinGeometry.PART_RADIUS;

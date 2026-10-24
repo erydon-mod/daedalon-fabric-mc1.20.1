@@ -37,9 +37,9 @@ public final class DecorPreviewGameTests {
                     context.assertTrue(box.minX == full.minX && box.minY == full.minY && box.minZ == full.minZ
                                     && box.maxX == full.maxX && box.maxY == full.maxY && box.maxZ == full.maxZ,
                             "Every obelisk preview must retain its complete body bounds");
-                    if (state.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.EXTRA_LARGE) {
+                    if (state.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE) {
                         context.assertTrue(box.getYLength() == 5 && box.getXLength() > 1,
-                                "Extra Large previews must include the five-block height and scaled overhang");
+                                "Large previews must include the five-block height and scaled overhang");
                     }
                 }
             }

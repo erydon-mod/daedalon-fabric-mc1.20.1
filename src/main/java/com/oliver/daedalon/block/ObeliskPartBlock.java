@@ -25,7 +25,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-/** Invisible XL-only interaction cells: no item, mesh, block entity or custom ticking. */
+/** Invisible Large-only interaction cells: no item, mesh, block entity or custom ticking. */
 public final class ObeliskPartBlock extends Block implements Waterloggable {
     public static final IntProperty OFFSET_X = IntProperty.of("offset_x", 0, 2);
     public static final IntProperty OFFSET_Y = IntProperty.of("offset_y", 0, 4);
@@ -49,7 +49,7 @@ public final class ObeliskPartBlock extends Block implements Waterloggable {
     public static BlockPos resolveAnchorPos(BlockView world, BlockPos pos, BlockState state) {
         BlockPos anchor = anchorPos(pos, state);
         BlockState owner = world.getBlockState(anchor);
-        return owner.getBlock() instanceof SizedDecorBlock && owner.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.EXTRA_LARGE ? anchor : null;
+        return owner.getBlock() instanceof SizedDecorBlock && owner.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE ? anchor : null;
     }
     public static boolean isOwnedBy(BlockState state, BlockPos pos, BlockPos anchor) {
         return state.getBlock() instanceof ObeliskPartBlock && anchorPos(pos, state).equals(anchor);

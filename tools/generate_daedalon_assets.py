@@ -801,7 +801,7 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
             }
         }
     if family in SIZED_DECOR_FAMILIES:
-        return {"variants": {f"size={size}": {"model": model} for size in ("small", "medium", "large", "extra_large")}}
+        return {"variants": {f"size={size}": {"model": model} for size in ("small", "medium", "large")}}
     if family in PLINTH_FAMILIES:
         return {
             "variants": {

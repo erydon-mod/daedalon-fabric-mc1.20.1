@@ -143,7 +143,6 @@ public final class DaedalonDebugProperties {
                 case "medium" -> 1;
                 case "large" -> 2;
                 case "double" -> 2;
-                case "extra_large" -> 3;
                 default -> 100;
             };
             case "width", "diameter", "pattern" -> Integer.parseInt(valueName);

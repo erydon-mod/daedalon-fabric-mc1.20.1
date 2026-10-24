@@ -8,9 +8,6 @@
     },
     "size=large": {
       "model": "daedalon:mesh/etruscus_obeliskos_monument"
-    },
-    "size=extra_large": {
-      "model": "daedalon:mesh/etruscus_obeliskos_monument"
     }
   }
 }

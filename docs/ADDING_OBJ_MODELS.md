@@ -153,7 +153,7 @@ Register IDs with material first and form last: for example
 `<material>_balanos_finial`, `<material>_aged_balanos_finial`, and
 `<material>_obeliskos_monument`. All five finials also register bronze and silver finishes using the existing shared mesh,
 texture and size transforms. Add only meaningful states: Krene has four
-facings, Obeliskos has sizes 1/2/3/5, while radial one-block decor has no state
+facings, Obeliskos has Small/Medium/Large sizes of 2/3/5 blocks, while radial one-block decor has no state
 properties. Record concept images without a matching mesh as unavailable rather
 than inventing geometry from the preview.
 

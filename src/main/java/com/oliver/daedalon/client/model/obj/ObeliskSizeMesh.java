@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-/** One repeat-safe five-block mesh per shared source; old model sizes use their original path. */
+/** One repeat-safe five-block mesh per shared source; the smaller sizes use their original path. */
 final class ObeliskSizeMesh {
     // The resulting mesh contains vertex data, never a reference back to its source key.
     // Old reload entries can therefore expire with the source's baked models.
@@ -25,7 +25,7 @@ final class ObeliskSizeMesh {
         var renderer = RendererAccess.INSTANCE.getRenderer();
         if (renderer == null) throw new IllegalStateException("No renderer while preparing the five-block obelisk");
         var builder = renderer.meshBuilder();
-        double scale = SizedDecorBlock.Size.EXTRA_LARGE.scale();
+        double scale = SizedDecorBlock.Size.LARGE.scale();
         source.forEach(quad -> {
             Vertex a = Vertex.read(quad, 0, scale), b = Vertex.read(quad, 1, scale);
             Vertex c = Vertex.read(quad, 2, scale), d = Vertex.read(quad, 3, scale);

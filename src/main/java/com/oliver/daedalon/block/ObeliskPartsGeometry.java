@@ -17,7 +17,7 @@ public final class ObeliskPartsGeometry {
 
     static {
         List<BlockPos> offsets = new ArrayList<>(45);
-        VoxelShape whole = SizedDecorBlock.fullShape(SizedDecorBlock.Size.EXTRA_LARGE);
+        VoxelShape whole = SizedDecorBlock.fullShape(SizedDecorBlock.Size.LARGE);
         for (int y = 0; y < HEIGHT; y++) for (int z = -1; z <= 1; z++) for (int x = -1; x <= 1; x++) {
             int index = index(x, y, z);
             double minX = Math.max(x, whole.getMin(Direction.Axis.X)) - x;

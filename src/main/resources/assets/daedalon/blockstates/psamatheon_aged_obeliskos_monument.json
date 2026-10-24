@@ -8,9 +8,6 @@
     },
     "size=large": {
       "model": "daedalon:mesh/psamatheon_aged_obeliskos_monument"
-    },
-    "size=extra_large": {
-      "model": "daedalon:mesh/psamatheon_aged_obeliskos_monument"
     }
   }
 }

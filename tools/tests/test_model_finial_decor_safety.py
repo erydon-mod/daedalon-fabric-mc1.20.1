@@ -112,7 +112,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
                     )
                 elif family == "obeliskos_monument":
                     self.assertEqual(
-                        {"size=small", "size=medium", "size=large", "size=extra_large"},
+                        {"size=small", "size=medium", "size=large"},
                         set(state["variants"]),
                     )
                 elif family in GENERATOR.FINIAL_FAMILIES:
@@ -194,9 +194,9 @@ class FinialDecorSafetyTests(unittest.TestCase):
         self.assertNotIn("EnumProperty", facing)
         self.assertNotIn("FacingDecorBlock.SIZE", baked)
         self.assertIn("rotationStepsFromSouth", facing)
-        self.assertIn('SMALL("small", 1.0F / 3.0F)', sized)
-        self.assertIn('MEDIUM("medium", 2.0F / 3.0F)', sized)
-        self.assertIn('LARGE("large", 1.0F)', sized)
+        self.assertIn('SMALL("small", 2.0F / 3.0F)', sized)
+        self.assertIn('MEDIUM("medium", 1.0F)', sized)
+        self.assertIn('LARGE("large", 5.0F / 3.0F)', sized)
 
         self.assertIn("isUpwardInwardSurface(centroid, geometricNormal)", baked)
         self.assertIn("INWARD_BOWL_MAX_RADIAL_DOT = -0.02F", baked)

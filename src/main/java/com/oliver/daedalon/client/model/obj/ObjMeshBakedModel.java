@@ -539,8 +539,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         } else if (state.getBlock() instanceof FacingDecorBlock) {
             positionTransform = FacingDecorTransform.forState(state);
         } else if (state.getBlock() instanceof SizedDecorBlock) {
-            if (state.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.EXTRA_LARGE) {
-                MonopterosRenderBounds.mark(pos, SizedDecorBlock.fullShape(SizedDecorBlock.Size.EXTRA_LARGE).getBoundingBox());
+            if (state.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE) {
+                MonopterosRenderBounds.mark(pos, SizedDecorBlock.fullShape(SizedDecorBlock.Size.LARGE).getBoundingBox());
             } else positionTransform = SizedDecorTransform.forState(state);
         } else if (state.getBlock() instanceof FountainBasinBlock) {
             positionTransform = BasinTransform.forState(state);
@@ -574,7 +574,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 FountainRaisedBaseMesh.emit(basin.style(), state.get(FountainBasinBlock.SIZE), pos, context);
             }
             if(positionTransform!=null) { context.pushTransform(positionTransform); positionPushed=true; }
-            if (state.getBlock() instanceof SizedDecorBlock && state.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.EXTRA_LARGE) {
+            if (state.getBlock() instanceof SizedDecorBlock && state.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE) {
                 ObeliskSizeMesh.forSource(mesh).outputTo(context.getEmitter());
             } else if (friezeParts != null && state.getBlock() instanceof FriezeBlock) {
                 friezeParts.emit(blockView, pos, state, context);
