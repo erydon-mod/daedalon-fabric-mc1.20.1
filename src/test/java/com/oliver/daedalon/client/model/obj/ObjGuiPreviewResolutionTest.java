@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import static org.junit.jupiter.api.Assertions.*;
 
 final class ObjGuiPreviewResolutionTest {
-    @Test void previewRasterUses256PixelsWhileInventoryRemains64() {
+    @Test void previewRasterUses256PixelsWhileInventoryUses128() {
         float[][] points = {{0,0,0},{1,0,0},{1,1,0},{0,1,0}};
         QuadView quad = (QuadView) Proxy.newProxyInstance(QuadView.class.getClassLoader(),
                 new Class<?>[]{QuadView.class}, (proxy, method, args) -> switch (method.getName()) {
@@ -31,9 +31,9 @@ final class ObjGuiPreviewResolutionTest {
         Transformation transform = new Transformation(new Vector3f(), new Vector3f(), new Vector3f(1));
         var inventory = ObjGuiIconTemplate.create(mesh, transform, 1, 1);
         var preview = ObjGuiIconTemplate.create(mesh, transform, 1, 1, 256);
-        assertEquals(64, inventory.resolution());
+        assertEquals(128, inventory.resolution());
         assertEquals(256, preview.resolution());
-        assertTrue(preview.coveredSampleCount() > inventory.coveredSampleCount() * 15);
+        assertTrue(preview.coveredSampleCount() > inventory.coveredSampleCount() * 3);
         assertFalse(preview.isCovered(0));
         assertTrue(preview.isCovered(128 * 256 + 128));
         assertTrue(preview.isCovered(240 * 256 + 240), "High-resolution raster must extend past the old 64px corner");

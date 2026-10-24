@@ -26,7 +26,7 @@ rendering remain unchanged. No entities or extra world blocks are created.
   protected, preventing churn in large selections. Pending drawing is submitted
   before recycling a texture slot. Resource reload releases the cache.
 - At most one new sharp image is generated per 50ms. While waiting, or when
-  the sharp cache is full, previews use the existing 64px inventory atlas.
+  the sharp cache is full, previews use the shared 128px inventory atlas.
 - Each image is one quad. Up to 1,024 decorations are shown per region render.
 - Preview opacity follows Axiom; rendering restores projection, model-view and
   framebuffer bindings. Optional mixins are skipped when Axiom is absent.

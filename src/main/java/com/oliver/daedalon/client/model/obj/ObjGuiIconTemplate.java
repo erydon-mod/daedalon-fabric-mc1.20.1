@@ -14,11 +14,10 @@ import org.joml.Vector3f;
  * dynamic icon atlas only when a particular material icon is first shown.
  */
 final class ObjGuiIconTemplate {
-    // Keep four times Minecraft's logical 16 px item resolution so fine OBJ
-    // details survive the final GUI reduction. One sample per output pixel
-    // retains the same 64x64 family projection and 4,096 material samples as
-    // the former 32 px / 2x path, so this does not restore per-item mesh work.
-    static final int ICON_RESOLUTION = 64;
+    // Eight times Minecraft's logical 16 px item resolution preserves fine OBJ
+    // details at larger GUI scales. Geometry is projected once per family;
+    // material colours are resolved lazily by the bounded background worker.
+    static final int ICON_RESOLUTION = 128;
     static final int SUPERSAMPLE = 1;
     static final int SAMPLE_RESOLUTION = ICON_RESOLUTION * SUPERSAMPLE;
     static final int FRAME_PADDING = SUPERSAMPLE;

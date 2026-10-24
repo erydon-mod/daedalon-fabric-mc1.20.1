@@ -22,6 +22,7 @@ class GuiItemPerformanceSafetyTests(unittest.TestCase):
         cls.rasterizer = (obj_root / "ObjGuiRasterizer.java").read_text(
             encoding="utf-8"
         )
+        cls.queue = (obj_root / "ObjGuiIconWorkQueue.java").read_text(encoding="utf-8")
         cls.plugin = (obj_root / "ObjMeshModelLoadingPlugin.java").read_text(
             encoding="utf-8"
         )
@@ -179,21 +180,46 @@ class GuiItemPerformanceSafetyTests(unittest.TestCase):
         capacity = cells_per_row * cells_per_row * max_pages
 
         self.assertEqual(2048, page_size)
-        self.assertEqual(64, icon_size)
-        self.assertEqual(5, max_pages)
-        self.assertEqual(64, icon_size * self.integer_constant(self.template, "SUPERSAMPLE"))
-        self.assertGreaterEqual(capacity, len(all_block_ids()))
+        self.assertEqual(128, icon_size)
+        self.assertEqual(22, max_pages)
+        self.assertEqual(128, icon_size * self.integer_constant(self.template, "SUPERSAMPLE"))
+        self.assertGreaterEqual(capacity, len(all_block_ids()) + 56)
         self.assertIn("nextCellIndex >= MAX_CACHED_ICONS", self.cache)
-        self.assertIn("cells.put(model, created)", self.cache)
-        self.assertIn("try (NativeImage stagedCell", self.cache)
+        self.assertIn("cells.put(result.key(), created)", self.cache)
         self.assertLess(
-            self.cache.index("page.copyCell(stagedCell, cellX, cellY)"),
-            self.cache.index("page.uploadCell(cellX, cellY)"),
+            self.cache.index("page.upload(strip, cellX, cellY)"),
+            self.cache.index("cells.put(result.key(), created)"),
         )
-        self.assertIn("NativeImageBackedTexture", self.cache)
+        self.assertIn("class IconAtlasTexture extends AbstractTexture", self.cache)
+        self.assertIn("TextureUtil.prepareImage(getGlId(), ATLAS_PAGE_SIZE, ATLAS_PAGE_SIZE)", self.cache)
+        self.assertIn("void setFilter(boolean bilinear, boolean mipmap)", self.cache)
+        self.assertIn("super.setFilter(true, false)", self.cache)
+        self.assertNotIn("new NativeImage(ATLAS_PAGE_SIZE", self.cache)
         self.assertNotIn("Framebuffer", self.cache)
         self.assertNotIn("ShaderProgram", self.cache)
         self.assertNotIn("VertexBuffer", self.cache)
+
+    def test_visible_requests_are_lazy_and_worker_upload_memory_is_bounded(self) -> None:
+        request = self.cache[
+            self.cache.index("private synchronized IconCell getOrCreate("):
+            self.cache.index("private ResourceEpoch resourceEpoch()")
+        ]
+        self.assertIn("work.request(model, () -> generateCell(model, epoch))", request)
+        for expensive in ("readTexture(", "sourceTexture(", "renderIcon(", "atlasPage(", ".upload("):
+            self.assertNotIn(expensive, request)
+        self.assertEqual(512, self.integer_constant(self.cache, "MAX_PENDING_ICONS"))
+        self.assertEqual(16, self.integer_constant(self.cache, "MAX_UPLOADS_PER_TICK"))
+        self.assertIn("ClientTickEvents.END_CLIENT_TICK.register", self.cache)
+        self.assertIn("UPLOAD_BUDGET_NANOS = 2_000_000L", self.cache)
+        self.assertIn("batch.size() < limit && processed < MAX_UPLOADS_PER_TICK", self.cache)
+        self.assertIn("Executors.newSingleThreadExecutor", self.cache)
+        self.assertIn("thread.setDaemon(true)", self.cache)
+        self.assertIn("pending.size() >= capacity", self.queue)
+        self.assertIn("request.generation() == generation", self.queue)
+        self.assertIn("close(result.value())", self.queue)
+        self.assertIn("close(value)", self.queue)
+        self.assertIn("work.reset()", self.cache)
+        self.assertIn("result.value().close()", self.cache)
 
     def test_icons_use_vanilla_lighting_and_display_transforms_are_complete(self) -> None:
         display_generator = REPO_ROOT / "tools/generate_obj_display_models.py"
@@ -209,7 +235,12 @@ class GuiItemPerformanceSafetyTests(unittest.TestCase):
         self.assertIn("texture.setFilter(true, false)", self.cache)
         self.assertNotIn("OUTLINE", self.cache)
         self.assertNotIn("gradeIconChannel", self.cache)
-        self.assertIn("return image.getColor(x, y)", self.cache)
+        self.assertIn("pixels[y * image.getWidth() + x] = image.getColor(x, y)", self.cache)
+        self.assertIn("return pixels[y * width + x]", self.cache)
+        self.assertIn("LINEAR_TO_SRGB[index]", self.cache)
+        # Explicit blur/clamp/mipmap/close upload flags preserve linear filtering,
+        # and ownership remains with the caller until upload completes.
+        self.assertIn("strip.getHeight(), true, false, false, false)", self.cache)
         self.assertNotIn("private static int blend(", self.cache)
 
         display_root = RESOURCES / "assets/daedalon/models/block/mesh"
@@ -245,7 +276,9 @@ class GuiItemPerformanceSafetyTests(unittest.TestCase):
         self.assertIn("ResourceReloadListenerKeys.TEXTURES", self.cache)
         self.assertIn("ResourceReloadListenerKeys.MODELS", self.cache)
         self.assertIn("textureManager.destroyTexture(page.id())", self.cache)
-        self.assertIn("sourceTexture.close()", self.cache)
+        self.assertIn("NativeImage image = NativeImage.read(input)", self.cache)
+        self.assertIn("resources = new ResourceEpoch(manager)", self.cache)
+        self.assertIn("work.reset()", self.cache)
         self.assertIn("failedModels.clear()", self.cache)
 
 

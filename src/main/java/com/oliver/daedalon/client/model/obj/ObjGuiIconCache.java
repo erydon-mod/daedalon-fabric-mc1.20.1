@@ -1,6 +1,8 @@
 package com.oliver.daedalon.client.model.obj;
 
 import com.oliver.daedalon.Daedalon;
+import com.mojang.blaze3d.platform.TextureUtil;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -14,6 +16,7 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -39,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 /**
  * Shared flat-icon cache for high-detail OBJ items. A complete family mesh is
@@ -49,15 +53,19 @@ import java.util.Set;
 public final class ObjGuiIconCache {
     private static final float UV_EPSILON = 1.0E-5F;
     private static final float[] SRGB_TO_LINEAR = createSrgbToLinearTable();
+    private static final int[] LINEAR_TO_SRGB = createLinearToSrgbTable();
     static final int ATLAS_PAGE_SIZE = 2048;
     static final int ICON_GUTTER = 1;
     static final int ICON_CELL_SIZE = ObjGuiIconTemplate.ICON_RESOLUTION + ICON_GUTTER * 2;
     static final int CELLS_PER_ROW = ATLAS_PAGE_SIZE / ICON_CELL_SIZE;
     static final int CELLS_PER_PAGE = CELLS_PER_ROW * CELLS_PER_ROW;
-    // Five lazily allocated 2048 px pages cover the complete 3,878-item catalogue
-    // at 64 px per icon (80 MiB only if every icon is requested).
-    static final int MAX_ATLAS_PAGES = 5;
+    // 225 cells/page: all 4,734 catalogue items fit in 22 pages. GPU storage is
+    // allocated only as visited (352 MiB worst case), without full CPU page copies.
+    static final int MAX_ATLAS_PAGES = 22;
     static final int MAX_CACHED_ICONS = CELLS_PER_PAGE * MAX_ATLAS_PAGES;
+    static final int MAX_PENDING_ICONS = 512;
+    static final int MAX_UPLOADS_PER_TICK = 16;
+    static final long UPLOAD_BUDGET_NANOS = 2_000_000L;
 
     private static final Identifier RELOAD_ID =
             new Identifier(Daedalon.MOD_ID, "obj_gui_icon_cache");
@@ -67,7 +75,12 @@ public final class ObjGuiIconCache {
     private final Map<ObjMeshBakedModel, IconCell> cells = new IdentityHashMap<>();
     private final Set<ObjMeshBakedModel> failedModels =
             Collections.newSetFromMap(new IdentityHashMap<>());
-    private final Map<Identifier, SourceTexture> sourceTextures = new LinkedHashMap<>();
+    private final ObjGuiIconWorkQueue<ObjMeshBakedModel, NativeImage> work =
+            new ObjGuiIconWorkQueue<>(Executors.newSingleThreadExecutor(task -> {
+                Thread thread = new Thread(task, "Daedalon icon colour worker");
+                thread.setDaemon(true);
+                return thread;
+            }), MAX_PENDING_ICONS);
     private final List<AtlasPage> pages = new ArrayList<>();
     private static final int MAX_PREVIEW_IMAGES = 128;
     private static final float[][] PREVIEW_QUAD = {
@@ -78,7 +91,7 @@ public final class ObjGuiIconCache {
     private final Set<ObjMeshBakedModel> failedPreviews = Collections.newSetFromMap(new IdentityHashMap<>());
     private long nextPreviewGeneration;
     private record PreviewImage(Identifier id, long usedAt) {}
-    private ResourceManager resourceManager;
+    private ResourceEpoch resources;
     private int nextCellIndex;
 
     private ObjGuiIconCache() {
@@ -89,6 +102,7 @@ public final class ObjGuiIconCache {
             return;
         }
         registered = true;
+        ClientTickEvents.END_CLIENT_TICK.register(client -> INSTANCE.uploadReadyIcons());
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(
                 new SimpleSynchronousResourceReloadListener() {
                     @Override
@@ -261,9 +275,9 @@ public final class ObjGuiIconCache {
             ObjGuiIconTemplate template = previewTemplates.computeIfAbsent(model.previewMesh(),
                     ignored -> model.createAxiomPreviewTemplate());
             if (previewTemplates.size() > 8) previewTemplates.remove(previewTemplates.keySet().iterator().next());
-            ResourceManager manager = MinecraftClient.getInstance().getResourceManager();
+            ResourceEpoch epoch = resourceEpoch();
             List<SourceTexture> materials = new ArrayList<>();
-            for (Identifier id : model.materialTextureIds()) materials.add(sourceTexture(manager, id));
+            for (Identifier id : model.materialTextureIds()) materials.add(sourceTexture(epoch, id));
             image = new NativeImage(256, 256, true);
             image.fillRect(0, 0, 256, 256, 0);
             // The projection already supplies its own transparent edge padding.
@@ -293,64 +307,113 @@ public final class ObjGuiIconCache {
 
     private synchronized IconCell getOrCreate(ObjMeshBakedModel model) {
         IconCell cached = cells.get(model);
-        if (cached != null) {
-            return cached;
-        }
-        if (failedModels.contains(model) || nextCellIndex >= MAX_CACHED_ICONS) {
-            return null;
-        }
+        if (cached != null) return cached;
+        if (failedModels.contains(model) || nextCellIndex >= MAX_CACHED_ICONS) return null;
+        ResourceEpoch epoch = resourceEpoch();
+        // Rendering only requests work. No PNG decoding, colour raster or GL upload here.
+        // Identity de-duplication also covers the flat fallback's second request.
+        work.request(model, () -> generateCell(model, epoch));
+        return null;
+    }
 
+    private ResourceEpoch resourceEpoch() {
+        if (resources == null) resources = new ResourceEpoch(MinecraftClient.getInstance().getResourceManager());
+        return resources;
+    }
+
+    private static NativeImage generateCell(ObjMeshBakedModel model, ResourceEpoch epoch) throws IOException {
+        List<SourceTexture> materials = new ArrayList<>(model.materialTextureIds().size());
+        for (Identifier id : model.materialTextureIds()) materials.add(sourceTexture(epoch, id));
+        NativeImage image = new NativeImage(ICON_CELL_SIZE, ICON_CELL_SIZE, true);
         try {
-            ResourceManager manager = resourceManager;
-            if (manager == null) {
-                manager = MinecraftClient.getInstance().getResourceManager();
-                resourceManager = manager;
-            }
-            List<SourceTexture> materials = new ArrayList<>(model.materialTextureIds().size());
-            for (Identifier textureId : model.materialTextureIds()) {
-                materials.add(sourceTexture(manager, textureId));
-            }
-
-            int pageIndex = nextCellIndex / CELLS_PER_PAGE;
-            int slotIndex = nextCellIndex % CELLS_PER_PAGE;
-            AtlasPage page = atlasPage(pageIndex);
-            int cellX = (slotIndex % CELLS_PER_ROW) * ICON_CELL_SIZE;
-            int cellY = (slotIndex / CELLS_PER_ROW) * ICON_CELL_SIZE;
-            try (NativeImage stagedCell = new NativeImage(ICON_CELL_SIZE, ICON_CELL_SIZE, true)) {
-                stagedCell.fillRect(0, 0, ICON_CELL_SIZE, ICON_CELL_SIZE, 0);
-                renderIcon(model, materials, stagedCell, 0, 0);
-                page.copyCell(stagedCell, cellX, cellY);
-            }
-            page.uploadCell(cellX, cellY);
-
-            float minU = (cellX + ICON_GUTTER) / (float) ATLAS_PAGE_SIZE;
-            float minV = (cellY + ICON_GUTTER) / (float) ATLAS_PAGE_SIZE;
-            float maxU = (cellX + ICON_GUTTER + ObjGuiIconTemplate.ICON_RESOLUTION)
-                    / (float) ATLAS_PAGE_SIZE;
-            float maxV = (cellY + ICON_GUTTER + ObjGuiIconTemplate.ICON_RESOLUTION)
-                    / (float) ATLAS_PAGE_SIZE;
-            IconCell created = new IconCell(page.id(), minU, minV, maxU, maxV);
-            cells.put(model, created);
-            nextCellIndex++;
-            return created;
+            image.fillRect(0, 0, ICON_CELL_SIZE, ICON_CELL_SIZE, 0);
+            renderIcon(model, materials, image, 0, 0);
+            return image; // Owned by the queue, then by the upload batch.
         } catch (IOException | RuntimeException exception) {
-            failedModels.add(model);
-            Daedalon.LOGGER.warn(
-                    "[Daedalon OBJ GUI] Unable to cache full-model icon for {}; using flat material icon fallback: {}",
-                    model.modelId(),
-                    exception.getMessage()
-            );
-            return null;
+            image.close();
+            throw exception;
         }
     }
 
-    private SourceTexture sourceTexture(ResourceManager manager, Identifier logicalTextureId)
-            throws IOException {
-        SourceTexture cached = sourceTextures.get(logicalTextureId);
-        if (cached != null) {
-            return cached;
+    /** Runs between frames on the client thread, never from an item draw. */
+    private synchronized void uploadReadyIcons() {
+        long started = System.nanoTime();
+        int processed = 0;
+        while (processed < MAX_UPLOADS_PER_TICK && nextCellIndex < MAX_CACHED_ICONS) {
+            int slot = nextCellIndex % CELLS_PER_PAGE;
+            int rowRemaining = CELLS_PER_ROW - slot % CELLS_PER_ROW;
+            int limit = Math.min(rowRemaining, MAX_UPLOADS_PER_TICK - processed);
+            List<ObjGuiIconWorkQueue.Completed<ObjMeshBakedModel, NativeImage>> batch = new ArrayList<>(limit);
+            while (batch.size() < limit && processed < MAX_UPLOADS_PER_TICK) {
+                if (processed > 0 && System.nanoTime() - started >= UPLOAD_BUDGET_NANOS) break;
+                var result = work.poll();
+                if (result == null) break;
+                processed++;
+                if (result.failure() != null) {
+                    iconFailed(result.key(), result.failure());
+                } else {
+                    batch.add(result);
+                }
+            }
+            if (batch.isEmpty()) return;
+            try (NativeImage strip = new NativeImage(batch.size() * ICON_CELL_SIZE, ICON_CELL_SIZE, true)) {
+                // Each source includes a zero-filled gutter. Merge consecutive cells into one upload.
+                for (int index = 0; index < batch.size(); index++) {
+                    batch.get(index).value().copyRect(strip, 0, 0, index * ICON_CELL_SIZE, 0,
+                            ICON_CELL_SIZE, ICON_CELL_SIZE, false, false);
+                }
+                AtlasPage page = atlasPage(nextCellIndex / CELLS_PER_PAGE);
+                int cellX = slot % CELLS_PER_ROW * ICON_CELL_SIZE;
+                int cellY = slot / CELLS_PER_ROW * ICON_CELL_SIZE;
+                page.upload(strip, cellX, cellY);
+                // Publish only after the GPU contains the pixels. Cells are never recycled.
+                for (var result : batch) {
+                    IconCell created = iconCell(page.id(), nextCellIndex % CELLS_PER_PAGE);
+                    cells.put(result.key(), created);
+                    nextCellIndex++;
+                }
+            } catch (RuntimeException exception) {
+                for (var result : batch) iconFailed(result.key(), exception);
+            } finally {
+                for (var result : batch) result.value().close();
+            }
+            if (nextCellIndex >= MAX_CACHED_ICONS) {
+                work.reset(); // Close any excess completed images instead of retaining them indefinitely.
+                return;
+            }
+            // Soft time limit: a single allocation/upload is indivisible, with a hard cell cap too.
+            if (System.nanoTime() - started >= UPLOAD_BUDGET_NANOS) return;
         }
+    }
 
+    private void iconFailed(ObjMeshBakedModel model, Exception exception) {
+        failedModels.add(model);
+        Daedalon.LOGGER.warn(
+                "[Daedalon OBJ GUI] Unable to cache full-model icon for {}; using flat material icon fallback: {}",
+                model.modelId(), exception.getMessage());
+    }
+
+    private static IconCell iconCell(Identifier page, int slot) {
+        int x = slot % CELLS_PER_ROW * ICON_CELL_SIZE + ICON_GUTTER;
+        int y = slot / CELLS_PER_ROW * ICON_CELL_SIZE + ICON_GUTTER;
+        return new IconCell(page, x / (float) ATLAS_PAGE_SIZE, y / (float) ATLAS_PAGE_SIZE,
+                (x + ObjGuiIconTemplate.ICON_RESOLUTION) / (float) ATLAS_PAGE_SIZE,
+                (y + ObjGuiIconTemplate.ICON_RESOLUTION) / (float) ATLAS_PAGE_SIZE);
+    }
+
+    private static SourceTexture sourceTexture(ResourceEpoch epoch, Identifier logicalTextureId)
+            throws IOException {
+        synchronized (epoch.sourceTextures) {
+            SourceTexture cached = epoch.sourceTextures.get(logicalTextureId);
+            if (cached != null) return cached;
+            SourceTexture loaded = readTexture(epoch.manager, logicalTextureId);
+            epoch.sourceTextures.put(logicalTextureId, loaded);
+            return loaded;
+        }
+    }
+
+    static SourceTexture readTexture(ResourceManager manager, Identifier logicalTextureId)
+            throws IOException {
         Identifier pngId = textureResourceId(logicalTextureId);
         Identifier metadataId = pngId.withPath(pngId.getPath() + ".mcmeta");
         if (manager.getResource(metadataId).isPresent()) {
@@ -362,26 +425,20 @@ public final class ObjGuiIconCache {
             throw new IOException("missing active texture " + pngId);
         }
 
-        NativeImage image;
-        try (InputStream input = resource.get().getInputStream()) {
-            image = NativeImage.read(input);
-        }
-        try {
+        // Worker and Axiom can share immutable ABGR pixels. Never retain/close a source
+        // NativeImage under another reader, including when a resource reload cancels work.
+        try (InputStream input = resource.get().getInputStream(); NativeImage image = NativeImage.read(input)) {
+            int[] pixels = new int[image.getWidth() * image.getHeight()];
             for (int y = 0; y < image.getHeight(); y++) {
                 for (int x = 0; x < image.getWidth(); x++) {
                     if ((image.getOpacity(x, y) & 0xFF) != 0xFF) {
                         throw new IOException("transparent texture " + logicalTextureId);
                     }
+                    pixels[y * image.getWidth() + x] = image.getColor(x, y);
                 }
             }
-        } catch (IOException | RuntimeException exception) {
-            image.close();
-            throw exception;
+            return new SourceTexture(image.getWidth(), image.getHeight(), pixels);
         }
-
-        SourceTexture loaded = new SourceTexture(image);
-        sourceTextures.put(logicalTextureId, loaded);
-        return loaded;
     }
 
     private AtlasPage atlasPage(int pageIndex) {
@@ -391,15 +448,10 @@ public final class ObjGuiIconCache {
                     Daedalon.MOD_ID,
                     "dynamic/obj_gui_icons_" + index
             );
-            NativeImage image = new NativeImage(ATLAS_PAGE_SIZE, ATLAS_PAGE_SIZE, true);
-            image.fillRect(0, 0, ATLAS_PAGE_SIZE, ATLAS_PAGE_SIZE, 0);
-            NativeImageBackedTexture texture = new NativeImageBackedTexture(image);
-            // These are rendered thumbnails rather than hand-authored pixel
-            // art. Linear sampling preserves the extra 64 px detail when the
-            // one-quad icon is reduced to Minecraft's 16 logical GUI pixels.
+            IconAtlasTexture texture = new IconAtlasTexture();
             texture.setFilter(true, false);
             MinecraftClient.getInstance().getTextureManager().registerTexture(id, texture);
-            pages.add(new AtlasPage(id, texture, image));
+            pages.add(new AtlasPage(id, texture));
             Daedalon.LOGGER.info(
                     "[Daedalon OBJ GUI] allocated bounded icon atlas page {} of {}",
                     index + 1,
@@ -417,7 +469,7 @@ public final class ObjGuiIconCache {
         renderIcon(model, model.guiIconTemplate(), materials, atlas, cellX, cellY);
     }
 
-    private static void renderIcon(ObjMeshBakedModel model, ObjGuiIconTemplate template,
+    static void renderIcon(ObjMeshBakedModel model, ObjGuiIconTemplate template,
                                    List<SourceTexture> materials, NativeImage atlas,
                                    int cellX, int cellY) throws IOException {
         int writtenPixels = 0;
@@ -485,6 +537,10 @@ public final class ObjGuiIconCache {
     }
 
     private synchronized void reload(ResourceManager manager) {
+        // Cancels queued generations and closes every completed staged image. A running
+        // old job owns its immutable source arrays and closes its late image itself.
+        work.reset();
+        resources = new ResourceEpoch(manager);
         TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
         for (AtlasPage page : pages) {
             textureManager.destroyTexture(page.id());
@@ -495,14 +551,9 @@ public final class ObjGuiIconCache {
         previewImages.clear();
         previewTemplates.clear();
         failedPreviews.clear();
-        for (SourceTexture sourceTexture : sourceTextures.values()) {
-            sourceTexture.close();
-        }
-        sourceTextures.clear();
         cells.clear();
         failedModels.clear();
         nextCellIndex = 0;
-        resourceManager = manager;
     }
 
     private static Identifier textureResourceId(Identifier logicalTextureId) {
@@ -528,10 +579,17 @@ public final class ObjGuiIconCache {
         return table;
     }
 
-    private static int linearToSrgb(double linear) {
-        return clampColor((int) Math.round(
-                Math.pow(Math.max(0.0D, Math.min(1.0D, linear)), 1.0D / 2.2D) * 255.0D
-        ));
+    private static int[] createLinearToSrgbTable() {
+        int[] table = new int[65_536];
+        for (int index = 0; index < table.length; index++) {
+            table[index] = clampColor((int) Math.round(Math.pow(index / (double) (table.length - 1), 1.0D / 2.2D) * 255.0D));
+        }
+        return table;
+    }
+
+    static int linearToSrgb(double linear) {
+        int index = (int) Math.round(Math.max(0.0D, Math.min(1.0D, linear)) * (LINEAR_TO_SRGB.length - 1));
+        return LINEAR_TO_SRGB[index];
     }
 
     private static void vertex(VertexConsumer consumer,
@@ -561,39 +619,40 @@ public final class ObjGuiIconCache {
     private record IconCell(Identifier atlasId, float minU, float minV, float maxU, float maxV) {
     }
 
-    private record AtlasPage(Identifier id,
-                             NativeImageBackedTexture texture,
-                             NativeImage image) {
-        private void copyCell(NativeImage source, int destinationX, int destinationY) {
-            for (int y = 0; y < ICON_CELL_SIZE; y++) {
-                for (int x = 0; x < ICON_CELL_SIZE; x++) {
-                    image.setColor(
-                            destinationX + x,
-                            destinationY + y,
-                            source.getColor(x, y)
-                    );
-                }
-            }
-        }
-
-        private void uploadCell(int x, int y) {
+    private record AtlasPage(Identifier id, IconAtlasTexture texture) {
+        private void upload(NativeImage strip, int x, int y) {
             texture.bindTexture();
-            image.upload(
-                    0,
-                    x,
-                    y,
-                    x,
-                    y,
-                    ICON_CELL_SIZE,
-                    ICON_CELL_SIZE,
-                    true,
-                    false
-            );
+            // Explicit blur/clamp/mipmap/close flags: the shorter overload's first
+            // boolean controls mipmaps, not linear filtering.
+            strip.upload(0, x, y, 0, 0, strip.getWidth(), strip.getHeight(), true, false, false, false);
         }
     }
 
-    private record SourceTexture(NativeImage image) implements AutoCloseable {
-        private int sample(float u, float v) throws IOException {
+    /** GPU allocation only: cells supply their own fully initialized pixels and gutters. */
+    private static final class IconAtlasTexture extends AbstractTexture {
+        private IconAtlasTexture() {
+            TextureUtil.prepareImage(getGlId(), ATLAS_PAGE_SIZE, ATLAS_PAGE_SIZE);
+        }
+
+        @Override public void setFilter(boolean bilinear, boolean mipmap) {
+            // Entity render phases request nearest filtering whenever they bind a
+            // texture. These pictures retain linear sampling at every GUI scale.
+            super.setFilter(true, false);
+        }
+
+        @Override public void load(ResourceManager manager) { }
+        @Override public void close() { clearGlId(); }
+    }
+
+    private static final class ResourceEpoch {
+        private final ResourceManager manager;
+        private final Map<Identifier, SourceTexture> sourceTextures = new LinkedHashMap<>();
+
+        private ResourceEpoch(ResourceManager manager) { this.manager = manager; }
+    }
+
+    record SourceTexture(int width, int height, int[] pixels) {
+        int sample(float u, float v) throws IOException {
             if (!Float.isFinite(u) || !Float.isFinite(v)) {
                 throw new IOException("non-finite generated GUI UV");
             }
@@ -602,17 +661,12 @@ public final class ObjGuiIconCache {
                 throw new IOException("GUI UV outside the source texture");
             }
             int x = Math.round(
-                    Math.max(0.0F, Math.min(1.0F, u)) * (image.getWidth() - 1)
+                    Math.max(0.0F, Math.min(1.0F, u)) * (width - 1)
             );
             int y = Math.round(
-                    Math.max(0.0F, Math.min(1.0F, v)) * (image.getHeight() - 1)
+                    Math.max(0.0F, Math.min(1.0F, v)) * (height - 1)
             );
-            return image.getColor(x, y);
-        }
-
-        @Override
-        public void close() {
-            image.close();
+            return pixels[y * width + x];
         }
     }
 }
