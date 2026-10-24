@@ -75,4 +75,3 @@ class OlympianMedallionSafetyTests(unittest.TestCase):
         stale = []
         GENERATOR.generate_olympian_god_items(True, stale)
         self.assertEqual([], stale)
-
