@@ -36,8 +36,10 @@ AUTHORED_UV_STATUE_FAMILIES = frozenset(
         "demeter",
         "dionysus",
         "helios",
+        "hephaestus",
         "hera",
         "heracles",
+        "hestia",
         "lion_couchant",
         "orpheus",
         "perseus",
@@ -491,6 +493,56 @@ for _subject, (_vertices, _faces, _bounds, _obj_sha256) in BUST_MESHES.items():
         "bounds": _bounds,
         "obj_sha256": _obj_sha256,
         "mtl_sha256": "bbaff126401a4c2f7497d513fedc67f945f37656d150536a869de512351b0378",
+    }
+
+# Supplemental intake: preserve the historical statue and bust batch locks above.
+# Geometry-stream digests deliberately ignore UV indices so a safe authored UV
+# result cannot silently change positions, normals, face order or references.
+OLYMPIAN_COMPLETION_MESHES = {
+    "hermes": {
+        "vertices": 7330, "uvs": 0, "normals": 16507, "faces": 14748,
+        "bounds": ((-0.369004, -0.950626, -0.317037), (0.363107, 0.948008, 0.319572)),
+        "obj_sha256": "e1f86dff34997f29f3cbc90e54c9c5931877835d07b6577a428ceaff13650dd1",
+        "position_stream_sha256": "dbd67973eede1ee662df2f061f98a78602f56f2852e31b83d69fe54cd85f6ebe",
+        "normal_stream_sha256": "e72ca6bf724c9719af7b94fc6054ae65378cab024c7f56294bf79f02d214b1c7",
+        "face_position_normal_stream_sha256": "40a60f9ef5991730e098f4c103caa3d15559865986c1ef5cadfc5c32278cdd92",
+    },
+    "hephaestus": {
+        "vertices": 7645, "uvs": 8683, "normals": 16422, "faces": 15350,
+        "bounds": ((-0.361118, -0.950441, -0.357865), (0.36315, 0.947902, 0.358974)),
+        "obj_sha256": "8e62ea0222b9cf74645648cc8fc873ad6da8e72d3974e79fc1bd386aba619d71",
+        "position_stream_sha256": "8ca3c947f0e6fc4dd993e101692d0053d5a4911dbaf8f2428e5c77493b42d545",
+        "normal_stream_sha256": "7c093ace3f56a9bc64d838448053e1e02f48f01a2f8e29eac17557476a67d5c2",
+        "face_position_normal_stream_sha256": "268c260bce0c29e161534bd17d522d3ba22d72446c416e951bbb013b1e120973",
+    },
+    "hestia": {
+        "vertices": 7531, "uvs": 8401, "normals": 15945, "faces": 15094,
+        "bounds": ((-0.334397, -0.950695, -0.3426), (0.335257, 0.947966, 0.344096)),
+        "obj_sha256": "ec43452c1f05dbb9144a9d6554a43a71a1377e692bef0535baf4dade4298ac43",
+        "position_stream_sha256": "0c3c2158df4aefb6e88fc37a2e7d17eb6c8b5c8cb4cdae960a1aa199ffd12274",
+        "normal_stream_sha256": "5eaf49e09ad42aadb71d7810da68559527391a333d3ed2bd86cb3620a6aadbb1",
+        "face_position_normal_stream_sha256": "2ac5d6cf2a9e6a4ee96491c627f3a79018b4a09b8418f83ea87fb8bda520cc81",
+    },
+    "bust_hestia": {
+        "vertices": 8137, "uvs": 0, "normals": 8137, "faces": 16274,
+        "bounds": ((-0.953054, -0.91879, -0.592399), (0.950516, 0.914841, 0.591126)),
+        "obj_sha256": "2bca499b4e20a66452c5577d5c8c5d6c5832d3c9d196f9b3b714c116706051bb",
+        "position_stream_sha256": "2093cdea41317988f97f34eb0ef52c08def9a1694efba00a1522e39287b315a6",
+        "normal_stream_sha256": "8f9b4dcd359c668c35eb48a5f12e58a4c0207a5b8f30f8ccb2d50b5b1029a5d0",
+        "face_position_normal_stream_sha256": "c7e9363bf9b19a2a25916fdfdb7c59db6783da32b67221059f17fda21dfedece",
+    },
+}
+
+for _stem, _mesh in OLYMPIAN_COMPLETION_MESHES.items():
+    MESH_EXPECTATIONS[_stem] = {
+        **_mesh,
+        "definition": f"{_stem}.json" if _stem.startswith("bust_") else f"{_stem}_statue.json",
+        "obj": f"{_stem}.obj",
+        "mtl": None,
+        "display": "bust_display.json" if _stem.startswith("bust_") else "zeus_statue_display.json",
+        "face_sizes": {3},
+        "face_index_styles": {"v/vt/vn"} if _mesh["uvs"] else {"v//vn"},
+        "mtl_sha256": None,
     }
 
 DECOR_MESHES = {

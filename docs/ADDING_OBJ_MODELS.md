@@ -15,7 +15,8 @@ materials, aged variants, sizes, facings, texture density, and geometry caches.
 3. For a statue, add one `StatueBlock.Profile` with the measured facing, pivot,
    and three-block collision shape. Never allocate profiles per material.
 4. Declare one mesh family, then register its 27 standard and 27 aged material
-   IDs. New IDs use `<material>_aged_<descriptors>_<form>` for aged variants.
+   IDs, plus the shared Bronze and Silver finishes where supported. New IDs use
+   `<material>_aged_<descriptors>_<form>` for aged variants.
 5. Add the family to `tools/generate_daedalon_assets.py`, then generate with
    `--families all`. The language and tag manifests are global, so never run a
    single-family generation as the final write.
@@ -40,6 +41,28 @@ UV discovery and normal generation are deliberately separate:
 
 This makes later builds deterministic: the expensive search happens once, and
 its accepted result becomes a short reusable recipe.
+
+### Supplied Olympian completion meshes
+
+The Hermes, Hephaestus and Hestia statues and the Hestia bust use the supplied
+OBJ triangles and normals without decimation or extra material-specific meshes.
+Their source fronts face south; a single rigid 180-degree Y rotation normalizes
+the runtime positions and normals to the existing north-facing statue path.
+Triangle order, winding, indices and source proportions are retained. The source
+files are unchanged, and none requires an MTL file.
+
+The bounded authored-UV discovery accepted Hephaestus and Hestia; their locked
+recipes replay through `tools/generate_statue_uvs.py`. Hermes retains the existing
+axis-stabilized runtime projection because no bounded candidate passed the
+stretch gates. The Hestia bust follows the existing bust projection policy and
+retains all 16,274 supplied triangles. Its wider-than-tall proportions use one
+measured immutable profile; the other bust profiles are unchanged.
+
+Counts, source hashes, rigid-rotation proofs, measured support points, collision
+layers and UV results are in
+[the completion evidence](evidence/olympian-completion-source.json). The shared
+[Greek/Roman search vocabulary](SCULPTURE_SEARCH.md) covers both sculpture forms
+without changing canonical Greek display names or IDs.
 
 ## Fast urn preparation
 

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#daedalon:hera",
+    "#daedalon:demeter",
+    "#daedalon:athena",
+    "#daedalon:artemis",
+    "#daedalon:aphrodite",
+    "#daedalon:hestia"
+  ]
+}

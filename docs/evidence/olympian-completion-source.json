@@ -1,0 +1,1059 @@
+{
+  "provenance": "Oliver-authored Meshy creations, confirmed by Oliver; permitted in the public Daedalon repository.",
+  "source_root": "External Oliver-owned Daedalon Working Files; source Blender files are not distributed in this repository.",
+  "model_policy": "One shared geometry and immutable measured profile per model; all material finishes share the mesh.",
+  "models": {
+    "hermes": {
+      "source_file": "statues/Olymians/Hermes/hermes 15k.obj",
+      "source_sha256": "7522d9febbf48c9256843e35d98e7b96db5d312c16c3f9af7955049d01622b44",
+      "source_vertices": 7330,
+      "source_faces": 14748,
+      "source_uvs": 0,
+      "source_normals": 16507,
+      "source_bounds": [
+        [
+          -0.363107,
+          -0.950626,
+          -0.319572
+        ],
+        [
+          0.369004,
+          0.948008,
+          0.317037
+        ]
+      ],
+      "source_face_sizes": [
+        3
+      ],
+      "prepared": true,
+      "source_modified": false,
+      "fitted_three_block_height": 3.0,
+      "model_support_center_x": 0.4564426,
+      "model_support_center_z": 0.5,
+      "model_ground_contact_y": 0.0,
+      "source_collision_boxes": [
+        [
+          0.003838,
+          0.0,
+          -0.022948,
+          1.083277,
+          0.375,
+          1.022948
+        ],
+        [
+          0.044348,
+          0.375,
+          0.005563,
+          1.041634,
+          0.75,
+          0.991466
+        ],
+        [
+          0.404454,
+          0.75,
+          0.046865,
+          1.016207,
+          1.125,
+          0.719788
+        ],
+        [
+          0.158244,
+          1.125,
+          0.187229,
+          0.956987,
+          1.5,
+          0.815423
+        ],
+        [
+          0.114716,
+          1.5,
+          0.153157,
+          1.098398,
+          1.875,
+          0.807557
+        ],
+        [
+          0.04318,
+          1.875,
+          0.140888,
+          1.075711,
+          2.25,
+          0.748163
+        ],
+        [
+          -0.018615,
+          2.25,
+          0.172547,
+          0.996252,
+          2.625,
+          0.894402
+        ],
+        [
+          -0.098398,
+          2.625,
+          0.290366,
+          0.739948,
+          3.0,
+          0.872206
+        ]
+      ],
+      "source_facing": "south",
+      "runtime_obj": "assets/daedalon/models/mesh/hermes.obj",
+      "runtime_obj_sha256": "e1f86dff34997f29f3cbc90e54c9c5931877835d07b6577a428ceaff13650dd1",
+      "geometry_policy": "Exact rigid rotation only; no decimation, scaling, topology, shape, normal-reference or face-order changes.",
+      "uv_policy": "Intentional runtime axis-stabilized box projection after the documented bounded authored-UV discovery rejected every candidate.",
+      "runtime_facing": "north",
+      "source_to_runtime_transform": "Rigid 180-degree Y rotation: (x,y,z)->(-x,y,-z), applied identically to position and normal records; faces and normal references unchanged.",
+      "runtime_bounds": [
+        [
+          -0.369004,
+          -0.950626,
+          -0.317037
+        ],
+        [
+          0.363107,
+          0.948008,
+          0.319572
+        ]
+      ],
+      "runtime_collision_boxes": [
+        [
+          -0.083277,
+          0.0,
+          -0.022948,
+          0.996162,
+          0.375,
+          1.022948
+        ],
+        [
+          -0.041634,
+          0.375,
+          0.008534,
+          0.955652,
+          0.75,
+          0.994437
+        ],
+        [
+          -0.016207,
+          0.75,
+          0.280212,
+          0.595546,
+          1.125,
+          0.953135
+        ],
+        [
+          0.043013,
+          1.125,
+          0.184577,
+          0.841756,
+          1.5,
+          0.812771
+        ],
+        [
+          -0.098398,
+          1.5,
+          0.192443,
+          0.885284,
+          1.875,
+          0.846843
+        ],
+        [
+          -0.075711,
+          1.875,
+          0.251837,
+          0.95682,
+          2.25,
+          0.859112
+        ],
+        [
+          0.003748,
+          2.25,
+          0.105598,
+          1.018615,
+          2.625,
+          0.827453
+        ],
+        [
+          0.260052,
+          2.625,
+          0.127794,
+          1.098398,
+          3.0,
+          0.709634
+        ]
+      ],
+      "intake_validation": {
+        "source_unchanged": true,
+        "vertex_rigid_rotation_exact": true,
+        "normal_rigid_rotation_exact": true,
+        "face_records_unchanged": true,
+        "lf_line_endings": true,
+        "uv_search_changes_geometry": false
+      },
+      "uv_discovery": {
+        "command": "python -B tools/generate_statue_uvs.py hermes --discover --dry-run --json",
+        "blender_version": "5.2.0",
+        "blender_build_hash": "fbe6228777e7",
+        "status": "rejected",
+        "scope": "Existing bounded three-base policy; no search expansion or threshold relaxation.",
+        "best_candidate": "height=1@zero,azimuth=1@zero",
+        "seam_percent": 3.928,
+        "p95_stretch": 4.541,
+        "p99_stretch": 15.437,
+        "density_ratio_p50_p90_p95_p99": [
+          1.074,
+          1.247,
+          1.39,
+          2.08
+        ],
+        "collapsed_faces": 0,
+        "flipped_faces": 0,
+        "error": "no candidate met UV acceptance; best height=1@zero,azimuth=1@zero seams=3.928% p95=4.541 p99=15.437 density=1.074/1.247/1.390/2.080 collapsed=0 flipped=0"
+      },
+      "runtime_vertices": 7330,
+      "runtime_faces": 14748,
+      "runtime_normals": 16507,
+      "runtime_uvs": 0,
+      "final_validation": {
+        "source_sha256_unchanged": true,
+        "position_rigid_rotation_exact": true,
+        "normal_rigid_rotation_exact": true,
+        "face_position_and_normal_reference_stream_unchanged": true,
+        "lf_line_endings": true
+      }
+    },
+    "hephaestus": {
+      "source_file": "statues/Olymians/Hephaestus/Hephaestus 15k.obj",
+      "source_sha256": "f8f995e8f48c7fe11b0de2c36fd3ab58cba3d018cdfbbd970e24e2617064cc07",
+      "source_vertices": 7645,
+      "source_faces": 15350,
+      "source_uvs": 0,
+      "source_normals": 16422,
+      "source_bounds": [
+        [
+          -0.36315,
+          -0.950441,
+          -0.358974
+        ],
+        [
+          0.361118,
+          0.947902,
+          0.357865
+        ]
+      ],
+      "source_face_sizes": [
+        3
+      ],
+      "prepared": true,
+      "source_modified": false,
+      "fitted_three_block_height": 3.0,
+      "model_support_center_x": 0.4657148,
+      "model_support_center_z": 0.4759253,
+      "model_ground_contact_y": 0.0,
+      "source_collision_boxes": [
+        [
+          -0.023719,
+          0.0,
+          -0.035024,
+          1.09229,
+          0.375,
+          1.083174
+        ],
+        [
+          -0.002737,
+          0.375,
+          -0.013089,
+          1.07276,
+          0.75,
+          1.065294
+        ],
+        [
+          0.23599,
+          0.75,
+          -0.08642,
+          1.015558,
+          1.125,
+          1.05167
+        ],
+        [
+          0.188986,
+          1.125,
+          0.203919,
+          1.034799,
+          1.5,
+          1.08642
+        ],
+        [
+          -0.09229,
+          1.5,
+          0.185811,
+          0.965559,
+          1.875,
+          0.860923
+        ],
+        [
+          -0.09229,
+          1.875,
+          0.114909,
+          0.999346,
+          2.25,
+          0.794737
+        ],
+        [
+          0.164382,
+          2.25,
+          0.123587,
+          0.993075,
+          2.625,
+          0.743694
+        ],
+        [
+          0.312029,
+          2.625,
+          0.244118,
+          0.859794,
+          3.0,
+          0.744908
+        ]
+      ],
+      "source_facing": "south",
+      "runtime_facing": "north",
+      "source_to_runtime_transform": "Rigid 180-degree Y rotation: (x,y,z)->(-x,y,-z), applied identically to position and normal records; faces and normal references unchanged.",
+      "runtime_obj": "assets/daedalon/models/mesh/hephaestus.obj",
+      "runtime_obj_sha256": "8e62ea0222b9cf74645648cc8fc873ad6da8e72d3974e79fc1bd386aba619d71",
+      "runtime_bounds": [
+        [
+          -0.361118,
+          -0.950441,
+          -0.357865
+        ],
+        [
+          0.36315,
+          0.947902,
+          0.358974
+        ]
+      ],
+      "runtime_collision_boxes": [
+        [
+          -0.09229,
+          0.0,
+          -0.083174,
+          1.023719,
+          0.375,
+          1.035024
+        ],
+        [
+          -0.07276,
+          0.375,
+          -0.065294,
+          1.002737,
+          0.75,
+          1.013089
+        ],
+        [
+          -0.015558,
+          0.75,
+          -0.05167,
+          0.76401,
+          1.125,
+          1.08642
+        ],
+        [
+          -0.034799,
+          1.125,
+          -0.08642,
+          0.811014,
+          1.5,
+          0.796081
+        ],
+        [
+          0.034441,
+          1.5,
+          0.139077,
+          1.09229,
+          1.875,
+          0.814189
+        ],
+        [
+          0.000654,
+          1.875,
+          0.205263,
+          1.09229,
+          2.25,
+          0.885091
+        ],
+        [
+          0.006925,
+          2.25,
+          0.256306,
+          0.835618,
+          2.625,
+          0.876413
+        ],
+        [
+          0.140206,
+          2.625,
+          0.255092,
+          0.687971,
+          3.0,
+          0.755882
+        ]
+      ],
+      "geometry_policy": "Exact rigid rotation only; no decimation, scaling, topology, shape, normal-reference or face-order changes.",
+      "uv_policy": "Authored UVs from the first accepted bounded candidate; locked recipe replay --write and --check passed.",
+      "intake_validation": {
+        "source_unchanged": true,
+        "vertex_rigid_rotation_exact": true,
+        "normal_rigid_rotation_exact": true,
+        "face_records_unchanged": true,
+        "lf_line_endings": true,
+        "uv_search_changes_geometry": false
+      },
+      "runtime_vertices": 7645,
+      "runtime_faces": 15350,
+      "runtime_normals": 16422,
+      "runtime_uvs": 8683,
+      "final_validation": {
+        "source_sha256_unchanged": true,
+        "position_rigid_rotation_exact": true,
+        "normal_rigid_rotation_exact": true,
+        "face_position_and_normal_reference_stream_unchanged": true,
+        "lf_line_endings": true
+      },
+      "uv_discovery": {
+        "status": "accepted",
+        "command": "python -B tools/generate_statue_uvs.py hephaestus hestia --discover --dry-run --json",
+        "blender_version": "5.2.0",
+        "blender_build_hash": "fbe6228777e7",
+        "replay_write_passed": true,
+        "replay_check_passed": true,
+        "recipe_manifest": "tools/statue_uv_recipes.json",
+        "quality": {
+          "algorithm_version": 3,
+          "allowed_single_face_indices": [],
+          "allowed_single_face_islands": 0,
+          "blender_build_hash": "fbe6228777e7",
+          "blender_version": "5.2.0",
+          "candidate": "height=3@zero,azimuth=1@zero",
+          "collapsed_faces": 0,
+          "cut_edge_sha256": "5a15b40208022899882948a41147b0fefcd8861e53c8fd528867635c82806309",
+          "density_ratio_p50": 1.048652,
+          "density_ratio_p90": 1.173554,
+          "density_ratio_p95": 1.261734,
+          "density_ratio_p99": 1.623798,
+          "faces": 15350,
+          "flipped_faces": 0,
+          "float32_allowed_single_face_indices": [],
+          "float32_collapsed_faces": 0,
+          "float32_density_limit_violation_indices": [],
+          "float32_density_ratio_p50": 1.048652,
+          "float32_density_ratio_p90": 1.173555,
+          "float32_density_ratio_p95": 1.261735,
+          "float32_density_ratio_p99": 1.623798,
+          "float32_flipped_faces": 0,
+          "float32_island_face_counts": [
+            3,
+            6,
+            496,
+            897,
+            1010,
+            1133,
+            1532,
+            1565,
+            4064,
+            4644
+          ],
+          "float32_locked_micro_island_density_indices": [],
+          "float32_maximum_island_density_error": 7.267797226262473e-07,
+          "float32_maximum_locked_micro_island_density_error": 0.0,
+          "float32_maximum_regular_island_density_error": 7.267797226262473e-07,
+          "float32_nonfinite_uvs": 0,
+          "float32_out_of_bounds_uvs": 0,
+          "float32_single_face_indices": [],
+          "geometric_degenerate_faces": 0,
+          "island_face_counts": [
+            3,
+            6,
+            496,
+            897,
+            1010,
+            1133,
+            1532,
+            1565,
+            4064,
+            4644
+          ],
+          "islands": 10,
+          "manifold_edges": 23025,
+          "maximum_fixed_density_span": 0.966107,
+          "maximum_island_density_error": 1.2016415074089792e-06,
+          "maximum_stretch": 135.967557,
+          "minimum_abs_uv_area": 7.795255965071962e-07,
+          "mode": "replay",
+          "model": "hephaestus",
+          "non_disk_chart_seeds": [],
+          "non_disk_charts": 0,
+          "obj_sha256": "8e62ea0222b9cf74645648cc8fc873ad6da8e72d3974e79fc1bd386aba619d71",
+          "out_of_bounds_uvs": 0,
+          "oversized_islands": 0,
+          "p95_stretch": 2.413545,
+          "p99_stretch": 5.432516,
+          "position_face_sha256": "d71c82b65fed9df789243ce86304d6e8ecb8edf6db16bbff724fb8bd468b6329",
+          "refinement_candidate_ranks": [
+            4,
+            3,
+            1,
+            1
+          ],
+          "refinement_policy": "conformal_density_v3",
+          "seam_edges": 998,
+          "seam_percent": 4.334419,
+          "single_face_indices": [],
+          "single_face_islands": 0,
+          "singleton_repair": "generic_lowest_safe_disk_glue_v1",
+          "smallest_island_faces": 3,
+          "solver_policy": "abf_density_slim_v1",
+          "uv_maximum": [
+            0.834785938,
+            0.983052671
+          ],
+          "uv_minimum": [
+            0.165214062,
+            0.016947325
+          ],
+          "uvs": 8683,
+          "vertices": 7645
+        }
+      }
+    },
+    "hestia": {
+      "source_file": "statues/Olymians/Hestia/Hestia 15k.obj",
+      "source_sha256": "a13b30bb47c988e9a6495b459b13849a5c7c659f38e37894665fe8c00b8ccf27",
+      "source_vertices": 7531,
+      "source_faces": 15094,
+      "source_uvs": 0,
+      "source_normals": 15945,
+      "source_bounds": [
+        [
+          -0.335257,
+          -0.950695,
+          -0.344096
+        ],
+        [
+          0.334397,
+          0.947966,
+          0.3426
+        ]
+      ],
+      "source_face_sizes": [
+        3
+      ],
+      "prepared": true,
+      "source_modified": false,
+      "fitted_three_block_height": 3.0,
+      "model_support_center_x": 0.5,
+      "model_support_center_z": 0.5365697,
+      "model_ground_contact_y": 0.0,
+      "source_collision_boxes": [
+        [
+          -0.049047,
+          0.0,
+          -0.062511,
+          1.049047,
+          0.375,
+          0.989371
+        ],
+        [
+          -0.025668,
+          0.375,
+          -0.047093,
+          1.02516,
+          0.75,
+          0.975867
+        ],
+        [
+          0.209915,
+          0.75,
+          0.210822,
+          0.903667,
+          1.125,
+          0.839251
+        ],
+        [
+          0.18676,
+          1.125,
+          0.237394,
+          0.957505,
+          1.5,
+          0.849863
+        ],
+        [
+          0.167619,
+          1.5,
+          0.255922,
+          0.987219,
+          1.875,
+          0.812215
+        ],
+        [
+          0.151512,
+          1.875,
+          0.265771,
+          0.997872,
+          2.25,
+          1.062511
+        ],
+        [
+          0.162574,
+          2.25,
+          0.281832,
+          0.958086,
+          2.625,
+          0.770566
+        ],
+        [
+          0.334925,
+          2.625,
+          0.322111,
+          0.749344,
+          3.0,
+          0.774423
+        ]
+      ],
+      "source_facing": "south",
+      "runtime_facing": "north",
+      "source_to_runtime_transform": "Rigid 180-degree Y rotation: (x,y,z)->(-x,y,-z), applied identically to position and normal records; faces and normal references unchanged.",
+      "runtime_obj": "assets/daedalon/models/mesh/hestia.obj",
+      "runtime_obj_sha256": "ec43452c1f05dbb9144a9d6554a43a71a1377e692bef0535baf4dade4298ac43",
+      "runtime_bounds": [
+        [
+          -0.334397,
+          -0.950695,
+          -0.3426
+        ],
+        [
+          0.335257,
+          0.947966,
+          0.344096
+        ]
+      ],
+      "runtime_collision_boxes": [
+        [
+          -0.049047,
+          0.0,
+          0.010629,
+          1.049047,
+          0.375,
+          1.062511
+        ],
+        [
+          -0.02516,
+          0.375,
+          0.024133,
+          1.025668,
+          0.75,
+          1.047093
+        ],
+        [
+          0.096333,
+          0.75,
+          0.160749,
+          0.790085,
+          1.125,
+          0.789178
+        ],
+        [
+          0.042495,
+          1.125,
+          0.150137,
+          0.81324,
+          1.5,
+          0.762606
+        ],
+        [
+          0.012781,
+          1.5,
+          0.187785,
+          0.832381,
+          1.875,
+          0.744078
+        ],
+        [
+          0.002128,
+          1.875,
+          -0.062511,
+          0.848488,
+          2.25,
+          0.734229
+        ],
+        [
+          0.041914,
+          2.25,
+          0.229434,
+          0.837426,
+          2.625,
+          0.718168
+        ],
+        [
+          0.250656,
+          2.625,
+          0.225577,
+          0.665075,
+          3.0,
+          0.677889
+        ]
+      ],
+      "geometry_policy": "Exact rigid rotation only; no decimation, scaling, topology, shape, normal-reference or face-order changes.",
+      "uv_policy": "Authored UVs from the first accepted bounded candidate; locked recipe replay --write and --check passed.",
+      "intake_validation": {
+        "source_unchanged": true,
+        "vertex_rigid_rotation_exact": true,
+        "normal_rigid_rotation_exact": true,
+        "face_records_unchanged": true,
+        "lf_line_endings": true,
+        "uv_search_changes_geometry": false
+      },
+      "runtime_uvs": 8401,
+      "uv_discovery": {
+        "status": "accepted",
+        "blender_version": "5.2.0",
+        "blender_build_hash": "fbe6228777e7",
+        "command": "python -B tools/generate_statue_uvs.py hestia --discover --dry-run --json",
+        "replay_write_passed": true,
+        "replay_check_passed": true,
+        "recipe_manifest": "tools/statue_uv_recipes.json",
+        "quality": {
+          "algorithm_version": 3,
+          "allowed_single_face_indices": [],
+          "allowed_single_face_islands": 0,
+          "blender_build_hash": "fbe6228777e7",
+          "blender_version": "5.2.0",
+          "candidate": "height=3@zero,azimuth=1@zero",
+          "collapsed_faces": 0,
+          "cut_edge_sha256": "2251a3163f4b3a8b8f95b0f0f497e8b24f845ce2b2e6d6dc2f9051278198e8eb",
+          "density_ratio_p50": 1.051608,
+          "density_ratio_p90": 1.188966,
+          "density_ratio_p95": 1.222705,
+          "density_ratio_p99": 1.334661,
+          "faces": 15094,
+          "flipped_faces": 0,
+          "float32_allowed_single_face_indices": [],
+          "float32_collapsed_faces": 0,
+          "float32_density_limit_violation_indices": [],
+          "float32_density_ratio_p50": 1.051607,
+          "float32_density_ratio_p90": 1.188965,
+          "float32_density_ratio_p95": 1.222704,
+          "float32_density_ratio_p99": 1.334662,
+          "float32_flipped_faces": 0,
+          "float32_island_face_counts": [
+            7,
+            2527,
+            2689,
+            4704,
+            5167
+          ],
+          "float32_locked_micro_island_density_indices": [],
+          "float32_maximum_island_density_error": 7.386331881686914e-07,
+          "float32_maximum_locked_micro_island_density_error": 0.0,
+          "float32_maximum_regular_island_density_error": 7.386331881686914e-07,
+          "float32_nonfinite_uvs": 0,
+          "float32_out_of_bounds_uvs": 0,
+          "float32_single_face_indices": [],
+          "geometric_degenerate_faces": 0,
+          "island_face_counts": [
+            7,
+            2527,
+            2689,
+            4704,
+            5167
+          ],
+          "islands": 5,
+          "manifold_edges": 22641,
+          "maximum_fixed_density_span": 0.910774,
+          "maximum_island_density_error": 7.973128708371746e-07,
+          "maximum_stretch": 44.346732,
+          "minimum_abs_uv_area": 1.1200962535092823e-06,
+          "mode": "replay",
+          "model": "hestia",
+          "non_disk_chart_seeds": [],
+          "non_disk_charts": 0,
+          "obj_sha256": "ec43452c1f05dbb9144a9d6554a43a71a1377e692bef0535baf4dade4298ac43",
+          "out_of_bounds_uvs": 0,
+          "oversized_islands": 0,
+          "p95_stretch": 1.733764,
+          "p99_stretch": 2.935186,
+          "position_face_sha256": "a3f078ae63601e32faf8ffd1e3b25cc78cb75db225ea752845a57ea181d9c6ed",
+          "refinement_candidate_ranks": [
+            2
+          ],
+          "refinement_policy": "conformal_density_v3",
+          "seam_edges": 849,
+          "seam_percent": 3.749834,
+          "single_face_indices": [],
+          "single_face_islands": 0,
+          "singleton_repair": "generic_lowest_safe_disk_glue_v1",
+          "smallest_island_faces": 7,
+          "solver_policy": "abf_density_slim_v1",
+          "uv_maximum": [
+            0.899235725,
+            0.955386043
+          ],
+          "uv_minimum": [
+            0.100764289,
+            0.044613998
+          ],
+          "uvs": 8401,
+          "vertices": 7531
+        }
+      },
+      "runtime_vertices": 7531,
+      "runtime_faces": 15094,
+      "runtime_normals": 15945,
+      "final_validation": {
+        "source_sha256_unchanged": true,
+        "position_rigid_rotation_exact": true,
+        "normal_rigid_rotation_exact": true,
+        "face_position_and_normal_reference_stream_unchanged": true,
+        "lf_line_endings": true
+      }
+    },
+    "bust_hestia": {
+      "source_file": "Busts/Meshy_AI_assets_20260812_130813/hestia 15k.obj",
+      "source_sha256": "320528575e6184f65542b68889d6c0f0fcdc06b35622b921f0b8dc4988947354",
+      "source_vertices": 8137,
+      "source_faces": 16274,
+      "source_uvs": 0,
+      "source_normals": 8137,
+      "source_bounds": [
+        [
+          -0.950516,
+          -0.91879,
+          -0.591126
+        ],
+        [
+          0.953054,
+          0.914841,
+          0.592399
+        ]
+      ],
+      "source_face_sizes": [
+        3
+      ],
+      "prepared": true,
+      "source_modified": false,
+      "fitted_three_block_height": 2.889777103,
+      "model_support_center_x": 0.4594176,
+      "model_support_center_z": 0.500026,
+      "model_ground_contact_y": 0.0,
+      "source_collision_boxes": [
+        [
+          -1.018821,
+          0.0,
+          -0.45261,
+          2.02,
+          0.361222,
+          1.45261
+        ],
+        [
+          -1.02,
+          0.361222,
+          -0.450868,
+          2.02,
+          0.722444,
+          1.45261
+        ],
+        [
+          -0.996863,
+          0.722444,
+          -0.393803,
+          1.969004,
+          1.083666,
+          1.345129
+        ],
+        [
+          -0.681942,
+          1.083666,
+          -0.366171,
+          1.66322,
+          1.444889,
+          0.924385
+        ],
+        [
+          -0.368119,
+          1.444889,
+          -0.294037,
+          1.286594,
+          1.806111,
+          1.167388
+        ],
+        [
+          -0.286497,
+          1.806111,
+          -0.215532,
+          1.247614,
+          2.167333,
+          1.236023
+        ],
+        [
+          -0.222885,
+          2.167333,
+          -0.159999,
+          1.215718,
+          2.528555,
+          1.280964
+        ],
+        [
+          -0.086083,
+          2.528555,
+          -0.065877,
+          1.188086,
+          2.889777,
+          1.280964
+        ]
+      ],
+      "source_facing": "south",
+      "runtime_facing": "north",
+      "source_to_runtime_transform": "Rigid 180-degree Y rotation: (x,y,z)->(-x,y,-z), applied identically to position and normal records; faces and normal references unchanged.",
+      "runtime_obj": "assets/daedalon/models/mesh/bust_hestia.obj",
+      "runtime_obj_sha256": "2bca499b4e20a66452c5577d5c8c5d6c5832d3c9d196f9b3b714c116706051bb",
+      "runtime_bounds": [
+        [
+          -0.953054,
+          -0.91879,
+          -0.592399
+        ],
+        [
+          0.950516,
+          0.914841,
+          0.591126
+        ]
+      ],
+      "runtime_collision_boxes": [
+        [
+          -1.02,
+          0.0,
+          -0.45261,
+          2.018821,
+          0.361222,
+          1.45261
+        ],
+        [
+          -1.02,
+          0.361222,
+          -0.45261,
+          2.02,
+          0.722444,
+          1.450868
+        ],
+        [
+          -0.969004,
+          0.722444,
+          -0.345129,
+          1.996863,
+          1.083666,
+          1.393803
+        ],
+        [
+          -0.66322,
+          1.083666,
+          0.075615,
+          1.681942,
+          1.444889,
+          1.366171
+        ],
+        [
+          -0.286594,
+          1.444889,
+          -0.167388,
+          1.368119,
+          1.806111,
+          1.294037
+        ],
+        [
+          -0.247614,
+          1.806111,
+          -0.236023,
+          1.286497,
+          2.167333,
+          1.215532
+        ],
+        [
+          -0.215718,
+          2.167333,
+          -0.280964,
+          1.222885,
+          2.528555,
+          1.159999
+        ],
+        [
+          -0.188086,
+          2.528555,
+          -0.280964,
+          1.086083,
+          2.889777,
+          1.065877
+        ]
+      ],
+      "geometry_policy": "Exact rigid rotation only; no decimation, scaling, topology, shape, normal-reference or face-order changes.",
+      "uv_policy": "Runtime axis-stabilized box projection; no authored UV search for bust.",
+      "intake_validation": {
+        "source_unchanged": true,
+        "vertex_rigid_rotation_exact": true,
+        "normal_rigid_rotation_exact": true,
+        "face_records_unchanged": true,
+        "lf_line_endings": true,
+        "uv_search_changes_geometry": false
+      },
+      "runtime_vertices": 8137,
+      "runtime_faces": 16274,
+      "runtime_normals": 8137,
+      "runtime_uvs": 0,
+      "final_validation": {
+        "source_sha256_unchanged": true,
+        "position_rigid_rotation_exact": true,
+        "normal_rigid_rotation_exact": true,
+        "face_position_and_normal_reference_stream_unchanged": true,
+        "lf_line_endings": true
+      }
+    }
+  },
+  "validation": {
+    "recorded": "2026-10-24",
+    "command": ".\\gradlew.bat clean build runGameTest --no-daemon --console=plain",
+    "build": "passed",
+    "generated_assets_check": "passed; --families all --check",
+    "shared_display_models_check": "passed; --check",
+    "authored_uv_replay_checks": {
+      "hephaestus": "passed; byte-identical",
+      "hestia": "passed; byte-identical"
+    },
+    "python_asset_safety_tests": {
+      "tests": 166,
+      "failures": 0,
+      "errors": 0
+    },
+    "java_unit_tests": {
+      "tests": 127,
+      "failures": 0,
+      "errors": 0
+    },
+    "minecraft_server_game_tests": {
+      "tests": 74,
+      "failures": 0
+    },
+    "olympian_catalogue_game_test": {
+      "profiles": 26,
+      "variants": 1456,
+      "cached_grounded_poses": 1248
+    },
+    "jar_audit": {
+      "status": "passed",
+      "artifact": "daedalon-fabric-mc1.20.1-compat2-1.0.0.jar",
+      "sha256": "2616d80905b86ba8f445b9654cc60c5ba404d6811499a1e174498be24e67e164",
+      "public_block_items": 4663,
+      "internal_blockstates": 3,
+      "shared_obj_meshes": 99
+    },
+    "verification_boundary": "Automated source, JAR and Minecraft server tests plus inspected Blender previews. Live Minecraft client, shader, Collection-pack appearance and installed Creative/REI/JEI/EMI searches remain unverified."
+  }
+}

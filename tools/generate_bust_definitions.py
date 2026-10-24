@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MESH_ROOT = ROOT / "src/main/resources/assets/daedalon/models/mesh"
 SUBJECTS = (
     "aphrodite", "apollo", "ares", "artemis", "athena", "demeter",
-    "dionysus", "hephaestus", "hera", "hermes", "poseidon", "zeus",
+    "dionysus", "hephaestus", "hera", "hermes", "hestia", "poseidon", "zeus",
 )
 
 
@@ -19,7 +19,8 @@ def definition(subject: str) -> dict[str, object]:
     stem = f"bust_{subject}"
     return {
         "obj": f"daedalon:models/mesh/{stem}.obj",
-        "mtl": f"daedalon:models/mesh/{stem}.mtl",
+        **({"mtl": f"daedalon:models/mesh/{stem}.mtl"}
+           if (MESH_ROOT / f"{stem}.mtl").is_file() else {}),
         "flip_v": True,
         "repair_degenerate_uvs": True,
         "force_uv_projection": True,

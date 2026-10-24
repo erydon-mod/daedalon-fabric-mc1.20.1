@@ -109,4 +109,38 @@ final class DaedalonSearchIndexTest {
             assertFalse(metalPlinth.contains("fountain"));
         }
     }
+
+    @Test
+    void greekAndRomanGodNamesCoverBothFormsAndEveryMaterialClass() throws Exception {
+        try (var input = getClass().getResourceAsStream("/assets/daedalon/search_vocabulary.json")) {
+            assertNotNull(input, "Bundled search vocabulary is missing");
+            DaedalonSearchIndex bundled = DaedalonSearchIndex.read(
+                    new InputStreamReader(input, StandardCharsets.UTF_8));
+            String[][] equivalents = {
+                    {"zeus", "jupiter", "jove"}, {"hera", "juno"},
+                    {"poseidon", "neptune"}, {"demeter", "ceres"},
+                    {"athena", "minerva"}, {"apollo", "apollon"},
+                    {"artemis", "diana"}, {"ares", "mars"},
+                    {"aphrodite", "venus"}, {"hephaestus", "vulcan"},
+                    {"hermes", "mercury"}, {"dionysus", "bacchus", "liber", "liber pater"},
+                    {"hestia", "vesta"}
+            };
+            for (String[] names : equivalents) {
+                for (String material : List.of("aganite", "aganite_aged", "bronze", "silver")) {
+                    for (String form : List.of("statue", "bust")) {
+                        String path = material + "_" + names[0] + "_" + form;
+                        List<String> terms = bundled.terms(path);
+                        assertTrue(terms.containsAll(List.of(names)), path + " -> " + terms);
+                        assertTrue(terms.containsAll(List.of("greek", "olympian", "god", "deity")), path);
+                    }
+                }
+            }
+            assertTrue(bundled.terms("silver_helios_statue").contains("sol"));
+            assertTrue(bundled.terms("aganite_heracles_statue").contains("hercules"));
+            assertTrue(bundled.terms("bronze_phaeton_statue").contains("phaethon"));
+            assertFalse(bundled.terms("aganite_apollo_statue").contains("sol"));
+            assertFalse(bundled.terms("bronze_phaeton_statue").contains("sol"));
+            assertFalse(bundled.terms("bronze_phaeton_statue").contains("deity"));
+        }
+    }
 }

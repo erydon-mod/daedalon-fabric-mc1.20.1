@@ -219,6 +219,7 @@ BUST_FAMILIES = {
     "bust_hephaestus": ("hephaestus", "Hephaestus", "Hephaistos", "Hefesto"),
     "bust_hera": ("hera", "Hera", "Hera", "Hera"),
     "bust_hermes": ("hermes", "Hermes", "Hermes", "Hermes"),
+    "bust_hestia": ("hestia", "Hestia", "Hestia", "Hestia"),
     "bust_poseidon": ("poseidon", "Poseidon", "Poseidon", "Poseidón"),
     "bust_zeus": ("zeus", "Zeus", "Zeus", "Zeus"),
 }
@@ -296,7 +297,10 @@ CANONICAL_STATUE_FAMILIES = {
     "demeter": ("Demeter", "Demeter", "Deméter"),
     "dionysus": ("Dionysus", "Dionysos", "Dioniso"),
     "helios": ("Helios", "Helios", "Helios"),
+    "hephaestus": ("Hephaestus", "Hephaistos", "Hefesto"),
     "hera": ("Hera", "Hera", "Hera"),
+    "hermes": ("Hermes", "Hermes", "Hermes"),
+    "hestia": ("Hestia", "Hestia", "Hestia"),
     "phaeton": ("Phaeton", "Phaethon", "Faetón"),
     "poseidon": ("Poseidon", "Poseidon", "Poseidón"),
     "bellerophon": ("Bellerophon", "Bellerophon", "Belerofonte"),
@@ -316,9 +320,10 @@ OLYMPIAN_STATUE_FAMILIES = (
     "athena",
     "demeter",
     "dionysus",
-    "helios",
+    "hephaestus",
     "hera",
-    "phaeton",
+    "hermes",
+    "hestia",
     "poseidon",
 )
 HERO_STATUE_FAMILIES = (
@@ -942,6 +947,7 @@ SEARCH_WORD_TRANSLATIONS = {
     "decor": ("Dekor", "decoración"),
     "decoration": ("Dekoration", "decoración"),
     "decorative": ("dekorativ", "decorativo"),
+    "deity": ("Gottheit", "deidad"),
     "dome": ("Kuppel", "cúpula"),
     "entablature": ("Gebälk", "entablamento"),
     "finial": ("Zierelement", "remate"),
@@ -956,6 +962,8 @@ SEARCH_WORD_TRANSLATIONS = {
     "gemstone": ("Edelstein", "gema"),
     "georgian": ("georgisch", "georgiano"),
     "gothic": ("gotisch", "gótico"),
+    "god": ("Gott", "dios"),
+    "goddess": ("Göttin", "diosa"),
     "greek": ("griechisch", "griego"),
     "guilloche": ("Guilloche", "guilloché"),
     "head": ("Kopf", "cabeza"),
@@ -1034,7 +1042,64 @@ SEARCH_WORD_TRANSLATIONS = {
 }
 
 
+# Search-only equivalents: canonical registrations and display names stay Greek.
+# Each alias uses the same finite subject membership for statues and busts.
+# Apollo and Helios remain separate; Phaeton is not an alias of either god.
+SUBJECT_SEARCH_ALIASES = {
+    "zeus": {
+        "jupiter": ("Jupiter", "Jupiter", "Júpiter"),
+        "jove": ("Jove", "Jove", "Jove"),
+        "iuppiter": ("Iuppiter", "Iuppiter", "Iuppiter"),
+    },
+    "hera": {"juno": ("Juno", "Juno", "Juno")},
+    "poseidon": {
+        "neptune": ("Neptune", "Neptun", "Neptuno"),
+        "neptunus": ("Neptunus", "Neptunus", "Neptunus"),
+    },
+    "demeter": {"ceres": ("Ceres", "Ceres", "Ceres")},
+    "athena": {
+        "minerva": ("Minerva", "Minerva", "Minerva"),
+        "athene": ("Athene", "Athene", "Atenea"),
+    },
+    "apollo": {"apollon": ("Apollon", "Apollon", "Apolo")},
+    "artemis": {"diana": ("Diana", "Diana", "Diana")},
+    "ares": {"mars": ("Mars", "Mars", "Marte")},
+    "aphrodite": {"venus": ("Venus", "Venus", "Venus")},
+    "hephaestus": {
+        "vulcan": ("Vulcan", "Vulkan", "Vulcano"),
+        "vulcanus": ("Vulcanus", "Vulcanus", "Vulcanus"),
+        "hephaistos": ("Hephaistos", "Hephaistos", "Hefesto"),
+    },
+    "hermes": {
+        "mercury": ("Mercury", "Merkur", "Mercurio"),
+        "mercurius": ("Mercurius", "Mercurius", "Mercurius"),
+    },
+    "dionysus": {
+        "bacchus": ("Bacchus", "Bacchus", "Baco"),
+        "liber": ("Liber", "Liber", "Liber"),
+        "liber_pater": ("Liber Pater", "Liber Pater", "Liber Pater"),
+        "dionysos": ("Dionysos", "Dionysos", "Dioniso"),
+    },
+    "hestia": {"vesta": ("Vesta", "Vesta", "Vesta")},
+    "helios": {"sol": ("Sol", "Sol", "Sol")},
+    "heracles": {
+        "hercules": ("Hercules", "Herkules", "Hércules"),
+        "herakles": ("Herakles", "Herakles", "Heracles"),
+    },
+    # The name is shared by Greek and Roman tellings, not a different deity.
+    "phaeton": {"phaethon": ("Phaethon", "Phaethon", "Faetón")},
+}
+SEARCH_ALIAS_TRANSLATIONS = {
+    alias: names
+    for aliases in SUBJECT_SEARCH_ALIASES.values()
+    for alias, names in aliases.items()
+}
+GODDESS_SEARCH_SUBJECTS = frozenset({"aphrodite", "artemis", "athena", "demeter", "hera", "hestia"})
+
+
 def translated_search_tag(tag: str, language: str) -> str:
+    if tag in SEARCH_ALIAS_TRANSLATIONS:
+        return SEARCH_ALIAS_TRANSLATIONS[tag][("en_us", "de_de", "es_es").index(language)]
     if language == "en_us":
         return tag.replace("_", " ")
     index = {"de_de": 0, "es_es": 1}[language]
@@ -1388,7 +1453,7 @@ def generate_tags(
         ]
         direct_tags[f"{family}_statue"] = family_refs
         relation_tags.setdefault(family, []).append(f"#{NAMESPACE}:{family}_statue")
-        if family in OLYMPIAN_STATUE_FAMILIES + HERO_STATUE_FAMILIES:
+        if family in OLYMPIAN_STATUE_FAMILIES + HERO_STATUE_FAMILIES + ("helios", "phaeton"):
             greek_values.append(f"#{NAMESPACE}:{family}_statue")
     for group, members in {
         "olympian": OLYMPIAN_STATUE_FAMILIES,
@@ -1412,6 +1477,20 @@ def generate_tags(
         ]
         relation_tags.setdefault("greek", []).extend(bust_tags)
         relation_tags.setdefault("olympian", []).extend(bust_tags)
+    for subject, aliases in SUBJECT_SEARCH_ALIASES.items():
+        if subject in relation_tags:
+            for alias in aliases:
+                relation_tags[alias] = [f"#{NAMESPACE}:{subject}"]
+    divine_subjects = [
+        subject for subject in SUBJECT_SEARCH_ALIASES
+        if subject != "phaeton" and subject in relation_tags
+    ]
+    if divine_subjects:
+        relation_tags["deity"] = [f"#{NAMESPACE}:{subject}" for subject in divine_subjects]
+        relation_tags["god"] = [f"#{NAMESPACE}:deity"]
+    goddesses = [subject for subject in divine_subjects if subject in GODDESS_SEARCH_SUBJECTS]
+    if goddesses:
+        relation_tags["goddess"] = [f"#{NAMESPACE}:{subject}" for subject in goddesses]
     plinth_families = [family for family in families if family in PLINTH_FAMILIES]
     if plinth_families:
         plinth_refs = [

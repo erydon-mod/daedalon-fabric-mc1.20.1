@@ -44,7 +44,7 @@ class ModelUvScaleSafetyTests(unittest.TestCase):
             ))
             checked.add(stem)
 
-        self.assertEqual(64, len(checked))
+        self.assertEqual(68, len(checked))
         self.assertEqual(
             {f"plinth_{style}" for style in (
                 "astragalos", "bathron", "kion", "stephanos", "triphyllon"

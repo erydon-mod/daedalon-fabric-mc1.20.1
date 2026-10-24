@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "#daedalon:zeus",
+    "#daedalon:hera",
+    "#daedalon:poseidon",
+    "#daedalon:demeter",
+    "#daedalon:athena",
+    "#daedalon:apollo",
+    "#daedalon:artemis",
+    "#daedalon:ares",
+    "#daedalon:aphrodite",
+    "#daedalon:hephaestus",
+    "#daedalon:hermes",
+    "#daedalon:dionysus",
+    "#daedalon:hestia",
+    "#daedalon:helios",
+    "#daedalon:heracles"
+  ]
+}

@@ -20,7 +20,7 @@ public final class BustBlock extends StatueBlock {
         setDefaultState(getDefaultState().with(SIZE, StatueSize.SMALL));
     }
 
-    /** One immutable transform/collision profile shared by all 55 finishes. */
+    /** One immutable transform/collision profile shared by all 56 finishes. */
     public enum Style {
         APHRODITE("aphrodite", "Aphrodite", 0.4504320F, 0.6264431F),
         APOLLO("apollo", "Apollo", 0.4517038F, 0.6249626F),
@@ -32,6 +32,16 @@ public final class BustBlock extends StatueBlock {
         HEPHAESTUS("hephaestus", "Hephaestus", 0.4932719F, 0.4393166F),
         HERA("hera", "Hera", 0.5046978F, 0.6497283F),
         HERMES("hermes", "Hermes", 0.4655674F, 0.4573966F),
+        HESTIA("hestia", "Hestia", 0.4594176F, 0.5000260F, shape(
+                -1.020000, 0.000000, -0.452610, 2.018821, 0.361222, 1.452610,
+                -1.020000, 0.361222, -0.452610, 2.020000, 0.722444, 1.450868,
+                -0.969004, 0.722444, -0.345129, 1.996863, 1.083666, 1.393803,
+                -0.663220, 1.083666, 0.075615, 1.681942, 1.444889, 1.366171,
+                -0.286594, 1.444889, -0.167388, 1.368119, 1.806111, 1.294037,
+                -0.247614, 1.806111, -0.236023, 1.286497, 2.167333, 1.215532,
+                -0.215718, 2.167333, -0.280964, 1.222885, 2.528555, 1.159999,
+                -0.188086, 2.528555, -0.280964, 1.086083, 2.889777, 1.065877
+        )),
         POSEIDON("poseidon", "Poseidon", 0.4681214F, 0.5383594F),
         ZEUS("zeus", "Zeus", 0.5231352F, 0.7276151F);
 
@@ -45,6 +55,17 @@ public final class BustBlock extends StatueBlock {
                 float modelSupportCenterX,
                 float modelSupportCenterZ
         ) {
+            this(subjectId, displayName, modelSupportCenterX, modelSupportCenterZ,
+                    THREE_HIGH_NORTH_SHAPE);
+        }
+
+        Style(
+                String subjectId,
+                String displayName,
+                float modelSupportCenterX,
+                float modelSupportCenterZ,
+                VoxelShape threeHighSourceShape
+        ) {
             this.subjectId = subjectId;
             this.displayName = displayName;
             this.profile = createProfile(
@@ -52,7 +73,7 @@ public final class BustBlock extends StatueBlock {
                     modelSupportCenterX,
                     0.0F,
                     modelSupportCenterZ,
-                    THREE_HIGH_NORTH_SHAPE
+                    threeHighSourceShape
             );
         }
 

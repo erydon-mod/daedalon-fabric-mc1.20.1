@@ -10,6 +10,7 @@
       "com.oliver.daedalon.gametest.FinialCopingFixture"
     ],
     "fabric-gametest": [
+      "com.oliver.daedalon.gametest.OlympianCompletionGameTests",
       "com.oliver.daedalon.gametest.MetalDecorGameTests",
       "com.oliver.daedalon.gametest.DecorPreviewGameTests",
       "com.oliver.daedalon.gametest.FinialGameTests",

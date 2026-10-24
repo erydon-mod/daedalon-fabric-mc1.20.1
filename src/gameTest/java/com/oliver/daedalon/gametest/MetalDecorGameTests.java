@@ -63,7 +63,7 @@ public final class MetalDecorGameTests {
                         "Decorative plinth has fountain instructions: " + id);
             }
         }
-        context.assertTrue(count == 116, "Expected 116 bronze/silver decorations, found " + count);
+        context.assertTrue(count == 124, "Expected 124 bronze/silver decorations, found " + count);
         context.complete();
     }
 

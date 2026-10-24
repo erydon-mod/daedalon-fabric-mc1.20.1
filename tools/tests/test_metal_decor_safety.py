@@ -17,7 +17,7 @@ class MetalDecorSafetyTests(unittest.TestCase):
             *GENERATOR.FINIAL_FAMILIES, *GENERATOR.CORBEL_FAMILIES,
             *GENERATOR.PLINTH_FAMILIES,
         )
-        self.assertEqual(58, len(families))
+        self.assertEqual(62, len(families))
         self.assertEqual(set(families), set(GENERATOR.METAL_DECOR_FAMILIES))
         languages = {
             locale: load_json(DAEDALON_ASSETS / f"lang/{locale}.json")
@@ -46,7 +46,7 @@ class MetalDecorSafetyTests(unittest.TestCase):
                     label = entries[f"block.daedalon.{block_id}"]
                     expected = {"en_us": "Silver", "de_de": "Silber", "es_es": "Plata"}[locale] if metal == "silver" else {"en_us": "Bronze", "de_de": "Bronze", "es_es": "Bronce"}[locale]
                     self.assertTrue(label.startswith(expected + " "), (locale, block_id, label))
-        self.assertEqual(116, len(metal_ids))
+        self.assertEqual(124, len(metal_ids))
         self.assertTrue(metal_ids <= set(all_block_ids()))
 
     def test_metal_tags_exclude_stone_and_fountain_plinths(self) -> None:
@@ -54,8 +54,8 @@ class MetalDecorSafetyTests(unittest.TestCase):
             tags = DAEDALON_DATA / f"tags/{kind}"
             bronze = set(load_json(tags / "bronze.json")["values"])
             silver = set(load_json(tags / "silver.json")["values"])
-            self.assertEqual(61, len(bronze))
-            self.assertEqual(58, len(silver))
+            self.assertEqual(65, len(bronze))
+            self.assertEqual(62, len(silver))
             self.assertEqual(bronze | silver, set(load_json(DAEDALON_DATA / f"../material/tags/{kind}/metal.json")["values"]))
             self.assertTrue((bronze | silver).isdisjoint(load_json(DAEDALON_DATA / f"../material/tags/{kind}/stone.json")["values"]))
             fountain_plinths = set(load_json(tags / "fountain_plinth.json")["values"])

@@ -1,8 +1,8 @@
 # Bronze and silver decorations
 
-All 58 urn, statue, bust, finial, corbel and plinth families offer both bronze
-and silver. This adds 58 silver variants and the 10 previously missing bronze
-corbels/plinths, bringing the public catalogue to 4,439 blocks and items.
+All 62 urn, statue, bust, finial, corbel and plinth families offer both bronze
+and silver, including the Hermes, Hephaestus and Hestia statues and Hestia bust.
+The public catalogue contains 4,663 blocks and items.
 Existing block and item IDs are retained. Metal variants have no aged finish.
 
 `DecorMetal` supplies the two shared finishes. Registrations, generated

@@ -33,11 +33,11 @@ class ClassicalStatueBatchSafetyTests(unittest.TestCase):
         ]
 
     def test_exact_material_first_batch_ids(self) -> None:
-        self.assertEqual(18, len(self.families))
-        self.assertEqual(1008, len(self.block_ids))
-        self.assertEqual(1008, len(set(self.block_ids)))
-        self.assertEqual(4439, len(all_block_ids()))
-        self.assertEqual(4439, len(set(all_block_ids())))
+        self.assertEqual(21, len(self.families))
+        self.assertEqual(1176, len(self.block_ids))
+        self.assertEqual(1176, len(set(self.block_ids)))
+        self.assertEqual(4663, len(all_block_ids()))
+        self.assertEqual(4663, len(set(all_block_ids())))
         for family in self.families:
             expected: list[str] = []
             for material in GENERATOR.MATERIALS:
@@ -185,12 +185,12 @@ class ClassicalStatueBatchSafetyTests(unittest.TestCase):
             JAVA_ROOT / "client/model/obj/ObjMeshBakedModel.java"
         ).read_text(encoding="utf-8")
 
-        self.assertEqual(18, block.count("F, shape("))
+        self.assertEqual(21, block.count("F, shape("))
         self.assertIn("Direction.NORTH", block)
         self.assertIn("return createProfile(", block)
         self.assertIn("new ClassicalStatueBlock(decorSettings(), style)", registrations)
         self.assertIn("ClassicalStatueBlock.Style.values()", registrations)
-        self.assertIn("exactly 4439 decor blocks and items", registrations)
+        self.assertIn("exactly 4663 decor blocks and items", registrations)
         self.assertIn("ClassicalStatueBlock.Style.values()", plugin)
         self.assertIn('id("block/mesh/zeus_statue_display")', plugin)
         self.assertIn("createClassicalStatueVariants(style.subjectId())", plugin)
@@ -216,7 +216,13 @@ class ClassicalStatueBatchSafetyTests(unittest.TestCase):
         repairs = {
             repair["subject"]: repair for repair in evidence["runtime_repairs"]
         }
-        for family in AUTHORED_UV_STATUE_FAMILIES:
+        historical_families = {
+            subject.lower().replace(" ", "_")
+            for subjects in evidence["batch_subjects"].values()
+            for subject in subjects
+        } | {"zeus"}
+        self.assertEqual(19, len(historical_families))
+        for family in AUTHORED_UV_STATUE_FAMILIES & historical_families:
             subject = family.replace("_", " ").title()
             self.assertEqual(
                 MESH_EXPECTATIONS[family]["obj_sha256"],

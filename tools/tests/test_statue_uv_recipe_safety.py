@@ -86,7 +86,7 @@ class StatueUvRecipeSafetyTests(unittest.TestCase):
 
     def test_normal_replay_rejects_intentional_projection_fallbacks(self) -> None:
         parser = UV_GENERATOR.build_parser()
-        for family in ("bellerophon", "lion_statant"):
+        for family in set(UV_GENERATOR.MODEL_NAMES) - AUTHORED_UV_STATUE_FAMILIES:
             with self.subTest(family=family), self.assertRaisesRegex(
                 ValueError, f"no locked UV recipe for: {family}"
             ):
@@ -110,11 +110,13 @@ class StatueUvRecipeSafetyTests(unittest.TestCase):
     def test_all_write_refuses_incomplete_authored_coverage(self) -> None:
         parser = UV_GENERATOR.build_parser()
         with self.assertRaisesRegex(
-            ValueError, "no locked UV recipe for: bellerophon, lion_statant"
-        ):
+            ValueError, "no locked UV recipe for:"
+        ) as rejected:
             UV_GENERATOR.invocation_context(
                 parser.parse_args(["all", "--write"])
             )
+        for family in set(UV_GENERATOR.MODEL_NAMES) - AUTHORED_UV_STATUE_FAMILIES:
+            self.assertIn(family, str(rejected.exception))
 
 
 if __name__ == "__main__":

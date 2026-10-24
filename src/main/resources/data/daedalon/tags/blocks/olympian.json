@@ -9,9 +9,10 @@
     "#daedalon:athena_statue",
     "#daedalon:demeter_statue",
     "#daedalon:dionysus_statue",
-    "#daedalon:helios_statue",
+    "#daedalon:hephaestus_statue",
     "#daedalon:hera_statue",
-    "#daedalon:phaeton_statue",
+    "#daedalon:hermes_statue",
+    "#daedalon:hestia_statue",
     "#daedalon:poseidon_statue",
     "#daedalon:aphrodite_bust",
     "#daedalon:apollo_bust",
@@ -23,6 +24,7 @@
     "#daedalon:hephaestus_bust",
     "#daedalon:hera_bust",
     "#daedalon:hermes_bust",
+    "#daedalon:hestia_bust",
     "#daedalon:poseidon_bust",
     "#daedalon:zeus_bust"
   ]

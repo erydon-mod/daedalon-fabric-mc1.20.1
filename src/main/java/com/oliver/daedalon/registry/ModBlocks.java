@@ -144,7 +144,7 @@ public final class ModBlocks {
                 || SPARTAN_PROMACHOS_STATUES.size() != METAL_FAMILY_VARIANTS
                 || ZEUS_STATUES.size() != METAL_FAMILY_VARIANTS) {
             throw new IllegalStateException(
-                    "Daedalon must register exactly 4439 decor blocks and items"
+                    "Daedalon must register exactly 4663 decor blocks and items"
             );
         }
         for (UrnBlock.UrnStyle style : UrnBlock.UrnStyle.values()) {

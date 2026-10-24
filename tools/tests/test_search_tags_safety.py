@@ -44,7 +44,7 @@ class SearchTagSafetyTests(unittest.TestCase):
         return result
 
     def test_tag_graph_has_parity_and_only_finite_public_memberships(self) -> None:
-        self.assertEqual(4439, len(self.public_refs))
+        self.assertEqual(4663, len(self.public_refs))
         self.assertEqual(self.tags["blocks"], self.tags["items"])
         self.assertEqual(self.public_refs, self.members("daedalon_blocks"))
         for name, tag in self.tags["items"].items():
@@ -79,7 +79,7 @@ class SearchTagSafetyTests(unittest.TestCase):
         aged = frozenset(
             ref for ref in self.public_refs if "_aged_" in ref or ref.endswith("_aged")
         )
-        self.assertEqual(2160, len(aged))
+        self.assertEqual(2268, len(aged))
         for name in ("aged", "weathered", "worn"):
             self.assertEqual(aged, self.members(name), name)
         self.assertTrue(aged <= self.members("stone"))
@@ -117,6 +117,95 @@ class SearchTagSafetyTests(unittest.TestCase):
         expected = self.members("byzantine_capital") | self.members("byzantine_frieze")
         for name in ("byzantine", "guilloche"):
             self.assertEqual(expected, self.members(name), name)
+
+    def test_greek_and_roman_names_find_every_finish_of_the_same_subject(self) -> None:
+        # Independent identity table: aliases must not leak into other gods.
+        equivalents = {
+            "zeus": ("jupiter", "jove", "iuppiter"),
+            "hera": ("juno",),
+            "poseidon": ("neptune", "neptunus"),
+            "demeter": ("ceres",),
+            "athena": ("minerva", "athene"),
+            "apollo": ("apollon",),  # Apollo has the same Roman name.
+            "artemis": ("diana",),
+            "ares": ("mars",),
+            "aphrodite": ("venus",),
+            "hephaestus": ("vulcan", "vulcanus", "hephaistos"),
+            "hermes": ("mercury", "mercurius"),
+            "dionysus": ("bacchus", "liber", "liber_pater", "dionysos"),
+            "hestia": ("vesta",),
+        }
+        vocabulary = load_json(DAEDALON_ASSETS / "search_vocabulary.json")["families"]
+        all_olympians: set[str] = set()
+        for subject, aliases in equivalents.items():
+            with self.subTest(subject=subject):
+                expected = self.members(f"{subject}_statue") | self.members(f"{subject}_bust")
+                self.assertEqual(112, len(expected))
+                all_olympians.update(expected)
+                self.assertEqual(expected, self.members(subject))
+                for alias in aliases:
+                    self.assertEqual(expected, self.members(alias), alias)
+                for form in ("statue", "bust"):
+                    keys = set(vocabulary[f"{subject}_{form}"])
+                    self.assertTrue({subject, *aliases} <= keys, (subject, form))
+        self.assertEqual(1456, len(all_olympians))
+        self.assertEqual(all_olympians, self.members("olympian"))
+
+        for subject, alias in (("helios", "sol"), ("heracles", "hercules"),
+                               ("heracles", "herakles"), ("phaeton", "phaethon")):
+            self.assertEqual(self.members(subject), self.members(alias), alias)
+            self.assertTrue(self.members(subject) <= self.members("greek"))
+        self.assertFalse(self.members("sol") & self.members("apollo"))
+        self.assertFalse(self.members("sol") & self.members("phaeton"))
+        self.assertFalse(self.members("mercury") & self.members("heracles"))
+        self.assertFalse(self.members("helios") & self.members("olympian"))
+        self.assertFalse(self.members("phaeton") & self.members("olympian"))
+        self.assertEqual(
+            all_olympians | self.members("helios") | self.members("heracles"),
+            self.members("deity"),
+        )
+        self.assertEqual(self.members("deity"), self.members("god"))
+        goddesses = set().union(*(self.members(name) for name in
+                                 ("aphrodite", "artemis", "athena", "demeter", "hera", "hestia")))
+        self.assertEqual(goddesses, self.members("goddess"))
+        self.assertFalse(self.members("phaeton") & self.members("deity"))
+
+    def test_greek_and_roman_names_are_localized_in_every_supported_language(self) -> None:
+        greek_names = {
+            "zeus": ("zeus", "Zeus", "Zeus"),
+            "hera": ("hera", "Hera", "Hera"),
+            "poseidon": ("poseidon", "Poseidon", "Poseidón"),
+            "demeter": ("demeter", "Demeter", "Deméter"),
+            "athena": ("athena", "Athene", "Atenea"),
+            "apollo": ("apollo", "Apollo", "Apolo"),
+            "artemis": ("artemis", "Artemis", "Artemisa"),
+            "ares": ("ares", "Ares", "Ares"),
+            "aphrodite": ("aphrodite", "Aphrodite", "Afrodita"),
+            "hephaestus": ("hephaestus", "Hephaistos", "Hefesto"),
+            "hermes": ("hermes", "Hermes", "Hermes"),
+            "dionysus": ("dionysus", "Dionysos", "Dioniso"),
+            "hestia": ("hestia", "Hestia", "Hestia"),
+        }
+        roman_names = {
+            "jupiter": ("Jupiter", "Jupiter", "Júpiter"),
+            "juno": ("Juno", "Juno", "Juno"),
+            "neptune": ("Neptune", "Neptun", "Neptuno"),
+            "ceres": ("Ceres", "Ceres", "Ceres"),
+            "minerva": ("Minerva", "Minerva", "Minerva"),
+            "diana": ("Diana", "Diana", "Diana"),
+            "mars": ("Mars", "Mars", "Marte"),
+            "venus": ("Venus", "Venus", "Venus"),
+            "vulcan": ("Vulcan", "Vulkan", "Vulcano"),
+            "mercury": ("Mercury", "Merkur", "Mercurio"),
+            "bacchus": ("Bacchus", "Bacchus", "Baco"),
+            "vesta": ("Vesta", "Vesta", "Vesta"),
+            "hercules": ("Hercules", "Herkules", "Hércules"),
+        }
+        for index, language in enumerate(("en_us", "de_de", "es_es")):
+            entries = load_json(DAEDALON_ASSETS / f"lang/{language}.json")
+            for name, translations in (greek_names | roman_names).items():
+                with self.subTest(language=language, name=name):
+                    self.assertEqual(translations[index], entries[f"search.daedalon.tag.{name}"])
 
     def test_fountain_search_keeps_supported_plinths_and_excludes_metals(self) -> None:
         supported = frozenset(

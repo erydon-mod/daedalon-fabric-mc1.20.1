@@ -1,8 +1,10 @@
 # Missing Olympian model references
 
 Prepared 24 October 2026 after checking the current Daedalon registrations.
-These are authoring references; the four missing models have not been imported
-or registered by this task.
+These are authoring references. The Hermes, Hephaestus and Hestia statues and
+Hestia bust are now registered in Daedalon, completing all 13 requested gods in
+both forms. Import provenance and geometry measurements are recorded in
+[the completion evidence](../../evidence/olympian-completion-source.json).
 
 | Missing model | Reference image | Status |
 | --- | --- | --- |
@@ -21,6 +23,9 @@ Meshy:
 - `statues/Olymians/Hephaestus/Hephaestus 15k.obj`
 - `statues/Olymians/Hestia/Hestia 15k.obj`
 
+The supplied Hestia bust source is
+`Busts/Meshy_AI_assets_20260812_130813/hestia 15k.obj`.
+
 Each source directory also contains the original Meshy output and front, back,
 left and right reference PNGs. The three statue PNGs collected here are exact
 copies of their original front images. Their existing 384 x 1024 resolution is
@@ -34,9 +39,10 @@ drapery and flat truncated base. It has no separate pedestal or loose props.
 The small clasp carries a carved hearth-flame motif.
 
 Use `hestia_bust.png` as the single-object input for Meshy's Image to 3D workflow.
-The generated image is a concept reference, not an existing 3D mesh or in-game
-validation. Follow [ADDING_OBJ_MODELS.md](../../ADDING_OBJ_MODELS.md) for a later
-model import, with one pilot model before a wider batch.
+The generated image remains a concept reference, separate from the subsequently
+supplied 3D bust mesh and any in-game validation. Follow
+[ADDING_OBJ_MODELS.md](../../ADDING_OBJ_MODELS.md) for future model imports, with
+one pilot model before a wider batch.
 
 Meshy's official [Image to 3D guidance](https://docs.meshy.ai/en/webapp/image-to-3d)
 supports a clear complete subject, plain background and even lighting. Supply each
