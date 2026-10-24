@@ -1,0 +1,58 @@
+import groovy.json.JsonSlurper
+import java.util.zip.ZipFile
+
+// Opt-in development companion only. Ordinary Daedalon builds remain standalone.
+// Run with: gradlew -I gradle/with-erydon.init.gradle runClientWithErydon
+allprojects {
+    if (project != rootProject) return
+
+    plugins.withId('fabric-loom') {
+        def defaultJar = rootProject.file('../erydon-public/build/libs/erydon-fabric-mc1.20.1-compat2-2.0.0.jar')
+        def erydonJar = providers.gradleProperty('erydonJar').map { rootProject.file(it) }.getOrElse(defaultJar)
+        if (!erydonJar.isFile()) {
+            throw new GradleException("ERYDON test JAR not found: ${erydonJar}. Set -PerydonJar=<path> to an existing compatible JAR.")
+        }
+
+        def metadata
+        new ZipFile(erydonJar).withCloseable { archive ->
+            def entry = archive.getEntry('fabric.mod.json')
+            if (entry == null) throw new GradleException("Missing fabric.mod.json in ${erydonJar}")
+            archive.getInputStream(entry).withCloseable { input ->
+                metadata = new JsonSlurper().parse(input)
+            }
+        }
+        def generation = providers.gradleProperty('family_compatibility_generation').get().toInteger()
+        def minecraft = providers.gradleProperty('minecraft_version').get()
+        if (metadata.id != 'erydon' || metadata.depends?.minecraft != minecraft
+                || metadata.custom?.get('erydon:family_compatibility_generation') != generation) {
+            throw new GradleException("The combined client requires ERYDON for Minecraft ${minecraft}, compat${generation}: ${erydonJar}")
+        }
+
+        // The existing ERYDON 2.0.0 test artifact declares this newer runtime floor.
+        // Daedalon's published dependency metadata and compilation API stay unchanged.
+        dependencies.add('modRuntimeOnly', rootProject.files(erydonJar))
+        dependencies.add('modRuntimeOnly', 'net.fabricmc.fabric-api:fabric-api:0.92.11+1.20.1')
+
+        extensions.getByName('loom').runs.create('clientWithErydon') {
+            client()
+            name 'Daedalon + ERYDON placement test'
+            runDir 'run-with-erydon'
+            programArgs '--gameDir', rootProject.file('run-with-erydon').absolutePath
+            ideConfigGenerated(false)
+        }
+
+        afterEvaluate {
+            tasks.named('runClientWithErydon') {
+                maxHeapSize = '24G'
+                doFirst {
+                    logger.lifecycle("Combined client: Daedalon ${project.version} + ERYDON ${metadata.version}; ${erydonJar}")
+                    logger.lifecycle("Combined client game directory: ${rootProject.file('run-with-erydon')}")
+                }
+            }
+            tasks.named('runGameTest') {
+                systemProperty 'daedalon.test.requireErydon', 'true'
+                maxHeapSize = '16G'
+            }
+        }
+    }
+}

@@ -26,6 +26,7 @@ run-dev/irisUpdateInfo.json
 run-dev/options.txt
 run-dev/usercache.json
 run-server/
+/run-with-erydon/
 logs/
 crash-reports/
 *.log

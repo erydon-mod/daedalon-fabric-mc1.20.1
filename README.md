@@ -58,11 +58,17 @@ checks repeated debug-stick and bucket edits, and writes
 `build/reports/gametest/fountains.xml`. It does not open player saves or package
 a JAR; the test mod is separate from production sources.
 
+To test with Daedalon and ERYDON together, run `.\run-with-erydon.bat` from
+this project, or double-click the launcher. This separate client uses current
+Daedalon source and the existing ERYDON 2.0.0 compat2 JAR; its worlds and settings
+live in `run-with-erydon/`. Add `-PerydonJar=<path>` to select another compatible
+ERYDON JAR. This launch does not produce a release JAR.
+
 ## Exedra curved bench
 
 Exedra is available in all 27 standard and aged stone finishes. Place it at
 the default 3m width; the debug stick selects `width=2`, `width=3` or `width=4`,
-then `facing` and **Orientation** (Straight or Diagonal 45°). All widths stay 1m high; depth scales with width while preserving
+then **Orientation**, which turns through eight positions in 45° steps. All widths stay 1m high; depth scales with width while preserving
 the original footprint proportions (about 1.07m, 1.60m and 2.13m deep). Search for Exedra,
 bench, seat or furniture.
 
