@@ -868,9 +868,14 @@ public final class ObjMeshModelLoadingPlugin {
             List<Identifier> textureIds = new ArrayList<>(geometry.materialNames().size());
             List<Boolean> worldPhaseMaterials = new ArrayList<>(geometry.materialNames().size());
             for (String materialName : geometry.materialNames()) {
+                // The item-only medallion keeps its contrasting relief even when
+                // the selected background is Bronze or Silver. All other families
+                // retain the established whole-metal component override.
+                Identifier textureId = MedallionReliefMaterials.override(
+                        definition.objId(), materialName, variantTextureId);
                 // Whole-metal variants include named components such as Diota's handles.
                 // Stone variants retain their separately authored bronze handle texture.
-                Identifier textureId = usesMetalTexture(variantTextureId) ? null : materialTexture(materialName);
+                if (textureId == null) textureId = usesMetalTexture(variantTextureId) ? null : materialTexture(materialName);
                 Identifier resolvedTextureId = textureId == null ? variantTextureId : textureId;
                 Sprite sprite = textureId == null
                         ? variantSprite

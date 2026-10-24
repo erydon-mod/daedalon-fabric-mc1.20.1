@@ -297,7 +297,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             "urn_diota_bronze_handles.png",
             "urn_diota_bronze_handles_s.png",
         }
-        finish_names = {"bronze.png", "bronze_s.png", "silver.png", "silver_s.png", "white.png"}
+        finish_names = {"bronze.png", "bronze_s.png", "silver.png", "silver_s.png", "white.png", "black.png"}
         self.assertEqual(
             root_material_names | statue_names | handle_names | finish_names,
             {path.name for path in texture_root.glob("*.png")},

@@ -1,13 +1,15 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "particle": "daedalon:block/statue_spartan_promachos_aganite"
+    "particle": "daedalon:block/statue_spartan_promachos_aganite",
+    "relief_light": "daedalon:block/white",
+    "relief_dark": "daedalon:block/black"
   },
   "display": {
     "gui": {
       "rotation": [
         0,
-        0,
+        20,
         0
       ],
       "translation": [

@@ -18,5 +18,8 @@
     0.0,
     0.0
   ],
-  "particle": "daedalon:block/statue_spartan_promachos_aganite"
+  "particle": "daedalon:block/statue_spartan_promachos_aganite",
+  "materials": {
+    "medallion_relief": "daedalon:block/white"
+  }
 }
