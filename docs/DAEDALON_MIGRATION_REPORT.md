@@ -8,8 +8,11 @@ Daedalon is now an independent Fabric 1.20.1 / Java 17 mod. The approved
 freestanding OBJ decor was moved from ERYDON into the `daedalon` namespace
 without an ERYDON or Themelios runtime dependency.
 
-Daedalon deliberately has no finished logo yet. Fabric metadata omits an icon,
-and the creative tab temporarily uses the Konche urn.
+At the time of this 26 July 2026 migration, Daedalon had no finished logo: Fabric
+metadata omitted an icon, and the creative tab temporarily used the Konche urn.
+The later Portorium branding integration replaced those temporary choices with
+Daedalon's static square emblem in Fabric metadata and animated emblem in the
+creative tab; see [BRANDING.md](../BRANDING.md) for the current rules.
 
 ### 12 August 2026 development update
 

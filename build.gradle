@@ -298,3 +298,5 @@ tasks.named('check') {
 tasks.named('build') {
     dependsOn tasks.named('auditDaedalonJar')
 }
+
+apply from: 'gradle/branding-validation.gradle'

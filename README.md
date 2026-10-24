@@ -1,5 +1,7 @@
 # ERYDON Daedalon for Fabric 1.20.1
 
+![Animated ERYDON Daedalon logo](docs/branding/daedalon-logo.gif)
+
 ERYDON Daedalon is ERYDON's standalone collection of detailed OBJ decor for
 Minecraft 1.20.1.
 

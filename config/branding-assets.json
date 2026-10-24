@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "project": "ERYDON Daedalon",
+  "assets": [
+    {
+      "path": "docs/branding/daedalon-logo.gif",
+      "role": "readme_logo",
+      "sha256": "e897a18b01d2d94321b5d842023b6a240137f0948a66e43f1b7683c1dd6b18fc",
+      "bytes": 3037990,
+      "size": [
+        480,
+        171
+      ],
+      "frames": 156,
+      "readme": "README.md"
+    },
+    {
+      "path": "src/main/resources/assets/daedalon/icon.png",
+      "role": "static_icon",
+      "sha256": "2fb967a803f3eb7e62571e9c8dfd2a86b26331abd9fc9509e3e667dea7d0fee3",
+      "bytes": 211823,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "path": "src/main/resources/assets/daedalon/textures/item/emblem.png",
+      "role": "creative_emblem",
+      "sha256": "d9eb3e4738b93826c87ca631f5e3f1a0d61d625797ce4a1c19b79505118f6f13",
+      "bytes": 251913,
+      "size": [
+        64,
+        2880
+      ],
+      "frames": 45,
+      "frame_size": [
+        64,
+        64
+      ]
+    }
+  ],
+  "runtime_roots": [
+    "src/main/resources/assets"
+  ],
+  "references": [
+    {
+      "path": "src/main/resources/fabric.mod.json",
+      "pointer": [
+        "icon"
+      ],
+      "equals": "assets/daedalon/icon.png"
+    },
+    {
+      "path": "src/main/resources/assets/daedalon/models/item/emblem.json",
+      "pointer": [
+        "textures",
+        "layer0"
+      ],
+      "equals": "daedalon:item/emblem"
+    },
+    {
+      "path": "src/main/java/com/oliver/daedalon/registry/ModItemGroups.java",
+      "pattern": "ModItems\\.EMBLEM"
+    }
+  ],
+  "forbidden": []
+}
