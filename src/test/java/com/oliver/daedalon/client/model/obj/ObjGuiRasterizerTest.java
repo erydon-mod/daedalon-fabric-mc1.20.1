@@ -37,6 +37,7 @@ final class ObjGuiRasterizerTest {
             assertEquals(farThenNear.uAt(index), nearThenFar.uAt(index), EPSILON);
             assertEquals(farThenNear.vAt(index), nearThenFar.vAt(index), EPSILON);
             assertEquals(farThenNear.shadeAt(index), nearThenFar.shadeAt(index), EPSILON);
+            assertEquals(farThenNear.reflectionAt(index), nearThenFar.reflectionAt(index));
         }
         assertTrue(farThenNear.coveredSampleCount() > 0);
         assertEquals(farThenNear.coveredSampleCount(), nearThenFar.coveredSampleCount());
@@ -59,7 +60,22 @@ final class ObjGuiRasterizerTest {
             assertEquals(first.uAt(index), second.uAt(index), 0.0F);
             assertEquals(first.vAt(index), second.vAt(index), 0.0F);
             assertEquals(first.shadeAt(index), second.shadeAt(index), 0.0F);
+            assertEquals(first.reflectionAt(index), second.reflectionAt(index));
         }
+    }
+
+    @Test
+    void reflectionUsesTheVisibleInterpolatedSurfaceNormal() {
+        ObjGuiRasterizer rasterizer = new ObjGuiRasterizer(4);
+        rasterizer.rasterize(new ObjGuiRasterizer.Vertex(0, 0, .75F, 0, 0, 0, 0, 1),
+                new ObjGuiRasterizer.Vertex(4, 0, .75F, 1, 0, 0, .6F, .8F),
+                new ObjGuiRasterizer.Vertex(0, 4, .75F, 0, 1, .6F, 0, .8F), 0);
+        // Pixel (1,1) has barycentric weights .25, .375, .375.
+        assertEquals(ObjGuiMetalLighting.reflection(.225F, .225F, .85F), rasterizer.reflectionAt(5));
+        int before = rasterizer.reflectionAt(5);
+        rasterizer.rasterize(vertex(0, 0, .25F, 0, 0), vertex(4, 0, .25F, 1, 0),
+                vertex(0, 4, .25F, 0, 1), 1);
+        assertEquals(before, rasterizer.reflectionAt(5), "Hidden triangles must not replace visible reflections");
     }
 
     @Test

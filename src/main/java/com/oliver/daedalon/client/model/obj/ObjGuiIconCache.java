@@ -472,6 +472,12 @@ public final class ObjGuiIconCache {
     static void renderIcon(ObjMeshBakedModel model, ObjGuiIconTemplate template,
                                    List<SourceTexture> materials, NativeImage atlas,
                                    int cellX, int cellY) throws IOException {
+        // Logical materials, rather than pixel colours, distinguish silver from
+        // grey stone and include bronze handles on an otherwise stone model.
+        boolean[] metallic = new boolean[materials.size()];
+        for (int material = 0; material < metallic.length; material++) {
+            metallic[material] = ObjGuiMetalLighting.isMetalTexture(model.materialTextureIds().get(material));
+        }
         int writtenPixels = 0;
         for (int iconY = 0; iconY < template.resolution(); iconY++) {
             for (int iconX = 0; iconX < template.resolution(); iconX++) {
@@ -503,9 +509,16 @@ public final class ObjGuiIconCache {
                         int red = color & 0xFF;
                         float shade = template.shadeAt(sampleIndex);
                         alphaSum += alpha;
-                        redPremultiplied += Math.min(1.0F, SRGB_TO_LINEAR[red] * shade) * alpha;
-                        greenPremultiplied += Math.min(1.0F, SRGB_TO_LINEAR[green] * shade) * alpha;
-                        bluePremultiplied += Math.min(1.0F, SRGB_TO_LINEAR[blue] * shade) * alpha;
+                        if (metallic[material]) {
+                            int reflection = template.reflectionAt(sampleIndex);
+                            redPremultiplied += ObjGuiMetalLighting.channel(SRGB_TO_LINEAR[red], reflection, 0) * alpha;
+                            greenPremultiplied += ObjGuiMetalLighting.channel(SRGB_TO_LINEAR[green], reflection, 8) * alpha;
+                            bluePremultiplied += ObjGuiMetalLighting.channel(SRGB_TO_LINEAR[blue], reflection, 16) * alpha;
+                        } else {
+                            redPremultiplied += Math.min(1.0F, SRGB_TO_LINEAR[red] * shade) * alpha;
+                            greenPremultiplied += Math.min(1.0F, SRGB_TO_LINEAR[green] * shade) * alpha;
+                            bluePremultiplied += Math.min(1.0F, SRGB_TO_LINEAR[blue] * shade) * alpha;
+                        }
                     }
                 }
 

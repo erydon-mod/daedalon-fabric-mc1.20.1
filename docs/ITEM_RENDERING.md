@@ -7,7 +7,12 @@ in item frames and in inventories. Placed geometry is unchanged.
 Each family's shared depth-buffered projection uses every quad from its actual
 baked OBJ mesh, its GUI transform and its model normals. Colour comes from the
 active resource pack, with the same phase-zero material mapping as item models
-and the established vanilla two-light shading. Material variants reuse that
+and the established vanilla two-light shading for stone. Bronze and Silver
+instead use fixed studio reflections from the actual model normals, with
+bright softboxes, dark surroundings and a gentle cool fill. Their chosen
+texture supplies the metal colour, including bronze handles on stone urns.
+These reflections are baked into the cached picture, not live shader effects.
+Material variants reuse that
 projection; cached pictures do not need another mesh render.
 
 `ObjGuiIconCache.tryRender` intercepts the normal item renderer before its
@@ -48,7 +53,21 @@ requested icons fill them: 22 pages cover all 4,734 catalogue items, with a
 352 MiB worst-case GPU allocation if every item is visited. There are no
 full-size CPU atlas copies and no slot reuse that could invalidate deferred
 item vertices. Untouched pages allocate nothing. Axiom's separate 256x256
-preview remains unchanged, including its 128-image LRU and generation throttle.
+preview keeps its 128-image LRU and generation throttle.
+
+The projection stores one packed reflection value per sample (64 KiB per
+128x128 family, shared by all finishes). Metal colouring runs only when an icon
+is prepared in the background; it adds no draw calls, atlas pages or per-frame
+lighting. Axiom's existing 256x256 render uses the same metal treatment.
+
+The 24 October 2026 native comparison covered Zeus, Diota, Gothic panels,
+Gothic friezes and the medallion with native and Collection 64x resources:
+84 renders, including 60 metal/diffuse comparisons at 64, 128 and 256 pixels.
+Alpha and coverage matched, mixed Diota stone pixels retained their exact
+diffuse colours, and all 18 existing stone comparison PNGs were byte-identical.
+Warm cache checks scheduled no new work or atlas allocations; the actual GPU
+upload/filter/gutter/release checks also passed. These generated-picture and
+cache checks do not measure live REI frame rate or replace player visual review.
 
 This supersedes the older per-family 3D held/dropped-item preparation notes.
 Existing optional item meshes remain compatible assets, but this item-rendering

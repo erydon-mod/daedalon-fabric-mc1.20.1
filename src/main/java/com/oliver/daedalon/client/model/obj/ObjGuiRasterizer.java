@@ -31,6 +31,7 @@ final class ObjGuiRasterizer {
     private final float[] u;
     private final float[] v;
     private final float[] shade;
+    private final int[] reflection;
     private final int[] material;
     private int coveredSampleCount;
 
@@ -44,6 +45,7 @@ final class ObjGuiRasterizer {
         this.u = new float[sampleCount];
         this.v = new float[sampleCount];
         this.shade = new float[sampleCount];
+        this.reflection = new int[sampleCount];
         this.material = new int[sampleCount];
         Arrays.fill(depth, Float.NEGATIVE_INFINITY);
         Arrays.fill(material, -1);
@@ -97,6 +99,7 @@ final class ObjGuiRasterizer {
                         + weightB * b.normalZ()
                         + weightC * c.normalZ();
                 shade[index] = guiShade(normalX, normalY, normalZ);
+                reflection[index] = ObjGuiMetalLighting.reflection(normalX, normalY, normalZ);
                 material[index] = materialTag;
             }
         }
@@ -132,6 +135,10 @@ final class ObjGuiRasterizer {
 
     float shadeAt(int index) {
         return shade[index];
+    }
+
+    int reflectionAt(int index) {
+        return reflection[index];
     }
 
     float depthAt(int index) {

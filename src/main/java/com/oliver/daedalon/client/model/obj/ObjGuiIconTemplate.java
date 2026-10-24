@@ -110,6 +110,10 @@ final class ObjGuiIconTemplate {
         return rasterizer.shadeAt(index);
     }
 
+    int reflectionAt(int index) {
+        return rasterizer.reflectionAt(index);
+    }
+
     private static void project(QuadView quad,
                                 int vertex,
                                 Matrix4f positionMatrix,
