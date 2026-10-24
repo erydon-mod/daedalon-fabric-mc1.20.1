@@ -20,6 +20,7 @@ import com.oliver.daedalon.block.FountainBasinPartBlock;
 import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.SpartanStatueBlock;
 import com.oliver.daedalon.block.SizedDecorBlock;
+import com.oliver.daedalon.block.ObeliskPartBlock;
 import com.oliver.daedalon.block.UrnBlock;
 import com.oliver.daedalon.block.ZeusStatueBlock;
 import net.minecraft.block.AbstractBlock;
@@ -90,6 +91,8 @@ public final class ModBlocks {
     private static final List<Block> OBELISKOS_MONUMENTS = new ArrayList<>();
     private static MonopterosPartBlock monopterosPart;
     public static MonopterosPartBlock monopterosPart() { return monopterosPart; }
+    private static ObeliskPartBlock obeliskosPart;
+    public static ObeliskPartBlock obeliskosPart() { return obeliskosPart; }
     private static FountainBasinPartBlock fountainBasinPart;
     private static CapitalPartBlock capitalPart;
     public static CapitalPartBlock capitalPart() { return capitalPart; }
@@ -284,6 +287,9 @@ public final class ModBlocks {
     }
 
     private static void registerInternalBlocks() {
+        obeliskosPart = Registry.register(Registries.BLOCK, id("obeliskos_part"),
+                new ObeliskPartBlock(AbstractBlock.Settings.create().strength(1.5F, 6.0F)
+                        .dropsNothing().nonOpaque().dynamicBounds().pistonBehavior(PistonBehavior.BLOCK)));
         capitalPart = Registry.register(Registries.BLOCK, id("capital_part"),
                 new CapitalPartBlock(AbstractBlock.Settings.create().strength(1.5F, 6.0F)
                         .dropsNothing().nonOpaque().dynamicBounds().pistonBehavior(PistonBehavior.BLOCK)));

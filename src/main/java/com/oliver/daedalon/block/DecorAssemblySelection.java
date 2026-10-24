@@ -18,14 +18,17 @@ public final class DecorAssemblySelection {
             anchor = MonopterosPartBlock.resolveAnchorPos(world, hit, state);
         } else if (state.getBlock() instanceof FountainBasinPartBlock) {
             anchor = FountainBasinPartBlock.resolveAnchorPos(world, hit, state);
+        } else if (state.getBlock() instanceof ObeliskPartBlock) {
+            anchor = ObeliskPartBlock.resolveAnchorPos(world, hit, state);
         }
         if (anchor == null) return List.of();
         BlockState owner = world.getBlockState(anchor);
         boolean dome = owner.getBlock() instanceof MonopterosBlock;
-        if (!dome && !(owner.getBlock() instanceof FountainBasinBlock)) return List.of();
+        boolean obelisk = owner.getBlock() instanceof SizedDecorBlock && owner.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.EXTRA_LARGE;
+        if (!dome && !obelisk && !(owner.getBlock() instanceof FountainBasinBlock)) return List.of();
 
-        int radius = dome ? MonopterosGeometry.RADIUS : FountainBasinGeometry.PART_RADIUS;
-        int height = dome ? MonopterosGeometry.HEIGHT_CELLS : FountainBasinGeometry.MAX_PART_Y + 1;
+        int radius = dome ? MonopterosGeometry.RADIUS : obelisk ? ObeliskPartsGeometry.RADIUS : FountainBasinGeometry.PART_RADIUS;
+        int height = dome ? MonopterosGeometry.HEIGHT_CELLS : obelisk ? ObeliskPartsGeometry.HEIGHT : FountainBasinGeometry.MAX_PART_Y + 1;
         List<BlockPos> cells = new ArrayList<>();
         cells.add(anchor.toImmutable());
         for (int y = 0; y < height; y++) {
@@ -34,6 +37,7 @@ public final class DecorAssemblySelection {
                     BlockPos pos = anchor.add(x, y, z);
                     BlockState part = world.getBlockState(pos);
                     if (dome ? MonopterosPartBlock.isOwnedBy(part, pos, anchor)
+                            : obelisk ? ObeliskPartBlock.isOwnedBy(part, pos, anchor)
                             : FountainBasinPartBlock.isOwnedBy(part, pos, anchor)) {
                         cells.add(pos);
                     }

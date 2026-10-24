@@ -3,6 +3,7 @@ package com.oliver.daedalon.gametest;
 import com.oliver.daedalon.block.DecorPreviewBounds;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
+import com.oliver.daedalon.block.SizedDecorBlock;
 import net.minecraft.registry.Registries;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.test.GameTest;
@@ -31,9 +32,19 @@ public final class DecorPreviewGameTests {
                     context.assertTrue(box.maxY - box.minY == 2.0,
                             "Double capital preview must include both vertical cells");
                 }
+                if (block instanceof SizedDecorBlock) {
+                    var full = SizedDecorBlock.fullShape(state.get(SizedDecorBlock.SIZE)).getBoundingBox();
+                    context.assertTrue(box.minX == full.minX && box.minY == full.minY && box.minZ == full.minZ
+                                    && box.maxX == full.maxX && box.maxY == full.maxY && box.maxZ == full.maxZ,
+                            "Every obelisk preview must retain its complete body bounds");
+                    if (state.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.EXTRA_LARGE) {
+                        context.assertTrue(box.getYLength() == 5 && box.getXLength() > 1,
+                                "Extra Large previews must include the five-block height and scaled overhang");
+                    }
+                }
             }
         }
-        context.assertTrue(supported > 4000 && helpers == 3, "Missing decorations or duplicate helper previews");
+        context.assertTrue(supported > 4000 && helpers == 4, "Missing decorations or duplicate helper previews");
         context.complete();
     }
 }

@@ -5,6 +5,7 @@ import com.oliver.daedalon.block.CapitalPartBlock;
 import com.oliver.daedalon.block.FountainBasinPartBlock;
 import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.MonopterosPartBlock;
+import com.oliver.daedalon.block.ObeliskPartBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Property;
 
@@ -27,7 +28,7 @@ public final class DaedalonDebugProperties {
     /** The actual player-visible controls, excluding automatic and helper-only state. */
     public static List<Property<?>> ordered(BlockState state) {
         if (state.getBlock() instanceof CapitalPartBlock || state.getBlock() instanceof FountainBasinPartBlock
-                || state.getBlock() instanceof MonopterosPartBlock) return List.of();
+                || state.getBlock() instanceof MonopterosPartBlock || state.getBlock() instanceof ObeliskPartBlock) return List.of();
         boolean manual = state.getBlock() instanceof FriezeBlock && state.get(FriezeBlock.MANUAL_CORNER);
         boolean repeating = !(state.getBlock() instanceof FriezeBlock frieze) || frieze.style().sections() > 1;
         return ordered(state.getBlock().getStateManager().getProperties().stream()
@@ -142,6 +143,7 @@ public final class DaedalonDebugProperties {
                 case "medium" -> 1;
                 case "large" -> 2;
                 case "double" -> 2;
+                case "extra_large" -> 3;
                 default -> 100;
             };
             case "width", "diameter", "pattern" -> Integer.parseInt(valueName);

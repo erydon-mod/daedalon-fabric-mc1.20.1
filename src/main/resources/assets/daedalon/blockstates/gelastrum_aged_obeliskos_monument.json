@@ -8,6 +8,9 @@
     },
     "size=large": {
       "model": "daedalon:mesh/gelastrum_aged_obeliskos_monument"
+    },
+    "size=extra_large": {
+      "model": "daedalon:mesh/gelastrum_aged_obeliskos_monument"
     }
   }
 }

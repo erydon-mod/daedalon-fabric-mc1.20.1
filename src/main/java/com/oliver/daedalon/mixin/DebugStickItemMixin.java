@@ -8,6 +8,8 @@ import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
 import com.oliver.daedalon.block.MonopterosPartBlock;
+import com.oliver.daedalon.block.ObeliskPartBlock;
+import com.oliver.daedalon.block.SizedDecorBlock;
 import com.oliver.daedalon.block.FountainBasinPartBlock;
 import com.oliver.daedalon.block.FountainBowlModel;
 import com.oliver.daedalon.block.PlinthBlock;
@@ -78,6 +80,12 @@ abstract class DebugStickItemMixin {
 
         if (state.getBlock() instanceof MonopterosPartBlock) {
             BlockPos anchorPos = MonopterosPartBlock.resolveAnchorPos(world, pos, state);
+            if (anchorPos == null) { callback.setReturnValue(false); return; }
+            targetPos = anchorPos;
+            targetState = world.getBlockState(anchorPos);
+        }
+        if (state.getBlock() instanceof ObeliskPartBlock) {
+            BlockPos anchorPos = ObeliskPartBlock.resolveAnchorPos(world, pos, state);
             if (anchorPos == null) { callback.setReturnValue(false); return; }
             targetPos = anchorPos;
             targetState = world.getBlockState(anchorPos);
@@ -153,6 +161,12 @@ abstract class DebugStickItemMixin {
             }
             if (targetState.getBlock() instanceof MonopterosBlock && !MonopterosBlock.canOccupy(world, targetPos, updated)) {
                 sendMessage(player, Text.translatable("message.daedalon.monopteros_size_blocked"));
+                callback.setReturnValue(true);
+                return;
+            }
+            if (targetState.getBlock() instanceof SizedDecorBlock && selected == SizedDecorBlock.SIZE
+                    && !SizedDecorBlock.canChangeSize(world, targetPos, updated)) {
+                sendMessage(player, Text.translatable("message.daedalon.obelisk_size_blocked"));
                 callback.setReturnValue(true);
                 return;
             }

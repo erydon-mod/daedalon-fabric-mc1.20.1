@@ -801,7 +801,7 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
             }
         }
     if family in SIZED_DECOR_FAMILIES:
-        return {"variants": {f"size={size}": {"model": model} for size in ("small", "medium", "large")}}
+        return {"variants": {f"size={size}": {"model": model} for size in ("small", "medium", "large", "extra_large")}}
     if family in PLINTH_FAMILIES:
         return {
             "variants": {
@@ -1373,6 +1373,11 @@ def generate_languages(
             "de_de": "Nicht genug freier Platz für diesen Kuppeldurchmesser.",
             "es_es": "No hay suficiente espacio libre para este diámetro de cúpula.",
         }[language]
+        entries["message.daedalon.obelisk_size_blocked"] = {
+            "en_us": "Not enough clear space for that obelisk size",
+            "de_de": "Nicht genug freier Platz für diese Obeliskengröße",
+            "es_es": "No hay suficiente espacio libre para ese tamaño de obelisco",
+        }[language]
         entries["message.daedalon.finial_size_blocked"] = {
             "en_us": "Not enough clear space for that finial size.",
             "de_de": "Nicht genug freier Platz für diese Größe des Zierelements.",
@@ -1863,6 +1868,10 @@ def generate(families: tuple[str, ...], check: bool = False) -> list[Path]:
     remove_creative_only_loot(families, check, changed)
     generate_models_and_loot(families, check, changed)
     generate_olympian_god_items(check, changed)
+    write(RESOURCES / f"assets/{NAMESPACE}/blockstates/obeliskos_part.json",
+          json_bytes({"variants": {"": {"model": f"{NAMESPACE}:block/internal/obeliskos_part"}}}), check, changed)
+    write(RESOURCES / f"assets/{NAMESPACE}/models/block/internal/obeliskos_part.json",
+          json_bytes({"elements": []}), check, changed)
     vocabulary = generate_tags(families, check, changed)
     generate_languages(families, check, changed, vocabulary)
     return changed

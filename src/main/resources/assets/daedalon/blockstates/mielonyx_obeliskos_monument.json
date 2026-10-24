@@ -8,6 +8,9 @@
     },
     "size=large": {
       "model": "daedalon:mesh/mielonyx_obeliskos_monument"
+    },
+    "size=extra_large": {
+      "model": "daedalon:mesh/mielonyx_obeliskos_monument"
     }
   }
 }

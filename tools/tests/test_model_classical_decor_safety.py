@@ -54,7 +54,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
 
         expected_files = {f"{block_id}.json" for block_id in block_ids}
         self.assertEqual(
-            expected_files | {"capital_part.json", "fountain_basin_part.json", "monopteros_part.json"},
+            expected_files | {"capital_part.json", "fountain_basin_part.json", "monopteros_part.json", "obeliskos_part.json"},
             {
                 path.name
                 for path in (DAEDALON_ASSETS / "blockstates").glob("*.json")

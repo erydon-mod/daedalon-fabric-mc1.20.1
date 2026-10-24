@@ -8,6 +8,9 @@
     },
     "size=large": {
       "model": "daedalon:mesh/sanguenite_obeliskos_monument"
+    },
+    "size=extra_large": {
+      "model": "daedalon:mesh/sanguenite_obeliskos_monument"
     }
   }
 }

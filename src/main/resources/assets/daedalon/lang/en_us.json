@@ -489,6 +489,7 @@
   "option.daedalon.capital.size.double": "Large",
   "message.daedalon.capital_size_blocked": "Not enough clear space for a Large capital (2×2×2 blocks).",
   "message.daedalon.monopteros_size_blocked": "Not enough clear space for this dome diameter.",
+  "message.daedalon.obelisk_size_blocked": "Not enough clear space for that obelisk size",
   "message.daedalon.finial_size_blocked": "Not enough clear space for that finial size.",
   "block.daedalon.aganite_amphora_urn": "Aganite Amphora Urn",
   "block.daedalon.aganite_aged_amphora_urn": "Aganite Aged Amphora Urn",

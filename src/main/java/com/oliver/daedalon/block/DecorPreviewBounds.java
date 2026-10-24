@@ -23,6 +23,10 @@ public final class DecorPreviewBounds {
             double radius = size.metres * .5;
             return new Box(.5 - radius, 0, .5 - radius, .5 + radius, size.height, .5 + radius);
         }
+        if (state.getBlock() instanceof SizedDecorBlock) {
+            // XL collision is split among helper cells; the preview represents the complete monument.
+            return SizedDecorBlock.fullShape(state.get(SizedDecorBlock.SIZE)).getBoundingBox();
+        }
         // A copied region already supplies the persisted join; no neighbour refresh is needed.
         if (state.getBlock() instanceof FriezeBlock) state = state.with(FriezeBlock.MANUAL_CORNER, true);
         var shape = state.getBlock() instanceof FountainBasinBlock basin

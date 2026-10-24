@@ -489,6 +489,7 @@
   "option.daedalon.capital.size.double": "Grande",
   "message.daedalon.capital_size_blocked": "No hay espacio libre suficiente para un capitel grande (2×2×2 bloques).",
   "message.daedalon.monopteros_size_blocked": "No hay suficiente espacio libre para este diámetro de cúpula.",
+  "message.daedalon.obelisk_size_blocked": "No hay suficiente espacio libre para ese tamaño de obelisco",
   "message.daedalon.finial_size_blocked": "No hay espacio libre suficiente para ese tamaño de remate.",
   "block.daedalon.aganite_amphora_urn": "Aganite Urna Amphora",
   "block.daedalon.aganite_aged_amphora_urn": "Aganite Urna Amphora Envejecida",

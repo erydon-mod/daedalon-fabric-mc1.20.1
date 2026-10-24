@@ -112,7 +112,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
                     )
                 elif family == "obeliskos_monument":
                     self.assertEqual(
-                        {"size=small", "size=medium", "size=large"},
+                        {"size=small", "size=medium", "size=large", "size=extra_large"},
                         set(state["variants"]),
                     )
                 elif family in GENERATOR.FINIAL_FAMILIES:

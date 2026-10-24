@@ -42,6 +42,13 @@ class OlympianSelectorSafetyTests(unittest.TestCase):
             lang = load_json(DAEDALON_ASSETS / f"lang/{locale}.json")
             for key in ("catalogue.daedalon.design.olympian_god_statue",
                         "tooltip.daedalon.olympian_god.cycle", "tooltip.daedalon.olympian_god.next",
-                        ):
+                        "message.daedalon.obelisk_size_blocked"):
                 self.assertTrue(lang[key].strip(), (locale, key))
             self.assertIn("%s", lang["tooltip.daedalon.olympian_god.next"])
+
+    def test_large_obelisk_helper_is_empty_and_has_no_item_or_loot(self) -> None:
+        state = load_json(DAEDALON_ASSETS / "blockstates/obeliskos_part.json")
+        self.assertEqual({"variants": {"": {"model": "daedalon:block/internal/obeliskos_part"}}}, state)
+        self.assertEqual({"elements": []}, load_json(DAEDALON_ASSETS / "models/block/internal/obeliskos_part.json"))
+        self.assertFalse((DAEDALON_ASSETS / "models/item/obeliskos_part.json").exists())
+        self.assertFalse((DAEDALON_DATA / "loot_tables/blocks/obeliskos_part.json").exists())

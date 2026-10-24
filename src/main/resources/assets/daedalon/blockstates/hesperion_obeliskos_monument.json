@@ -8,6 +8,9 @@
     },
     "size=large": {
       "model": "daedalon:mesh/hesperion_obeliskos_monument"
+    },
+    "size=extra_large": {
+      "model": "daedalon:mesh/hesperion_obeliskos_monument"
     }
   }
 }
