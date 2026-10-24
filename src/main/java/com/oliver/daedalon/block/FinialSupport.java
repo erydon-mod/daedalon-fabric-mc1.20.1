@@ -182,7 +182,10 @@ public final class FinialSupport {
         Alignment alignment=profile.alignment;
         double normalLength=Math.sqrt(1+profile.gradient()*profile.gradient());
         double thickness=profile.copingThickness;
-        double nativeX=(profile.start+profile.end)*.5+profile.gradient()*thickness/normalLength;
+        // Full-width caps keep the ornament over the block centre. A steep half-width
+        // cap's finite top deck is shifted by its normal extrusion, so retain that deck centre.
+        double nativeX=(profile.start+profile.end)*.5;
+        if(profile.end-profile.start<1) nativeX+=profile.gradient()*thickness/normalLength;
         double nativeZ=.5;
         if(alignment!=Alignment.AXIS) { nativeX=.5+alignment.offsetX; nativeZ=.5+alignment.offsetZ; }
         double x=.5+(nativeX-.5)*cos-(nativeZ-.5)*sin;
@@ -190,7 +193,8 @@ public final class FinialSupport {
         if(profile.offset) {
             x-=facing.getOffsetX(); z-=facing.getOffsetZ();
         }
-        double planeY=profile.height((profile.start+profile.end)*.5)+thickness/normalLength-(profile.coping ? 1 : 0);
+        // Evaluate the same authored top plane at the chosen horizontal anchor.
+        double planeY=profile.height(nativeX)+thickness*normalLength-(profile.coping ? 1 : 0);
         double gradientX=-profile.gradient()*cos,gradientZ=-profile.gradient()*sin;
         double yaw=angle+alignment.yaw;
         double width=(style.finialFootWidth()+1.0/16.0)*scale*BASE_WIDTH;

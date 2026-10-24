@@ -4,6 +4,17 @@ The five original finial OBJ meshes are unchanged. A finial placed on Georgian
 coping reads the saved coping surface, facing and owner offset. Its square
 support stub follows that plane, while the ornament remains upright.
 
+On full-width pitched coping, the finial stays over the centre of the owning
+block rather than following the cap's downhill extrusion. Its base is evaluated
+on the same authored top plane at that centre, so it rises with the slope rather
+than sinking into it. Both Georgian coping designs and both finial sizes use
+this anchor. Flat and diagonal-wall fits retain their established centres.
+
+Steep half-width coping retains the centre of its finite top deck. In particular,
+Grand steep coping shifts that deck far enough that forcing the ornament over
+the supporting half-cell would leave some small pedestals beyond the real top
+face. Upper-half owner offsets remain intact.
+
 Edit the shared Blockbench template at
 src/main/resources/assets/daedalon/authoring_models/block/finial/support_base.json.
 It is one unrotated square cuboid and accepts the 1.21.11 JSON header. Its
@@ -56,6 +67,10 @@ first-use placements against the installed CopingBlock's actual outline and
 all saved surfaces, facings, valid steep offsets and both finial sizes. It emits
 `DAEDALON_ERYDON_FINIAL_INTEGRATION` with its result; set
 `-Ddaedalon.test.requireErydon=true` to reject an accidentally standalone run.
+The matrix also checks the horizontal anchor and every fitted base corner
+against ERYDON's actual attachment plane. A separate centre regression covers
+all saved profiles, five styles, both sizes and all four facings, including the
+unchanged finite half-deck and diagonal-wall anchors.
 The packet regression also covers valid overhangs in both hands and rejects
 off-outline packets and unrelated items. These server checks do not replace
 in-game visual and interaction review.

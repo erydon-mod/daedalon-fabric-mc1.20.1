@@ -92,6 +92,66 @@ public final class FinialGameTests {
     }
 
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=600)
+    public void fullWidthCopingFinialsStayOverTheirBlockCentreWithoutMovingTheMountingPlane(TestContext context) {
+        int cases=0;
+        for(var style:FixedDecorBlock.Style.values()) {
+            if(!style.isFinial()) continue;
+            var finial=(FinialBlock)Registries.BLOCK.get(new Identifier("daedalon","bronze_"+style.idSuffix()));
+            for(var size:TwoSizeDecorBlock.Size.values()) for(var profile:FinialSupport.Profile.values())
+                for(Direction facing:Direction.Type.HORIZONTAL) {
+                    var state=finial.getDefaultState().with(TwoSizeDecorBlock.SIZE,size)
+                            .with(FinialBlock.SUPPORT,profile).with(FinialBlock.FACING,facing);
+                    var fit=FinialSupport.fit(state,style);
+                    assertCopingAnchor(context,state,fit);
+                    // Reconstruct the actual top plane from a point extruded along the source normal.
+                    // Moving its anchor must not translate the surface itself.
+                    double gradient=profile.gradient(),normalLength=Math.sqrt(1+gradient*gradient);
+                    double midpoint=(profile.start+profile.end)/2;
+                    double sourceX=midpoint+gradient*profile.copingThickness/normalLength,sourceZ=.5;
+                    if(profile.alignment!=FinialSupport.Alignment.AXIS) {
+                        sourceX=.5+profile.alignment.offsetX; sourceZ=.5+profile.alignment.offsetZ;
+                    }
+                    var source=turnedAnchor(sourceX,sourceZ,facing,profile.offset);
+                    double sourceY=profile.height(midpoint)+profile.copingThickness/normalLength-(profile.coping ? 1 : 0);
+                    double expectedPlane=sourceY+fit.gradientX()*(fit.centreX()-source[0])+fit.gradientZ()*(fit.centreZ()-source[1]);
+                    context.assertTrue(Math.abs(fit.planeY()-expectedPlane)<1e-8,
+                            "Recentering changed the physical mounting plane: "+profile+"/"+facing);
+                    var box=state.getOutlineShape(context.getWorld(),BlockPos.ORIGIN).getBoundingBox();
+                    context.assertTrue(Math.abs((box.minX+box.maxX)/2-fit.centreX())<1e-8
+                                    && Math.abs((box.minZ+box.maxZ)/2-fit.centreZ())<1e-8,
+                            "Selection and collision must share the centered ornament anchor");
+                    cases++;
+                }
+        }
+        context.assertTrue(cases==5*2*FinialSupport.Profile.values().length*4,"Cover every profile, style, size and facing");
+        System.out.println("DAEDALON_FINIAL_CENTRES passed cases="+cases);
+        context.complete();
+    }
+
+    private static void assertCopingAnchor(TestContext context,net.minecraft.block.BlockState state,FinialSupport.Fit fit) {
+        var profile=state.get(FinialBlock.SUPPORT);
+        double nativeX=(profile.start+profile.end)/2,nativeZ=.5;
+        // Preserve the finite steep top decks, whose centers differ from the supporting half-cell.
+        if(profile.coping && profile.end-profile.start==.5) nativeX+=2*profile.copingThickness/Math.sqrt(5);
+        if(profile.alignment!=FinialSupport.Alignment.AXIS) {
+            nativeX=.5+profile.alignment.offsetX; nativeZ=.5+profile.alignment.offsetZ;
+        }
+        var expected=turnedAnchor(nativeX,nativeZ,state.get(FinialBlock.FACING),profile.offset);
+        context.assertTrue(Math.abs(fit.centreX()-expected[0])<1e-8 && Math.abs(fit.centreZ()-expected[1])<1e-8,
+                "Finial must keep its block/finite-deck center: "+profile+"/"+state.get(FinialBlock.FACING)
+                        +" expected="+java.util.Arrays.toString(expected)+" actual="+fit.centreX()+","+fit.centreZ());
+    }
+
+    private static double[] turnedAnchor(double x,double z,Direction facing,boolean offset) {
+        double[] result=switch(facing) {
+            case SOUTH -> new double[]{1-z,x}; case WEST -> new double[]{1-x,1-z};
+            case NORTH -> new double[]{z,1-x}; default -> new double[]{x,z};
+        };
+        if(offset) { result[0]-=facing.getOffsetX(); result[1]-=facing.getOffsetZ(); }
+        return result;
+    }
+
+    @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=600)
     public void realPlacementChoosesEveryCopingProfileAndKeepsTheFittedBaseSelectable(TestContext context) {
         var world=context.getWorld();
         var player=context.createMockCreativeServerPlayerInWorld();
@@ -136,7 +196,7 @@ public final class FinialGameTests {
     }
 
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE,tickLimit=1200)
-    public void installedErydonCopingAcceptsFirstUseFromActualOutlineHits(TestContext context) {
+    public void installedErydonCopingAcceptsFirstUseFromActualOutlineHits(TestContext context) throws ReflectiveOperationException {
         var ordinary=new Identifier("erydon","aganite_coping_georgian");
         if(!Registries.BLOCK.containsId(ordinary)) {
             context.assertTrue(!Boolean.getBoolean("daedalon.test.requireErydon"),"Requested real ERYDON integration but its coping is not installed");
@@ -157,6 +217,7 @@ public final class FinialGameTests {
             context.assertTrue(Registries.BLOCK.containsId(id),"Real grand coping is missing from the integration runtime");
             var copingBlock=Registries.BLOCK.get(id);
             context.assertTrue(copingBlock.getClass().getName().equals("com.oliver.erydon.block.CopingBlock"),"Integration must exercise the real ERYDON implementation");
+            var attachment=copingBlock.getClass().getMethod("attachmentPose",net.minecraft.block.BlockState.class);
             for(var coping:copingBlock.getStateManager().getStates()) {
                 String surface=FinialSupportPlacement.named(coping,"surface");
                 boolean offset=FinialSupportPlacement.named(coping,"offset").equals("true");
@@ -164,6 +225,13 @@ public final class FinialGameTests {
                 world.setBlockState(support,coping,Block.NOTIFY_LISTENERS);
                 var outline=coping.getOutlineShape(world,support,ShapeContext.absent());
                 Vec3d centre=outline.getBoundingBox().getCenter().add(Vec3d.of(support));
+                var pose=attachment.invoke(null,coping);
+                var poseType=pose.getClass();
+                double px=(double)poseType.getMethod("centreX").invoke(pose),pz=(double)poseType.getMethod("centreZ").invoke(pose);
+                double py=(double)poseType.getMethod("topCentreY").invoke(pose);
+                double gx=(double)poseType.getMethod("gradientX").invoke(pose),gz=(double)poseType.getMethod("gradientZ").invoke(pose);
+                double yaw=(double)poseType.getMethod("yawRadians").invoke(pose);
+                double run=(double)poseType.getMethod("runLength").invoke(pose),width=(double)poseType.getMethod("width").invoke(pose);
                 for(var size:TwoSizeDecorBlock.Size.values()) for(Direction approach:Direction.values()) {
                     world.removeBlock(owner,false);
                     var stack=finial.asItem().getDefaultStack();
@@ -179,6 +247,19 @@ public final class FinialGameTests {
                     var expected=FinialSupport.Profile.find(offset ? "steep_upper_offset" : surface,true,path.endsWith("_grand"));
                     context.assertTrue(placed.get(FinialBlock.SUPPORT)==expected && placed.get(TwoSizeDecorBlock.SIZE)==size,
                             "Real coping placement selected the wrong saved fit: "+detail);
+                    var fit=FinialSupport.fit(placed,finial.style());
+                    assertCopingAnchor(context,placed,fit);
+                    double dx=fit.centreX()-px,dz=fit.centreZ()-pz;
+                    context.assertTrue(Math.abs(dx*Math.cos(yaw)+dz*Math.sin(yaw))<=run/2+1e-8
+                                    && Math.abs(-dx*Math.sin(yaw)+dz*Math.cos(yaw))<=width/2+1e-8,
+                            "Centered anchor must remain inside the actual finite coping top deck: "+detail);
+                    double half=fit.baseWidth()/2;
+                    for(double u:new double[]{-half,half}) for(double v:new double[]{-half,half}) {
+                        double x=fit.x(u,v),z=fit.z(u,v);
+                        double authoredTop=py+gx*(x-px)+gz*(z-pz);
+                        context.assertTrue(Math.abs(fit.bottom(x,z)+1-authoredTop)<1e-8,
+                                "Centered finial base must stay on ERYDON's actual authored attachment plane: "+detail);
+                    }
                     cases++;
                 }
                 world.removeBlock(owner,false);
