@@ -46,6 +46,12 @@ public final class DaedalonSearchIndex {
         keys.addAll(materials.get(material));
         keys.add(family);
         keys.addAll(families.get(family));
+        // Preserve searches for the same stone after its configured finish changes.
+        if (isStandardStone(entry)) {
+            keys.add("honed");
+            keys.add("polished");
+            keys.add("mirror");
+        }
         if (entry.aged()) {
             keys.add("aged");
             keys.add("weathered");
@@ -83,6 +89,16 @@ public final class DaedalonSearchIndex {
     public List<String> families() { return List.copyOf(families.keySet()); }
 
     public List<String> materials() { return List.copyOf(materials.keySet()); }
+
+    public boolean isStandardStone(String path) {
+        Entry entry = entry(path);
+        return entry != null && isStandardStone(entry);
+    }
+
+    private boolean isStandardStone(Entry entry) {
+        return !entry.aged() && !"white".equals(entry.material())
+                && materials.get(entry.material()).contains("stone");
+    }
 
     public record Entry(String material, String family, boolean aged) { }
 

@@ -275,7 +275,7 @@ class SearchTagSafetyTests(unittest.TestCase):
 
     def test_every_browser_search_key_is_present_in_all_three_languages(self) -> None:
         vocabulary = load_json(DAEDALON_ASSETS / "search_vocabulary.json")
-        tags = {"aged", "weathered", "worn", "daedalon", "deadalon"}
+        tags = {"aged", "weathered", "worn", "daedalon", "deadalon", "honed", "polished", "mirror"}
         for group in vocabulary.values():
             tags.update(tag for values in group.values() for tag in values)
         expected_keys = {f"search.daedalon.tag.{tag}" for tag in tags}
@@ -291,6 +291,19 @@ class SearchTagSafetyTests(unittest.TestCase):
                     self.assertNotEqual(key, entries[key])
         self.assertEqual(key_sets[0], key_sets[1])
         self.assertEqual(key_sets[0], key_sets[2])
+
+    def test_configured_finish_labels_and_search_words_have_all_three_translations(self) -> None:
+        labels = {
+            "en_us": ("Honed", "Polished", "Mirror"),
+            "de_de": ("Geschliffen", "Poliert", "Spiegelglanz"),
+            "es_es": ("Apomazado", "Pulido", "Espejo"),
+        }
+        for language, expected in labels.items():
+            entries = load_json(DAEDALON_ASSETS / f"lang/{language}.json")
+            for finish, label in zip(("honed", "polished", "mirror"), expected):
+                with self.subTest(language=language, finish=finish):
+                    self.assertEqual(label, entries[f"finish.daedalon.{finish}"])
+                    self.assertEqual(label.lower(), entries[f"search.daedalon.tag.{finish}"].lower())
 
     def test_browser_design_form_and_material_names_are_complete_and_distinct(self) -> None:
         vocabulary = load_json(DAEDALON_ASSETS / "search_vocabulary.json")

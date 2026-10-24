@@ -39,6 +39,19 @@ Spanish. White is a plain nonmetal finish; bronze and silver are metal finishes.
 The five architectural designs receive white, bronze and silver finish search terms without
 acquiring aged/weathered aliases.
 
+Fresh named stone also accepts `honed`, `polished` and `mirror`, including their
+German and Spanish translations, in all four search surfaces. All three words
+remain useful after changing the stone's finish. Aged stone, plain white and
+metal finishes do not acquire these aliases.
+
+When ERYDON is installed, fresh stone display names use its active per-stone
+finish, for example `Glacium Honed Hedra` or `Latmion Mirror Zeus Statue`.
+The names follow the same captured launch preference as rendering, so saved
+setting changes require a restart. Standalone Daedalon retains its original
+names. The optional adapter uses ERYDON's actual eligibility classifier,
+including support for the published form-first Spartan statue IDs; older
+companions that do not classify those IDs leave those names unchanged.
+
 ## Implementation and validation
 
 `DaedalonSearchIndex` factors the generated vocabulary into family and material
@@ -47,6 +60,15 @@ from registered public items. Optional plugins reuse these lists. Search
 classification is cached by item; REI and EMI also cache their plain-token flag
 when a query is parsed. There is no tick, render, world-tag scan or per-frame
 catalogue rebuilding.
+
+Finish labels are an immutable language-only resource overlay built once per
+launch and reused by resource reloads. It reads the bundled language catalogue
+and ERYDON's optional public client methods without scanning registries, worlds
+or resource-pack textures. An unavailable or incompatible optional API retains
+the original names. English, German and Spanish labels come from the same
+asset generator as the search translations. Focused tests cover captured
+preferences, all fresh catalogue names, exclusions and real text-index matches;
+the live combined-client wording remains a separate acceptance check.
 
 REI's text-cache integration appends aliases while constructing the cache value,
 before other family mods' return injections run. An early return for a foreign

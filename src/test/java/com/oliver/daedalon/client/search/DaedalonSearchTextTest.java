@@ -38,6 +38,21 @@ final class DaedalonSearchTextTest {
     }
 
     @Test
+    void realTextIndexFindsAllFinishWordsOnlyForFreshNamedStone() {
+        var vocabulary = DaedalonSearchVocabulary.index();
+        SuffixArray<String> index = new SuffixArray<>();
+        for (String path : List.of("glacium_hedra", "statue_spartan_promachos_glacium",
+                "glacium_aged_hedra", "white_gothic_wall_panel", "bronze_zeus_statue", "silver_gothic_frieze")) {
+            index.add(path, DaedalonSearchVocabulary.appendTerms("", vocabulary.terms(path)));
+        }
+        index.build();
+        for (String word : List.of("honed", "polished", "mirror")) {
+            assertEquals(Set.of("glacium_hedra", "statue_spartan_promachos_glacium"),
+                    Set.copyOf(index.findAll(word)), word);
+        }
+    }
+
+    @Test
     void composingWithAnAlreadyReturnedForeignModResultRetainsBothSetsOfTerms() {
         String delegated = "base name\u0000another mod alias";
         String result = DaedalonSearchVocabulary.appendTerms(delegated, List.of("Daedalon", "Deadalon", "Jupiter"));
