@@ -131,7 +131,7 @@ class FriezeSafetyChecks:
 
     def test_materials_languages_search_and_one_block_item(self):
         ids=GENERATOR.family_block_ids(self.family)
-        self.assertEqual(54,len(set(ids)))
+        self.assertEqual(57,len(set(ids)))
         self.assertIn('aganite_aged_'+self.family,ids)
         for lang in ('en_us','de_de','es_es'):
             values=load_json(DAEDALON_ASSETS/f'lang/{lang}.json')

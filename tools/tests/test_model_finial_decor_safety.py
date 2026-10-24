@@ -174,7 +174,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
         self.assertIn("FixedDecorBlock.Style.values()", mod_blocks)
         self.assertIn("registerKreneFountains()", mod_blocks)
         self.assertIn("registerObeliskosMonuments()", mod_blocks)
-        self.assertIn("exactly 4663 decor blocks and items", mod_blocks)
+        self.assertIn("exactly 4678 decor blocks and items", mod_blocks)
         self.assertIn("new FinialBlock(decorSettings(), style)", mod_blocks)
         self.assertIn("createDetailedVariants(style.idSuffix())", plugin)
         self.assertIn('createDetailedVariants("krene_fountain")', plugin)

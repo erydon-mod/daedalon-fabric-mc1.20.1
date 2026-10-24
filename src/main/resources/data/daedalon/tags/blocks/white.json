@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "daedalon:white_gothic_wall_panel",
+    "daedalon:white_byzantine_frieze",
+    "daedalon:white_gothic_frieze",
+    "daedalon:white_corinthian_frieze",
+    "daedalon:white_ionic_frieze"
+  ]
+}

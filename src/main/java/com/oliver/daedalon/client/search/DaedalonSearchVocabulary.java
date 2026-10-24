@@ -21,6 +21,8 @@ public final class DaedalonSearchVocabulary {
 
     private DaedalonSearchVocabulary() { }
 
+    public static DaedalonSearchIndex index() { return IndexHolder.INDEX; }
+
     public static List<String> terms(ItemStack stack) {
         if (!(stack.getItem() instanceof BlockItem)) return List.of();
         Identifier id = Registries.ITEM.getId(stack.getItem());

@@ -143,4 +143,51 @@ final class DaedalonSearchIndexTest {
             assertFalse(bundled.terms("bronze_phaeton_statue").contains("deity"));
         }
     }
+
+    @Test
+    void catalogueDesignsKeepAllFinishesTogetherAndFormsSeparate() throws Exception {
+        try (var input = getClass().getResourceAsStream("/assets/daedalon/search_vocabulary.json")) {
+            assertNotNull(input);
+            DaedalonSearchIndex bundled = DaedalonSearchIndex.read(
+                    new InputStreamReader(input, StandardCharsets.UTF_8));
+            for (String material : List.of("aganite", "aganite_aged", "bronze", "silver")) {
+                assertEquals("zeus_statue", bundled.entry(material + "_zeus_statue").family());
+                assertEquals("zeus_bust", bundled.entry(material + "_zeus_bust").family());
+            }
+            assertEquals("spartan_promachos_statue", bundled.entry("statue_spartan_promachos_aganite_aged").family());
+            assertEquals("aganite", bundled.entry("statue_spartan_promachos_aganite_aged").material());
+            assertTrue(bundled.entry("statue_spartan_promachos_aganite_aged").aged());
+            for (String family : bundled.families()) {
+                assertTrue(DaedalonCatalogue.FORMS.contains(DaedalonCatalogue.form(family)), family);
+            }
+            assertEquals("statues", DaedalonCatalogue.form("zeus_statue"));
+            assertEquals("busts", DaedalonCatalogue.form("zeus_bust"));
+            assertEquals("basins", DaedalonCatalogue.form("gothic_fountain_basin"));
+            assertEquals("fountains", DaedalonCatalogue.form("pege_fountain"));
+            assertEquals("benches", DaedalonCatalogue.form("exedra"));
+        }
+    }
+
+    @Test
+    void plainWhiteAndPreciousMetalArchitectureHaveAccurateSearchVocabulary() throws Exception {
+        try (var input = getClass().getResourceAsStream("/assets/daedalon/search_vocabulary.json")) {
+            assertNotNull(input);
+            DaedalonSearchIndex bundled = DaedalonSearchIndex.read(
+                    new InputStreamReader(input, StandardCharsets.UTF_8));
+            for (String family : List.of("byzantine_frieze", "gothic_frieze", "corinthian_frieze",
+                    "ionic_frieze", "gothic_wall_panel")) {
+                for (String finish : List.of("white", "bronze", "gold")) {
+                    String path = finish + "_" + family;
+                    assertEquals(family, bundled.entry(path).family());
+                    assertEquals(finish, bundled.entry(path).material());
+                    List<String> terms = bundled.terms(path);
+                    assertTrue(terms.contains(finish), path);
+                    assertEquals(!finish.equals("white"), terms.contains("metal"), path);
+                    assertFalse(terms.contains("aged"), path);
+                    assertFalse(terms.contains("weathered"), path);
+                    assertFalse(terms.contains("daedalon blocks"), path);
+                }
+            }
+        }
+    }
 }

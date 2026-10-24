@@ -1,5 +1,8 @@
 # Sculpture search names
 
+See [item browser search and groups](ITEM_BROWSER_SEARCH.md) for catalogue
+navigation and the plain `block` search rule.
+
 Statues and busts keep their Greek display names and registry IDs. Searching by
 the corresponding Roman name finds every material and aged finish of the same
 subject in Creative, REI, JEI and EMI.

@@ -212,7 +212,7 @@ public final class FriezeGameTests {
         var world=context.getWorld();
         var pos=context.getAbsolutePos(new BlockPos(3,2,3));
         var blocks=ModBlocks.blocks().stream().filter(b -> b instanceof FriezeBlock f && f.style()==style).toList();
-        context.assertTrue(blocks.size()==54,"Missing material variants");
+        context.assertTrue(blocks.size()==57,"Missing material variants");
         for (var block:blocks) for (var state:block.getStateManager().getStates()) {
             var shape=state.getCollisionShape(world,pos); var bounds=shape.getBoundingBox();
             context.assertTrue(bounds.minY==0 && bounds.maxY==1,"Height must be exactly 1m");

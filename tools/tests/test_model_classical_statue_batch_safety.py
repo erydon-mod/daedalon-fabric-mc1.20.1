@@ -36,8 +36,8 @@ class ClassicalStatueBatchSafetyTests(unittest.TestCase):
         self.assertEqual(21, len(self.families))
         self.assertEqual(1176, len(self.block_ids))
         self.assertEqual(1176, len(set(self.block_ids)))
-        self.assertEqual(4663, len(all_block_ids()))
-        self.assertEqual(4663, len(set(all_block_ids())))
+        self.assertEqual(4678, len(all_block_ids()))
+        self.assertEqual(4678, len(set(all_block_ids())))
         for family in self.families:
             expected: list[str] = []
             for material in GENERATOR.MATERIALS:
@@ -190,7 +190,7 @@ class ClassicalStatueBatchSafetyTests(unittest.TestCase):
         self.assertIn("return createProfile(", block)
         self.assertIn("new ClassicalStatueBlock(decorSettings(), style)", registrations)
         self.assertIn("ClassicalStatueBlock.Style.values()", registrations)
-        self.assertIn("exactly 4663 decor blocks and items", registrations)
+        self.assertIn("exactly 4678 decor blocks and items", registrations)
         self.assertIn("ClassicalStatueBlock.Style.values()", plugin)
         self.assertIn('id("block/mesh/zeus_statue_display")', plugin)
         self.assertIn("createClassicalStatueVariants(style.subjectId())", plugin)

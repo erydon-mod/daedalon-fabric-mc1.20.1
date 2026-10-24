@@ -44,7 +44,7 @@ class SearchTagSafetyTests(unittest.TestCase):
         return result
 
     def test_tag_graph_has_parity_and_only_finite_public_memberships(self) -> None:
-        self.assertEqual(4663, len(self.public_refs))
+        self.assertEqual(4678, len(self.public_refs))
         self.assertEqual(self.tags["blocks"], self.tags["items"])
         self.assertEqual(self.public_refs, self.members("daedalon_blocks"))
         for name, tag in self.tags["items"].items():
@@ -67,13 +67,15 @@ class SearchTagSafetyTests(unittest.TestCase):
         self.assertEqual(self.public_refs, stone | metal)
         self.assertEqual(stone, self.members("rock"))
         self.assertEqual(metal, self.members("metallic"))
-        self.assertEqual(metal, self.members("bronze") | self.members("silver"))
+        self.assertEqual(metal, self.members("bronze") | self.members("silver") | self.members("gold"))
         for kind in ("blocks", "items"):
             for name, expected in (("stone", stone), ("metal", metal)):
                 shared = load_json(DAEDALON_DATA / f"../material/tags/{kind}/{name}.json")
                 self.assertEqual(expected, set(shared["values"]), (kind, name))
-        self.assertTrue(all(value.split(":")[1].startswith(("bronze_", "silver_")) for value in metal))
-        self.assertFalse(any(value.split(":")[1].startswith(("bronze_", "silver_")) for value in stone))
+        self.assertTrue(all(value.split(":")[1].startswith(("bronze_", "silver_", "gold_")) for value in metal))
+        self.assertFalse(any(value.split(":")[1].startswith(("bronze_", "silver_", "gold_")) for value in stone))
+        self.assertEqual(5, len(self.members("white")))
+        self.assertTrue(self.members("white") <= stone)
 
     def test_weathered_search_exactly_matches_aged_stone(self) -> None:
         aged = frozenset(
@@ -223,7 +225,7 @@ class SearchTagSafetyTests(unittest.TestCase):
         self.assertEqual({"families", "materials"}, set(vocabulary))
         families = vocabulary["families"]
         materials = vocabulary["materials"]
-        self.assertEqual(29, len(materials))
+        self.assertEqual(31, len(materials))
         self.assertNotIn("aged", materials)
         reached_families: set[str] = set()
         for block_id in sorted(self.public_ids):
@@ -246,6 +248,8 @@ class SearchTagSafetyTests(unittest.TestCase):
                     self.assertIn(ref, self.members(tag), (block_id, tag))
                 self.assertIn(material, materials[material])
                 self.assertTrue({"decor", "architecture"} <= set(families[family]))
+                self.assertNotIn("daedalon_blocks", families[family])
+                self.assertNotIn("daedalon_blocks", materials[material])
         self.assertEqual(set(families), reached_families, "Manifest must not expose proxy or obsolete families")
         for group in vocabulary.values():
             for name, tags in group.items():
@@ -287,6 +291,32 @@ class SearchTagSafetyTests(unittest.TestCase):
                     self.assertNotEqual(key, entries[key])
         self.assertEqual(key_sets[0], key_sets[1])
         self.assertEqual(key_sets[0], key_sets[2])
+
+    def test_browser_design_form_and_material_names_are_complete_and_distinct(self) -> None:
+        vocabulary = load_json(DAEDALON_ASSETS / "search_vocabulary.json")
+        forms = {"statues", "busts", "urns", "capitals", "corbels", "plinths", "finials", "friezes",
+                 "panels", "benches", "planters", "domes", "basins", "fountains", "monuments"}
+        expected_keys = {
+            *(f"catalogue.daedalon.design.{family}" for family in vocabulary["families"]),
+            *(f"catalogue.daedalon.material.{material}" for material in vocabulary["materials"]),
+            *(f"catalogue.daedalon.form.{form}" for form in forms),
+            "catalogue.daedalon.designs", "catalogue.daedalon.forms", "catalogue.daedalon.materials",
+            "catalogue.daedalon.design_info",
+        }
+        localized_key_sets = []
+        for language in ("en_us", "de_de", "es_es"):
+            entries = load_json(DAEDALON_ASSETS / f"lang/{language}.json")
+            self.assertTrue(expected_keys <= entries.keys(), language)
+            localized_key_sets.append({key for key in entries if key.startswith("catalogue.daedalon.")})
+            design_names = [entries[f"catalogue.daedalon.design.{family}"] for family in vocabulary["families"]]
+            self.assertEqual(len(design_names), len(set(design_names)), language)
+            for key in expected_keys:
+                self.assertTrue(entries[key].strip(), (language, key))
+                self.assertNotEqual(key, entries[key], (language, key))
+            self.assertNotEqual(entries["catalogue.daedalon.design.zeus_statue"],
+                                entries["catalogue.daedalon.design.zeus_bust"])
+        self.assertEqual(localized_key_sets[0], localized_key_sets[1])
+        self.assertEqual(localized_key_sets[0], localized_key_sets[2])
 
 
 if __name__ == "__main__":

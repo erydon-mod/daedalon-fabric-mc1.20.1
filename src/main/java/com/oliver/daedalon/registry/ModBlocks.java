@@ -64,7 +64,8 @@ public final class ModBlocks {
                     + PlinthBlock.Style.values().length
                     + (int) java.util.Arrays.stream(FixedDecorBlock.Style.values()).filter(FixedDecorBlock.Style::isFinial).count();
     private static final int EXPECTED_BLOCK_COUNT =
-            STONE_VARIANTS_PER_FAMILY * FAMILY_COUNT + DecorMetal.values().length * METAL_FAMILY_COUNT + 3;
+            STONE_VARIANTS_PER_FAMILY * FAMILY_COUNT + DecorMetal.values().length * METAL_FAMILY_COUNT + 3
+                    + ArchitecturalFinish.values().length * (FriezeBlock.Style.values().length + 1);
 
     private static final Map<Identifier, Block> BY_ID = new LinkedHashMap<>();
     private static final List<Block> SPARTAN_PROMACHOS_STATUES = new ArrayList<>();
@@ -144,7 +145,7 @@ public final class ModBlocks {
                 || SPARTAN_PROMACHOS_STATUES.size() != METAL_FAMILY_VARIANTS
                 || ZEUS_STATUES.size() != METAL_FAMILY_VARIANTS) {
             throw new IllegalStateException(
-                    "Daedalon must register exactly 4663 decor blocks and items"
+                    "Daedalon must register exactly 4678 decor blocks and items"
             );
         }
         for (UrnBlock.UrnStyle style : UrnBlock.UrnStyle.values()) {
@@ -556,6 +557,9 @@ public final class ModBlocks {
             String prefix=material.id()+(aged?"_aged":"");
             registerBlock(prefix+"_gothic_wall_panel",new PanelBlock(decorSettings()));
         }
+        for (ArchitecturalFinish finish : ArchitecturalFinish.values()) {
+            registerBlock(finish.id() + "_gothic_wall_panel", new PanelBlock(decorSettings()));
+        }
     }
 
     private static void registerFriezes() {
@@ -563,6 +567,12 @@ public final class ModBlocks {
             for (boolean aged : new boolean[]{false, true}) {
                 registerBlock(material.id() + (aged ? "_aged" : "") + "_" + style.id() + "_frieze",
                         new FriezeBlock(decorSettings(),style));
+            }
+        }
+        for (FriezeBlock.Style style : FriezeBlock.Style.values()) {
+            for (ArchitecturalFinish finish : ArchitecturalFinish.values()) {
+                registerBlock(finish.id() + "_" + style.id() + "_frieze",
+                        new FriezeBlock(decorSettings(), style));
             }
         }
     }

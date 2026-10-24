@@ -21,7 +21,7 @@ public final class PanelGameTests {
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE)
     public void everyFinishHasThreeSquareSizesAndFlushBacking(TestContext context) {
         var panels=ModBlocks.blocks().stream().filter(b->b instanceof PanelBlock).toList();
-        context.assertTrue(panels.size()==54,"Expected one dual-purpose panel per finish");
+        context.assertTrue(panels.size()==57,"Expected one dual-purpose panel per finish");
         var pos=context.getAbsolutePos(new BlockPos(2,3,2));
         for (Block block:panels) for (var state:block.getStateManager().getStates()) {
             var panel=(PanelBlock)block;

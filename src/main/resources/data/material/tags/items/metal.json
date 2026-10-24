@@ -30,6 +30,11 @@
     "daedalon:bronze_hestia_bust",
     "daedalon:bronze_poseidon_bust",
     "daedalon:bronze_zeus_bust",
+    "daedalon:bronze_gothic_wall_panel",
+    "daedalon:bronze_byzantine_frieze",
+    "daedalon:bronze_gothic_frieze",
+    "daedalon:bronze_corinthian_frieze",
+    "daedalon:bronze_ionic_frieze",
     "daedalon:bronze_anthophoros_planter",
     "daedalon:bronze_monopteros_dome",
     "daedalon:bronze_balanos_finial",
@@ -127,6 +132,11 @@
     "daedalon:silver_bathron_plinth",
     "daedalon:silver_kion_plinth",
     "daedalon:silver_stephanos_plinth",
-    "daedalon:silver_triphyllon_plinth"
+    "daedalon:silver_triphyllon_plinth",
+    "daedalon:gold_gothic_wall_panel",
+    "daedalon:gold_byzantine_frieze",
+    "daedalon:gold_gothic_frieze",
+    "daedalon:gold_corinthian_frieze",
+    "daedalon:gold_ionic_frieze"
   ]
 }

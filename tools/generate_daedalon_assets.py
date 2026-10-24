@@ -142,6 +142,8 @@ MATERIALS = (
 )
 BRONZE_MATERIAL = "bronze"
 SILVER_MATERIAL = "silver"
+GOLD_MATERIAL = "gold"
+WHITE_FINISH = "white"
 NO_DROP_FAMILIES = frozenset(
     {
         "gothic_fountain_basin",
@@ -271,6 +273,11 @@ PLINTH_FAMILIES = {
 BENCH_FAMILIES = ("exedra", "hedra")
 WIDTH_FAMILIES = (*BENCH_FAMILIES, "anthophoros_planter")
 PANEL_FAMILIES = ("gothic_wall_panel",)
+ARCHITECTURAL_FINISH_FAMILIES = (
+    "gothic_wall_panel", "byzantine_frieze", "gothic_frieze",
+    "corinthian_frieze", "ionic_frieze",
+)
+ARCHITECTURAL_FINISHES = (WHITE_FINISH, BRONZE_MATERIAL, GOLD_MATERIAL)
 NEW_DECOR_FAMILIES = {
     "gothic_wall_panel": ("gothic_panel", "Gothic Panel", "Gotisches Paneel", "Panel Gótico"),
     "byzantine_frieze": ("byzantine_frieze", "Byzantine Frieze", "Byzantinischer Fries", "Friso Bizantino"),
@@ -348,10 +355,12 @@ BRONZE_FAMILIES = (
     "obeliskos_monument",
     "monopteros_dome",
     "anthophoros_planter",
+    *ARCHITECTURAL_FINISH_FAMILIES,
 )
 METAL_FAMILIES = {
     BRONZE_MATERIAL: BRONZE_FAMILIES,
     SILVER_MATERIAL: METAL_DECOR_FAMILIES,
+    GOLD_MATERIAL: ARCHITECTURAL_FINISH_FAMILIES,
 }
 STATUE_DISPLAY_MODELS = {
     "spartan": "statue_spartan_promachos",
@@ -410,7 +419,15 @@ def metal_block_id(family: str, metal: str) -> str:
         return f"{metal}_{family}"
     if family in FINIAL_FAMILIES or family in ("obeliskos_monument", "monopteros_dome", "anthophoros_planter"):
         return metal + "_" + family
+    if family in ARCHITECTURAL_FINISH_FAMILIES:
+        return architectural_finish_block_id(family, metal)
     raise ValueError(f"Unknown metal decor family: {family}")
+
+
+def architectural_finish_block_id(family: str, finish: str) -> str:
+    if family not in ARCHITECTURAL_FINISH_FAMILIES or finish not in ARCHITECTURAL_FINISHES:
+        raise ValueError(f"Unsupported architectural finish: {family} / {finish}")
+    return f"{finish}_{family}"
 
 
 def bronze_block_id(family: str) -> str:
@@ -495,6 +512,8 @@ def family_block_ids(family: str) -> list[str]:
     if family in NEW_DECOR_FAMILIES:
         for material in MATERIALS:
             result.extend((f"{material}_{family}", f"{material}_aged_{family}"))
+        if family in ARCHITECTURAL_FINISH_FAMILIES:
+            result.append(architectural_finish_block_id(family, WHITE_FINISH))
         return add_metals(family, result)
 
     if family in PLINTH_FAMILIES:
@@ -836,6 +855,9 @@ def translated_name(language: str, family: str, material: str, aged: bool) -> st
         "Bronce" if material == BRONZE_MATERIAL and language == "es_es"
         else "Silber" if material == SILVER_MATERIAL and language == "de_de"
         else "Plata" if material == SILVER_MATERIAL and language == "es_es"
+        else "Oro" if material == GOLD_MATERIAL and language == "es_es"
+        else "Weiß" if material == WHITE_FINISH and language == "de_de"
+        else "Blanco" if material == WHITE_FINISH and language == "es_es"
         else material.capitalize()
     )
     if family == "spartan":
@@ -964,6 +986,7 @@ SEARCH_WORD_TRANSLATIONS = {
     "gothic": ("gotisch", "gótico"),
     "god": ("Gott", "dios"),
     "goddess": ("Göttin", "diosa"),
+    "gold": ("Gold", "oro"),
     "greek": ("griechisch", "griego"),
     "guilloche": ("Guilloche", "guilloché"),
     "head": ("Kopf", "cabeza"),
@@ -1036,6 +1059,7 @@ SEARCH_WORD_TRANSLATIONS = {
     "vessel": ("Gefäß", "recipiente"),
     "volute": ("Volute", "voluta"),
     "wall": ("Wand", "pared"),
+    "white": ("weiß", "blanco"),
     "water": ("Wasser", "agua"),
     "weathered": ("verwittert", "desgastado"),
     "worn": ("abgenutzt", "desgastado"),
@@ -1157,6 +1181,10 @@ def search_vocabulary(
                 if family in metal_families]
         for metal, metal_families in METAL_FAMILIES.items()
     })
+    material_ids[WHITE_FINISH] = [
+        architectural_finish_block_id(family, WHITE_FINISH)
+        for family in families if family in ARCHITECTURAL_FINISH_FAMILIES
+    ]
     return {
         "families": {
             ("spartan_promachos_statue" if family == "spartan" else
@@ -1170,6 +1198,25 @@ def search_vocabulary(
     }
 
 
+CATALOGUE_FORM_NAMES = {
+    "statues": ("Statues", "Statuen", "Estatuas"),
+    "busts": ("Busts", "Büsten", "Bustos"),
+    "urns": ("Urns", "Urnen", "Urnas"),
+    "capitals": ("Capitals", "Kapitelle", "Capiteles"),
+    "corbels": ("Corbels", "Konsolen", "Ménsulas"),
+    "plinths": ("Plinths", "Sockel", "Pedestales"),
+    "finials": ("Finials", "Zierelemente", "Remates"),
+    "friezes": ("Friezes", "Friese", "Frisos"),
+    "panels": ("Panels", "Paneele", "Paneles"),
+    "benches": ("Benches", "Bänke", "Bancos"),
+    "planters": ("Planters", "Pflanzgefäße", "Jardineras"),
+    "domes": ("Domes", "Kuppeln", "Cúpulas"),
+    "basins": ("Basins", "Becken", "Cuencas"),
+    "fountains": ("Fountains", "Brunnen", "Fuentes"),
+    "monuments": ("Monuments", "Denkmäler", "Monumentos"),
+}
+
+
 def generate_languages(
     families: tuple[str, ...], check: bool, changed: list[Path],
     search_vocabulary: dict[str, dict[str, list[str]]],
@@ -1181,6 +1228,29 @@ def generate_languages(
             search_tags.update(tag for tags in group.values() for tag in tags)
         for tag in sorted(search_tags):
             entries[f"search.daedalon.tag.{tag}"] = translated_search_tag(tag, language)
+        language_index = ("en_us", "de_de", "es_es").index(language)
+        for key, labels in {
+            "designs": ("Designs", "Modelle", "Diseños"),
+            "forms": ("Forms", "Formen", "Formas"),
+            "materials": ("Materials and finishes", "Materialien und Oberflächen", "Materiales y acabados"),
+            "design_info": (
+                "%s: compare all available materials and finishes for this design.",
+                "%s: Alle verfügbaren Materialien und Oberflächen dieses Modells vergleichen.",
+                "%s: compara todos los materiales y acabados disponibles para este diseño.",
+            ),
+        }.items():
+            entries[f"catalogue.daedalon.{key}"] = labels[language_index]
+        for form, names in CATALOGUE_FORM_NAMES.items():
+            entries[f"catalogue.daedalon.form.{form}"] = names[language_index]
+        for material in search_vocabulary["materials"]:
+            label = translated_search_tag(material, language)
+            entries[f"catalogue.daedalon.material.{material}"] = label[0].upper() + label[1:]
+        for family in families:
+            family_key = ("spartan_promachos_statue" if family == "spartan" else
+                          family_block_ids(family)[0].removeprefix(f"{MATERIALS[0]}_"))
+            entries[f"catalogue.daedalon.design.{family_key}"] = translated_name(
+                language, family, MATERIALS[0], False
+            ).removeprefix(MATERIALS[0].capitalize() + " ")
         particle_messages = {
             "en_us": ("Fountain droplets: Normal (1x). This computer only.", "Fountain droplets: High (4x). This computer only.", "Could not save the fountain particle setting; the previous setting is unchanged."),
             "de_de": ("Brunnentropfen: Normal (1x). Nur auf diesem Computer.", "Brunnentropfen: Hoch (4x). Nur auf diesem Computer.", "Die Brunnenpartikel-Einstellung konnte nicht gespeichert werden; die bisherige Einstellung bleibt erhalten."),
@@ -1251,6 +1321,11 @@ def generate_languages(
                     entries[f"block.{NAMESPACE}.{block_id}"] = translated_name(
                         language, family, metal, False
                     )
+            if family in ARCHITECTURAL_FINISH_FAMILIES:
+                block_id = architectural_finish_block_id(family, WHITE_FINISH)
+                entries[f"block.{NAMESPACE}.{block_id}"] = translated_name(
+                    language, family, WHITE_FINISH, False
+                )
         write(
             RESOURCES / f"assets/{NAMESPACE}/lang/{language}.json",
             json_bytes(entries),
@@ -1310,6 +1385,12 @@ def generate_tags(
         "aged": aged_refs,
         "stone": stone_refs,
     }
+    white_refs = [
+        f"{NAMESPACE}:{architectural_finish_block_id(family, WHITE_FINISH)}"
+        for family in families if family in ARCHITECTURAL_FINISH_FAMILIES
+    ]
+    if white_refs:
+        direct_tags[WHITE_FINISH] = white_refs
     relation_tags: dict[str, list[str]] = {
         "rock": [f"#{NAMESPACE}:stone"],
         "weathered": [f"#{NAMESPACE}:aged"],

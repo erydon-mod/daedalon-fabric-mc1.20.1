@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 /** Bundled catalogue metadata; independent of a world's tag binding or optional browsers. */
 public final class DaedalonSearchIndex {
@@ -34,41 +35,55 @@ public final class DaedalonSearchIndex {
     }
 
     List<String> keys(String path) {
-        if (path == null) return List.of();
-        // Published stone statues retain their original form-first IDs.
-        String statuePrefix = "statue_spartan_promachos_";
-        if (path.startsWith(statuePrefix)) {
-            String material = path.substring(statuePrefix.length());
-            boolean aged = material.endsWith("_aged");
-            if (aged) material = material.substring(0, material.length() - "_aged".length());
-            if (!materials.containsKey(material)) return List.of();
-            path = material + (aged ? "_aged" : "") + "_spartan_promachos_statue";
-        }
-        int separator = path.indexOf('_');
-        if (separator < 1) return List.of();
-        String material = path.substring(0, separator);
-        List<String> materialKeys = materials.get(material);
-        if (materialKeys == null) return List.of();
-
-        String family = path.substring(separator + 1);
-        boolean aged = family.startsWith("aged_");
-        if (aged) family = family.substring("aged_".length());
-        List<String> familyKeys = families.get(family);
-        if (familyKeys == null) return List.of();
-
+        Entry entry = entry(path);
+        if (entry == null) return List.of();
+        String material = entry.material();
+        String family = entry.family();
         LinkedHashSet<String> keys = new LinkedHashSet<>();
         keys.add("daedalon");
         keys.add(material);
-        keys.addAll(materialKeys);
+        keys.addAll(materials.get(material));
         keys.add(family);
-        keys.addAll(familyKeys);
-        if (aged) {
+        keys.addAll(families.get(family));
+        if (entry.aged()) {
             keys.add("aged");
             keys.add("weathered");
             keys.add("worn");
         }
         return List.copyOf(keys);
     }
+
+    /** The same exact family lookup drives aliases and browser grouping. */
+    public Entry entry(String path) {
+        if (path == null) return null;
+        // Published stone statues retain their original form-first IDs.
+        String statuePrefix = "statue_spartan_promachos_";
+        if (path.startsWith(statuePrefix)) {
+            String material = path.substring(statuePrefix.length());
+            boolean aged = material.endsWith("_aged");
+            if (aged) material = material.substring(0, material.length() - "_aged".length());
+            if (!materials.containsKey(material)) return null;
+            path = material + (aged ? "_aged" : "") + "_spartan_promachos_statue";
+        }
+        int separator = path.indexOf('_');
+        if (separator < 1) return null;
+        String material = path.substring(0, separator);
+        List<String> materialKeys = materials.get(material);
+        if (materialKeys == null) return null;
+
+        String family = path.substring(separator + 1);
+        boolean aged = family.startsWith("aged_");
+        if (aged) family = family.substring("aged_".length());
+        List<String> familyKeys = families.get(family);
+        if (familyKeys == null) return null;
+        return new Entry(material, family, aged);
+    }
+
+    public List<String> families() { return List.copyOf(families.keySet()); }
+
+    public List<String> materials() { return List.copyOf(materials.keySet()); }
+
+    public record Entry(String material, String family, boolean aged) { }
 
     static String words(String key) {
         return key.replace('_', ' ');
@@ -93,6 +108,6 @@ public final class DaedalonSearchIndex {
             }
             result.put(entry.getKey(), List.copyOf(keys));
         }
-        return Map.copyOf(result);
+        return Collections.unmodifiableMap(result);
     }
 }

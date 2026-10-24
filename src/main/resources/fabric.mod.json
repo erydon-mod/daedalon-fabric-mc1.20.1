@@ -19,6 +19,9 @@
     ],
     "emi": [
       "com.oliver.daedalon.compat.emi.DaedalonEmiPlugin"
+    ],
+    "rei_client": [
+      "com.oliver.daedalon.compat.rei.DaedalonReiClientPlugin"
     ]
   },
   "mixins": [

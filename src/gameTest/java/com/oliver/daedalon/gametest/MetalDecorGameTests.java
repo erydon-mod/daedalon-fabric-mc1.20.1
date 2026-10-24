@@ -3,12 +3,16 @@ package com.oliver.daedalon.gametest;
 import com.oliver.daedalon.block.BustBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.FinialBlock;
+import com.oliver.daedalon.block.FriezeBlock;
+import com.oliver.daedalon.block.PanelBlock;
 import com.oliver.daedalon.block.FountainAssemblyPlacement;
 import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.StatueBlock;
 import com.oliver.daedalon.block.UrnBlock;
 import com.oliver.daedalon.block.entity.FountainBasinBlockEntity;
 import com.oliver.daedalon.registry.DecorMetal;
+import com.oliver.daedalon.registry.ArchitecturalFinish;
+import com.oliver.daedalon.registry.ModBlocks;
 import com.oliver.daedalon.client.search.PlinthSearchVocabulary;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Block;
@@ -29,6 +33,35 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 public final class MetalDecorGameTests {
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
+    public void carvedFinishesRetainPlacementControlsAndMaterialTags(TestContext context) {
+        int count = 0;
+        for (Block stone : ModBlocks.blocks()) {
+            if (!(stone instanceof FriezeBlock) && !(stone instanceof PanelBlock)) continue;
+            String path = Registries.BLOCK.getId(stone).getPath();
+            if (!path.startsWith("aganite_") || path.startsWith("aganite_aged_")) continue;
+            String suffix = path.substring("aganite_".length());
+            for (ArchitecturalFinish finish : ArchitecturalFinish.values()) {
+                Identifier id = new Identifier("daedalon", finish.id() + "_" + suffix);
+                Block block = Registries.BLOCK.get(id);
+                context.assertTrue(stone.getClass() == block.getClass(), "Finish changed block type: " + id);
+                context.assertTrue(stone.getStateManager().getProperties().equals(block.getStateManager().getProperties()),
+                        "Finish changed placement controls: " + id);
+                context.assertTrue(stone.getStateManager().getStates().size() == block.getStateManager().getStates().size(),
+                        "Finish changed state variants: " + id);
+                context.assertTrue(Registries.ITEM.get(id) == block.asItem(), "Missing finish item: " + id);
+                context.assertTrue(block.getDefaultState().isIn(TagKey.of(RegistryKeys.BLOCK,
+                        new Identifier("daedalon", finish.id()))), "Missing finish search tag: " + id);
+                boolean metal = block.getDefaultState().isIn(TagKey.of(RegistryKeys.BLOCK,
+                        new Identifier("material", "metal")));
+                context.assertTrue(metal == (finish != ArchitecturalFinish.WHITE), "Wrong finish material: " + id);
+                count++;
+            }
+        }
+        context.assertTrue(count == 15, "Expected 15 carved finishes, found " + count);
+        context.complete();
+    }
+
     @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE)
     public void everyMetalDecorVariantRetainsItsStoneControlsAndTags(TestContext context) {
         int count = 0;

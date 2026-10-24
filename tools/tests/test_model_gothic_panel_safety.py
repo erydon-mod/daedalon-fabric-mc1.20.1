@@ -23,7 +23,7 @@ class GothicPanelSafetyTests(unittest.TestCase):
         all_ids=[]
         for family in ('gothic_wall_panel',):
             ids=GENERATOR.family_block_ids(family);all_ids+=ids
-            self.assertEqual(54,len(ids))
+            self.assertEqual(57,len(ids))
             for block_id in ids:
                 state=load_json(DAEDALON_ASSETS/f'blockstates/{block_id}.json')
                 self.assertEqual({'variants':{'':{'model':f'daedalon:mesh/{block_id}'}}},state)
@@ -35,7 +35,7 @@ class GothicPanelSafetyTests(unittest.TestCase):
             for kind in ('blocks','items'):
                 for term in ('panel','gothic','tracery','ceiling','coffer','coffered_ceiling'):
                     self.assertIn('#daedalon:'+family,load_json(DAEDALON_DATA/f'tags/{kind}/{term}.json')['values'])
-        self.assertEqual(54,len(set(all_ids)))
+        self.assertEqual(57,len(set(all_ids)))
         self.assertFalse(list((DAEDALON_ASSETS/"blockstates").glob("*_gothic_coffered_ceiling.json")))
 
     def test_families_share_the_same_mesh_definition(self):

@@ -24,6 +24,12 @@ public final class DaedalonMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.contains(".client.rei.")) {
             return loader.isModLoaded("roughlyenoughitems");
         }
+        if (mixinClassName.contains(".client.jei.")) {
+            return loader.isModLoaded("jei");
+        }
+        if (mixinClassName.contains(".client.emi.")) {
+            return loader.isModLoaded("emi");
+        }
         if (mixinClassName.endsWith(".client.sodium.OcclusionCullerMixin")) {
             return loader.isModLoaded("sodium");
         }

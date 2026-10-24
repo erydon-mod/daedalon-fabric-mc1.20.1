@@ -588,8 +588,6 @@
       "ornamental_panel",
       "panel",
       "ribbed",
-      "rock",
-      "stone",
       "tracery",
       "vault",
       "wall_panel",
@@ -611,8 +609,6 @@
       "ornament",
       "palm",
       "palmette",
-      "rock",
-      "stone",
       "wall_relief"
     ],
     "gothic_frieze": [
@@ -627,8 +623,6 @@
       "lancet",
       "ornament",
       "quatrefoil",
-      "rock",
-      "stone",
       "tracery",
       "wall_relief"
     ],
@@ -643,8 +637,6 @@
       "entablature",
       "frieze",
       "ornament",
-      "rock",
-      "stone",
       "wall_relief"
     ],
     "ionic_frieze": [
@@ -662,8 +654,6 @@
       "palm",
       "palmette",
       "procession",
-      "rock",
-      "stone",
       "wall_relief"
     ],
     "anthophoros_planter": [
@@ -1581,6 +1571,28 @@
       "metallic",
       "ornament",
       "silver"
+    ],
+    "gold": [
+      "architecture",
+      "decor",
+      "decoration",
+      "decorative",
+      "gold",
+      "metal",
+      "metallic",
+      "ornament",
+      "wall_relief"
+    ],
+    "white": [
+      "architecture",
+      "decor",
+      "decoration",
+      "decorative",
+      "ornament",
+      "rock",
+      "stone",
+      "wall_relief",
+      "white"
     ]
   }
 }

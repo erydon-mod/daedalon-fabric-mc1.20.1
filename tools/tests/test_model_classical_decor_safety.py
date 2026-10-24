@@ -37,10 +37,10 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             for block_id in GENERATOR.family_block_ids(family)
         ]
 
-    def test_exact_4663_id_manifest(self) -> None:
+    def test_exact_4678_id_manifest(self) -> None:
         block_ids = all_block_ids()
-        self.assertEqual(4663, len(block_ids))
-        self.assertEqual(4663, len(set(block_ids)))
+        self.assertEqual(4678, len(block_ids))
+        self.assertEqual(4678, len(set(block_ids)))
         self.assertEqual(616, len(self.urn_ids))
         self.assertEqual(280, len(self.plinth_ids))
         self.assertIn("aganite_amphora_urn", block_ids)
@@ -292,9 +292,10 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             "urn_diota_bronze_handles.png",
             "urn_diota_bronze_handles_s.png",
         }
-        bronze_names = {"bronze.png", "bronze_s.png", "silver.png", "silver_s.png"}
+        finish_names = {"bronze.png", "bronze_s.png", "silver.png", "silver_s.png",
+                        "white.png", "gold.png", "gold_s.png"}
         self.assertEqual(
-            root_material_names | statue_names | handle_names | bronze_names,
+            root_material_names | statue_names | handle_names | finish_names,
             {path.name for path in texture_root.glob("*.png")},
         )
         urn_surface_root = texture_root / "urn_surface"
@@ -312,7 +313,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             self.assertEqual((192, 96), png_dimensions(texture_root / filename))
         for filename in handle_names:
             self.assertEqual((16, 16), png_dimensions(texture_root / filename))
-        for filename in bronze_names:
+        for filename in finish_names:
             self.assertEqual((16, 16), png_dimensions(texture_root / filename))
 
     def test_bronze_finish_is_selected_non_aged_metal_with_locked_pbr_pixels(self) -> None:
@@ -320,7 +321,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             GENERATOR.bronze_block_id(family)
             for family in GENERATOR.BRONZE_FAMILIES
         }
-        self.assertEqual(65, len(bronze_ids))
+        self.assertEqual(70, len(bronze_ids))
         self.assertTrue(bronze_ids <= set(all_block_ids()))
         self.assertFalse(any("aged" in block_id for block_id in bronze_ids))
         self.assertEqual(
@@ -363,11 +364,12 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
                 set(load_json(tag_root / "bronze.json")["values"]),
             )
             self.assertEqual(
-                ["#daedalon:bronze", "#daedalon:silver"],
+                ["#daedalon:bronze", "#daedalon:silver", "#daedalon:gold"],
                 load_json(tag_root / "metal.json")["values"],
             )
             self.assertEqual(
-                bronze_refs | set(load_json(tag_root / "silver.json")["values"]),
+                bronze_refs | set(load_json(tag_root / "silver.json")["values"])
+                | set(load_json(tag_root / "gold.json")["values"]),
                 set(
                     load_json(
                         DAEDALON_DATA / f"../material/tags/{kind}/metal.json"
@@ -476,7 +478,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertEqual(5, plinth_block.count('"plinth_'))
         self.assertNotIn("GeorgianPlinth", registrations)
         self.assertIn("EXPECTED_BLOCK_COUNT", registrations)
-        self.assertIn("exactly 4663 decor blocks and items", registrations)
+        self.assertIn("exactly 4678 decor blocks and items", registrations)
 
     def test_urn_source_and_decimation_evidence_is_locked(self) -> None:
         evidence = load_json(REPO_ROOT / "docs/evidence/urn-batch-source.json")

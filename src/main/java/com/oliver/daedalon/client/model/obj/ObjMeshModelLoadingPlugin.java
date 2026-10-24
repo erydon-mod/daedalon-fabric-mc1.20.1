@@ -14,6 +14,7 @@ import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.UrnBlock;
 import com.oliver.daedalon.registry.ModBlocks;
 import com.oliver.daedalon.registry.DecorMetal;
+import com.oliver.daedalon.registry.ArchitecturalFinish;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.PreparableModelLoadingPlugin;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -88,6 +89,7 @@ public final class ObjMeshModelLoadingPlugin {
     );
     private static final Identifier BRONZE_TEXTURE = id("block/bronze");
     private static final Identifier SILVER_TEXTURE = id("block/silver");
+    private static final Identifier GOLD_TEXTURE = id("block/gold");
     private static final Identifier WATER_STILL_TEXTURE = new Identifier(
             "minecraft",
             "block/water_still"
@@ -99,7 +101,8 @@ public final class ObjMeshModelLoadingPlugin {
     }
 
     static boolean usesMetalTexture(Identifier textureId) {
-        return BRONZE_TEXTURE.equals(textureId) || SILVER_TEXTURE.equals(textureId);
+        return BRONZE_TEXTURE.equals(textureId) || SILVER_TEXTURE.equals(textureId)
+                || GOLD_TEXTURE.equals(textureId);
     }
 
     public static void register() {
@@ -350,14 +353,14 @@ public final class ObjMeshModelLoadingPlugin {
         }
         for (String form : List.of("gothic_wall_panel")) {
             families.add(new MeshFamily(form,id("models/mesh/gothic_panel.json"),
-                    id("block/mesh/gothic_panel_display"),createDetailedVariants(form)));
+                    id("block/mesh/gothic_panel_display"),createCarvedArchitecturalVariants(form)));
         }
         for (FriezeBlock.Style style : FriezeBlock.Style.values()) {
             String family=style.id()+"_frieze";
             families.add(new MeshFamily(family,
                     id("models/mesh/"+family+".json"),
                     id("block/mesh/"+family+"_display"),
-                    createDetailedVariants(family)));
+                    createCarvedArchitecturalVariants(family)));
         }
         return List.copyOf(families);
     }
@@ -529,6 +532,20 @@ public final class ObjMeshModelLoadingPlugin {
                     material + "_aged_" + idSuffix,
                     SPARTAN_BLOCK_PREFIX + material + "_aged"
             ));
+        }
+        return List.copyOf(variants);
+    }
+
+    private static List<MeshVariant> createCarvedArchitecturalVariants(String suffix) {
+        List<MeshVariant> variants = new ArrayList<>(createDetailedVariants(suffix));
+        for (ArchitecturalFinish finish : ArchitecturalFinish.values()) {
+            String blockId = finish.id() + "_" + suffix;
+            Identifier texture = id("block/" + finish.id());
+            variants.add(new MeshVariant(
+                    id("mesh/" + blockId),
+                    new ModelIdentifier(Daedalon.MOD_ID, blockId, "inventory"),
+                    id("item/" + blockId), id(blockId), texture, texture,
+                    WorldTexturePhase.detailedSurface(), blockId, true, false));
         }
         return List.copyOf(variants);
     }
