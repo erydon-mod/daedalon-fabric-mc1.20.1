@@ -66,6 +66,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     private final Mesh mesh;
     private final Mesh itemMesh;
     private final FriezeMeshParts friezeParts;
+    private final CapitalWorldMesh capitalWorldMesh;
+    private final TextureTransform capitalTextureTransform;
     private final BakedModel metadataModel;
     private final Sprite particleSprite;
     private final TextureTransform textureTransform;
@@ -81,6 +83,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     private ObjMeshBakedModel(Mesh mesh,
                               Mesh itemMesh,
                               FriezeMeshParts friezeParts,
+                              CapitalWorldMesh capitalWorldMesh,
                               BakedModel metadataModel,
                               Sprite particleSprite,
                               List<Sprite> materialSprites,
@@ -93,6 +96,9 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         this.mesh = mesh;
         this.itemMesh = itemMesh;
         this.friezeParts = friezeParts;
+        this.capitalWorldMesh = capitalWorldMesh;
+        this.capitalTextureTransform = capitalWorldMesh == null ? null
+                : new TextureTransform(materialSprites, worldPhaseMaterials, WorldTexturePhase.blockSurface(), 0);
         this.metadataModel = metadataModel;
         this.particleSprite = particleSprite;
         this.textureTransform = new TextureTransform(materialSprites, worldPhaseMaterials, worldTexturePhase, 0);
@@ -172,6 +178,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         return new GeometryBakeResult(
                 mesh,
                 frieze ? new FriezeMeshParts(parts,friezeStyle) : null,
+                definition.objId().getPath().startsWith("models/mesh/capital_") ? new CapitalWorldMesh(mesh) : null,
                 transformedBounds,
                 materialNames,
                 emittedQuadCount,
@@ -211,6 +218,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 geometry.mesh(),
                 itemMesh,
                 geometry.friezeParts(),
+                geometry.capitalWorldMesh(),
                 metadataModel,
                 particleSprite,
                 materialSprites,
@@ -501,6 +509,19 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                                RenderContext context) {
         if (state.getBlock() instanceof com.oliver.daedalon.block.MonopterosBlock) {
             MonopterosRenderBounds.mark(pos);
+        }
+        if (capitalWorldMesh != null && state.getBlock() instanceof CapitalBlock capital
+                && state.get(CapitalBlock.SUPPORT) != com.oliver.daedalon.block.CapitalTransition.NONE) {
+            // The fitted carving and collar share physical tile coordinates. This cache
+            // belongs to the shared source mesh, never to a material or world position.
+            context.pushTransform(capitalTextureTransform);
+            try {
+                CapitalTransitionMesh.emit(state.get(CapitalBlock.SUPPORT), state.get(CapitalBlock.SIZE), pos, context);
+                capitalWorldMesh.emit(capital.orientation(state), state.get(CapitalBlock.SIZE), pos, context);
+            } finally {
+                context.popTransform();
+            }
+            return;
         }
         RenderContext.QuadTransform positionTransform = null;
         if (state.getBlock() instanceof StatueBlock) {
@@ -903,6 +924,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
 
     record GeometryBakeResult(Mesh mesh,
                               FriezeMeshParts friezeParts,
+                              CapitalWorldMesh capitalWorldMesh,
                               ObjMeshData.Bounds transformedBounds,
                               List<String> materialNames,
                               int emittedQuadCount,

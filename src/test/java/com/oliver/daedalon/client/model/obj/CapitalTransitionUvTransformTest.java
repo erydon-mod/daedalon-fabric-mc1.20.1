@@ -26,9 +26,9 @@ final class CapitalTransitionUvTransformTest {
                 float localU = switch (face) { case NORTH -> 1 - (px - x); case EAST -> 1 - (pz - z);
                     case WEST -> pz - z; default -> px - x; };
                 float localV = switch (face) { case UP -> pz - z; case DOWN -> 1 - (pz - z); default -> 1 - py; };
-                assertEquals((Math.floorMod(tileU, 6) + localU) / 6, uv[0], 1e-6);
-                assertEquals((Math.floorMod(tileV, 6) + localV) / 6, uv[1], 1e-6);
-                assertTrue(uv[0] >= 0 && uv[0] <= 1 && uv[1] >= 0 && uv[1] <= 1);
+                assertEquals(Math.floorMod(tileU, 6) + localU, uv[0], 1e-6);
+                assertEquals(Math.floorMod(tileV, 6) + localV, uv[1], 1e-6);
+                assertTrue(uv[0] >= 0 && uv[0] <= 6 && uv[1] >= 0 && uv[1] <= 6);
             }
     }
 
@@ -38,7 +38,7 @@ final class CapitalTransitionUvTransformTest {
             var transform = CapitalTransitionUvTransform.forCell(BlockPos.ORIGIN, cell, 0);
             transform.transform(quad(cell + 0.2F, 0.05F, 0.2F, Direction.SOUTH, a));
             transform.transform(quad(cell + 0.45F, 0.15F, 0.2F, Direction.SOUTH, b));
-            var layout = WorldTexturePhase.detailedSurface();
+            var layout = WorldTexturePhase.blockSurface();
             assertEquals(0.25, (layout.mapU(b[0], 0) - layout.mapU(a[0], 0)) * 12, 1e-6);
             assertEquals(-0.1, (layout.mapV(b[1]) - layout.mapV(a[1])) * 6, 1e-6);
         }
@@ -60,13 +60,14 @@ final class CapitalTransitionUvTransformTest {
     }
 
     private static void assertSamePhase(float[] a, float[] b) {
-        for (int i = 0; i < 2; i++) assertEquals(0, Math.IEEEremainder(a[i] - b[i], 1), 1e-6);
+        for (int i = 0; i < 2; i++) assertEquals(0, Math.IEEEremainder(a[i] - b[i], 6), 1e-6);
     }
 
     private static MutableQuadView quad(float x, float y, float z, Direction face, float[] uv) {
         return (MutableQuadView) Proxy.newProxyInstance(MutableQuadView.class.getClassLoader(),
                 new Class<?>[]{MutableQuadView.class}, (proxy, method, args) -> switch (method.getName()) {
                     case "x" -> x; case "y" -> y; case "z" -> z; case "nominalFace" -> face;
+                    case "u" -> uv[0]; case "v" -> uv[1];
                     case "uv" -> { uv[0] = (float) args[1]; uv[1] = (float) args[2]; yield proxy; }
                     default -> throw new AssertionError("Collar UV projection must not edit geometry, normals, faces or tags: " + method.getName());
                 });
