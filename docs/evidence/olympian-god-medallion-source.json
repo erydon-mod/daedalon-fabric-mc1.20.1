@@ -1,0 +1,68 @@
+{
+  "provenance": {
+    "owner": "Oliver",
+    "source": "Oliver-supplied Meshy creation; ownership confirmation already recorded for supplied Daedalon models",
+    "scope": "One shared item-only Olympian God medallion; existing placed statues stay unchanged"
+  },
+  "runtime_source": {
+    "source_file": "god swap.obj",
+    "resource": "assets/daedalon/models/mesh/olympian_god_medallion.obj",
+    "sha256": "09ca7e114c9fe5a9eb491fbb44e7be8929b7aeb13b2660b51f5c072d142ec117",
+    "bytes": 795284,
+    "vertices": 4799,
+    "triangles": 9657,
+    "normals": 12504,
+    "uv_coordinates": 0,
+    "objects": [
+      "Mesh_0"
+    ],
+    "mtl_references": [],
+    "material_references": [],
+    "bounds": {
+      "min": [
+        -0.951579,
+        -0.952934,
+        -0.094811
+      ],
+      "max": [
+        0.94672,
+        0.951355,
+        0.099754
+      ],
+      "span": [
+        1.898299,
+        1.904289,
+        0.194565
+      ]
+    },
+    "changes": "Byte-identical import; no decimation, normal smoothing, geometry edits or source rewrite",
+    "uv_policy": "Existing bounded axis-stabilized box projection supplies missing UVs; authored normal indices remain intact",
+    "normalization": "fit_to_block normalizes the largest source dimension to one block; XY medallion remains proportional and centered, front faces +Z"
+  },
+  "authoring_source": {
+    "source_file": "god swap.blend",
+    "sha256": "2b73408687282276c5154efe6da3ee9f57300f43b47bd6aad358d78f1755defa",
+    "bytes": 59320300,
+    "use": "Full-resolution authoring reference; not packaged or modified"
+  },
+  "concept_reference": {
+    "source_file": "Daedalon_Reference_Pack/Greek Gods Gold Medallion Wheel.png",
+    "sha256": "80d3627bf53544bd7b125410b0bf406a0592d530211db24072f56c1e5103c386",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "alpha": false,
+    "visual": "Grayscale silver/white medallion on an opaque black background; filename does not imply a gold runtime material",
+    "use": "Design reference only; the supplied mesh is textured from each selector material"
+  },
+  "runtime_policy": {
+    "geometry_families": 1,
+    "material_variants": 56,
+    "public_blocks": 0,
+    "gui": "Existing bounded shared raster template and per-material icon cache",
+    "first_person": "Existing Daedalon hide-in-first-person rule retained",
+    "collection_packs": "Uses existing stone repeat sheets and Bronze/Silver textures; no new pack texture paths"
+  }
+}

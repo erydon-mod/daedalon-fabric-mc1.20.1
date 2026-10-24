@@ -28,10 +28,10 @@ class OlympianSelectorSafetyTests(unittest.TestCase):
         self.assertIs(tag["replace"], False)
         self.assertFalse((DAEDALON_DATA / "tags/blocks/olympian_god_statue.json").exists())
 
-    def test_temporary_creative_image_is_one_replaceable_shared_existing_texture(self) -> None:
+    def test_creative_image_uses_the_shared_item_only_medallion(self) -> None:
         model = load_json(DAEDALON_ASSETS / "models/item/olympian_god.json")
-        self.assertEqual({"parent": "minecraft:item/generated", "textures": {"layer0": "daedalon:item/emblem"}}, model)
-        self.assertTrue((DAEDALON_ASSETS / "textures/item/emblem.png").is_file())
+        self.assertEqual({"parent": "daedalon:item/olympian_god_display"}, model)
+        self.assertTrue((DAEDALON_ASSETS / "models/mesh/olympian_god_medallion.obj").is_file())
 
     def test_selector_locales_and_family_terms_do_not_depend_on_block_ids(self) -> None:
         vocabulary = load_json(DAEDALON_ASSETS / "search_vocabulary.json")

@@ -461,10 +461,20 @@ def olympian_god_item_ids() -> list[str]:
 
 
 def generate_olympian_god_items(check: bool, changed: list[Path]) -> None:
-    # One replaceable placeholder until Oliver supplies the final Creative image.
+    # One item-only medallion mesh supplies every material's cached icon.
     write(RESOURCES / f"assets/{NAMESPACE}/models/item/olympian_god.json",
-          json_bytes({"parent": "minecraft:item/generated", "textures": {"layer0": f"{NAMESPACE}:item/emblem"}}),
+          json_bytes({"parent": f"{NAMESPACE}:item/olympian_god_display"}),
           check, changed)
+    write(RESOURCES / f"assets/{NAMESPACE}/models/item/olympian_god_display.json",
+          json_bytes({
+              "parent": "minecraft:block/block",
+              "textures": {"particle": f"{NAMESPACE}:block/statue_spartan_promachos_aganite"},
+              "display": {
+                  "gui": {"rotation": [0, 0, 0], "translation": [0, 0, 0], "scale": [0.8, 0.8, 0.8]},
+                  "ground": {"translation": [0, 3, 0], "scale": [0.25, 0.25, 0.25]},
+                  "fixed": {"rotation": [0, 0, 0], "scale": [0.5, 0.5, 0.5]},
+              },
+          }), check, changed)
     for item_id in olympian_god_item_ids():
         write(RESOURCES / f"assets/{NAMESPACE}/models/item/{item_id}.json",
               json_bytes({"parent": f"{NAMESPACE}:item/olympian_god"}), check, changed)
@@ -1421,6 +1431,11 @@ def generate_languages(
         )[language_index]
         entries["tooltip.daedalon.olympian_god.next"] = (
             "Next: %s", "Als Nächstes: %s", "Siguiente: %s",
+        )[language_index]
+        entries["tooltip.daedalon.olympian_god.swap"] = (
+            "Use on a statue's side to change its god; sneak to go backwards.",
+            "Seitlich auf eine Statue anwenden, um den Gott zu wechseln; schleichen für die umgekehrte Reihenfolge.",
+            "Úsalo en el lateral de una estatua para cambiar de dios; agáchate para retroceder.",
         )[language_index]
         write(
             RESOURCES / f"assets/{NAMESPACE}/lang/{language}.json",

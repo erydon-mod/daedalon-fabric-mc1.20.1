@@ -73,7 +73,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         }
         self.assertEqual(56, len(selector_files))
         self.assertEqual(
-            expected_files | selector_files | {"emblem.json", "olympian_god.json"},
+            expected_files | selector_files | {"emblem.json", "olympian_god.json", "olympian_god_display.json"},
             {
                 path.name
                 for path in (DAEDALON_ASSETS / "models/item").glob("*.json")
@@ -92,10 +92,10 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             },
         )
 
-    def test_exact_99_mesh_manifests_and_hashes(self) -> None:
+    def test_exact_world_and_item_mesh_manifests_and_hashes(self) -> None:
         self.assertEqual(99, len(MESH_EXPECTATIONS))
         self.assertEqual(
-            {expectation["obj"] for expectation in MESH_EXPECTATIONS.values()},
+            {expectation["obj"] for expectation in MESH_EXPECTATIONS.values()} | {"olympian_god_medallion.obj"},
             {path.name for path in MESH_ROOT.glob("*.obj")},
         )
         self.assertEqual(
@@ -110,7 +110,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             {
                 expectation["definition"]
                 for expectation in MESH_EXPECTATIONS.values()
-            },
+            } | {"olympian_god_medallion.json"},
             {path.name for path in MESH_ROOT.glob("*.json")},
         )
         display_root = DAEDALON_ASSETS / "models/block/mesh"

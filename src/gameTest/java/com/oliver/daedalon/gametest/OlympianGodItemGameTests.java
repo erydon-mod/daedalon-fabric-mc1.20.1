@@ -181,6 +181,92 @@ public final class OlympianGodItemGameTests {
         return (OlympianGodItem) Registries.ITEM.get(new Identifier("daedalon", prefix + "_" + OlympianGodItem.ID_SUFFIX));
     }
 
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void sideClicksCycleEveryFinishInPlaceAndPreservePoseAndHeldProgress(TestContext context) {
+        var world = context.getWorld();
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(30, 3, 30));
+        var player = context.createMockCreativeServerPlayerInWorld();
+        // A tool in another finish must preserve the clicked statue's finish.
+        ItemStack tool = new ItemStack(selector("bronze"), 3);
+        tool.getOrCreateNbt().putInt(OlympianGodItem.NEXT_OLYMPIAN_NBT, 7);
+        tool.getOrCreateNbt().putString("Marker", "unchanged");
+        player.setStackInHand(Hand.OFF_HAND, tool);
+        NbtCompound heldBefore = tool.writeNbt(new NbtCompound());
+        int swaps = 0;
+        for (Item item : ModItems.olympianGodItems()) {
+            String path = Registries.ITEM.getId(item).getPath();
+            String prefix = path.substring(0, path.length() - ("_" + OlympianGodItem.ID_SUFFIX).length());
+            var first = Registries.BLOCK.get(new Identifier("daedalon", prefix + "_zeus_statue"));
+            var size = StatueBlock.StatueSize.values()[swaps / 12 % 3];
+            Direction facing = Direction.fromHorizontal(swaps / 12 % 4);
+            boolean offset = swaps / 12 % 2 == 0;
+            var orientation = swaps / 12 / 4 % 2 == 0 ? DecorOrientation.DIAGONAL : DecorOrientation.STRAIGHT;
+            world.setBlockState(anchor, first.getDefaultState().with(StatueBlock.SIZE, size)
+                    .with(StatueBlock.FACING, facing).with(StatueBlock.OFFSET, offset)
+                    .with(StatueBlock.ORIENTATION, orientation), Block.NOTIFY_ALL);
+            for (int step = 1; step <= 12; step++) {
+                context.assertTrue(useSide(player, Hand.OFF_HAND, anchor).isAccepted(), "A side click must swap " + prefix);
+                var after = world.getBlockState(anchor);
+                String expected = prefix + "_" + OlympianGodCycle.subject(step % 12) + "_statue";
+                context.assertTrue(Registries.BLOCK.getId(after.getBlock()).getPath().equals(expected)
+                                && after.get(StatueBlock.SIZE) == size && after.get(StatueBlock.FACING) == facing
+                                && after.get(StatueBlock.OFFSET) == offset && after.get(StatueBlock.ORIENTATION) == orientation,
+                        "Swapping must retain finish, size, offset and eight-way facing: " + expected);
+                context.assertTrue(heldBefore.equals(tool.writeNbt(new NbtCompound())),
+                        "Editing must not consume or advance the independent placement selector");
+                swaps++;
+            }
+        }
+        context.assertTrue(swaps == 672, "Exercise a full in-place cycle in every finish");
+        world.removeBlock(anchor, false);
+        System.out.println("DAEDALON_OLYMPIAN_SIDE_SWAP passed finishes=56 swaps=" + swaps);
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void sideEditingRespectsAdventureAndSneakingAndNeverConsumesSurvivalTool(TestContext context) {
+        var world = context.getWorld();
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(30, 3, 30));
+        var player = context.createMockCreativeServerPlayerInWorld();
+        ItemStack tool = selector("glacium").getDefaultStack();
+        player.setStackInHand(Hand.MAIN_HAND, tool);
+        var zeus = Registries.BLOCK.get(new Identifier("daedalon", "silver_zeus_statue")).getDefaultState()
+                .with(StatueBlock.SIZE, StatueBlock.StatueSize.LARGE);
+        world.setBlockState(anchor, zeus, Block.NOTIFY_ALL);
+        player.changeGameMode(GameMode.ADVENTURE);
+        context.assertTrue(!useSide(player, Hand.MAIN_HAND, anchor).isAccepted() && world.getBlockState(anchor) == zeus,
+                "An adventure player must not edit a statue");
+        ItemUsageContext restricted = new ItemUsageContext(player, Hand.MAIN_HAND,
+                new BlockHitResult(Vec3d.ofCenter(anchor).add(.5, 0, 0), Direction.EAST, anchor, false));
+        context.assertTrue(!tool.getItem().useOnBlock(restricted).isAccepted() && world.getBlockState(anchor) == zeus,
+                "The editor's own permission guard must reject Adventure even when called directly");
+        player.changeGameMode(GameMode.SURVIVAL);
+        player.setSneaking(true);
+        context.assertTrue(useSide(player, Hand.MAIN_HAND, anchor).isAccepted()
+                        && Registries.BLOCK.getId(world.getBlockState(anchor).getBlock()).getPath().equals("silver_dionysus_statue"),
+                "Sneaking must go backwards from Zeus to Dionysus in the clicked finish");
+        player.setSneaking(false);
+        context.assertTrue(useSide(player, Hand.MAIN_HAND, anchor).isAccepted() && world.getBlockState(anchor) == zeus,
+                "Forward editing must wrap Dionysus back to Zeus");
+        context.assertTrue(tool.getCount() == 1 && OlympianGodItem.nextIndex(tool) == 0 && tool.getNbt() == null,
+                "Survival editing must leave count and the fresh placement cursor unchanged");
+        player.changeGameMode(GameMode.CREATIVE);
+        ItemUsageContext top = new ItemUsageContext(player, Hand.MAIN_HAND,
+                new BlockHitResult(Vec3d.of(anchor).add(.5, 3, .5), Direction.UP, anchor, false));
+        context.assertTrue(tool.useOnBlock(top).isAccepted() && world.getBlockState(anchor) == zeus
+                        && Registries.BLOCK.getId(world.getBlockState(anchor.up(3)).getBlock()).getPath().equals("glacium_zeus_statue")
+                        && OlympianGodItem.nextIndex(tool) == 1,
+                "A top click must place the selected statue on the crown and advance placement, not edit the support");
+        world.removeBlock(anchor.up(3), false);
+        world.removeBlock(anchor, false);
+        context.complete();
+    }
+
+    private static net.minecraft.util.ActionResult useSide(ServerPlayerEntity player, Hand hand, BlockPos anchor) {
+        return player.getStackInHand(hand).useOnBlock(new ItemUsageContext(player, hand,
+                new BlockHitResult(Vec3d.ofCenter(anchor).add(.5, 0, 0), Direction.EAST, anchor, false)));
+    }
+
     private static void clearTarget(TestContext context, BlockPos anchor) {
         context.getWorld().setBlockState(anchor, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         context.getWorld().setBlockState(anchor.down(), Blocks.STONE.getDefaultState(), Block.NOTIFY_ALL);

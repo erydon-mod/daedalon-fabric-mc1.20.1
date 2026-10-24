@@ -12,6 +12,7 @@ import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.FountainBowlModel;
 import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.UrnBlock;
+import com.oliver.daedalon.item.OlympianGodItem;
 import com.oliver.daedalon.registry.ModBlocks;
 import com.oliver.daedalon.registry.DecorMetal;
 import com.oliver.daedalon.registry.ArchitecturalFinish;
@@ -29,6 +30,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceManager;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
@@ -139,7 +141,9 @@ public final class ObjMeshModelLoadingPlugin {
         return FAMILIES.stream()
                 .filter(family -> family.variants().stream()
                         .anyMatch(variant -> ModBlocks.blocksById()
-                                .containsKey(id(variant.sourceBlockId()))))
+                                .containsKey(id(variant.sourceBlockId()))
+                                || variant.inventoryModelId() != null
+                                && Registries.ITEM.containsId(id(variant.sourceBlockId()))))
                 .toList();
     }
 
@@ -234,6 +238,12 @@ public final class ObjMeshModelLoadingPlugin {
                 id("models/mesh/zeus_statue.json"),
                 id("block/mesh/zeus_statue_display"),
                 createZeusVariants()
+        ));
+        families.add(new MeshFamily(
+                "Olympian God Medallion",
+                id("models/mesh/olympian_god_medallion.json"),
+                id("item/olympian_god_display"),
+                createOlympianGodItemVariants()
         ));
         for (ClassicalStatueBlock.Style style : ClassicalStatueBlock.Style.values()) {
             families.add(new MeshFamily(
@@ -361,6 +371,17 @@ public final class ObjMeshModelLoadingPlugin {
                     createCarvedArchitecturalVariants(family)));
         }
         return List.copyOf(families);
+    }
+
+    private static List<MeshVariant> createOlympianGodItemVariants() {
+        // These aliases render registered selector items, never placed blocks.
+        return withMetals(createDetailedVariants(OlympianGodItem.ID_SUFFIX),
+                OlympianGodItem.ID_SUFFIX, WorldTexturePhase.detailedSurface()).stream()
+                .map(variant -> new MeshVariant(variant.modelId(), variant.inventoryModelId(),
+                        variant.itemFileModelId(), variant.plainItemModelId(), variant.textureId(),
+                        variant.particleTextureId(), variant.worldTexturePhase(),
+                        variant.sourceBlockId(), false, false))
+                .toList();
     }
 
     private static List<MeshVariant> createBenchVariants(String bench, int width) {
@@ -686,7 +707,7 @@ public final class ObjMeshModelLoadingPlugin {
             for (PreparedModel model : models) {
                 MeshVariant variant = model.variant;
                 byModelId.put(variant.modelId(), model.unbakedModel);
-                if (variant.publicBlockModel()) {
+                if (variant.inventoryModelId() != null) {
                     byModelId.put(variant.inventoryModelId(), model.unbakedModel);
                     byModelId.put(variant.itemFileModelId(), model.unbakedModel);
                     byModelId.put(variant.plainItemModelId(), model.unbakedModel);

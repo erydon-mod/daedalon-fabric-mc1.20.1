@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "daedalon:item/emblem"
-  }
+  "parent": "daedalon:item/olympian_god_display"
 }

@@ -5227,5 +5227,6 @@
   "item.daedalon.bronze_olympian_god_statue": "Bronze Olympische Götterstatue",
   "item.daedalon.silver_olympian_god_statue": "Silber Olympische Götterstatue",
   "tooltip.daedalon.olympian_god.cycle": "Platziert die zwölf olympischen Götterstatuen der Reihe nach und beginnt danach erneut.",
-  "tooltip.daedalon.olympian_god.next": "Als Nächstes: %s"
+  "tooltip.daedalon.olympian_god.next": "Als Nächstes: %s",
+  "tooltip.daedalon.olympian_god.swap": "Seitlich auf eine Statue anwenden, um den Gott zu wechseln; schleichen für die umgekehrte Reihenfolge."
 }

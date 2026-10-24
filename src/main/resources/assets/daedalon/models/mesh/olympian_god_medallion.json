@@ -1,0 +1,22 @@
+{
+  "obj": "daedalon:models/mesh/olympian_god_medallion.obj",
+  "flip_v": true,
+  "repair_degenerate_uvs": false,
+  "force_uv_projection": true,
+  "uv_projection": "axis_stabilized_box",
+  "box_projection_span": 1.0,
+  "face_oriented_uvs": true,
+  "smooth_normals": false,
+  "fit_to_block": true,
+  "scale": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "translate": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "particle": "daedalon:block/statue_spartan_promachos_aganite"
+}
