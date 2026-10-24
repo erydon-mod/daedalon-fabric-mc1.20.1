@@ -177,6 +177,35 @@ class OlympianCompletionSafetyTests(unittest.TestCase):
         self.assertEqual("north", mesh["runtime_facing"])
         self.assertEqual(mesh["runtime_obj_sha256"], sha256(MESH_ROOT / "bust_hestia.obj"))
 
+    def test_only_the_three_north_statues_use_the_front_aligned_gui_view(self) -> None:
+        north = {"hermes", "hephaestus", "hestia"}
+        root = DAEDALON_ASSETS / "models/block/mesh"
+        original = load_json(root / "zeus_statue_display.json")
+        aligned = load_json(root / "statue_north_display.json")
+        before, after = original["display"]["gui"], aligned["display"]["gui"]
+        self.assertEqual(180, (after["rotation"][1] - before["rotation"][1]) % 360)
+        self.assertEqual(before["rotation"][::2], after["rotation"][::2])
+        self.assertEqual({key: value for key, value in before.items() if key != "rotation"},
+                         {key: value for key, value in after.items() if key != "rotation"})
+        for context, transform in original["display"].items():
+            if context != "gui":
+                self.assertEqual(transform, aligned["display"][context])
+        changed_ids = set()
+        for family in GENERATOR.CANONICAL_STATUE_FAMILIES:
+            expected = "daedalon:block/mesh/" + ("statue_north_display" if family in north else "zeus_statue_display")
+            self.assertEqual(expected, GENERATOR.display_parent(family))
+            for block_id in GENERATOR.family_block_ids(family):
+                self.assertEqual(expected, load_json(DAEDALON_ASSETS / f"models/item/{block_id}.json")["parent"])
+                if family in north:
+                    changed_ids.add(block_id)
+        self.assertEqual(168, len(changed_ids))
+        plugin = (JAVA_ROOT / "client/model/obj/ObjMeshModelLoadingPlugin.java").read_text(encoding="utf-8")
+        self.assertIn('case HERMES, HEPHAESTUS, HESTIA -> "statue_north_display"', plugin)
+        for family in north:
+            self.assertEqual("statue_north_display.json", MESH_EXPECTATIONS[family]["display"])
+            self.assertEqual("north", self.evidence["models"][family]["runtime_facing"])
+            self.assertEqual(self.evidence["models"][family]["runtime_obj_sha256"], sha256(MESH_ROOT / f"{family}.obj"))
+
     def test_one_shared_mesh_keeps_uv_policy_and_material_variants_separate(self) -> None:
         for stem in OLYMPIAN_COMPLETION_MESHES:
             expected = MESH_EXPECTATIONS[stem]

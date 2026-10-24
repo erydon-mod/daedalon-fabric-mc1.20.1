@@ -89,7 +89,9 @@
     "hephaestus": {
       "obj": "hephaestus.obj",
       "sha256": "8e62ea0222b9cf74645648cc8fc873ad6da8e72d3974e79fc1bd386aba619d71",
-      "source_front": "north"
+      "source_front": "north",
+      "gui_rotation_y_degrees": 135,
+      "gui_source_alignment_note": "The final 24 October 2026 publication audit aligns the GUI view with this north-facing prepared mesh through one shared display turned 180 degrees from the older south-facing statue view. Runtime OBJ, world-facing profile, normals, UVs, scale, collision and saved state remain unchanged."
     },
     "hera": {
       "obj": "hera.obj",
@@ -99,12 +101,16 @@
     "hermes": {
       "obj": "hermes.obj",
       "sha256": "e1f86dff34997f29f3cbc90e54c9c5931877835d07b6577a428ceaff13650dd1",
-      "source_front": "north"
+      "source_front": "north",
+      "gui_rotation_y_degrees": 135,
+      "gui_source_alignment_note": "The final 24 October 2026 publication audit aligns the GUI view with this north-facing prepared mesh through one shared display turned 180 degrees from the older south-facing statue view. Runtime OBJ, world-facing profile, normals, UVs, scale, collision and saved state remain unchanged."
     },
     "hestia": {
       "obj": "hestia.obj",
       "sha256": "ec43452c1f05dbb9144a9d6554a43a71a1377e692bef0535baf4dade4298ac43",
-      "source_front": "north"
+      "source_front": "north",
+      "gui_rotation_y_degrees": 135,
+      "gui_source_alignment_note": "The final 24 October 2026 publication audit aligns the GUI view with this north-facing prepared mesh through one shared display turned 180 degrees from the older south-facing statue view. Runtime OBJ, world-facing profile, normals, UVs, scale, collision and saved state remain unchanged."
     },
     "phaeton": {
       "obj": "phaeton.obj",

@@ -249,7 +249,11 @@ public final class ObjMeshModelLoadingPlugin {
             families.add(new MeshFamily(
                     style.displayName() + " Statue",
                     id("models/mesh/" + style.subjectId() + "_statue.json"),
-                    id("block/mesh/zeus_statue_display"),
+                    // These three prepared meshes face north; their item view must show that front.
+                    id("block/mesh/" + switch (style) {
+                        case HERMES, HEPHAESTUS, HESTIA -> "statue_north_display";
+                        default -> "zeus_statue_display";
+                    }),
                     createClassicalStatueVariants(style.subjectId())
             ));
         }

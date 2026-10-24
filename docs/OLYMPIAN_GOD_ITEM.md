@@ -32,6 +32,8 @@ transform accounts for that difference, so the physical front follows the
 selected eight-way facing through side-click swaps and debug-stick turns.
 Hestia's bust also uses a separate shared GUI display turned 180 degrees from
 the older bust view, showing her face without changing placed orientation.
+Hermes, Hephaestus and Hestia full statue icons share the corresponding
+north-facing GUI view, also turned 180 degrees from the older statue view.
 Fresh placement points these corrected sculptures back towards the player;
 it uses the opposite of the player's horizontal look direction and retains
 the existing default size, straight pose and disabled offset. Explicit
@@ -81,6 +83,7 @@ player headings, checking the measured physical front points towards the player,
 and retain the published Spartan convention for the other four placements.
 Pure tests pin the approved twelve-member order and wrap behavior.
 
-Oliver approved in-game statue cycling on 24 October 2026. The medallion's
-20-degree view remains a separate visual check; the sharper catalogue icons and
-their performance changes have also received Oliver's approval.
+Oliver approved in-game statue cycling, the medallion's 20-degree view, the
+sharper catalogue icons and their performance in the 24 October 2026 review.
+The second metallic-lighting pass and Hestia bust icon correction were also
+approved before the final publication audit.

@@ -125,7 +125,8 @@ class ClassicalStatueBatchSafetyTests(unittest.TestCase):
                     {value["model"] for value in blockstate["variants"].values()},
                 )
                 self.assertEqual(
-                    "daedalon:block/mesh/zeus_statue_display",
+                    "daedalon:block/mesh/" + ("statue_north_display"
+                     if family in {"hermes", "hephaestus", "hestia"} else "zeus_statue_display"),
                     load_json(
                         DAEDALON_ASSETS / f"models/item/{block_id}.json"
                     )["parent"],

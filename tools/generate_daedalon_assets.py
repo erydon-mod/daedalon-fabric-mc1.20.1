@@ -376,7 +376,8 @@ METAL_FAMILIES = {
 }
 STATUE_DISPLAY_MODELS = {
     "spartan": "statue_spartan_promachos",
-    **{family: "zeus_statue" for family in CANONICAL_STATUE_FAMILIES},
+    **{family: ("statue_north" if family in {"hermes", "hephaestus", "hestia"} else "zeus_statue")
+       for family in CANONICAL_STATUE_FAMILIES},
 }
 ALL_FAMILIES = (
     "amphora",

@@ -3,7 +3,8 @@
 
 Keeping the display transforms in one manifest makes the GUI, held, dropped,
 and fixed sizes reproducible across the large material catalogue. Corbels keep
-their approved front, and Hestia's north-facing bust has its own GUI view.
+their approved front; north-facing prepared statues and Hestia's bust use
+shared GUI views aligned to their respective source fronts.
 """
 
 from __future__ import annotations
@@ -195,6 +196,10 @@ def expected_files() -> dict[str, bytes]:
         "zeus_statue_display.json": payload(
             "daedalon:block/statue_spartan_promachos_aganite",
             three_block_display([30, 315, 0]),
+        ),
+        "statue_north_display.json": payload(
+            "daedalon:block/statue_spartan_promachos_aganite",
+            three_block_display([30, 135, 0]),
         ),
         "statue_spartan_promachos_display.json": payload(
             "daedalon:block/statue_spartan_promachos_aganite",

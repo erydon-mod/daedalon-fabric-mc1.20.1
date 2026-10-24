@@ -23,6 +23,9 @@ materials, aged variants, sizes, facings, texture density, and geometry caches.
    Hestia's bust uses its own shared GUI display, turned 180 degrees from the
    older bust view, so its inventory picture shows the same front. This view
    does not rotate placed geometry or alter the measured collision profile.
+   Hermes, Hephaestus and Hestia full statues similarly share one north-facing
+   GUI display, with Y 135 degrees instead of the older south-facing view's 315.
+   All other statue icons and every placed profile remain unchanged.
    Spartan Promachos is a published compatibility exception: retain its EAST
    profile convention, public helper and existing world/collision orientation,
    including its 90-degree offset between the saved facing and physical front.
