@@ -23,6 +23,20 @@ ALIAS_MANIFEST_ENTRY = (
     f"assets/{ALIAS_NAMESPACE}/texture_aliases/v1.json"
 )
 ALIAS_BLOB_PREFIX = f"assets/{ALIAS_NAMESPACE}/texture_blobs/"
+INTERNAL_BLOCK_IDS = frozenset({
+    "capital_part", "fountain_basin_part", "monopteros_part", "obeliskos_part",
+})
+SHARED_ITEM_MODEL_IDS = frozenset({"emblem", "olympian_god", "olympian_god_display"})
+# The medallion is item-only: do not add it to the placed-block mesh catalogue.
+ITEM_ONLY_MESH_EXPECTATIONS = {
+    "olympian_god_medallion": {
+        "definition": "olympian_god_medallion.json",
+        "obj": "olympian_god_medallion.obj",
+        "obj_sha256": "09ca7e114c9fe5a9eb491fbb44e7be8929b7aeb13b2660b51f5c072d142ec117",
+        "mtl": None,
+        "display": None,
+    },
+}
 
 
 def project_property(name: str) -> str:
@@ -66,6 +80,38 @@ def require(condition: bool, message: str) -> None:
 
 def sha256(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
+
+
+def validate_catalogue_resources(entries: set[str]) -> dict[str, set[str]]:
+    """Check exact production inventories, including item-only selectors/helpers."""
+    def direct_json_names(prefix: str) -> set[str]:
+        return {
+            entry[len(prefix):]
+            for entry in entries
+            if entry.startswith(prefix) and entry.endswith(".json")
+            and "/" not in entry[len(prefix):]
+        }
+
+    expected_blocks = {f"{block_id}.json" for block_id in all_block_ids()}
+    selector_models = {f"{item_id}.json" for item_id in GENERATOR.olympian_god_item_ids()}
+    expected_items = expected_blocks | selector_models | {
+        f"{model_id}.json" for model_id in SHARED_ITEM_MODEL_IDS
+    }
+    no_drop_names = {
+        f"{block_id}.json"
+        for family in GENERATOR.NO_DROP_FAMILIES
+        for block_id in GENERATOR.family_block_ids(family)
+    }
+    blockstates = direct_json_names("assets/daedalon/blockstates/")
+    items = direct_json_names("assets/daedalon/models/item/")
+    loot = direct_json_names("data/daedalon/loot_tables/blocks/")
+    require(blockstates == expected_blocks | {f"{name}.json" for name in INTERNAL_BLOCK_IDS},
+            f"JAR must contain exactly {len(expected_blocks)} public Daedalon blockstates and the four internal assembly parts")
+    require(items == expected_items,
+            f"JAR must contain exactly {len(expected_blocks)} block item models, {len(selector_models)} item-only selectors and {len(SHARED_ITEM_MODEL_IDS)} shared item models")
+    require(loot == expected_blocks - no_drop_names,
+            f"JAR must contain exactly {len(expected_blocks - no_drop_names)} Daedalon self-drop loot tables; creative-only fountains and item-only selectors must not drop")
+    return {"blockstates": blockstates, "items": items, "loot": loot}
 
 
 def texture_alias_details(
@@ -269,69 +315,46 @@ def audit(
         jar_path.name == expected_jar_name,
         f"Daedalon JAR filename must be {expected_jar_name}",
     )
-    expected_ids = set(all_block_ids())
-    expected_block_count = len(expected_ids)
-    expected_json_names = {f"{block_id}.json" for block_id in expected_ids}
-
     with zipfile.ZipFile(jar_path) as archive:
         entries = set(archive.namelist())
-
-        def direct_json_names(prefix: str) -> set[str]:
-            return {
-                entry[len(prefix) :]
-                for entry in entries
-                if entry.startswith(prefix)
-                and entry.endswith(".json")
-                and "/" not in entry[len(prefix) :]
-            }
-
-        blockstates = direct_json_names("assets/daedalon/blockstates/")
-        items = direct_json_names("assets/daedalon/models/item/")
-        loot = direct_json_names("data/daedalon/loot_tables/blocks/")
-        require(
-            blockstates == expected_json_names | {"capital_part.json", "fountain_basin_part.json", "monopteros_part.json"},
-            f"JAR must contain exactly {expected_block_count} public Daedalon blockstates and the internal capital/fountain/dome parts",
-        )
-        require(
-            items == expected_json_names | {"emblem.json"},
-            f"JAR must contain exactly {expected_block_count} Daedalon block item models and the emblem",
-        )
-        no_drop_names = {
-            f"{block_id}.json"
-            for family in GENERATOR.NO_DROP_FAMILIES
-            for block_id in GENERATOR.family_block_ids(family)
-        }
-        expected_loot_names = expected_json_names - no_drop_names
-        require(
-            loot == expected_loot_names,
-            f"JAR must contain exactly {len(expected_loot_names)} Daedalon self-drop loot tables; creative-only fountains must not drop",
-        )
+        require(len(entries) == len(archive.namelist()), "JAR contains duplicate archive entries")
+        catalogue = validate_catalogue_resources(entries)
+        blockstates, items, loot = (catalogue[key] for key in ("blockstates", "items", "loot"))
 
         expected_mesh_entries: set[str] = set()
+        expected_definition_entries: set[str] = set()
         expected_obj_entries: set[str] = set()
         expected_mtl_entries: set[str] = set()
         expected_display_entries: set[str] = set()
-        for expected in MESH_EXPECTATIONS.values():
+        all_meshes = MESH_EXPECTATIONS | ITEM_ONLY_MESH_EXPECTATIONS
+        for expected in all_meshes.values():
             definition_entry = (
                 f"assets/daedalon/models/mesh/{expected['definition']}"
             )
             obj_entry = f"assets/daedalon/models/mesh/{expected['obj']}"
             expected_mesh_entries.update({definition_entry, obj_entry})
+            expected_definition_entries.add(definition_entry)
             expected_obj_entries.add(obj_entry)
             if expected["mtl"] is not None:
                 mtl_entry = f"assets/daedalon/models/mesh/{expected['mtl']}"
                 expected_mesh_entries.add(mtl_entry)
                 expected_mtl_entries.add(mtl_entry)
-            expected_display_entries.add(
-                f"assets/daedalon/models/block/mesh/{expected['display']}"
-            )
+            if expected["display"] is not None:
+                expected_display_entries.add(
+                    f"assets/daedalon/models/block/mesh/{expected['display']}"
+                )
         require(
             expected_mesh_entries <= entries,
             "JAR is missing one or more OBJ/MTL/definition manifests",
         )
+        actual_display_entries = {
+            entry for entry in entries
+            if entry.startswith("assets/daedalon/models/block/mesh/")
+            and entry.endswith("_display.json")
+        }
         require(
-            expected_display_entries <= entries,
-            "JAR is missing one or more OBJ display models",
+            actual_display_entries == expected_display_entries,
+            f"JAR must contain exactly {len(expected_display_entries)} approved OBJ display models",
         )
 
         actual_obj_entries = {
@@ -346,6 +369,12 @@ def audit(
             if entry.startswith("assets/daedalon/models/mesh/")
             and entry.endswith(".mtl")
         }
+        actual_definition_entries = {
+            entry for entry in entries
+            if entry.startswith("assets/daedalon/models/mesh/") and entry.endswith(".json")
+        }
+        require(actual_definition_entries == expected_definition_entries,
+                f"JAR must contain exactly {len(expected_definition_entries)} approved mesh definitions")
         require(
             actual_obj_entries == expected_obj_entries,
             f"JAR must contain exactly {len(expected_obj_entries)} approved OBJs",
@@ -355,7 +384,7 @@ def audit(
             f"JAR must contain exactly {len(expected_mtl_entries)} approved MTLs",
         )
 
-        for family, expected in MESH_EXPECTATIONS.items():
+        for family, expected in all_meshes.items():
             obj_entry = f"assets/daedalon/models/mesh/{expected['obj']}"
             require(
                 sha256(archive.read(obj_entry)) == expected["obj_sha256"],
@@ -388,6 +417,14 @@ def audit(
             "JAR contains foreign ERYDON/Themelios namespaces: "
             + ", ".join(forbidden_entries[:10]),
         )
+        development_prefixes = (
+            "com/oliver/daedalon/gametest/", "com/oliver/daedalon/probe/",
+            "build/", "docs/", "tools/", "gradle/", ".git/", ".gradle/", ".idea/",
+            "run-dev/", "run-with-erydon/", "config/branding-assets.json",
+        )
+        development_entries = sorted(entry for entry in entries if entry.startswith(development_prefixes))
+        require(not development_entries,
+                "Production JAR contains development-only files: " + ", ".join(development_entries[:10]))
 
         metadata = json.loads(archive.read("fabric.mod.json"))
         require(metadata["id"] == "daedalon", "fabric.mod.json id must be daedalon")
@@ -510,7 +547,7 @@ def audit(
         "jarSha256": hashlib.sha256(jar_path.read_bytes()).hexdigest(),
         "metadata": {
             "id": "daedalon",
-            "name": "Daedalon",
+            "name": "ERYDON Daedalon",
             "version": EXPECTED_MOD_VERSION,
             "familyCompatibilityGeneration": (
                 EXPECTED_FAMILY_COMPATIBILITY_GENERATION
@@ -524,8 +561,10 @@ def audit(
             "lootTables": len(loot),
             "objFiles": len(actual_obj_entries),
             "mtlFiles": len(actual_mtl_entries),
-            "meshDefinitions": len(MESH_EXPECTATIONS),
-            "displayModels": len(expected_display_entries),
+            "meshDefinitions": len(all_meshes),
+            "publicBlocks": len(all_block_ids()),
+            "itemOnlySelectors": len(GENERATOR.olympian_god_item_ids()),
+            "displayModels": len(actual_display_entries),
         },
         "independence": {
             "forbiddenForeignEntries": 0,

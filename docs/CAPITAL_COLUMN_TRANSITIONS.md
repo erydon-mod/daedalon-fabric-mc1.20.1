@@ -32,4 +32,4 @@ Both surfaces use the same stable radial projection patches, with matching North
 
 The existing `CapitalGameTests` covers 2,592 combinations across six styles, 54 material finishes, both sizes and all four head/shaft profiles, plus serialization, rotation and hidden controls. With ERYDON installed, additional tests invoke the real column side-click controls and verify that changing any of four Large supports updates the existing capital without re-placement.
 
-The UV correction is verified from source geometry and the complete material pipeline without launching Minecraft. These measurements establish scale and phase; they are separate from a rendered shader screenshot.
+The UV correction is verified from source geometry and the complete material pipeline. Oliver also approved the fitted collars and their texture scale and joins in the 24 October 2026 combined Daedalon/ERYDON review with Complementary Unbound and the Collection 64x pack.

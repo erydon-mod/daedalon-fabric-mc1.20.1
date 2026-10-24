@@ -46,6 +46,9 @@ ordinary search works before joining a server. REI, JEI and EMI are optional.
 
 ## Development validation
 
+The current publication checkpoint is recorded in
+[the Daedalon 1.0.0 audit](docs/PREPUBLICATION_AUDIT.md).
+
 Daedalon requires Java 17 and Python 3.13. Run the complete compilation, test,
 and source-asset safety suite without producing a release JAR:
 

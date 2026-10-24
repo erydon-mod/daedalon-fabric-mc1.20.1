@@ -16,5 +16,7 @@ of the existing authored boxes. Axiom previews use those same state bounds.
 Copy rotation preserves the half step. Reflection reverses the diagonal facing
 and offset direction, including East-authored statue profiles. The automatic
 checks cover all mesh profiles, widths, sizes, cardinal facings and both mirror
-axes. Client inspection still needs to confirm the diagonal Exedra opening,
-selection feel, statues, offset positions, shaders and Axiom copy previews.
+axes. Oliver approved the diagonal Exedra and statue controls in the
+24 October 2026 pre-publication review with REI, Complementary Unbound and the
+Collection 64x pack. Axiom copy previews remain a separate optional integration
+check; the approval does not claim that wider rendering matrix.

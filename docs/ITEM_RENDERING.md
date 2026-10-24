@@ -76,6 +76,12 @@ Warm cache checks scheduled no new work or atlas allocations; the actual GPU
 upload/filter/gutter/release checks also passed. These generated-picture and
 cache checks do not measure live REI frame rate or replace player visual review.
 
+Oliver approved the second metallic pass and Hestia bust view on 24 October
+2026. The final audit extended the native comparisons to 228 renders and
+corrected the inventory fronts of Hermes, Hephaestus and Hestia full statues;
+placed rendering and the image-cache draw path remain unchanged. The complete
+publication checkpoint is in `PREPUBLICATION_AUDIT.md`.
+
 This supersedes the older per-family 3D held/dropped-item preparation notes.
 Existing optional item meshes remain compatible assets, but this item-rendering
 path does not draw them and new decorations do not need a separate 3D item mesh.
