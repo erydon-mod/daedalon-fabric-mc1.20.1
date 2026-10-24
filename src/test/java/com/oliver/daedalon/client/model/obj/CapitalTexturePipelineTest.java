@@ -68,11 +68,11 @@ final class CapitalTexturePipelineTest {
 
     private static RenderContext.QuadTransform materialTransform(Sprite sprite) throws Exception {
         Class<?> type = Class.forName(ObjMeshBakedModel.class.getName() + "$TextureTransform");
-        var constructor = type.getDeclaredConstructor(List.class, List.class, WorldTexturePhase.Layout.class, int.class);
+        var constructor = type.getDeclaredConstructor(List.class, List.class, WorldTexturePhase.Layout.class, int.class, boolean.class);
         constructor.setAccessible(true);
         // createArchitecturalVariants -> variant(material + "_block") uses blockSurface.
         return (RenderContext.QuadTransform) constructor.newInstance(List.of(sprite), List.of(true),
-                WorldTexturePhase.blockSurface(), 0);
+                WorldTexturePhase.blockSurface(), 0, false);
     }
 
     private static Sprite spriteSentinel() throws Exception {

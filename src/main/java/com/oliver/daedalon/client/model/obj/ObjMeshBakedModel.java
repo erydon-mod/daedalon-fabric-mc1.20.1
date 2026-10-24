@@ -98,16 +98,17 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         this.friezeParts = friezeParts;
         this.capitalWorldMesh = capitalWorldMesh;
         this.capitalTextureTransform = capitalWorldMesh == null ? null
-                : new TextureTransform(materialSprites, worldPhaseMaterials, WorldTexturePhase.blockSurface(), 0);
+                : new TextureTransform(materialSprites, worldPhaseMaterials, WorldTexturePhase.blockSurface(), 0, false);
         this.metadataModel = metadataModel;
         this.particleSprite = particleSprite;
-        this.textureTransform = new TextureTransform(materialSprites, worldPhaseMaterials, worldTexturePhase, 0);
+        this.textureTransform = new TextureTransform(materialSprites, worldPhaseMaterials, worldTexturePhase, 0, false);
         this.worldTexturePhase = worldTexturePhase;
         this.worldPhaseMaterials = List.copyOf(worldPhaseMaterials);
         this.worldTextureTransforms = createWorldTextureTransforms(
                 materialSprites,
                 worldPhaseMaterials,
-                worldTexturePhase
+                worldTexturePhase,
+                friezeParts != null
         );
         this.guiIconTemplate = guiIconTemplate;
         this.materialTextureIds = List.copyOf(materialTextureIds);
@@ -985,7 +986,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     private static TextureTransform[] createWorldTextureTransforms(
             List<Sprite> materialSprites,
             List<Boolean> worldPhaseMaterials,
-            WorldTexturePhase.Layout worldTexturePhase
+            WorldTexturePhase.Layout worldTexturePhase,
+            boolean friezeRepeat
     ) {
         TextureTransform[] transforms = new TextureTransform[worldTexturePhase.phaseCount()];
         for (int phaseIndex = 0; phaseIndex < transforms.length; phaseIndex++) {
@@ -993,7 +995,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                     materialSprites,
                     worldPhaseMaterials,
                     worldTexturePhase,
-                    phaseIndex
+                    phaseIndex,
+                    friezeRepeat
             );
         }
         return transforms;
@@ -1003,7 +1006,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             List<Sprite> materialSprites,
             List<Boolean> worldPhaseMaterials,
             WorldTexturePhase.Layout worldTexturePhase,
-            int phaseIndex
+            int phaseIndex,
+            boolean friezeRepeat
     )
             implements RenderContext.QuadTransform {
         private TextureTransform {
@@ -1038,6 +1042,9 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                     );
                 }
             }
+            // Frieze projection can land exactly on the sprite's outside edge.
+            // Select its identical interior repeat before atlas/PBR sampling.
+            if (friezeRepeat && materialUsesWorldPhase) FriezeAtlasRepeatGuard.protect(quad);
             quad.spriteBake(sprite, MutableQuadView.BAKE_NORMALIZED);
             return true;
         }
