@@ -26,16 +26,16 @@ final class ObjGuiMetalLightingTest {
                 float z = (float) Math.cos(angle);
                 int reflection = ObjGuiMetalLighting.reflection(x, y, z);
                 for (int shift : new int[]{0, 8, 16}) {
-                    float value = ObjGuiMetalLighting.channel(0.625F, reflection, shift);
+                    float value = ObjGuiMetalLighting.channel(0.625F, reflection, shift, 0.7F);
                     assertTrue(Float.isFinite(value) && value >= 0 && value < 1);
                     darkest = Math.min(darkest, value);
                     brightest = Math.max(brightest, value);
                 }
             }
         }
-        assertTrue(darkest < 0.15F, "Metal needs dark reflected surroundings");
-        assertTrue(brightest > 0.7F, "Metal needs clear bright studio reflections");
-        assertTrue(brightest - darkest > 0.55F);
+        assertTrue(darkest > 0.2F && darkest < 0.3F, "Dark reflections must retain readable model midtones");
+        assertTrue(brightest > 0.6F, "Metal needs clear bright studio reflections");
+        assertTrue(brightest - darkest > 0.3F);
     }
 
     @Test void equivalentNormalsRetainTheSameReflectionAndBadNormalsStayFinite() {
@@ -44,18 +44,27 @@ final class ObjGuiMetalLightingTest {
         assertEquals(unit, ObjGuiMetalLighting.reflection(0, -0.6F, -0.8F));
         for (float invalid : new float[]{0, Float.NaN, Float.POSITIVE_INFINITY}) {
             int reflection = ObjGuiMetalLighting.reflection(invalid, 0, 0);
-            assertTrue(Float.isFinite(ObjGuiMetalLighting.channel(0.625F, reflection, 0)));
+            assertTrue(Float.isFinite(ObjGuiMetalLighting.channel(0.625F, reflection, 0, 0.7F)));
         }
     }
 
     @Test void sourceMetalTintIsRetainedAndHighlightsDoNotClip() {
         int reflection = ObjGuiMetalLighting.reflection(-0.2F, 0.2F, 0.96F);
-        float bronzeRed = ObjGuiMetalLighting.channel(0.79F, reflection, 0);
-        float bronzeGreen = ObjGuiMetalLighting.channel(0.36F, reflection, 8);
-        float bronzeBlue = ObjGuiMetalLighting.channel(0.008F, reflection, 16);
+        float bronzeRed = ObjGuiMetalLighting.channel(0.79F, reflection, 0, 0.7F);
+        float bronzeGreen = ObjGuiMetalLighting.channel(0.36F, reflection, 8, 0.7F);
+        float bronzeBlue = ObjGuiMetalLighting.channel(0.008F, reflection, 16, 0.7F);
         assertTrue(bronzeRed > bronzeGreen && bronzeGreen > bronzeBlue);
         assertTrue(bronzeRed < 1);
-        assertTrue(ObjGuiMetalLighting.channel(0.5F, reflection, 0)
-                > ObjGuiMetalLighting.channel(0.1F, reflection, 0));
+        assertTrue(ObjGuiMetalLighting.channel(0.5F, reflection, 0, 0.7F)
+                > ObjGuiMetalLighting.channel(0.1F, reflection, 0, 0.7F));
+    }
+
+    @Test void modelLightStillDescribesTheFormInsideDarkAndBrightReflections() {
+        for (float normalX : new float[]{-0.2F, 0.0F, 0.7F}) {
+            int reflection = ObjGuiMetalLighting.reflection(normalX, 0.2F, 0.7F);
+            float shadow = ObjGuiMetalLighting.channel(0.625F, reflection, 0, 0.4F);
+            float light = ObjGuiMetalLighting.channel(0.625F, reflection, 0, 1.0F);
+            assertTrue(light - shadow > 0.15F, "Reflections must retain enough form lighting to read faces and clothing");
+        }
     }
 }

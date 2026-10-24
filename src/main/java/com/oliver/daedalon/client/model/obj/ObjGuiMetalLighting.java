@@ -45,13 +45,17 @@ final class ObjGuiMetalLighting {
                 room + 2.35F * key + 1.15F * fill + 0.65F * ceiling, fresnel);
     }
 
-    static float channel(float sourceLinear, int reflection, int shift) {
+    static float channel(float sourceLinear, int reflection, int shift, float formShade) {
         float grazing = (reflection >>> 24) / 255.0F;
         float reflectance = sourceLinear + (1.0F - sourceLinear) * grazing;
         float radiance = (reflection >>> shift & 255) * (RADIANCE_RANGE / 255.0F);
         float exposed = reflectance * radiance * 1.8F;
         // Compress bright reflections without clipping their colour or detail.
-        return exposed / (1.0F + exposed);
+        float reflected = exposed / (1.0F + exposed);
+        // Retain the established model lighting so faces, clothing and small
+        // relief do not dissolve into isolated reflection fragments at slot size.
+        float form = Math.min(1.0F, sourceLinear * formShade);
+        return form * 0.45F + reflected * 0.55F;
     }
 
     private static float softbox(float distance, float inner, float outer) {

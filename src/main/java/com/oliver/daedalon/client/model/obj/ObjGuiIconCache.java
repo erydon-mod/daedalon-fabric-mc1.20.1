@@ -511,9 +511,9 @@ public final class ObjGuiIconCache {
                         alphaSum += alpha;
                         if (metallic[material]) {
                             int reflection = template.reflectionAt(sampleIndex);
-                            redPremultiplied += ObjGuiMetalLighting.channel(SRGB_TO_LINEAR[red], reflection, 0) * alpha;
-                            greenPremultiplied += ObjGuiMetalLighting.channel(SRGB_TO_LINEAR[green], reflection, 8) * alpha;
-                            bluePremultiplied += ObjGuiMetalLighting.channel(SRGB_TO_LINEAR[blue], reflection, 16) * alpha;
+                            redPremultiplied += ObjGuiMetalLighting.channel(SRGB_TO_LINEAR[red], reflection, 0, shade) * alpha;
+                            greenPremultiplied += ObjGuiMetalLighting.channel(SRGB_TO_LINEAR[green], reflection, 8, shade) * alpha;
+                            bluePremultiplied += ObjGuiMetalLighting.channel(SRGB_TO_LINEAR[blue], reflection, 16, shade) * alpha;
                         } else {
                             redPremultiplied += Math.min(1.0F, SRGB_TO_LINEAR[red] * shade) * alpha;
                             greenPremultiplied += Math.min(1.0F, SRGB_TO_LINEAR[green] * shade) * alpha;
