@@ -1,0 +1,1636 @@
+{
+  "schema": 1,
+  "design": "Paired pointed lancets, continuous mullion and supported four-circular-lobed quatrefoil",
+  "provenance": "Oliver's own Meshy Gothic lantern and approved authored derivatives; requested lead tracery revision.",
+  "tool": {
+    "path": "tools/rebuild_gothic_lantern_tracery.py",
+    "sha256": "c9a5a9e0d23ed02b31514719484e6dcf53abb1d44f726a9c753cb7c441929743",
+    "blender": "5.2.0 LTS"
+  },
+  "retention_policy": "Only interior lead tracery changed. Existing stone, bronze, glass, flame and outer pointed frames retain exact face references and referenced attribute declarations.",
+  "runtime": {
+    "before_sha256": "814a88a3c33fea116c7fb9a18284bc11c4597a29bc3256934df56d06917143e8",
+    "sha256": "e127a7893d4823326107b20933c9f9ef2444332c89dc38823b87efefb5c61772",
+    "vertices": 57788,
+    "normals": 62183,
+    "uvs": 65,
+    "groups": {
+      "hanging_bronze": 896,
+      "hanging_flame": 12,
+      "hanging_glass": 912,
+      "hanging_lead": 14136,
+      "hanging_stone": 18624,
+      "pier_bronze": 896,
+      "pier_flame": 12,
+      "pier_glass": 912,
+      "pier_lead": 14136,
+      "pier_stone": 19202,
+      "wall_bronze": 896,
+      "wall_flame": 12,
+      "wall_glass": 608,
+      "wall_lead": 9424,
+      "wall_stone": 15320
+    },
+    "before_role_fingerprints": {
+      "hanging_bronze": {
+        "triangles": 896,
+        "sha256": "dfab95a96d29a1819fee32aa21bdb3f4f10946d07c0f5102d71ab2ef9ce433c7"
+      },
+      "hanging_flame": {
+        "triangles": 12,
+        "sha256": "bc140c3d44ca9aef623bdcc9c116d79d3e355de703668ee06fd5a3b2b4ad580c"
+      },
+      "hanging_glass": {
+        "triangles": 912,
+        "sha256": "9ea91c26629a8889f2424fb8cef9e1fd482fe12e26ee28be6c323df1e392bfd5"
+      },
+      "hanging_lead": {
+        "triangles": 11784,
+        "sha256": "310ec33de27c39f4340511c7d8d67281e0a45a2a781f3d2dd304e456e93183a9"
+      },
+      "hanging_stone": {
+        "triangles": 18624,
+        "sha256": "57109ed86069b388a7226a6bf4225d1e9ad5d44195fd6c7a86fa470758404caa"
+      },
+      "pier_bronze": {
+        "triangles": 896,
+        "sha256": "c5a8f1769e6de932edfef261df4233e74c0f7dfaa08e0641c8160c323163f2f9"
+      },
+      "pier_flame": {
+        "triangles": 12,
+        "sha256": "b769ef38d1272e5ba538d18f1fd43f6aad780ad50b4245fa11e184d9caa8ef4e"
+      },
+      "pier_glass": {
+        "triangles": 912,
+        "sha256": "4dee68125d73140e07f46d726264b054b1ca6732871d9042f04a3ae07403163c"
+      },
+      "pier_lead": {
+        "triangles": 11784,
+        "sha256": "744c2b87b0df8b6fb931d1f7f5552ace0c57d5cf7157b24104434614a874e481"
+      },
+      "pier_stone": {
+        "triangles": 19202,
+        "sha256": "0a5bfaa6de007cdbd89980f4ac9f07ea89e73f3795f6b2631a41ce6b60900db8"
+      },
+      "wall_bronze": {
+        "triangles": 896,
+        "sha256": "9269da815eb4e1e8517c10ba764dff38a1e761e5a3f33e09fb9b285c46b2e083"
+      },
+      "wall_flame": {
+        "triangles": 12,
+        "sha256": "edd41e4fe42b1b6b175af9f6fa0ab36cc94471c2906d427501c84660f54ac537"
+      },
+      "wall_glass": {
+        "triangles": 608,
+        "sha256": "e7158fb425f06dfb408bf988ab8a85fa0a5faf6c478c5daefe23f54a0ba72e77"
+      },
+      "wall_lead": {
+        "triangles": 7856,
+        "sha256": "58b6ca644c2bae5fb5f18078cfbf7aaa304c1514c5d6971a1eb3c5a778e94192"
+      },
+      "wall_stone": {
+        "triangles": 15320,
+        "sha256": "0f1dff7c65c5d47ec38a0e7b89a524aaacc59803b0157d0394be5711245b1c82"
+      }
+    },
+    "after_role_fingerprints": {
+      "hanging_bronze": {
+        "triangles": 896,
+        "sha256": "dfab95a96d29a1819fee32aa21bdb3f4f10946d07c0f5102d71ab2ef9ce433c7"
+      },
+      "hanging_flame": {
+        "triangles": 12,
+        "sha256": "bc140c3d44ca9aef623bdcc9c116d79d3e355de703668ee06fd5a3b2b4ad580c"
+      },
+      "hanging_glass": {
+        "triangles": 912,
+        "sha256": "9ea91c26629a8889f2424fb8cef9e1fd482fe12e26ee28be6c323df1e392bfd5"
+      },
+      "hanging_lead": {
+        "triangles": 14136,
+        "sha256": "5198f3cd86e575c5abfe8b8c1a4aca1d219472fc8d3ee9f621ff2b4ec95001e8"
+      },
+      "hanging_stone": {
+        "triangles": 18624,
+        "sha256": "57109ed86069b388a7226a6bf4225d1e9ad5d44195fd6c7a86fa470758404caa"
+      },
+      "pier_bronze": {
+        "triangles": 896,
+        "sha256": "c5a8f1769e6de932edfef261df4233e74c0f7dfaa08e0641c8160c323163f2f9"
+      },
+      "pier_flame": {
+        "triangles": 12,
+        "sha256": "b769ef38d1272e5ba538d18f1fd43f6aad780ad50b4245fa11e184d9caa8ef4e"
+      },
+      "pier_glass": {
+        "triangles": 912,
+        "sha256": "4dee68125d73140e07f46d726264b054b1ca6732871d9042f04a3ae07403163c"
+      },
+      "pier_lead": {
+        "triangles": 14136,
+        "sha256": "258eb8d30a9cb39195236231ee8f71c96ef82685efd524a3eeaa9f7d78c2730a"
+      },
+      "pier_stone": {
+        "triangles": 19202,
+        "sha256": "0a5bfaa6de007cdbd89980f4ac9f07ea89e73f3795f6b2631a41ce6b60900db8"
+      },
+      "wall_bronze": {
+        "triangles": 896,
+        "sha256": "9269da815eb4e1e8517c10ba764dff38a1e761e5a3f33e09fb9b285c46b2e083"
+      },
+      "wall_flame": {
+        "triangles": 12,
+        "sha256": "edd41e4fe42b1b6b175af9f6fa0ab36cc94471c2906d427501c84660f54ac537"
+      },
+      "wall_glass": {
+        "triangles": 608,
+        "sha256": "e7158fb425f06dfb408bf988ab8a85fa0a5faf6c478c5daefe23f54a0ba72e77"
+      },
+      "wall_lead": {
+        "triangles": 9424,
+        "sha256": "f42c653c95d1811fcf1a6dd90cb394dd9d02f9f7b7c27f32d4d60a5b7550b9de"
+      },
+      "wall_stone": {
+        "triangles": 15320,
+        "sha256": "0f1dff7c65c5d47ec38a0e7b89a524aaacc59803b0157d0394be5711245b1c82"
+      }
+    },
+    "retained_outer_frame_fingerprints": {
+      "hanging": {
+        "triangles": 4680,
+        "sha256": "ec632add6d64ca94428ac7d7e394d5ded40e6cb8f3bdf0954e5fd273861f7769"
+      },
+      "pier": {
+        "triangles": 4680,
+        "sha256": "72648d1b8141246aadde752f291c1fa4767cdbd751cad67e08aa2dd452706b5a"
+      },
+      "wall": {
+        "triangles": 3120,
+        "sha256": "c9ae9c8b1cb3bfffb343ff124dbd1dd0953cead46be5c35dd29ef78130ad058b"
+      }
+    },
+    "removed_old_tracery_triangles": {
+      "pier": 7104,
+      "wall": 4736,
+      "hanging": 7104
+    },
+    "added_tracery_triangles": {
+      "pier": 9456,
+      "wall": 6304,
+      "hanging": 9456
+    },
+    "non_lead_roles_exact": true,
+    "outer_frames_exact": true,
+    "attribute_policy": "Original declarations and unaffected face references retained; new lead positions/normals appended.",
+    "path": "models/mesh/lantern_gothic.obj",
+    "triangles": 95998
+  },
+  "retained_non_lead_roles": {
+    "hanging_bronze": {
+      "before": {
+        "triangles": 896,
+        "sha256": "dfab95a96d29a1819fee32aa21bdb3f4f10946d07c0f5102d71ab2ef9ce433c7"
+      },
+      "after": {
+        "triangles": 896,
+        "sha256": "dfab95a96d29a1819fee32aa21bdb3f4f10946d07c0f5102d71ab2ef9ce433c7"
+      },
+      "exact": true
+    },
+    "hanging_flame": {
+      "before": {
+        "triangles": 12,
+        "sha256": "bc140c3d44ca9aef623bdcc9c116d79d3e355de703668ee06fd5a3b2b4ad580c"
+      },
+      "after": {
+        "triangles": 12,
+        "sha256": "bc140c3d44ca9aef623bdcc9c116d79d3e355de703668ee06fd5a3b2b4ad580c"
+      },
+      "exact": true
+    },
+    "hanging_glass": {
+      "before": {
+        "triangles": 912,
+        "sha256": "9ea91c26629a8889f2424fb8cef9e1fd482fe12e26ee28be6c323df1e392bfd5"
+      },
+      "after": {
+        "triangles": 912,
+        "sha256": "9ea91c26629a8889f2424fb8cef9e1fd482fe12e26ee28be6c323df1e392bfd5"
+      },
+      "exact": true
+    },
+    "hanging_stone": {
+      "before": {
+        "triangles": 18624,
+        "sha256": "57109ed86069b388a7226a6bf4225d1e9ad5d44195fd6c7a86fa470758404caa"
+      },
+      "after": {
+        "triangles": 18624,
+        "sha256": "57109ed86069b388a7226a6bf4225d1e9ad5d44195fd6c7a86fa470758404caa"
+      },
+      "exact": true
+    },
+    "pier_bronze": {
+      "before": {
+        "triangles": 896,
+        "sha256": "c5a8f1769e6de932edfef261df4233e74c0f7dfaa08e0641c8160c323163f2f9"
+      },
+      "after": {
+        "triangles": 896,
+        "sha256": "c5a8f1769e6de932edfef261df4233e74c0f7dfaa08e0641c8160c323163f2f9"
+      },
+      "exact": true
+    },
+    "pier_flame": {
+      "before": {
+        "triangles": 12,
+        "sha256": "b769ef38d1272e5ba538d18f1fd43f6aad780ad50b4245fa11e184d9caa8ef4e"
+      },
+      "after": {
+        "triangles": 12,
+        "sha256": "b769ef38d1272e5ba538d18f1fd43f6aad780ad50b4245fa11e184d9caa8ef4e"
+      },
+      "exact": true
+    },
+    "pier_glass": {
+      "before": {
+        "triangles": 912,
+        "sha256": "4dee68125d73140e07f46d726264b054b1ca6732871d9042f04a3ae07403163c"
+      },
+      "after": {
+        "triangles": 912,
+        "sha256": "4dee68125d73140e07f46d726264b054b1ca6732871d9042f04a3ae07403163c"
+      },
+      "exact": true
+    },
+    "pier_stone": {
+      "before": {
+        "triangles": 19202,
+        "sha256": "0a5bfaa6de007cdbd89980f4ac9f07ea89e73f3795f6b2631a41ce6b60900db8"
+      },
+      "after": {
+        "triangles": 19202,
+        "sha256": "0a5bfaa6de007cdbd89980f4ac9f07ea89e73f3795f6b2631a41ce6b60900db8"
+      },
+      "exact": true
+    },
+    "wall_bronze": {
+      "before": {
+        "triangles": 896,
+        "sha256": "9269da815eb4e1e8517c10ba764dff38a1e761e5a3f33e09fb9b285c46b2e083"
+      },
+      "after": {
+        "triangles": 896,
+        "sha256": "9269da815eb4e1e8517c10ba764dff38a1e761e5a3f33e09fb9b285c46b2e083"
+      },
+      "exact": true
+    },
+    "wall_flame": {
+      "before": {
+        "triangles": 12,
+        "sha256": "edd41e4fe42b1b6b175af9f6fa0ab36cc94471c2906d427501c84660f54ac537"
+      },
+      "after": {
+        "triangles": 12,
+        "sha256": "edd41e4fe42b1b6b175af9f6fa0ab36cc94471c2906d427501c84660f54ac537"
+      },
+      "exact": true
+    },
+    "wall_glass": {
+      "before": {
+        "triangles": 608,
+        "sha256": "e7158fb425f06dfb408bf988ab8a85fa0a5faf6c478c5daefe23f54a0ba72e77"
+      },
+      "after": {
+        "triangles": 608,
+        "sha256": "e7158fb425f06dfb408bf988ab8a85fa0a5faf6c478c5daefe23f54a0ba72e77"
+      },
+      "exact": true
+    },
+    "wall_stone": {
+      "before": {
+        "triangles": 15320,
+        "sha256": "0f1dff7c65c5d47ec38a0e7b89a524aaacc59803b0157d0394be5711245b1c82"
+      },
+      "after": {
+        "triangles": 15320,
+        "sha256": "0f1dff7c65c5d47ec38a0e7b89a524aaacc59803b0157d0394be5711245b1c82"
+      },
+      "exact": true
+    }
+  },
+  "native_files": [
+    {
+      "mount": "pier",
+      "finish": "material",
+      "file": "gothic lantern - seated limestone and metal.blend",
+      "source_sha256": "929060b66b80aa7e09846425f42cc5b97efc5da66bd8c260e7764c60e644088a",
+      "delivery_sha256": "7507c40b931aadec48b4bd731734f92aa5d5f1620291563090db18fbe339e2d1",
+      "preview": "gothic lantern - seated limestone and metal preview.png",
+      "retained_native_mesh_fingerprints": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "865ebaa4035e18789cfd1ca643043dc690a470b03b5eae2ae8004487a0110e1b",
+        "02 Layered pointed arch moulding 1": "5429e385df6e5c403bbafa2c39c5b8f97542fbe2c6678888e30872b2dd37a79f",
+        "02 Layered pointed arch moulding 2": "39db6cc0d8600206e569be9e6dab38005faf6740162da842c112a144fbb29ad6",
+        "02 Layered pointed arch moulding 3": "7345a1a75688245be4f3006ce8d7b4ab399cd188c7f0e7075e173ed901736f30",
+        "02 Layered pointed arch moulding 4": "79d27dc37f1a709416a0c0d09e3e9e7c0cb2447b31585d2f35d62ed5ebb1cf49",
+        "02 Layered pointed arch moulding 5": "8db484481ba850460e7fd03cd2015f0bd5f31d57f8eaa80e08c3923d9f8b1a41",
+        "02 Layered pointed arch moulding 6": "9f972e8bb041087beec751275f9484b70d8a54a91132414e26c7331984d043d9",
+        "08 Crocketed gable 1": "27d99571afb71fc2b243ad5b042537e2a9ae08ccd785cd1c50f1c1c555b53c36",
+        "08 Crocketed gable 2": "92982eb234172f5b0b9d39de2c3d991e054aa93afbdf84de342c245936ed10f5",
+        "08 Crocketed gable 3": "061f399b4f493834d42009959486c342fa4117505a7aa835fa732ad0587166cb",
+        "08 Crocketed gable 4": "b90659ccf23872f3d7965ff040295b60be2a55b4893531afcb70fc264bedf346",
+        "08 Crocketed gable 5": "9b1d82b011523aba161283200994c1b5452ba24f285b22e21d48dcc98514ea2d",
+        "08 Crocketed gable 6": "534089855c64d8f4067c136fae7e0eb25ce5457747ce76ddd124599b59c71233",
+        "08 Gable raised edge 1": "39ecec663778d6a525cc151b6194b7d96298f4b1dfaada6fb06751ab4925fd97",
+        "08 Gable raised edge 2": "2b9c804602d30f515a6128a8a159510b69ef40e087e7b7b8006ca81be2b505df",
+        "08 Gable raised edge 3": "42914f10835a531fe0ce136467c213fafb84b9383db1c6e6a86fb6721107b1a4",
+        "08 Gable raised edge 4": "e9cf7d0b009bcd4deabd98a2189b28abd0cb25c57190b19c6a8d3efe64653156",
+        "08 Gable raised edge 5": "0727729f2853be3dbeac6a04497379c49565a492cca2231d8df6e8dfab72c6ba",
+        "08 Gable raised edge 6": "281cdd9a05bf9bf44fbbbfbca0be3d57a550c0264ea620b417eba070c86aadaa",
+        "08 Gable tip 1": "1e8016bdade4ba6d7b4a27e9fdd148817273fc89311d145a4069e5c677cbc1a8",
+        "08 Gable tip 2": "8d3855f35ba1278bdf9ffa793351f20b3df2554098d33f1eafb029690c056865",
+        "08 Gable tip 3": "1c8f891e94270df0283db982fb691f492cf3be2f3a2467acb6268773bd9130f3",
+        "08 Gable tip 4": "e66983ff68003c5d325efeb6d2b34bd47c26389e59a08074ed9a9fc57db706a1",
+        "08 Gable tip 5": "6225db9e7562726ebf3c9bc3bff0143ea844ef7ceaf2caec034213797cdad613",
+        "08 Gable tip 6": "5b9059676a566dd0452808cbb8be8bd6aada92ab43706718205df432e9db478f",
+        "09 Clean six-panel Gothic roof": "5e9b6ddbafb9f954aa46e5b9a646c9a1c7c9ff88bb30890d2dda098fd6399e64",
+        "09 Raised roof hip rib 1": "7be6db3e0ea3ea4557c5765976f36bf4ca911d87e9e32ce586e01cced43eb98f",
+        "09 Raised roof hip rib 2": "4e565060696975bee28015773a361666ca5fd118cca42f283e0e0a8bbc89058f",
+        "09 Raised roof hip rib 3": "0b5b53d0b28178616dde1478b235e46c0bc24359b510c5310c3cf36fd9d6a7a1",
+        "09 Raised roof hip rib 4": "e21625064c8dfcf4b56afcb8e88e74ec4da70f43634c6f816d6d1dd271982334",
+        "09 Raised roof hip rib 5": "3ae274ca94164fba0d0a76a2234e0191cca62015239c7ead314b5b221b371688",
+        "09 Raised roof hip rib 6": "b0c6f2af4b3a3116e8917143de2f87785625485ad59e22a13c67735bb63e82ff",
+        "10 Main top finial bulb and point": "c8287a5257cad52a3e5e82f317ee8241e1eae7c9bd65641f86320f487c2947be",
+        "10 Main top finial collar": "d4b563db710b915c1c7b9fcc703adeffd718d1f5e34263552823c2c4b302d09a",
+        "11 Paneled seated pedestal": "c843c31cfa0ecb442e27fd8aa5282f3e83ba8ed25e49dc80486cc8c0c13389b1",
+        "G01 Small floor mounting collar": "1c7216f3fd402b191a8cb23393e28c36eedcdde3a00eef5e5f0bfd8b6a788776",
+        "G02 Sturdier gas riser - diameter 0.032": "6f95422de7e442b7e8b956807f62a880da519213bdbf2e5ae5d7fb0513aa84af",
+        "G03 Proportional hexagonal union": "98f9e5a4e70851e355a43a6ebf2987cb05b6d53cd068863ad0766fbe54a567fc",
+        "G04 Discreet rear valve branch": "d4528c355cc98fc7535e58da41ab72f6b5a958f2b560d04c9af03da239c11dbd",
+        "G05 Proportional rear valve knob": "84ae0e8e19eaf96911d0bddc1d581e160cfae9466e5bf504d25ec1867fe2c0f4",
+        "G06 Broader tip retaining collar": "00a730fa6b3d099a04d18b74f708d5e32a4e625a3dd5ac1055948754296b668c",
+        "G07 Pale wider burner tip - diameter 0.044": "f1e8543ca3fd0372e6bc8536fc5ebdc3a86a8825f7ce3804b01ff2d78fc1a815",
+        "G08 Dark split-jet slit": "a903e71087434bf38aa0eb2244927d0f8d326ed4933401105072d943bdaaf213",
+        "GL01 Inset clear glazing pane": "34f6d59b9d28d6369458f9a511fc764c126110b99c704e2043dfc0c0060a3b21",
+        "GL02 Inset clear glazing pane": "db1ce07c3e86419c3a9acce8a072860c75462a6f4443ba0ce66230d5c83750d1",
+        "GL03 Inset clear glazing pane": "ab18e4576e3b815d3ed8417eba7ff9993a506a5459cfaf8bdb2c7a55e0eaa2b7",
+        "GL04 Inset clear glazing pane": "b19001f9e743d7a9ab59aca64c0178711431975ecd88aa1b76f48e15b45e62bc",
+        "GL05 Inset clear glazing pane": "0ba7126461e96ea9c730b48e9e770efdb71bd3919a486d7768611309955bc031",
+        "GL06 Inset clear glazing pane": "92e37a1627f4575d662e6f20b415b24395963de34366c6e3eb696ab55b03ac56",
+        "pier_flame": "d92b8765998287f6a5b05ca1c68ec3328c91d29f6d4d9e0ef2aff43fff2be882"
+      },
+      "retained_meshes_exact": true,
+      "new_components": [
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 1",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 2",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 3",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 4",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 5",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 6",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        }
+      ],
+      "counts": {
+        "body": {
+          "polygons": 15971,
+          "triangles": 35146
+        },
+        "rig": {
+          "polygons": 0,
+          "triangles": 0
+        },
+        "flame": {
+          "polygons": 6,
+          "triangles": 12,
+          "mesh_objects": 1
+        }
+      },
+      "body_mesh_digests": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "865ebaa4035e18789cfd1ca643043dc690a470b03b5eae2ae8004487a0110e1b",
+        "02 Layered pointed arch moulding 1": "5429e385df6e5c403bbafa2c39c5b8f97542fbe2c6678888e30872b2dd37a79f",
+        "02 Layered pointed arch moulding 2": "39db6cc0d8600206e569be9e6dab38005faf6740162da842c112a144fbb29ad6",
+        "02 Layered pointed arch moulding 3": "7345a1a75688245be4f3006ce8d7b4ab399cd188c7f0e7075e173ed901736f30",
+        "02 Layered pointed arch moulding 4": "79d27dc37f1a709416a0c0d09e3e9e7c0cb2447b31585d2f35d62ed5ebb1cf49",
+        "02 Layered pointed arch moulding 5": "8db484481ba850460e7fd03cd2015f0bd5f31d57f8eaa80e08c3923d9f8b1a41",
+        "02 Layered pointed arch moulding 6": "9f972e8bb041087beec751275f9484b70d8a54a91132414e26c7331984d043d9",
+        "08 Crocketed gable 1": "27d99571afb71fc2b243ad5b042537e2a9ae08ccd785cd1c50f1c1c555b53c36",
+        "08 Gable raised edge 1": "39ecec663778d6a525cc151b6194b7d96298f4b1dfaada6fb06751ab4925fd97",
+        "08 Gable tip 1": "1e8016bdade4ba6d7b4a27e9fdd148817273fc89311d145a4069e5c677cbc1a8",
+        "08 Crocketed gable 2": "92982eb234172f5b0b9d39de2c3d991e054aa93afbdf84de342c245936ed10f5",
+        "08 Gable raised edge 2": "2b9c804602d30f515a6128a8a159510b69ef40e087e7b7b8006ca81be2b505df",
+        "08 Gable tip 2": "8d3855f35ba1278bdf9ffa793351f20b3df2554098d33f1eafb029690c056865",
+        "08 Crocketed gable 3": "061f399b4f493834d42009959486c342fa4117505a7aa835fa732ad0587166cb",
+        "08 Gable raised edge 3": "42914f10835a531fe0ce136467c213fafb84b9383db1c6e6a86fb6721107b1a4",
+        "08 Gable tip 3": "1c8f891e94270df0283db982fb691f492cf3be2f3a2467acb6268773bd9130f3",
+        "08 Crocketed gable 4": "b90659ccf23872f3d7965ff040295b60be2a55b4893531afcb70fc264bedf346",
+        "08 Gable raised edge 4": "e9cf7d0b009bcd4deabd98a2189b28abd0cb25c57190b19c6a8d3efe64653156",
+        "08 Gable tip 4": "e66983ff68003c5d325efeb6d2b34bd47c26389e59a08074ed9a9fc57db706a1",
+        "08 Crocketed gable 5": "9b1d82b011523aba161283200994c1b5452ba24f285b22e21d48dcc98514ea2d",
+        "08 Gable raised edge 5": "0727729f2853be3dbeac6a04497379c49565a492cca2231d8df6e8dfab72c6ba",
+        "08 Gable tip 5": "6225db9e7562726ebf3c9bc3bff0143ea844ef7ceaf2caec034213797cdad613",
+        "08 Crocketed gable 6": "534089855c64d8f4067c136fae7e0eb25ce5457747ce76ddd124599b59c71233",
+        "08 Gable raised edge 6": "281cdd9a05bf9bf44fbbbfbca0be3d57a550c0264ea620b417eba070c86aadaa",
+        "08 Gable tip 6": "5b9059676a566dd0452808cbb8be8bd6aada92ab43706718205df432e9db478f",
+        "09 Clean six-panel Gothic roof": "5e9b6ddbafb9f954aa46e5b9a646c9a1c7c9ff88bb30890d2dda098fd6399e64",
+        "09 Raised roof hip rib 1": "7be6db3e0ea3ea4557c5765976f36bf4ca911d87e9e32ce586e01cced43eb98f",
+        "09 Raised roof hip rib 2": "4e565060696975bee28015773a361666ca5fd118cca42f283e0e0a8bbc89058f",
+        "09 Raised roof hip rib 3": "0b5b53d0b28178616dde1478b235e46c0bc24359b510c5310c3cf36fd9d6a7a1",
+        "09 Raised roof hip rib 4": "e21625064c8dfcf4b56afcb8e88e74ec4da70f43634c6f816d6d1dd271982334",
+        "09 Raised roof hip rib 5": "3ae274ca94164fba0d0a76a2234e0191cca62015239c7ead314b5b221b371688",
+        "09 Raised roof hip rib 6": "b0c6f2af4b3a3116e8917143de2f87785625485ad59e22a13c67735bb63e82ff",
+        "10 Main top finial collar": "d4b563db710b915c1c7b9fcc703adeffd718d1f5e34263552823c2c4b302d09a",
+        "10 Main top finial bulb and point": "c8287a5257cad52a3e5e82f317ee8241e1eae7c9bd65641f86320f487c2947be",
+        "11 Paneled seated pedestal": "c843c31cfa0ecb442e27fd8aa5282f3e83ba8ed25e49dc80486cc8c0c13389b1",
+        "GL01 Inset clear glazing pane": "34f6d59b9d28d6369458f9a511fc764c126110b99c704e2043dfc0c0060a3b21",
+        "GL02 Inset clear glazing pane": "db1ce07c3e86419c3a9acce8a072860c75462a6f4443ba0ce66230d5c83750d1",
+        "GL03 Inset clear glazing pane": "ab18e4576e3b815d3ed8417eba7ff9993a506a5459cfaf8bdb2c7a55e0eaa2b7",
+        "GL04 Inset clear glazing pane": "b19001f9e743d7a9ab59aca64c0178711431975ecd88aa1b76f48e15b45e62bc",
+        "GL05 Inset clear glazing pane": "0ba7126461e96ea9c730b48e9e770efdb71bd3919a486d7768611309955bc031",
+        "GL06 Inset clear glazing pane": "92e37a1627f4575d662e6f20b415b24395963de34366c6e3eb696ab55b03ac56",
+        "G08 Dark split-jet slit": "a903e71087434bf38aa0eb2244927d0f8d326ed4933401105072d943bdaaf213",
+        "G07 Pale wider burner tip - diameter 0.044": "f1e8543ca3fd0372e6bc8536fc5ebdc3a86a8825f7ce3804b01ff2d78fc1a815",
+        "G06 Broader tip retaining collar": "00a730fa6b3d099a04d18b74f708d5e32a4e625a3dd5ac1055948754296b668c",
+        "G05 Proportional rear valve knob": "84ae0e8e19eaf96911d0bddc1d581e160cfae9466e5bf504d25ec1867fe2c0f4",
+        "G04 Discreet rear valve branch": "d4528c355cc98fc7535e58da41ab72f6b5a958f2b560d04c9af03da239c11dbd",
+        "G03 Proportional hexagonal union": "98f9e5a4e70851e355a43a6ebf2987cb05b6d53cd068863ad0766fbe54a567fc",
+        "G02 Sturdier gas riser - diameter 0.032": "6f95422de7e442b7e8b956807f62a880da519213bdbf2e5ae5d7fb0513aa84af",
+        "G01 Small floor mounting collar": "1c7216f3fd402b191a8cb23393e28c36eedcdde3a00eef5e5f0bfd8b6a788776",
+        "03 Gothic twin lancets and quatrefoil 1": "8ba0c57331575a7f1c57786cc0c7d6c39b2dce9b79819da7bc8e1a64b0cc1fa9",
+        "03 Gothic twin lancets and quatrefoil 2": "56528efb5b0470170f00e53a0ccf2cea484fce49960ce4b6e45d922d4a4215dc",
+        "03 Gothic twin lancets and quatrefoil 3": "2a4d5b99bad922475722f71504a72e612626f08839e4b58f799606142ce3cbd5",
+        "03 Gothic twin lancets and quatrefoil 4": "2d7db2a97123d31d0b5d04812de1a9d2ee860f1c96480b5f0ad943e082337fe9",
+        "03 Gothic twin lancets and quatrefoil 5": "2219fe2f77cf515151fe778f3e93533c6e3522f30623ff804fec59ea42b740c9",
+        "03 Gothic twin lancets and quatrefoil 6": "32594e829b91df990ce2e925aeede828bdc37e85babfcfe789ecc2ae8cd31cc7"
+      },
+      "bar_diameters_m": {
+        "mullion": 0.004414083330254805,
+        "lancets": 0.004203888885956957,
+        "quatrefoil": 0.003993694441659109
+      },
+      "preview_sha256": "778b4a69c269d3053582d456e639daa24a0eaa2632fe540cd3023830ce1fcbd1"
+    },
+    {
+      "mount": "pier",
+      "finish": "clean",
+      "file": "gothic lantern - clean seated.blend",
+      "source_sha256": "6e82cb9b53d626afc172d8399bf4c12e2e747bfe23d68ce5ceb4dd410ca693a0",
+      "delivery_sha256": "f4b3a62110c162d8f7735d59157b1932cfabac67b56d58df4e83c692bd453620",
+      "preview": "gothic lantern - seated preview.png",
+      "retained_native_mesh_fingerprints": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "865ebaa4035e18789cfd1ca643043dc690a470b03b5eae2ae8004487a0110e1b",
+        "02 Layered pointed arch moulding 1": "5429e385df6e5c403bbafa2c39c5b8f97542fbe2c6678888e30872b2dd37a79f",
+        "02 Layered pointed arch moulding 2": "39db6cc0d8600206e569be9e6dab38005faf6740162da842c112a144fbb29ad6",
+        "02 Layered pointed arch moulding 3": "7345a1a75688245be4f3006ce8d7b4ab399cd188c7f0e7075e173ed901736f30",
+        "02 Layered pointed arch moulding 4": "79d27dc37f1a709416a0c0d09e3e9e7c0cb2447b31585d2f35d62ed5ebb1cf49",
+        "02 Layered pointed arch moulding 5": "8db484481ba850460e7fd03cd2015f0bd5f31d57f8eaa80e08c3923d9f8b1a41",
+        "02 Layered pointed arch moulding 6": "9f972e8bb041087beec751275f9484b70d8a54a91132414e26c7331984d043d9",
+        "08 Crocketed gable 1": "27d99571afb71fc2b243ad5b042537e2a9ae08ccd785cd1c50f1c1c555b53c36",
+        "08 Crocketed gable 2": "92982eb234172f5b0b9d39de2c3d991e054aa93afbdf84de342c245936ed10f5",
+        "08 Crocketed gable 3": "061f399b4f493834d42009959486c342fa4117505a7aa835fa732ad0587166cb",
+        "08 Crocketed gable 4": "b90659ccf23872f3d7965ff040295b60be2a55b4893531afcb70fc264bedf346",
+        "08 Crocketed gable 5": "9b1d82b011523aba161283200994c1b5452ba24f285b22e21d48dcc98514ea2d",
+        "08 Crocketed gable 6": "534089855c64d8f4067c136fae7e0eb25ce5457747ce76ddd124599b59c71233",
+        "08 Gable raised edge 1": "39ecec663778d6a525cc151b6194b7d96298f4b1dfaada6fb06751ab4925fd97",
+        "08 Gable raised edge 2": "2b9c804602d30f515a6128a8a159510b69ef40e087e7b7b8006ca81be2b505df",
+        "08 Gable raised edge 3": "42914f10835a531fe0ce136467c213fafb84b9383db1c6e6a86fb6721107b1a4",
+        "08 Gable raised edge 4": "e9cf7d0b009bcd4deabd98a2189b28abd0cb25c57190b19c6a8d3efe64653156",
+        "08 Gable raised edge 5": "0727729f2853be3dbeac6a04497379c49565a492cca2231d8df6e8dfab72c6ba",
+        "08 Gable raised edge 6": "281cdd9a05bf9bf44fbbbfbca0be3d57a550c0264ea620b417eba070c86aadaa",
+        "08 Gable tip 1": "1e8016bdade4ba6d7b4a27e9fdd148817273fc89311d145a4069e5c677cbc1a8",
+        "08 Gable tip 2": "8d3855f35ba1278bdf9ffa793351f20b3df2554098d33f1eafb029690c056865",
+        "08 Gable tip 3": "1c8f891e94270df0283db982fb691f492cf3be2f3a2467acb6268773bd9130f3",
+        "08 Gable tip 4": "e66983ff68003c5d325efeb6d2b34bd47c26389e59a08074ed9a9fc57db706a1",
+        "08 Gable tip 5": "6225db9e7562726ebf3c9bc3bff0143ea844ef7ceaf2caec034213797cdad613",
+        "08 Gable tip 6": "5b9059676a566dd0452808cbb8be8bd6aada92ab43706718205df432e9db478f",
+        "09 Clean six-panel Gothic roof": "5e9b6ddbafb9f954aa46e5b9a646c9a1c7c9ff88bb30890d2dda098fd6399e64",
+        "09 Raised roof hip rib 1": "7be6db3e0ea3ea4557c5765976f36bf4ca911d87e9e32ce586e01cced43eb98f",
+        "09 Raised roof hip rib 2": "4e565060696975bee28015773a361666ca5fd118cca42f283e0e0a8bbc89058f",
+        "09 Raised roof hip rib 3": "0b5b53d0b28178616dde1478b235e46c0bc24359b510c5310c3cf36fd9d6a7a1",
+        "09 Raised roof hip rib 4": "e21625064c8dfcf4b56afcb8e88e74ec4da70f43634c6f816d6d1dd271982334",
+        "09 Raised roof hip rib 5": "3ae274ca94164fba0d0a76a2234e0191cca62015239c7ead314b5b221b371688",
+        "09 Raised roof hip rib 6": "b0c6f2af4b3a3116e8917143de2f87785625485ad59e22a13c67735bb63e82ff",
+        "10 Main top finial bulb and point": "c8287a5257cad52a3e5e82f317ee8241e1eae7c9bd65641f86320f487c2947be",
+        "10 Main top finial collar": "d4b563db710b915c1c7b9fcc703adeffd718d1f5e34263552823c2c4b302d09a",
+        "11 Paneled seated pedestal": "c843c31cfa0ecb442e27fd8aa5282f3e83ba8ed25e49dc80486cc8c0c13389b1",
+        "G01 Small floor mounting collar": "1c7216f3fd402b191a8cb23393e28c36eedcdde3a00eef5e5f0bfd8b6a788776",
+        "G02 Sturdier gas riser - diameter 0.032": "6f95422de7e442b7e8b956807f62a880da519213bdbf2e5ae5d7fb0513aa84af",
+        "G03 Proportional hexagonal union": "98f9e5a4e70851e355a43a6ebf2987cb05b6d53cd068863ad0766fbe54a567fc",
+        "G04 Discreet rear valve branch": "d4528c355cc98fc7535e58da41ab72f6b5a958f2b560d04c9af03da239c11dbd",
+        "G05 Proportional rear valve knob": "84ae0e8e19eaf96911d0bddc1d581e160cfae9466e5bf504d25ec1867fe2c0f4",
+        "G06 Broader tip retaining collar": "00a730fa6b3d099a04d18b74f708d5e32a4e625a3dd5ac1055948754296b668c",
+        "G07 Pale wider burner tip - diameter 0.044": "f1e8543ca3fd0372e6bc8536fc5ebdc3a86a8825f7ce3804b01ff2d78fc1a815",
+        "G08 Dark split-jet slit": "a903e71087434bf38aa0eb2244927d0f8d326ed4933401105072d943bdaaf213",
+        "GL01 Inset clear glazing pane": "34f6d59b9d28d6369458f9a511fc764c126110b99c704e2043dfc0c0060a3b21",
+        "GL02 Inset clear glazing pane": "db1ce07c3e86419c3a9acce8a072860c75462a6f4443ba0ce66230d5c83750d1",
+        "GL03 Inset clear glazing pane": "ab18e4576e3b815d3ed8417eba7ff9993a506a5459cfaf8bdb2c7a55e0eaa2b7",
+        "GL04 Inset clear glazing pane": "b19001f9e743d7a9ab59aca64c0178711431975ecd88aa1b76f48e15b45e62bc",
+        "GL05 Inset clear glazing pane": "0ba7126461e96ea9c730b48e9e770efdb71bd3919a486d7768611309955bc031",
+        "GL06 Inset clear glazing pane": "92e37a1627f4575d662e6f20b415b24395963de34366c6e3eb696ab55b03ac56",
+        "pier_flame": "d92b8765998287f6a5b05ca1c68ec3328c91d29f6d4d9e0ef2aff43fff2be882"
+      },
+      "retained_meshes_exact": true,
+      "new_components": [
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 1",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 2",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 3",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 4",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 5",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 6",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        }
+      ],
+      "counts": {
+        "body": {
+          "polygons": 15971,
+          "triangles": 35146
+        },
+        "rig": {
+          "polygons": 0,
+          "triangles": 0
+        },
+        "flame": {
+          "polygons": 6,
+          "triangles": 12,
+          "mesh_objects": 1
+        }
+      },
+      "body_mesh_digests": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "865ebaa4035e18789cfd1ca643043dc690a470b03b5eae2ae8004487a0110e1b",
+        "02 Layered pointed arch moulding 1": "5429e385df6e5c403bbafa2c39c5b8f97542fbe2c6678888e30872b2dd37a79f",
+        "02 Layered pointed arch moulding 2": "39db6cc0d8600206e569be9e6dab38005faf6740162da842c112a144fbb29ad6",
+        "02 Layered pointed arch moulding 3": "7345a1a75688245be4f3006ce8d7b4ab399cd188c7f0e7075e173ed901736f30",
+        "02 Layered pointed arch moulding 4": "79d27dc37f1a709416a0c0d09e3e9e7c0cb2447b31585d2f35d62ed5ebb1cf49",
+        "02 Layered pointed arch moulding 5": "8db484481ba850460e7fd03cd2015f0bd5f31d57f8eaa80e08c3923d9f8b1a41",
+        "02 Layered pointed arch moulding 6": "9f972e8bb041087beec751275f9484b70d8a54a91132414e26c7331984d043d9",
+        "08 Crocketed gable 1": "27d99571afb71fc2b243ad5b042537e2a9ae08ccd785cd1c50f1c1c555b53c36",
+        "08 Gable raised edge 1": "39ecec663778d6a525cc151b6194b7d96298f4b1dfaada6fb06751ab4925fd97",
+        "08 Gable tip 1": "1e8016bdade4ba6d7b4a27e9fdd148817273fc89311d145a4069e5c677cbc1a8",
+        "08 Crocketed gable 2": "92982eb234172f5b0b9d39de2c3d991e054aa93afbdf84de342c245936ed10f5",
+        "08 Gable raised edge 2": "2b9c804602d30f515a6128a8a159510b69ef40e087e7b7b8006ca81be2b505df",
+        "08 Gable tip 2": "8d3855f35ba1278bdf9ffa793351f20b3df2554098d33f1eafb029690c056865",
+        "08 Crocketed gable 3": "061f399b4f493834d42009959486c342fa4117505a7aa835fa732ad0587166cb",
+        "08 Gable raised edge 3": "42914f10835a531fe0ce136467c213fafb84b9383db1c6e6a86fb6721107b1a4",
+        "08 Gable tip 3": "1c8f891e94270df0283db982fb691f492cf3be2f3a2467acb6268773bd9130f3",
+        "08 Crocketed gable 4": "b90659ccf23872f3d7965ff040295b60be2a55b4893531afcb70fc264bedf346",
+        "08 Gable raised edge 4": "e9cf7d0b009bcd4deabd98a2189b28abd0cb25c57190b19c6a8d3efe64653156",
+        "08 Gable tip 4": "e66983ff68003c5d325efeb6d2b34bd47c26389e59a08074ed9a9fc57db706a1",
+        "08 Crocketed gable 5": "9b1d82b011523aba161283200994c1b5452ba24f285b22e21d48dcc98514ea2d",
+        "08 Gable raised edge 5": "0727729f2853be3dbeac6a04497379c49565a492cca2231d8df6e8dfab72c6ba",
+        "08 Gable tip 5": "6225db9e7562726ebf3c9bc3bff0143ea844ef7ceaf2caec034213797cdad613",
+        "08 Crocketed gable 6": "534089855c64d8f4067c136fae7e0eb25ce5457747ce76ddd124599b59c71233",
+        "08 Gable raised edge 6": "281cdd9a05bf9bf44fbbbfbca0be3d57a550c0264ea620b417eba070c86aadaa",
+        "08 Gable tip 6": "5b9059676a566dd0452808cbb8be8bd6aada92ab43706718205df432e9db478f",
+        "09 Clean six-panel Gothic roof": "5e9b6ddbafb9f954aa46e5b9a646c9a1c7c9ff88bb30890d2dda098fd6399e64",
+        "09 Raised roof hip rib 1": "7be6db3e0ea3ea4557c5765976f36bf4ca911d87e9e32ce586e01cced43eb98f",
+        "09 Raised roof hip rib 2": "4e565060696975bee28015773a361666ca5fd118cca42f283e0e0a8bbc89058f",
+        "09 Raised roof hip rib 3": "0b5b53d0b28178616dde1478b235e46c0bc24359b510c5310c3cf36fd9d6a7a1",
+        "09 Raised roof hip rib 4": "e21625064c8dfcf4b56afcb8e88e74ec4da70f43634c6f816d6d1dd271982334",
+        "09 Raised roof hip rib 5": "3ae274ca94164fba0d0a76a2234e0191cca62015239c7ead314b5b221b371688",
+        "09 Raised roof hip rib 6": "b0c6f2af4b3a3116e8917143de2f87785625485ad59e22a13c67735bb63e82ff",
+        "10 Main top finial collar": "d4b563db710b915c1c7b9fcc703adeffd718d1f5e34263552823c2c4b302d09a",
+        "10 Main top finial bulb and point": "c8287a5257cad52a3e5e82f317ee8241e1eae7c9bd65641f86320f487c2947be",
+        "11 Paneled seated pedestal": "c843c31cfa0ecb442e27fd8aa5282f3e83ba8ed25e49dc80486cc8c0c13389b1",
+        "GL01 Inset clear glazing pane": "34f6d59b9d28d6369458f9a511fc764c126110b99c704e2043dfc0c0060a3b21",
+        "GL02 Inset clear glazing pane": "db1ce07c3e86419c3a9acce8a072860c75462a6f4443ba0ce66230d5c83750d1",
+        "GL03 Inset clear glazing pane": "ab18e4576e3b815d3ed8417eba7ff9993a506a5459cfaf8bdb2c7a55e0eaa2b7",
+        "GL04 Inset clear glazing pane": "b19001f9e743d7a9ab59aca64c0178711431975ecd88aa1b76f48e15b45e62bc",
+        "GL05 Inset clear glazing pane": "0ba7126461e96ea9c730b48e9e770efdb71bd3919a486d7768611309955bc031",
+        "GL06 Inset clear glazing pane": "92e37a1627f4575d662e6f20b415b24395963de34366c6e3eb696ab55b03ac56",
+        "G08 Dark split-jet slit": "a903e71087434bf38aa0eb2244927d0f8d326ed4933401105072d943bdaaf213",
+        "G07 Pale wider burner tip - diameter 0.044": "f1e8543ca3fd0372e6bc8536fc5ebdc3a86a8825f7ce3804b01ff2d78fc1a815",
+        "G06 Broader tip retaining collar": "00a730fa6b3d099a04d18b74f708d5e32a4e625a3dd5ac1055948754296b668c",
+        "G05 Proportional rear valve knob": "84ae0e8e19eaf96911d0bddc1d581e160cfae9466e5bf504d25ec1867fe2c0f4",
+        "G04 Discreet rear valve branch": "d4528c355cc98fc7535e58da41ab72f6b5a958f2b560d04c9af03da239c11dbd",
+        "G03 Proportional hexagonal union": "98f9e5a4e70851e355a43a6ebf2987cb05b6d53cd068863ad0766fbe54a567fc",
+        "G02 Sturdier gas riser - diameter 0.032": "6f95422de7e442b7e8b956807f62a880da519213bdbf2e5ae5d7fb0513aa84af",
+        "G01 Small floor mounting collar": "1c7216f3fd402b191a8cb23393e28c36eedcdde3a00eef5e5f0bfd8b6a788776",
+        "03 Gothic twin lancets and quatrefoil 1": "8ba0c57331575a7f1c57786cc0c7d6c39b2dce9b79819da7bc8e1a64b0cc1fa9",
+        "03 Gothic twin lancets and quatrefoil 2": "56528efb5b0470170f00e53a0ccf2cea484fce49960ce4b6e45d922d4a4215dc",
+        "03 Gothic twin lancets and quatrefoil 3": "2a4d5b99bad922475722f71504a72e612626f08839e4b58f799606142ce3cbd5",
+        "03 Gothic twin lancets and quatrefoil 4": "2d7db2a97123d31d0b5d04812de1a9d2ee860f1c96480b5f0ad943e082337fe9",
+        "03 Gothic twin lancets and quatrefoil 5": "2219fe2f77cf515151fe778f3e93533c6e3522f30623ff804fec59ea42b740c9",
+        "03 Gothic twin lancets and quatrefoil 6": "32594e829b91df990ce2e925aeede828bdc37e85babfcfe789ecc2ae8cd31cc7"
+      },
+      "bar_diameters_m": {
+        "mullion": 0.004414083330254805,
+        "lancets": 0.004203888885956957,
+        "quatrefoil": 0.003993694441659109
+      },
+      "preview_sha256": "dfe1bbc4e9ed50a63a029652060af741ac33d96235ddf176bc8de77ba2df9302"
+    },
+    {
+      "mount": "wall",
+      "finish": "material",
+      "file": "gothic lantern - wall limestone and metal.blend",
+      "source_sha256": "8b6610de05583da3b52464ba6988c458ece84029474346255be7eecc811db724",
+      "delivery_sha256": "c87e4633c27df4cd332bf5c9f91a9fb704df88aea2f407a19aeabc4b24f3b545",
+      "preview": "gothic lantern - wall limestone and metal preview.png",
+      "retained_native_mesh_fingerprints": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "1766713450674dc59227242358a67d2405bb5bf8ede8c9d7fbac978703694177",
+        "02 Layered pointed arch moulding 1": "f00be94d2b4a75d79b2712060e150345c345025c597b93760b6328e5d33be209",
+        "02 Layered pointed arch moulding 2": "bf448e16c928be3fb9c864d0afbdf732a87a0238ddd509265798ed4cfc8efe5e",
+        "02 Layered pointed arch moulding 5": "b50c0857a6efcc4370f3d38d2b8f45c3e6f93d06b2a39b0d92c6f0a9d1d1feff",
+        "02 Layered pointed arch moulding 6": "b5621055a3eaa90aab8bbe7374d399bb4acf830ec18b22d3be667d6180f3572d",
+        "08 Crocketed gable 1": "ed5184684f7fa70f48b9957e9c3eb49930b76e9fb193efc2f09e72080021cceb",
+        "08 Crocketed gable 2": "02278cc0bac3e23767b3201b2553c7d5d3fbfdaea787c79aa05877de663ccf0b",
+        "08 Crocketed gable 5": "a7b7cc6e024f5714d781d1855da040b2410ede4405d01f5f50224addc42ee770",
+        "08 Crocketed gable 6": "ef80a1ffb2f1d79140dee9f3f487d09a287d804fcd2bbe0120f319e654d84abf",
+        "08 Gable raised edge 1": "c932652b9dd7cbb651b37c817384dba7865f7ec1293143eef163f3c79f6ca0e3",
+        "08 Gable raised edge 2": "b3db4865c03ad292719a7f83ea4874931a025b0e48eb58aabbd6aa8021ae9e95",
+        "08 Gable raised edge 5": "dd9da5b9024a3e0bae0e3fea1a51a7bc4638af8c008eea0ebfbc427cf5ce268c",
+        "08 Gable raised edge 6": "11a8304fbf925016bb08b45756fe7b6c319d1d0dfdba3f65bf7f712b55b740cb",
+        "08 Gable tip 1": "1ea5a02f4bb4aea311bcd64640c226e82764444bb28874329b5b72e7a89078ff",
+        "08 Gable tip 2": "a8231abbaac94d5c6129cc54534bc6da38ebd9a438b93dd71c8ea7d062f34b5c",
+        "08 Gable tip 5": "cd10b32dd4cba032de10aaebcc7df9ee6560b0c864fee88c9fb29b381e578f90",
+        "08 Gable tip 6": "98af76bbec1b0155510e7b75e96bb8974f97c0910e16c409bbca028d6f60fe64",
+        "09 Clean six-panel Gothic roof": "512189c3bd4b5d394f47db9a1e92617421eead628ccfc9b63643bbd28e25c593",
+        "09 Raised roof hip rib 1": "64f1f09ab4925537de65c1d3c9829a62bd6baa89210cbc47c186bfda7e769dba",
+        "09 Raised roof hip rib 2": "6aa5ce48b73d7becb7cece787c6460149bd363de2e22b036aaaec66cf250d55d",
+        "09 Raised roof hip rib 3": "0a8567a26c604d7de3ce6c250022f8e62324169dee6cb0af97976c6b2e9ed434",
+        "09 Raised roof hip rib 4": "cdaaead740cd05731a1c9a1e58445b99ab4c5883f98d61e737cf2e17906045bd",
+        "09 Raised roof hip rib 5": "e34ac0fa9f438e0b8a5b97bb6f69a7ad2e24e6ad9072d7d2fefd2661ed432496",
+        "09 Raised roof hip rib 6": "e8524832e34600f7794f619540e46ef1370a8d254f0bdf559f0ec392ed1f53f9",
+        "10 Main top finial bulb and point": "04a5ede8a0997fa6cb84fcb2b2e71ab648f6a1412e6fb07a0c532fdc441db3af",
+        "10 Main top finial collar": "412dff207724fbcfeecb257ed470ffbc8e6dafa4facb5c24e4d70f4585725981",
+        "G01 Small floor mounting collar": "d4e1d61f595be100101bac3b85b497fe95c1ac2cb88041b87e0e710285298d44",
+        "G02 Sturdier gas riser - diameter 0.032": "259e6a91fca6515f4639f219eff6785310da785e80cdf45675246764aa484606",
+        "G03 Proportional hexagonal union": "c0824bf7922637c695ef1d03f0557603b5d11394a8c790a2d4d3af611da4fb73",
+        "G04 Discreet rear valve branch": "b7702d39541173a4c3aff990a076dd9699c230cd72e7102692d7967999f0fcf1",
+        "G05 Proportional rear valve knob": "62565138d68c99ba998214699a7b03b105f9e13f1593e4a1029b76f121e7683f",
+        "G06 Broader tip retaining collar": "b790cee05fda349181ad97d7994b919e035955785307183bd0e30b4c515781c4",
+        "G07 Pale wider burner tip - diameter 0.044": "719c815343526ea65b9437b204029a02b5cd63f7af0e7fdfb501014842d9f90e",
+        "G08 Dark split-jet slit": "2e72effc2c5eecb6a949d0431225077b71735741b758f20b163428d1a70636c6",
+        "GL01 Inset clear glazing pane": "a4432229f69bacced1f6461a61685a7fa73ac8fd860d63166f4643ab681ba64a",
+        "GL02 Inset clear glazing pane": "d0c5a35966559cb734ca5d68b99ab9d84466d4bebb365d03d8d3d7927f103e55",
+        "GL03 Inset clear glazing pane": "045cc7d12290190fc86b28ac6e13e416f7f279b9db745ed5ba0f012a76c96ad1",
+        "GL04 Inset clear glazing pane": "d2d1d41591b68d00fadfb3f8d5a295b52693371365c84bce53fd960d53195c1b",
+        "wall_flame": "f7e15f4e67f15239d32b0b0d8fa424b91127353c8db54d595d51e743c0f90f10"
+      },
+      "retained_meshes_exact": true,
+      "new_components": [
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 1",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 2",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 5",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 6",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        }
+      ],
+      "counts": {
+        "body": {
+          "polygons": 11771,
+          "triangles": 26248
+        },
+        "rig": {
+          "polygons": 0,
+          "triangles": 0
+        },
+        "flame": {
+          "polygons": 6,
+          "triangles": 12,
+          "mesh_objects": 1
+        }
+      },
+      "body_mesh_digests": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "1766713450674dc59227242358a67d2405bb5bf8ede8c9d7fbac978703694177",
+        "02 Layered pointed arch moulding 1": "f00be94d2b4a75d79b2712060e150345c345025c597b93760b6328e5d33be209",
+        "02 Layered pointed arch moulding 2": "bf448e16c928be3fb9c864d0afbdf732a87a0238ddd509265798ed4cfc8efe5e",
+        "02 Layered pointed arch moulding 5": "b50c0857a6efcc4370f3d38d2b8f45c3e6f93d06b2a39b0d92c6f0a9d1d1feff",
+        "02 Layered pointed arch moulding 6": "b5621055a3eaa90aab8bbe7374d399bb4acf830ec18b22d3be667d6180f3572d",
+        "08 Crocketed gable 1": "ed5184684f7fa70f48b9957e9c3eb49930b76e9fb193efc2f09e72080021cceb",
+        "08 Gable raised edge 1": "c932652b9dd7cbb651b37c817384dba7865f7ec1293143eef163f3c79f6ca0e3",
+        "08 Gable tip 1": "1ea5a02f4bb4aea311bcd64640c226e82764444bb28874329b5b72e7a89078ff",
+        "08 Crocketed gable 2": "02278cc0bac3e23767b3201b2553c7d5d3fbfdaea787c79aa05877de663ccf0b",
+        "08 Gable raised edge 2": "b3db4865c03ad292719a7f83ea4874931a025b0e48eb58aabbd6aa8021ae9e95",
+        "08 Gable tip 2": "a8231abbaac94d5c6129cc54534bc6da38ebd9a438b93dd71c8ea7d062f34b5c",
+        "08 Crocketed gable 5": "a7b7cc6e024f5714d781d1855da040b2410ede4405d01f5f50224addc42ee770",
+        "08 Gable raised edge 5": "dd9da5b9024a3e0bae0e3fea1a51a7bc4638af8c008eea0ebfbc427cf5ce268c",
+        "08 Gable tip 5": "cd10b32dd4cba032de10aaebcc7df9ee6560b0c864fee88c9fb29b381e578f90",
+        "08 Crocketed gable 6": "ef80a1ffb2f1d79140dee9f3f487d09a287d804fcd2bbe0120f319e654d84abf",
+        "08 Gable raised edge 6": "11a8304fbf925016bb08b45756fe7b6c319d1d0dfdba3f65bf7f712b55b740cb",
+        "08 Gable tip 6": "98af76bbec1b0155510e7b75e96bb8974f97c0910e16c409bbca028d6f60fe64",
+        "09 Clean six-panel Gothic roof": "512189c3bd4b5d394f47db9a1e92617421eead628ccfc9b63643bbd28e25c593",
+        "09 Raised roof hip rib 1": "64f1f09ab4925537de65c1d3c9829a62bd6baa89210cbc47c186bfda7e769dba",
+        "09 Raised roof hip rib 2": "6aa5ce48b73d7becb7cece787c6460149bd363de2e22b036aaaec66cf250d55d",
+        "09 Raised roof hip rib 3": "0a8567a26c604d7de3ce6c250022f8e62324169dee6cb0af97976c6b2e9ed434",
+        "09 Raised roof hip rib 4": "cdaaead740cd05731a1c9a1e58445b99ab4c5883f98d61e737cf2e17906045bd",
+        "09 Raised roof hip rib 5": "e34ac0fa9f438e0b8a5b97bb6f69a7ad2e24e6ad9072d7d2fefd2661ed432496",
+        "09 Raised roof hip rib 6": "e8524832e34600f7794f619540e46ef1370a8d254f0bdf559f0ec392ed1f53f9",
+        "10 Main top finial collar": "412dff207724fbcfeecb257ed470ffbc8e6dafa4facb5c24e4d70f4585725981",
+        "10 Main top finial bulb and point": "04a5ede8a0997fa6cb84fcb2b2e71ab648f6a1412e6fb07a0c532fdc441db3af",
+        "GL01 Inset clear glazing pane": "a4432229f69bacced1f6461a61685a7fa73ac8fd860d63166f4643ab681ba64a",
+        "GL02 Inset clear glazing pane": "d0c5a35966559cb734ca5d68b99ab9d84466d4bebb365d03d8d3d7927f103e55",
+        "GL03 Inset clear glazing pane": "045cc7d12290190fc86b28ac6e13e416f7f279b9db745ed5ba0f012a76c96ad1",
+        "GL04 Inset clear glazing pane": "d2d1d41591b68d00fadfb3f8d5a295b52693371365c84bce53fd960d53195c1b",
+        "G08 Dark split-jet slit": "2e72effc2c5eecb6a949d0431225077b71735741b758f20b163428d1a70636c6",
+        "G07 Pale wider burner tip - diameter 0.044": "719c815343526ea65b9437b204029a02b5cd63f7af0e7fdfb501014842d9f90e",
+        "G06 Broader tip retaining collar": "b790cee05fda349181ad97d7994b919e035955785307183bd0e30b4c515781c4",
+        "G05 Proportional rear valve knob": "62565138d68c99ba998214699a7b03b105f9e13f1593e4a1029b76f121e7683f",
+        "G04 Discreet rear valve branch": "b7702d39541173a4c3aff990a076dd9699c230cd72e7102692d7967999f0fcf1",
+        "G03 Proportional hexagonal union": "c0824bf7922637c695ef1d03f0557603b5d11394a8c790a2d4d3af611da4fb73",
+        "G02 Sturdier gas riser - diameter 0.032": "259e6a91fca6515f4639f219eff6785310da785e80cdf45675246764aa484606",
+        "G01 Small floor mounting collar": "d4e1d61f595be100101bac3b85b497fe95c1ac2cb88041b87e0e710285298d44",
+        "03 Gothic twin lancets and quatrefoil 1": "7dc186a00c8bd1797698641a85f726dc6c7177c0537240df36b5567c0106adce",
+        "03 Gothic twin lancets and quatrefoil 2": "86f838d723ff9d4f2e88657ffe3ff45cb1261b012b3a36cfe36c0c96119a29c7",
+        "03 Gothic twin lancets and quatrefoil 5": "c784d2b8207a537546c0148829470a5d035a5217c9c458426aab517e2870ee07",
+        "03 Gothic twin lancets and quatrefoil 6": "be8ba0b496c525c2297477f6d42dbe18c6b361e73a1e11b29cb8aabd0035cf62"
+      },
+      "bar_diameters_m": {
+        "mullion": 0.0044176347632157165,
+        "lancets": 0.004207271203062588,
+        "quatrefoil": 0.003996907642909458
+      },
+      "preview_sha256": "311f4b48a084c97ed0819585016e6c785c702759d6c7ed9da19087cf1472f2cd"
+    },
+    {
+      "mount": "wall",
+      "finish": "clean",
+      "file": "gothic lantern - clean wall.blend",
+      "source_sha256": "e91f9ca36ee51d00bc2a939b1c8f06c613c131ebcef91fef3ebe54ba1b9b24e6",
+      "delivery_sha256": "f2f8c947ff7d4f80a57d104e31c2b6857ccbf0d7d280e012d5601a2b621ddb02",
+      "preview": "gothic lantern - wall preview.png",
+      "retained_native_mesh_fingerprints": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "1766713450674dc59227242358a67d2405bb5bf8ede8c9d7fbac978703694177",
+        "02 Layered pointed arch moulding 1": "f00be94d2b4a75d79b2712060e150345c345025c597b93760b6328e5d33be209",
+        "02 Layered pointed arch moulding 2": "bf448e16c928be3fb9c864d0afbdf732a87a0238ddd509265798ed4cfc8efe5e",
+        "02 Layered pointed arch moulding 5": "b50c0857a6efcc4370f3d38d2b8f45c3e6f93d06b2a39b0d92c6f0a9d1d1feff",
+        "02 Layered pointed arch moulding 6": "b5621055a3eaa90aab8bbe7374d399bb4acf830ec18b22d3be667d6180f3572d",
+        "08 Crocketed gable 1": "ed5184684f7fa70f48b9957e9c3eb49930b76e9fb193efc2f09e72080021cceb",
+        "08 Crocketed gable 2": "02278cc0bac3e23767b3201b2553c7d5d3fbfdaea787c79aa05877de663ccf0b",
+        "08 Crocketed gable 5": "a7b7cc6e024f5714d781d1855da040b2410ede4405d01f5f50224addc42ee770",
+        "08 Crocketed gable 6": "ef80a1ffb2f1d79140dee9f3f487d09a287d804fcd2bbe0120f319e654d84abf",
+        "08 Gable raised edge 1": "c932652b9dd7cbb651b37c817384dba7865f7ec1293143eef163f3c79f6ca0e3",
+        "08 Gable raised edge 2": "b3db4865c03ad292719a7f83ea4874931a025b0e48eb58aabbd6aa8021ae9e95",
+        "08 Gable raised edge 5": "dd9da5b9024a3e0bae0e3fea1a51a7bc4638af8c008eea0ebfbc427cf5ce268c",
+        "08 Gable raised edge 6": "11a8304fbf925016bb08b45756fe7b6c319d1d0dfdba3f65bf7f712b55b740cb",
+        "08 Gable tip 1": "1ea5a02f4bb4aea311bcd64640c226e82764444bb28874329b5b72e7a89078ff",
+        "08 Gable tip 2": "a8231abbaac94d5c6129cc54534bc6da38ebd9a438b93dd71c8ea7d062f34b5c",
+        "08 Gable tip 5": "cd10b32dd4cba032de10aaebcc7df9ee6560b0c864fee88c9fb29b381e578f90",
+        "08 Gable tip 6": "98af76bbec1b0155510e7b75e96bb8974f97c0910e16c409bbca028d6f60fe64",
+        "09 Clean six-panel Gothic roof": "512189c3bd4b5d394f47db9a1e92617421eead628ccfc9b63643bbd28e25c593",
+        "09 Raised roof hip rib 1": "64f1f09ab4925537de65c1d3c9829a62bd6baa89210cbc47c186bfda7e769dba",
+        "09 Raised roof hip rib 2": "6aa5ce48b73d7becb7cece787c6460149bd363de2e22b036aaaec66cf250d55d",
+        "09 Raised roof hip rib 3": "0a8567a26c604d7de3ce6c250022f8e62324169dee6cb0af97976c6b2e9ed434",
+        "09 Raised roof hip rib 4": "cdaaead740cd05731a1c9a1e58445b99ab4c5883f98d61e737cf2e17906045bd",
+        "09 Raised roof hip rib 5": "e34ac0fa9f438e0b8a5b97bb6f69a7ad2e24e6ad9072d7d2fefd2661ed432496",
+        "09 Raised roof hip rib 6": "e8524832e34600f7794f619540e46ef1370a8d254f0bdf559f0ec392ed1f53f9",
+        "10 Main top finial bulb and point": "04a5ede8a0997fa6cb84fcb2b2e71ab648f6a1412e6fb07a0c532fdc441db3af",
+        "10 Main top finial collar": "412dff207724fbcfeecb257ed470ffbc8e6dafa4facb5c24e4d70f4585725981",
+        "G01 Small floor mounting collar": "d4e1d61f595be100101bac3b85b497fe95c1ac2cb88041b87e0e710285298d44",
+        "G02 Sturdier gas riser - diameter 0.032": "259e6a91fca6515f4639f219eff6785310da785e80cdf45675246764aa484606",
+        "G03 Proportional hexagonal union": "c0824bf7922637c695ef1d03f0557603b5d11394a8c790a2d4d3af611da4fb73",
+        "G04 Discreet rear valve branch": "b7702d39541173a4c3aff990a076dd9699c230cd72e7102692d7967999f0fcf1",
+        "G05 Proportional rear valve knob": "62565138d68c99ba998214699a7b03b105f9e13f1593e4a1029b76f121e7683f",
+        "G06 Broader tip retaining collar": "b790cee05fda349181ad97d7994b919e035955785307183bd0e30b4c515781c4",
+        "G07 Pale wider burner tip - diameter 0.044": "719c815343526ea65b9437b204029a02b5cd63f7af0e7fdfb501014842d9f90e",
+        "G08 Dark split-jet slit": "2e72effc2c5eecb6a949d0431225077b71735741b758f20b163428d1a70636c6",
+        "GL01 Inset clear glazing pane": "a4432229f69bacced1f6461a61685a7fa73ac8fd860d63166f4643ab681ba64a",
+        "GL02 Inset clear glazing pane": "d0c5a35966559cb734ca5d68b99ab9d84466d4bebb365d03d8d3d7927f103e55",
+        "GL03 Inset clear glazing pane": "045cc7d12290190fc86b28ac6e13e416f7f279b9db745ed5ba0f012a76c96ad1",
+        "GL04 Inset clear glazing pane": "d2d1d41591b68d00fadfb3f8d5a295b52693371365c84bce53fd960d53195c1b",
+        "wall_flame": "f7e15f4e67f15239d32b0b0d8fa424b91127353c8db54d595d51e743c0f90f10"
+      },
+      "retained_meshes_exact": true,
+      "new_components": [
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 1",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 2",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 5",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 6",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        }
+      ],
+      "counts": {
+        "body": {
+          "polygons": 11771,
+          "triangles": 26248
+        },
+        "rig": {
+          "polygons": 0,
+          "triangles": 0
+        },
+        "flame": {
+          "polygons": 6,
+          "triangles": 12,
+          "mesh_objects": 1
+        }
+      },
+      "body_mesh_digests": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "1766713450674dc59227242358a67d2405bb5bf8ede8c9d7fbac978703694177",
+        "02 Layered pointed arch moulding 1": "f00be94d2b4a75d79b2712060e150345c345025c597b93760b6328e5d33be209",
+        "02 Layered pointed arch moulding 2": "bf448e16c928be3fb9c864d0afbdf732a87a0238ddd509265798ed4cfc8efe5e",
+        "02 Layered pointed arch moulding 5": "b50c0857a6efcc4370f3d38d2b8f45c3e6f93d06b2a39b0d92c6f0a9d1d1feff",
+        "02 Layered pointed arch moulding 6": "b5621055a3eaa90aab8bbe7374d399bb4acf830ec18b22d3be667d6180f3572d",
+        "08 Crocketed gable 1": "ed5184684f7fa70f48b9957e9c3eb49930b76e9fb193efc2f09e72080021cceb",
+        "08 Gable raised edge 1": "c932652b9dd7cbb651b37c817384dba7865f7ec1293143eef163f3c79f6ca0e3",
+        "08 Gable tip 1": "1ea5a02f4bb4aea311bcd64640c226e82764444bb28874329b5b72e7a89078ff",
+        "08 Crocketed gable 2": "02278cc0bac3e23767b3201b2553c7d5d3fbfdaea787c79aa05877de663ccf0b",
+        "08 Gable raised edge 2": "b3db4865c03ad292719a7f83ea4874931a025b0e48eb58aabbd6aa8021ae9e95",
+        "08 Gable tip 2": "a8231abbaac94d5c6129cc54534bc6da38ebd9a438b93dd71c8ea7d062f34b5c",
+        "08 Crocketed gable 5": "a7b7cc6e024f5714d781d1855da040b2410ede4405d01f5f50224addc42ee770",
+        "08 Gable raised edge 5": "dd9da5b9024a3e0bae0e3fea1a51a7bc4638af8c008eea0ebfbc427cf5ce268c",
+        "08 Gable tip 5": "cd10b32dd4cba032de10aaebcc7df9ee6560b0c864fee88c9fb29b381e578f90",
+        "08 Crocketed gable 6": "ef80a1ffb2f1d79140dee9f3f487d09a287d804fcd2bbe0120f319e654d84abf",
+        "08 Gable raised edge 6": "11a8304fbf925016bb08b45756fe7b6c319d1d0dfdba3f65bf7f712b55b740cb",
+        "08 Gable tip 6": "98af76bbec1b0155510e7b75e96bb8974f97c0910e16c409bbca028d6f60fe64",
+        "09 Clean six-panel Gothic roof": "512189c3bd4b5d394f47db9a1e92617421eead628ccfc9b63643bbd28e25c593",
+        "09 Raised roof hip rib 1": "64f1f09ab4925537de65c1d3c9829a62bd6baa89210cbc47c186bfda7e769dba",
+        "09 Raised roof hip rib 2": "6aa5ce48b73d7becb7cece787c6460149bd363de2e22b036aaaec66cf250d55d",
+        "09 Raised roof hip rib 3": "0a8567a26c604d7de3ce6c250022f8e62324169dee6cb0af97976c6b2e9ed434",
+        "09 Raised roof hip rib 4": "cdaaead740cd05731a1c9a1e58445b99ab4c5883f98d61e737cf2e17906045bd",
+        "09 Raised roof hip rib 5": "e34ac0fa9f438e0b8a5b97bb6f69a7ad2e24e6ad9072d7d2fefd2661ed432496",
+        "09 Raised roof hip rib 6": "e8524832e34600f7794f619540e46ef1370a8d254f0bdf559f0ec392ed1f53f9",
+        "10 Main top finial collar": "412dff207724fbcfeecb257ed470ffbc8e6dafa4facb5c24e4d70f4585725981",
+        "10 Main top finial bulb and point": "04a5ede8a0997fa6cb84fcb2b2e71ab648f6a1412e6fb07a0c532fdc441db3af",
+        "GL01 Inset clear glazing pane": "a4432229f69bacced1f6461a61685a7fa73ac8fd860d63166f4643ab681ba64a",
+        "GL02 Inset clear glazing pane": "d0c5a35966559cb734ca5d68b99ab9d84466d4bebb365d03d8d3d7927f103e55",
+        "GL03 Inset clear glazing pane": "045cc7d12290190fc86b28ac6e13e416f7f279b9db745ed5ba0f012a76c96ad1",
+        "GL04 Inset clear glazing pane": "d2d1d41591b68d00fadfb3f8d5a295b52693371365c84bce53fd960d53195c1b",
+        "G08 Dark split-jet slit": "2e72effc2c5eecb6a949d0431225077b71735741b758f20b163428d1a70636c6",
+        "G07 Pale wider burner tip - diameter 0.044": "719c815343526ea65b9437b204029a02b5cd63f7af0e7fdfb501014842d9f90e",
+        "G06 Broader tip retaining collar": "b790cee05fda349181ad97d7994b919e035955785307183bd0e30b4c515781c4",
+        "G05 Proportional rear valve knob": "62565138d68c99ba998214699a7b03b105f9e13f1593e4a1029b76f121e7683f",
+        "G04 Discreet rear valve branch": "b7702d39541173a4c3aff990a076dd9699c230cd72e7102692d7967999f0fcf1",
+        "G03 Proportional hexagonal union": "c0824bf7922637c695ef1d03f0557603b5d11394a8c790a2d4d3af611da4fb73",
+        "G02 Sturdier gas riser - diameter 0.032": "259e6a91fca6515f4639f219eff6785310da785e80cdf45675246764aa484606",
+        "G01 Small floor mounting collar": "d4e1d61f595be100101bac3b85b497fe95c1ac2cb88041b87e0e710285298d44",
+        "03 Gothic twin lancets and quatrefoil 1": "7dc186a00c8bd1797698641a85f726dc6c7177c0537240df36b5567c0106adce",
+        "03 Gothic twin lancets and quatrefoil 2": "86f838d723ff9d4f2e88657ffe3ff45cb1261b012b3a36cfe36c0c96119a29c7",
+        "03 Gothic twin lancets and quatrefoil 5": "c784d2b8207a537546c0148829470a5d035a5217c9c458426aab517e2870ee07",
+        "03 Gothic twin lancets and quatrefoil 6": "be8ba0b496c525c2297477f6d42dbe18c6b361e73a1e11b29cb8aabd0035cf62"
+      },
+      "bar_diameters_m": {
+        "mullion": 0.0044176347632157165,
+        "lancets": 0.004207271203062588,
+        "quatrefoil": 0.003996907642909458
+      },
+      "preview_sha256": "c4b58d0692429909268da7845ab6664cb8e5f5ec60d3ed920dc827416fddb82b"
+    },
+    {
+      "mount": "hanging",
+      "finish": "material",
+      "file": "gothic lantern - hanging limestone and metal.blend",
+      "source_sha256": "c1501e2745d84ff2404214ec00cfdb15ae4583cd73d24dd274cc35e8e074c3d0",
+      "delivery_sha256": "ab3c159d451a476ae3f0e4f7c223d310a18e394563dcf721d4b5b01254301db1",
+      "preview": "gothic lantern - hanging limestone and metal preview.png",
+      "retained_native_mesh_fingerprints": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "1bbc5726546437c50768a5e8c745d3d4672e79d094e0e55a379748d620b1a671",
+        "02 Layered pointed arch moulding 1": "f00be94d2b4a75d79b2712060e150345c345025c597b93760b6328e5d33be209",
+        "02 Layered pointed arch moulding 2": "bf448e16c928be3fb9c864d0afbdf732a87a0238ddd509265798ed4cfc8efe5e",
+        "02 Layered pointed arch moulding 3": "884de9429249fd7f736a63c66b50ae3ebdc078be3c3d6effc7f402b98d104166",
+        "02 Layered pointed arch moulding 4": "416a727cbc2ca81194b52cca370b147bb17be0eaaf973d3a193d2c7feebf7e30",
+        "02 Layered pointed arch moulding 5": "b50c0857a6efcc4370f3d38d2b8f45c3e6f93d06b2a39b0d92c6f0a9d1d1feff",
+        "02 Layered pointed arch moulding 6": "b5621055a3eaa90aab8bbe7374d399bb4acf830ec18b22d3be667d6180f3572d",
+        "08 Crocketed gable 1": "ed5184684f7fa70f48b9957e9c3eb49930b76e9fb193efc2f09e72080021cceb",
+        "08 Crocketed gable 2": "02278cc0bac3e23767b3201b2553c7d5d3fbfdaea787c79aa05877de663ccf0b",
+        "08 Crocketed gable 3": "0a9d29aa1d382fdaa1ecc2edc8ed012b3c6bff9034b78db27271c6f49972eb7a",
+        "08 Crocketed gable 4": "1f63216a2a4d2404ab93d2e2cb83e730cd25e9c3e359da938607dd5a176dc179",
+        "08 Crocketed gable 5": "a7b7cc6e024f5714d781d1855da040b2410ede4405d01f5f50224addc42ee770",
+        "08 Crocketed gable 6": "ef80a1ffb2f1d79140dee9f3f487d09a287d804fcd2bbe0120f319e654d84abf",
+        "08 Gable raised edge 1": "c932652b9dd7cbb651b37c817384dba7865f7ec1293143eef163f3c79f6ca0e3",
+        "08 Gable raised edge 2": "b3db4865c03ad292719a7f83ea4874931a025b0e48eb58aabbd6aa8021ae9e95",
+        "08 Gable raised edge 3": "8f8231c88ca84982d21de433cc2023ed848fa61ea9936f9214b9ea298fd91ed4",
+        "08 Gable raised edge 4": "53e78537d1f7760c9eee5cd0704aa4d06fc23c055928a65c7ec5b00855a2fdaf",
+        "08 Gable raised edge 5": "dd9da5b9024a3e0bae0e3fea1a51a7bc4638af8c008eea0ebfbc427cf5ce268c",
+        "08 Gable raised edge 6": "11a8304fbf925016bb08b45756fe7b6c319d1d0dfdba3f65bf7f712b55b740cb",
+        "08 Gable tip 1": "1ea5a02f4bb4aea311bcd64640c226e82764444bb28874329b5b72e7a89078ff",
+        "08 Gable tip 2": "a8231abbaac94d5c6129cc54534bc6da38ebd9a438b93dd71c8ea7d062f34b5c",
+        "08 Gable tip 3": "73a7357a761ca55c264b6cbbecc3d1f1d60eb16b9677036013de80ac2fd3776d",
+        "08 Gable tip 4": "7dd6fb2ddc9d8828ab5c732d108d0305b30449d44b7320bf58ae24cc3147edda",
+        "08 Gable tip 5": "cd10b32dd4cba032de10aaebcc7df9ee6560b0c864fee88c9fb29b381e578f90",
+        "08 Gable tip 6": "98af76bbec1b0155510e7b75e96bb8974f97c0910e16c409bbca028d6f60fe64",
+        "09 Clean six-panel Gothic roof": "b55a495d0b23e2d1ad7e036f13475b43dbeb286877f0233593b78b04b8f35d67",
+        "09 Raised roof hip rib 1": "64f1f09ab4925537de65c1d3c9829a62bd6baa89210cbc47c186bfda7e769dba",
+        "09 Raised roof hip rib 2": "6aa5ce48b73d7becb7cece787c6460149bd363de2e22b036aaaec66cf250d55d",
+        "09 Raised roof hip rib 3": "0a8567a26c604d7de3ce6c250022f8e62324169dee6cb0af97976c6b2e9ed434",
+        "09 Raised roof hip rib 4": "4a3982d12b2010008c00a83f9ed14fffe843bc72dccdb3c62556752e8b154016",
+        "09 Raised roof hip rib 5": "e34ac0fa9f438e0b8a5b97bb6f69a7ad2e24e6ad9072d7d2fefd2661ed432496",
+        "09 Raised roof hip rib 6": "e8524832e34600f7794f619540e46ef1370a8d254f0bdf559f0ec392ed1f53f9",
+        "10 Main top finial bulb and point": "04a5ede8a0997fa6cb84fcb2b2e71ab648f6a1412e6fb07a0c532fdc441db3af",
+        "10 Main top finial collar": "412dff207724fbcfeecb257ed470ffbc8e6dafa4facb5c24e4d70f4585725981",
+        "14 Lower inverted finial bulb and point": "04323b11c8e183ed8764c65f4a10857a847632fe965f383a08806abe3e5499de",
+        "14 Lower inverted finial collar": "b7b52241e425a2b18c47ef052ef0e0c5374bbb0dd709d67a663a3052995cd8d9",
+        "canopy": "7fdb7cf06e2562db1bbe6e4f055ccb21df13021237bf87957fedfeb932ea5ddd",
+        "G01 Small floor mounting collar": "4e431f68cec8a41bdb23ae4dbaa159113df82a084179f51af1e4b6e74d5b2201",
+        "G02 Sturdier gas riser - diameter 0.032": "f5bbb41255bb328ba8089d682c459920d25a1ab10fca9f02b2e8d96da87f9205",
+        "G03 Proportional hexagonal union": "b17ccfbf80d353706d6d54bc76ae68afb9fe3ae72e61446121816c9e6d8efd3b",
+        "G04 Discreet rear valve branch": "ddd42cad0797b011ca843af65cd722b3c336171ec300271654d2fc88a72949c6",
+        "G05 Proportional rear valve knob": "da010da83add3ee3c94a9a9ea789d9e5e571d5634606e56a96f93bdfc0bcab19",
+        "G06 Broader tip retaining collar": "d9a8f22f2e7322bdd3ea5fea7aa94061a3c359ce7db4daa69b8afb14f52d45bf",
+        "G07 Pale wider burner tip - diameter 0.044": "0f13bffceffb83a729ea771db35685748d24f60b68754dd231d6c89c3c9bc3ef",
+        "G08 Dark split-jet slit": "fd7e2470c826235672a92d50193ce65d16fff32233f1a50c91c9296042c1dd53",
+        "GL01 Inset clear glazing pane": "a4432229f69bacced1f6461a61685a7fa73ac8fd860d63166f4643ab681ba64a",
+        "GL02 Inset clear glazing pane": "d0c5a35966559cb734ca5d68b99ab9d84466d4bebb365d03d8d3d7927f103e55",
+        "GL03 Inset clear glazing pane": "f67fcd431e2f829558c1cac2654b62b187858ef3486c3afc73e79cf3092d81f8",
+        "GL04 Inset clear glazing pane": "5b3a1dbd40eca49aaeeb04b1b1e34d6e644e0adb8408dc60249976fe5ab9466c",
+        "GL05 Inset clear glazing pane": "045cc7d12290190fc86b28ac6e13e416f7f279b9db745ed5ba0f012a76c96ad1",
+        "GL06 Inset clear glazing pane": "d2d1d41591b68d00fadfb3f8d5a295b52693371365c84bce53fd960d53195c1b",
+        "half_chain - direct apex eye": "35b447f3b0ac9b46e21d29f52856e2c40ad4a4169778bfdfee57040200fbf5fb",
+        "half_chain - embedded apex fixing": "c4aaac139124f450eedc39d8352afd7348204666aec0bc7ae62aba1c9795d8a8",
+        "half_chain - initial round join": "70375b8d6328e6a6f9f85a42db8e2f399748e8d2ba49a1d1ba956ea3df21a4ba",
+        "half_chain - rectangular link 01": "7bfecb81a3d258cc12963d100cd8ba78120258561ae139f7b176ae0e49cbad37",
+        "half_chain - rectangular link 02": "b472a20220b5818134c75ff118e25bfcf69d767521c9fc53c84e9da7ebd198ae",
+        "half_chain - rectangular link 03": "387f1fd9aa3d5667f1552b5cb10face4b189a261e922778642ae9c027f464b7d",
+        "half_chain - rectangular link 04": "fd091c2f079f28faf3379e49f6f6f409ffa8f1f11458043a4adf9e706cacd7d8",
+        "half_chain - rectangular link 05": "8a9830ac368944865baebbb2efc3b984f1a76b70801561bab5fbb7618ccad5d4",
+        "half_chain - rectangular link 06": "e35714b1f91140fd40315cbd980990fa60f65e6925848a6ea5739c9de4b46427",
+        "half_chain - round join 01": "6cdb2b6cc7b3d9a4148ce1c06ea3c3d472f9f1bdd1cb0588432ea2644ac9cc88",
+        "half_chain - round join 02": "18483a8b2823f6e267e1bbe9d53c4b5ffcfcf3ec81d7d2dcf24ce85fdc9b9af1",
+        "half_chain - round join 03": "015407a57edb2d9d51b2047b70c5dff2f33108a12d91ab57c11c1a1a4c438967",
+        "half_chain - round join 04": "2a4d97fff03b53e94631ea32b628173dc7afbc98ab128f8a4e2f95c469daf036",
+        "half_chain - round join 05": "43dfa90800ceadeeba248a9aa20923e031717025343a79da7d1cb7b156ed7c7d",
+        "half_chain - round join 06": "22b835eb37973df180bcf555e2f4dd786a8a9c8a06b21ad1a321deba47e123d2",
+        "hanging_flame": "3291397e605333650a208b07bb34c481b732a46500355bf407a74d6ffc91666a"
+      },
+      "retained_meshes_exact": true,
+      "new_components": [
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 1",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 2",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 3",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 4",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 5",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 6",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        }
+      ],
+      "counts": {
+        "body": {
+          "polygons": 15692,
+          "triangles": 34568
+        },
+        "rig": {
+          "polygons": 5340,
+          "triangles": 10808
+        },
+        "flame": {
+          "polygons": 6,
+          "triangles": 12,
+          "mesh_objects": 1
+        }
+      },
+      "body_mesh_digests": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "1bbc5726546437c50768a5e8c745d3d4672e79d094e0e55a379748d620b1a671",
+        "02 Layered pointed arch moulding 1": "f00be94d2b4a75d79b2712060e150345c345025c597b93760b6328e5d33be209",
+        "02 Layered pointed arch moulding 2": "bf448e16c928be3fb9c864d0afbdf732a87a0238ddd509265798ed4cfc8efe5e",
+        "02 Layered pointed arch moulding 3": "884de9429249fd7f736a63c66b50ae3ebdc078be3c3d6effc7f402b98d104166",
+        "02 Layered pointed arch moulding 4": "416a727cbc2ca81194b52cca370b147bb17be0eaaf973d3a193d2c7feebf7e30",
+        "02 Layered pointed arch moulding 5": "b50c0857a6efcc4370f3d38d2b8f45c3e6f93d06b2a39b0d92c6f0a9d1d1feff",
+        "02 Layered pointed arch moulding 6": "b5621055a3eaa90aab8bbe7374d399bb4acf830ec18b22d3be667d6180f3572d",
+        "08 Crocketed gable 1": "ed5184684f7fa70f48b9957e9c3eb49930b76e9fb193efc2f09e72080021cceb",
+        "08 Gable raised edge 1": "c932652b9dd7cbb651b37c817384dba7865f7ec1293143eef163f3c79f6ca0e3",
+        "08 Gable tip 1": "1ea5a02f4bb4aea311bcd64640c226e82764444bb28874329b5b72e7a89078ff",
+        "08 Crocketed gable 2": "02278cc0bac3e23767b3201b2553c7d5d3fbfdaea787c79aa05877de663ccf0b",
+        "08 Gable raised edge 2": "b3db4865c03ad292719a7f83ea4874931a025b0e48eb58aabbd6aa8021ae9e95",
+        "08 Gable tip 2": "a8231abbaac94d5c6129cc54534bc6da38ebd9a438b93dd71c8ea7d062f34b5c",
+        "08 Crocketed gable 3": "0a9d29aa1d382fdaa1ecc2edc8ed012b3c6bff9034b78db27271c6f49972eb7a",
+        "08 Gable raised edge 3": "8f8231c88ca84982d21de433cc2023ed848fa61ea9936f9214b9ea298fd91ed4",
+        "08 Gable tip 3": "73a7357a761ca55c264b6cbbecc3d1f1d60eb16b9677036013de80ac2fd3776d",
+        "08 Crocketed gable 4": "1f63216a2a4d2404ab93d2e2cb83e730cd25e9c3e359da938607dd5a176dc179",
+        "08 Gable raised edge 4": "53e78537d1f7760c9eee5cd0704aa4d06fc23c055928a65c7ec5b00855a2fdaf",
+        "08 Gable tip 4": "7dd6fb2ddc9d8828ab5c732d108d0305b30449d44b7320bf58ae24cc3147edda",
+        "08 Crocketed gable 5": "a7b7cc6e024f5714d781d1855da040b2410ede4405d01f5f50224addc42ee770",
+        "08 Gable raised edge 5": "dd9da5b9024a3e0bae0e3fea1a51a7bc4638af8c008eea0ebfbc427cf5ce268c",
+        "08 Gable tip 5": "cd10b32dd4cba032de10aaebcc7df9ee6560b0c864fee88c9fb29b381e578f90",
+        "08 Crocketed gable 6": "ef80a1ffb2f1d79140dee9f3f487d09a287d804fcd2bbe0120f319e654d84abf",
+        "08 Gable raised edge 6": "11a8304fbf925016bb08b45756fe7b6c319d1d0dfdba3f65bf7f712b55b740cb",
+        "08 Gable tip 6": "98af76bbec1b0155510e7b75e96bb8974f97c0910e16c409bbca028d6f60fe64",
+        "09 Clean six-panel Gothic roof": "b55a495d0b23e2d1ad7e036f13475b43dbeb286877f0233593b78b04b8f35d67",
+        "09 Raised roof hip rib 1": "64f1f09ab4925537de65c1d3c9829a62bd6baa89210cbc47c186bfda7e769dba",
+        "09 Raised roof hip rib 2": "6aa5ce48b73d7becb7cece787c6460149bd363de2e22b036aaaec66cf250d55d",
+        "09 Raised roof hip rib 3": "0a8567a26c604d7de3ce6c250022f8e62324169dee6cb0af97976c6b2e9ed434",
+        "09 Raised roof hip rib 4": "4a3982d12b2010008c00a83f9ed14fffe843bc72dccdb3c62556752e8b154016",
+        "09 Raised roof hip rib 5": "e34ac0fa9f438e0b8a5b97bb6f69a7ad2e24e6ad9072d7d2fefd2661ed432496",
+        "09 Raised roof hip rib 6": "e8524832e34600f7794f619540e46ef1370a8d254f0bdf559f0ec392ed1f53f9",
+        "10 Main top finial collar": "412dff207724fbcfeecb257ed470ffbc8e6dafa4facb5c24e4d70f4585725981",
+        "10 Main top finial bulb and point": "04a5ede8a0997fa6cb84fcb2b2e71ab648f6a1412e6fb07a0c532fdc441db3af",
+        "14 Lower inverted finial collar": "b7b52241e425a2b18c47ef052ef0e0c5374bbb0dd709d67a663a3052995cd8d9",
+        "14 Lower inverted finial bulb and point": "04323b11c8e183ed8764c65f4a10857a847632fe965f383a08806abe3e5499de",
+        "GL01 Inset clear glazing pane": "a4432229f69bacced1f6461a61685a7fa73ac8fd860d63166f4643ab681ba64a",
+        "GL02 Inset clear glazing pane": "d0c5a35966559cb734ca5d68b99ab9d84466d4bebb365d03d8d3d7927f103e55",
+        "GL03 Inset clear glazing pane": "f67fcd431e2f829558c1cac2654b62b187858ef3486c3afc73e79cf3092d81f8",
+        "GL04 Inset clear glazing pane": "5b3a1dbd40eca49aaeeb04b1b1e34d6e644e0adb8408dc60249976fe5ab9466c",
+        "GL05 Inset clear glazing pane": "045cc7d12290190fc86b28ac6e13e416f7f279b9db745ed5ba0f012a76c96ad1",
+        "GL06 Inset clear glazing pane": "d2d1d41591b68d00fadfb3f8d5a295b52693371365c84bce53fd960d53195c1b",
+        "G08 Dark split-jet slit": "fd7e2470c826235672a92d50193ce65d16fff32233f1a50c91c9296042c1dd53",
+        "G07 Pale wider burner tip - diameter 0.044": "0f13bffceffb83a729ea771db35685748d24f60b68754dd231d6c89c3c9bc3ef",
+        "G06 Broader tip retaining collar": "d9a8f22f2e7322bdd3ea5fea7aa94061a3c359ce7db4daa69b8afb14f52d45bf",
+        "G05 Proportional rear valve knob": "da010da83add3ee3c94a9a9ea789d9e5e571d5634606e56a96f93bdfc0bcab19",
+        "G04 Discreet rear valve branch": "ddd42cad0797b011ca843af65cd722b3c336171ec300271654d2fc88a72949c6",
+        "G03 Proportional hexagonal union": "b17ccfbf80d353706d6d54bc76ae68afb9fe3ae72e61446121816c9e6d8efd3b",
+        "G02 Sturdier gas riser - diameter 0.032": "f5bbb41255bb328ba8089d682c459920d25a1ab10fca9f02b2e8d96da87f9205",
+        "G01 Small floor mounting collar": "4e431f68cec8a41bdb23ae4dbaa159113df82a084179f51af1e4b6e74d5b2201",
+        "03 Gothic twin lancets and quatrefoil 1": "7dc186a00c8bd1797698641a85f726dc6c7177c0537240df36b5567c0106adce",
+        "03 Gothic twin lancets and quatrefoil 2": "86f838d723ff9d4f2e88657ffe3ff45cb1261b012b3a36cfe36c0c96119a29c7",
+        "03 Gothic twin lancets and quatrefoil 3": "07cc53d329f32df9fd60aaf1f848fabdf5f479cdd153e5ebb71533f0c6bf7a54",
+        "03 Gothic twin lancets and quatrefoil 4": "f1506ef5c5cd9ca9b32624a8dad5ffdf754acacfb82b7892570a167fc01094bf",
+        "03 Gothic twin lancets and quatrefoil 5": "c784d2b8207a537546c0148829470a5d035a5217c9c458426aab517e2870ee07",
+        "03 Gothic twin lancets and quatrefoil 6": "be8ba0b496c525c2297477f6d42dbe18c6b361e73a1e11b29cb8aabd0035cf62"
+      },
+      "bar_diameters_m": {
+        "mullion": 0.0044176347632157165,
+        "lancets": 0.004207271203062588,
+        "quatrefoil": 0.003996907642909458
+      },
+      "preview_sha256": "819659348eb08a4eea834c404c5e86c4c3de3aa7d65ce0c77d79a3a3e95a1fa1"
+    },
+    {
+      "mount": "hanging",
+      "finish": "clean",
+      "file": "gothic lantern - clean hanging.blend",
+      "source_sha256": "b7149bbb942c6df88d9defad0935effe3172af866a72a46f9075526a09a0ad96",
+      "delivery_sha256": "40e50251270bbd20d6b913f429a41372eae1c119ae9edb74b707378d52b11aac",
+      "preview": "gothic lantern - hanging preview.png",
+      "retained_native_mesh_fingerprints": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "1bbc5726546437c50768a5e8c745d3d4672e79d094e0e55a379748d620b1a671",
+        "02 Layered pointed arch moulding 1": "f00be94d2b4a75d79b2712060e150345c345025c597b93760b6328e5d33be209",
+        "02 Layered pointed arch moulding 2": "bf448e16c928be3fb9c864d0afbdf732a87a0238ddd509265798ed4cfc8efe5e",
+        "02 Layered pointed arch moulding 3": "884de9429249fd7f736a63c66b50ae3ebdc078be3c3d6effc7f402b98d104166",
+        "02 Layered pointed arch moulding 4": "416a727cbc2ca81194b52cca370b147bb17be0eaaf973d3a193d2c7feebf7e30",
+        "02 Layered pointed arch moulding 5": "b50c0857a6efcc4370f3d38d2b8f45c3e6f93d06b2a39b0d92c6f0a9d1d1feff",
+        "02 Layered pointed arch moulding 6": "b5621055a3eaa90aab8bbe7374d399bb4acf830ec18b22d3be667d6180f3572d",
+        "08 Crocketed gable 1": "ed5184684f7fa70f48b9957e9c3eb49930b76e9fb193efc2f09e72080021cceb",
+        "08 Crocketed gable 2": "02278cc0bac3e23767b3201b2553c7d5d3fbfdaea787c79aa05877de663ccf0b",
+        "08 Crocketed gable 3": "0a9d29aa1d382fdaa1ecc2edc8ed012b3c6bff9034b78db27271c6f49972eb7a",
+        "08 Crocketed gable 4": "1f63216a2a4d2404ab93d2e2cb83e730cd25e9c3e359da938607dd5a176dc179",
+        "08 Crocketed gable 5": "a7b7cc6e024f5714d781d1855da040b2410ede4405d01f5f50224addc42ee770",
+        "08 Crocketed gable 6": "ef80a1ffb2f1d79140dee9f3f487d09a287d804fcd2bbe0120f319e654d84abf",
+        "08 Gable raised edge 1": "c932652b9dd7cbb651b37c817384dba7865f7ec1293143eef163f3c79f6ca0e3",
+        "08 Gable raised edge 2": "b3db4865c03ad292719a7f83ea4874931a025b0e48eb58aabbd6aa8021ae9e95",
+        "08 Gable raised edge 3": "8f8231c88ca84982d21de433cc2023ed848fa61ea9936f9214b9ea298fd91ed4",
+        "08 Gable raised edge 4": "53e78537d1f7760c9eee5cd0704aa4d06fc23c055928a65c7ec5b00855a2fdaf",
+        "08 Gable raised edge 5": "dd9da5b9024a3e0bae0e3fea1a51a7bc4638af8c008eea0ebfbc427cf5ce268c",
+        "08 Gable raised edge 6": "11a8304fbf925016bb08b45756fe7b6c319d1d0dfdba3f65bf7f712b55b740cb",
+        "08 Gable tip 1": "1ea5a02f4bb4aea311bcd64640c226e82764444bb28874329b5b72e7a89078ff",
+        "08 Gable tip 2": "a8231abbaac94d5c6129cc54534bc6da38ebd9a438b93dd71c8ea7d062f34b5c",
+        "08 Gable tip 3": "73a7357a761ca55c264b6cbbecc3d1f1d60eb16b9677036013de80ac2fd3776d",
+        "08 Gable tip 4": "7dd6fb2ddc9d8828ab5c732d108d0305b30449d44b7320bf58ae24cc3147edda",
+        "08 Gable tip 5": "cd10b32dd4cba032de10aaebcc7df9ee6560b0c864fee88c9fb29b381e578f90",
+        "08 Gable tip 6": "98af76bbec1b0155510e7b75e96bb8974f97c0910e16c409bbca028d6f60fe64",
+        "09 Clean six-panel Gothic roof": "b55a495d0b23e2d1ad7e036f13475b43dbeb286877f0233593b78b04b8f35d67",
+        "09 Raised roof hip rib 1": "64f1f09ab4925537de65c1d3c9829a62bd6baa89210cbc47c186bfda7e769dba",
+        "09 Raised roof hip rib 2": "6aa5ce48b73d7becb7cece787c6460149bd363de2e22b036aaaec66cf250d55d",
+        "09 Raised roof hip rib 3": "0a8567a26c604d7de3ce6c250022f8e62324169dee6cb0af97976c6b2e9ed434",
+        "09 Raised roof hip rib 4": "4a3982d12b2010008c00a83f9ed14fffe843bc72dccdb3c62556752e8b154016",
+        "09 Raised roof hip rib 5": "e34ac0fa9f438e0b8a5b97bb6f69a7ad2e24e6ad9072d7d2fefd2661ed432496",
+        "09 Raised roof hip rib 6": "e8524832e34600f7794f619540e46ef1370a8d254f0bdf559f0ec392ed1f53f9",
+        "10 Main top finial bulb and point": "04a5ede8a0997fa6cb84fcb2b2e71ab648f6a1412e6fb07a0c532fdc441db3af",
+        "10 Main top finial collar": "412dff207724fbcfeecb257ed470ffbc8e6dafa4facb5c24e4d70f4585725981",
+        "14 Lower inverted finial bulb and point": "04323b11c8e183ed8764c65f4a10857a847632fe965f383a08806abe3e5499de",
+        "14 Lower inverted finial collar": "b7b52241e425a2b18c47ef052ef0e0c5374bbb0dd709d67a663a3052995cd8d9",
+        "canopy": "7fdb7cf06e2562db1bbe6e4f055ccb21df13021237bf87957fedfeb932ea5ddd",
+        "G01 Small floor mounting collar": "4e431f68cec8a41bdb23ae4dbaa159113df82a084179f51af1e4b6e74d5b2201",
+        "G02 Sturdier gas riser - diameter 0.032": "f5bbb41255bb328ba8089d682c459920d25a1ab10fca9f02b2e8d96da87f9205",
+        "G03 Proportional hexagonal union": "b17ccfbf80d353706d6d54bc76ae68afb9fe3ae72e61446121816c9e6d8efd3b",
+        "G04 Discreet rear valve branch": "ddd42cad0797b011ca843af65cd722b3c336171ec300271654d2fc88a72949c6",
+        "G05 Proportional rear valve knob": "da010da83add3ee3c94a9a9ea789d9e5e571d5634606e56a96f93bdfc0bcab19",
+        "G06 Broader tip retaining collar": "d9a8f22f2e7322bdd3ea5fea7aa94061a3c359ce7db4daa69b8afb14f52d45bf",
+        "G07 Pale wider burner tip - diameter 0.044": "0f13bffceffb83a729ea771db35685748d24f60b68754dd231d6c89c3c9bc3ef",
+        "G08 Dark split-jet slit": "fd7e2470c826235672a92d50193ce65d16fff32233f1a50c91c9296042c1dd53",
+        "GL01 Inset clear glazing pane": "a4432229f69bacced1f6461a61685a7fa73ac8fd860d63166f4643ab681ba64a",
+        "GL02 Inset clear glazing pane": "d0c5a35966559cb734ca5d68b99ab9d84466d4bebb365d03d8d3d7927f103e55",
+        "GL03 Inset clear glazing pane": "f67fcd431e2f829558c1cac2654b62b187858ef3486c3afc73e79cf3092d81f8",
+        "GL04 Inset clear glazing pane": "5b3a1dbd40eca49aaeeb04b1b1e34d6e644e0adb8408dc60249976fe5ab9466c",
+        "GL05 Inset clear glazing pane": "045cc7d12290190fc86b28ac6e13e416f7f279b9db745ed5ba0f012a76c96ad1",
+        "GL06 Inset clear glazing pane": "d2d1d41591b68d00fadfb3f8d5a295b52693371365c84bce53fd960d53195c1b",
+        "half_chain - direct apex eye": "35b447f3b0ac9b46e21d29f52856e2c40ad4a4169778bfdfee57040200fbf5fb",
+        "half_chain - embedded apex fixing": "c4aaac139124f450eedc39d8352afd7348204666aec0bc7ae62aba1c9795d8a8",
+        "half_chain - initial round join": "70375b8d6328e6a6f9f85a42db8e2f399748e8d2ba49a1d1ba956ea3df21a4ba",
+        "half_chain - rectangular link 01": "7bfecb81a3d258cc12963d100cd8ba78120258561ae139f7b176ae0e49cbad37",
+        "half_chain - rectangular link 02": "b472a20220b5818134c75ff118e25bfcf69d767521c9fc53c84e9da7ebd198ae",
+        "half_chain - rectangular link 03": "387f1fd9aa3d5667f1552b5cb10face4b189a261e922778642ae9c027f464b7d",
+        "half_chain - rectangular link 04": "fd091c2f079f28faf3379e49f6f6f409ffa8f1f11458043a4adf9e706cacd7d8",
+        "half_chain - rectangular link 05": "8a9830ac368944865baebbb2efc3b984f1a76b70801561bab5fbb7618ccad5d4",
+        "half_chain - rectangular link 06": "e35714b1f91140fd40315cbd980990fa60f65e6925848a6ea5739c9de4b46427",
+        "half_chain - round join 01": "6cdb2b6cc7b3d9a4148ce1c06ea3c3d472f9f1bdd1cb0588432ea2644ac9cc88",
+        "half_chain - round join 02": "18483a8b2823f6e267e1bbe9d53c4b5ffcfcf3ec81d7d2dcf24ce85fdc9b9af1",
+        "half_chain - round join 03": "015407a57edb2d9d51b2047b70c5dff2f33108a12d91ab57c11c1a1a4c438967",
+        "half_chain - round join 04": "2a4d97fff03b53e94631ea32b628173dc7afbc98ab128f8a4e2f95c469daf036",
+        "half_chain - round join 05": "43dfa90800ceadeeba248a9aa20923e031717025343a79da7d1cb7b156ed7c7d",
+        "half_chain - round join 06": "22b835eb37973df180bcf555e2f4dd786a8a9c8a06b21ad1a321deba47e123d2",
+        "hanging_flame": "3291397e605333650a208b07bb34c481b732a46500355bf407a74d6ffc91666a"
+      },
+      "retained_meshes_exact": true,
+      "new_components": [
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 1",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 2",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 3",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 4",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 5",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        },
+        {
+          "name": "03 Gothic twin lancets and quatrefoil 6",
+          "role": "lead",
+          "vertices": 788,
+          "polygons": 734,
+          "triangles": 1576,
+          "boundary": 0,
+          "nonmanifold": 0,
+          "degenerate": 0,
+          "components": 1
+        }
+      ],
+      "counts": {
+        "body": {
+          "polygons": 15692,
+          "triangles": 34568
+        },
+        "rig": {
+          "polygons": 5340,
+          "triangles": 10808
+        },
+        "flame": {
+          "polygons": 6,
+          "triangles": 12,
+          "mesh_objects": 1
+        }
+      },
+      "body_mesh_digests": {
+        "01 Continuous stone body - pilasters, cornices and softened pinnacles": "1bbc5726546437c50768a5e8c745d3d4672e79d094e0e55a379748d620b1a671",
+        "02 Layered pointed arch moulding 1": "f00be94d2b4a75d79b2712060e150345c345025c597b93760b6328e5d33be209",
+        "02 Layered pointed arch moulding 2": "bf448e16c928be3fb9c864d0afbdf732a87a0238ddd509265798ed4cfc8efe5e",
+        "02 Layered pointed arch moulding 3": "884de9429249fd7f736a63c66b50ae3ebdc078be3c3d6effc7f402b98d104166",
+        "02 Layered pointed arch moulding 4": "416a727cbc2ca81194b52cca370b147bb17be0eaaf973d3a193d2c7feebf7e30",
+        "02 Layered pointed arch moulding 5": "b50c0857a6efcc4370f3d38d2b8f45c3e6f93d06b2a39b0d92c6f0a9d1d1feff",
+        "02 Layered pointed arch moulding 6": "b5621055a3eaa90aab8bbe7374d399bb4acf830ec18b22d3be667d6180f3572d",
+        "08 Crocketed gable 1": "ed5184684f7fa70f48b9957e9c3eb49930b76e9fb193efc2f09e72080021cceb",
+        "08 Gable raised edge 1": "c932652b9dd7cbb651b37c817384dba7865f7ec1293143eef163f3c79f6ca0e3",
+        "08 Gable tip 1": "1ea5a02f4bb4aea311bcd64640c226e82764444bb28874329b5b72e7a89078ff",
+        "08 Crocketed gable 2": "02278cc0bac3e23767b3201b2553c7d5d3fbfdaea787c79aa05877de663ccf0b",
+        "08 Gable raised edge 2": "b3db4865c03ad292719a7f83ea4874931a025b0e48eb58aabbd6aa8021ae9e95",
+        "08 Gable tip 2": "a8231abbaac94d5c6129cc54534bc6da38ebd9a438b93dd71c8ea7d062f34b5c",
+        "08 Crocketed gable 3": "0a9d29aa1d382fdaa1ecc2edc8ed012b3c6bff9034b78db27271c6f49972eb7a",
+        "08 Gable raised edge 3": "8f8231c88ca84982d21de433cc2023ed848fa61ea9936f9214b9ea298fd91ed4",
+        "08 Gable tip 3": "73a7357a761ca55c264b6cbbecc3d1f1d60eb16b9677036013de80ac2fd3776d",
+        "08 Crocketed gable 4": "1f63216a2a4d2404ab93d2e2cb83e730cd25e9c3e359da938607dd5a176dc179",
+        "08 Gable raised edge 4": "53e78537d1f7760c9eee5cd0704aa4d06fc23c055928a65c7ec5b00855a2fdaf",
+        "08 Gable tip 4": "7dd6fb2ddc9d8828ab5c732d108d0305b30449d44b7320bf58ae24cc3147edda",
+        "08 Crocketed gable 5": "a7b7cc6e024f5714d781d1855da040b2410ede4405d01f5f50224addc42ee770",
+        "08 Gable raised edge 5": "dd9da5b9024a3e0bae0e3fea1a51a7bc4638af8c008eea0ebfbc427cf5ce268c",
+        "08 Gable tip 5": "cd10b32dd4cba032de10aaebcc7df9ee6560b0c864fee88c9fb29b381e578f90",
+        "08 Crocketed gable 6": "ef80a1ffb2f1d79140dee9f3f487d09a287d804fcd2bbe0120f319e654d84abf",
+        "08 Gable raised edge 6": "11a8304fbf925016bb08b45756fe7b6c319d1d0dfdba3f65bf7f712b55b740cb",
+        "08 Gable tip 6": "98af76bbec1b0155510e7b75e96bb8974f97c0910e16c409bbca028d6f60fe64",
+        "09 Clean six-panel Gothic roof": "b55a495d0b23e2d1ad7e036f13475b43dbeb286877f0233593b78b04b8f35d67",
+        "09 Raised roof hip rib 1": "64f1f09ab4925537de65c1d3c9829a62bd6baa89210cbc47c186bfda7e769dba",
+        "09 Raised roof hip rib 2": "6aa5ce48b73d7becb7cece787c6460149bd363de2e22b036aaaec66cf250d55d",
+        "09 Raised roof hip rib 3": "0a8567a26c604d7de3ce6c250022f8e62324169dee6cb0af97976c6b2e9ed434",
+        "09 Raised roof hip rib 4": "4a3982d12b2010008c00a83f9ed14fffe843bc72dccdb3c62556752e8b154016",
+        "09 Raised roof hip rib 5": "e34ac0fa9f438e0b8a5b97bb6f69a7ad2e24e6ad9072d7d2fefd2661ed432496",
+        "09 Raised roof hip rib 6": "e8524832e34600f7794f619540e46ef1370a8d254f0bdf559f0ec392ed1f53f9",
+        "10 Main top finial collar": "412dff207724fbcfeecb257ed470ffbc8e6dafa4facb5c24e4d70f4585725981",
+        "10 Main top finial bulb and point": "04a5ede8a0997fa6cb84fcb2b2e71ab648f6a1412e6fb07a0c532fdc441db3af",
+        "14 Lower inverted finial collar": "b7b52241e425a2b18c47ef052ef0e0c5374bbb0dd709d67a663a3052995cd8d9",
+        "14 Lower inverted finial bulb and point": "04323b11c8e183ed8764c65f4a10857a847632fe965f383a08806abe3e5499de",
+        "GL01 Inset clear glazing pane": "a4432229f69bacced1f6461a61685a7fa73ac8fd860d63166f4643ab681ba64a",
+        "GL02 Inset clear glazing pane": "d0c5a35966559cb734ca5d68b99ab9d84466d4bebb365d03d8d3d7927f103e55",
+        "GL03 Inset clear glazing pane": "f67fcd431e2f829558c1cac2654b62b187858ef3486c3afc73e79cf3092d81f8",
+        "GL04 Inset clear glazing pane": "5b3a1dbd40eca49aaeeb04b1b1e34d6e644e0adb8408dc60249976fe5ab9466c",
+        "GL05 Inset clear glazing pane": "045cc7d12290190fc86b28ac6e13e416f7f279b9db745ed5ba0f012a76c96ad1",
+        "GL06 Inset clear glazing pane": "d2d1d41591b68d00fadfb3f8d5a295b52693371365c84bce53fd960d53195c1b",
+        "G08 Dark split-jet slit": "fd7e2470c826235672a92d50193ce65d16fff32233f1a50c91c9296042c1dd53",
+        "G07 Pale wider burner tip - diameter 0.044": "0f13bffceffb83a729ea771db35685748d24f60b68754dd231d6c89c3c9bc3ef",
+        "G06 Broader tip retaining collar": "d9a8f22f2e7322bdd3ea5fea7aa94061a3c359ce7db4daa69b8afb14f52d45bf",
+        "G05 Proportional rear valve knob": "da010da83add3ee3c94a9a9ea789d9e5e571d5634606e56a96f93bdfc0bcab19",
+        "G04 Discreet rear valve branch": "ddd42cad0797b011ca843af65cd722b3c336171ec300271654d2fc88a72949c6",
+        "G03 Proportional hexagonal union": "b17ccfbf80d353706d6d54bc76ae68afb9fe3ae72e61446121816c9e6d8efd3b",
+        "G02 Sturdier gas riser - diameter 0.032": "f5bbb41255bb328ba8089d682c459920d25a1ab10fca9f02b2e8d96da87f9205",
+        "G01 Small floor mounting collar": "4e431f68cec8a41bdb23ae4dbaa159113df82a084179f51af1e4b6e74d5b2201",
+        "03 Gothic twin lancets and quatrefoil 1": "7dc186a00c8bd1797698641a85f726dc6c7177c0537240df36b5567c0106adce",
+        "03 Gothic twin lancets and quatrefoil 2": "86f838d723ff9d4f2e88657ffe3ff45cb1261b012b3a36cfe36c0c96119a29c7",
+        "03 Gothic twin lancets and quatrefoil 3": "07cc53d329f32df9fd60aaf1f848fabdf5f479cdd153e5ebb71533f0c6bf7a54",
+        "03 Gothic twin lancets and quatrefoil 4": "f1506ef5c5cd9ca9b32624a8dad5ffdf754acacfb82b7892570a167fc01094bf",
+        "03 Gothic twin lancets and quatrefoil 5": "c784d2b8207a537546c0148829470a5d035a5217c9c458426aab517e2870ee07",
+        "03 Gothic twin lancets and quatrefoil 6": "be8ba0b496c525c2297477f6d42dbe18c6b361e73a1e11b29cb8aabd0035cf62"
+      },
+      "bar_diameters_m": {
+        "mullion": 0.0044176347632157165,
+        "lancets": 0.004207271203062588,
+        "quatrefoil": 0.003996907642909458
+      },
+      "preview_sha256": "0439c9051b1c6c7435c77d743e84cc3080897020b94cf27f51bfb49cb4d4e252"
+    }
+  ],
+  "saved_file_readback": [
+    {
+      "file": "gothic lantern - seated limestone and metal.blend",
+      "sha256": "7507c40b931aadec48b4bd731734f92aa5d5f1620291563090db18fbe339e2d1",
+      "retained_meshes_exact_after_reopen": true,
+      "new_components_manifold": true,
+      "flame_switch_unchanged": true,
+      "final_render_filepath_preserved": true
+    },
+    {
+      "file": "gothic lantern - clean seated.blend",
+      "sha256": "f4b3a62110c162d8f7735d59157b1932cfabac67b56d58df4e83c692bd453620",
+      "retained_meshes_exact_after_reopen": true,
+      "new_components_manifold": true,
+      "flame_switch_unchanged": true,
+      "final_render_filepath_preserved": true
+    },
+    {
+      "file": "gothic lantern - wall limestone and metal.blend",
+      "sha256": "c87e4633c27df4cd332bf5c9f91a9fb704df88aea2f407a19aeabc4b24f3b545",
+      "retained_meshes_exact_after_reopen": true,
+      "new_components_manifold": true,
+      "flame_switch_unchanged": true,
+      "final_render_filepath_preserved": true
+    },
+    {
+      "file": "gothic lantern - clean wall.blend",
+      "sha256": "f2f8c947ff7d4f80a57d104e31c2b6857ccbf0d7d280e012d5601a2b621ddb02",
+      "retained_meshes_exact_after_reopen": true,
+      "new_components_manifold": true,
+      "flame_switch_unchanged": true,
+      "final_render_filepath_preserved": true
+    },
+    {
+      "file": "gothic lantern - hanging limestone and metal.blend",
+      "sha256": "ab3c159d451a476ae3f0e4f7c223d310a18e394563dcf721d4b5b01254301db1",
+      "retained_meshes_exact_after_reopen": true,
+      "new_components_manifold": true,
+      "flame_switch_unchanged": true,
+      "final_render_filepath_preserved": true
+    },
+    {
+      "file": "gothic lantern - clean hanging.blend",
+      "sha256": "40e50251270bbd20d6b913f429a41372eae1c119ae9edb74b707378d52b11aac",
+      "retained_meshes_exact_after_reopen": true,
+      "new_components_manifold": true,
+      "flame_switch_unchanged": true,
+      "final_render_filepath_preserved": true
+    }
+  ],
+  "current_previews": {
+    "comparison": {
+      "file": "gothic lantern - pointed lancet family comparison.png",
+      "sha256": "8fe46e03243a6ee0b3ddb7af0b748c0bf77f7371516f2afda17936aa5628fe94"
+    },
+    "detail": {
+      "file": "gothic lantern - pointed tracery detail.png",
+      "sha256": "c68c638d1ea931195c9cc9823848e7dbcbde9ee9c16f83668ef919ad86b39d71"
+    },
+    "family_overview": {
+      "outside_gothic_cells_sha256": "ea59e74aa537d4a78f205cf2dd3f12962dcf5d6bf26e76608f055104ea171a9a",
+      "unchanged_georgian_byzantine_pixels": true,
+      "changed_cells": [
+        [
+          176,
+          942,
+          776,
+          1742
+        ],
+        [
+          792,
+          942,
+          1392,
+          1742
+        ],
+        [
+          1408,
+          942,
+          2008,
+          1742
+        ]
+      ],
+      "before_file_sha256": "6ec0b0be09211321a365dbfd4f20f66e59f61d0235959d907a1d29d85579d80a",
+      "after_file_sha256": "bbf0e312fd5d354fe0f777451de5b828e0235908a779b0a15e4d607e5134a868",
+      "file": "lanterns - yellow gas flame family preview.png"
+    }
+  },
+  "rollback": "Six prior approved Blender aliases and their previews retained in the approved JARs authoring archive.",
+  "live_native_readback": [
+    {
+      "file": "gothic lantern - seated limestone and metal.blend",
+      "sha256": "7507c40b931aadec48b4bd731734f92aa5d5f1620291563090db18fbe339e2d1",
+      "live_readback_passed": true,
+      "rollback_verified": true
+    },
+    {
+      "file": "gothic lantern - clean seated.blend",
+      "sha256": "f4b3a62110c162d8f7735d59157b1932cfabac67b56d58df4e83c692bd453620",
+      "live_readback_passed": true,
+      "rollback_verified": true
+    },
+    {
+      "file": "gothic lantern - wall limestone and metal.blend",
+      "sha256": "c87e4633c27df4cd332bf5c9f91a9fb704df88aea2f407a19aeabc4b24f3b545",
+      "live_readback_passed": true,
+      "rollback_verified": true
+    },
+    {
+      "file": "gothic lantern - clean wall.blend",
+      "sha256": "f2f8c947ff7d4f80a57d104e31c2b6857ccbf0d7d280e012d5601a2b621ddb02",
+      "live_readback_passed": true,
+      "rollback_verified": true
+    },
+    {
+      "file": "gothic lantern - hanging limestone and metal.blend",
+      "sha256": "ab3c159d451a476ae3f0e4f7c223d310a18e394563dcf721d4b5b01254301db1",
+      "live_readback_passed": true,
+      "rollback_verified": true
+    },
+    {
+      "file": "gothic lantern - clean hanging.blend",
+      "sha256": "40e50251270bbd20d6b913f429a41372eae1c119ae9edb74b707378d52b11aac",
+      "live_readback_passed": true,
+      "rollback_verified": true
+    }
+  ]
+}

@@ -47,12 +47,27 @@ unmodified, and the launcher scripts retain their upstream copyright and
 licence headers. This build tooling is distributed with the source repository;
 it is not bundled in Daedalon's mod JAR.
 
-## Model assets and branding
-
-The attribution and CC BY 4.0 terms for tina.hill's model adapted into the
-Diota, Kylix and Kalyx families remain in
-[the packaged model notices](src/main/resources/META-INF/THIRD_PARTY_NOTICES.md).
+## Branding
 
 [BRANDING.md](BRANDING.md) records the Portorium artwork provenance and the
 Cinzel rendered-lettering attribution. These notices do not change the
 licences of Daedalon's own code or assets.
+
+## Cinzel settings font
+
+- Component: Cinzel Regular, version 2.000, unmodified.
+- Designer: Natanael Gama; copyright 2020 The Cinzel Project Authors.
+- Source: <https://github.com/NDISCOVER/Cinzel>.
+- Runtime path: `src/main/resources/assets/daedalon/font/cinzel.ttf`.
+- Licence: SIL Open Font License 1.1, including the full copyright notice in
+  [src/main/resources/assets/daedalon/font/OFL-1.1.txt](src/main/resources/assets/daedalon/font/OFL-1.1.txt).
+
+This runtime font is separate from the rendered Cinzel lettering already present
+in Daedalon's approved branding images. The original shared GUI textures retain
+Oliver's restricted licence; their provenance is recorded in
+[docs/SETTINGS_STYLE.md](docs/SETTINGS_STYLE.md).
+
+## Glaux local model
+
+- Component: the Glaux local language model derives from [Potion Base 2M](https://huggingface.co/minishlab/potion-base-2M/tree/389b9f64be5aa4ae7a6bc6fe95ef20ce485ae5da).
+- Licence: MIT. See the [bundled notice](src/main/resources/assets/daedalon/glaux/brain/MODEL-LICENSE.txt) and [model provenance](src/main/resources/assets/daedalon/glaux/brain/provenance.json).

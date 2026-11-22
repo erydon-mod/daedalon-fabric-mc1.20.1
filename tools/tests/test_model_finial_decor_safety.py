@@ -61,12 +61,26 @@ class FinialDecorSafetyTests(unittest.TestCase):
         self.assertEqual("fbe6228777e7", evidence["preparation"]["blender_build_hash"])
         evidence_by_name = {entry["name"]: entry for entry in evidence["models"]}
         self.assertEqual(set(self.FAMILIES.values()), set(evidence_by_name))
+        rebuild_path = REPO_ROOT / "docs/evidence/finial-rebuild-source.json"
+        rebuilt = {}
+        if rebuild_path.exists():
+            rebuild = load_json(rebuild_path)
+            self.assertFalse(rebuild["source_files_modified"])
+            self.assertEqual("docs/evidence/finial-decor-batch-source.json", rebuild["historical_evidence"])
+            rebuilt = {"finial_" + entry["style"]: entry for entry in rebuild["models"]}
+            self.assertTrue(set(rebuilt) <= {stem for stem in self.FAMILIES.values() if stem.startswith("finial_")})
 
         for stem in self.FAMILIES.values():
             expected = MESH_EXPECTATIONS[stem]
             entry = evidence_by_name[stem]
-            self.assertEqual(expected["faces"], entry["runtime_faces"], stem)
-            self.assertEqual(expected["obj_sha256"], entry["runtime_obj_sha256"], stem)
+            if stem in rebuilt:
+                active = rebuilt[stem]
+                self.assertEqual(entry["source_sha256"], active["source_sha256"], stem)
+                self.assertEqual(expected["faces"], active["runtime_triangles"], stem)
+                self.assertEqual(expected["obj_sha256"], active["runtime_obj_sha256"], stem)
+            else:
+                self.assertEqual(expected["faces"], entry["runtime_faces"], stem)
+                self.assertEqual(expected["obj_sha256"], entry["runtime_obj_sha256"], stem)
             obj_path = MESH_ROOT / expected["obj"]
             actual = parse_obj(obj_path)
             self.assertEqual(0, actual["uvs"], stem)
@@ -80,11 +94,13 @@ class FinialDecorSafetyTests(unittest.TestCase):
                 "cylindrical_with_radial_caps"
                 if stem == "fountain_pege"
                 else "cylindrical"
-                if stem.startswith("finial_") or stem == "basin_louterion"
+                if stem.startswith("finial_")
                 else "axis_stabilized_box",
                 definition["uv_projection"],
                 stem,
             )
+            if stem == "basin_louterion":
+                self.assertEqual(6.0, definition["box_projection_span"])
 
     def test_states_items_loot_languages_and_search_tags_are_complete(self) -> None:
         languages = {
@@ -112,7 +128,10 @@ class FinialDecorSafetyTests(unittest.TestCase):
                     )
                 elif family == "obeliskos_monument":
                     self.assertEqual(
-                        {"size=small", "size=medium", "size=large"},
+                        {f"size={size},offset={offset},facing={facing}"
+                         for size in ("small", "medium", "large")
+                         for offset in ("false", "true")
+                         for facing in ("north", "east", "south", "west")},
                         set(state["variants"]),
                     )
                 elif family in GENERATOR.FINIAL_FAMILIES:
@@ -150,6 +169,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
                     "#daedalon:greek_fountain_basin",
                     "#daedalon:fountain_plinth",
                     "#daedalon:krene_fountain",
+                    "#daedalon:louterion_basin",
                     "#daedalon:pege_fountain",
                 },
                 set(load_json(tag_root / "fountain.json")["values"]),
@@ -174,7 +194,7 @@ class FinialDecorSafetyTests(unittest.TestCase):
         self.assertIn("FixedDecorBlock.Style.values()", mod_blocks)
         self.assertIn("registerKreneFountains()", mod_blocks)
         self.assertIn("registerObeliskosMonuments()", mod_blocks)
-        self.assertIn("exactly 4678 decor blocks and items", mod_blocks)
+        self.assertIn("EXPECTED_BLOCK_COUNT", mod_blocks)
         self.assertIn("new FinialBlock(decorSettings(), style)", mod_blocks)
         self.assertIn("createDetailedVariants(style.idSuffix())", plugin)
         self.assertIn('createDetailedVariants("krene_fountain")', plugin)

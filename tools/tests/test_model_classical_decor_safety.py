@@ -37,10 +37,11 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             for block_id in GENERATOR.family_block_ids(family)
         ]
 
-    def test_exact_4678_id_manifest(self) -> None:
+    def test_exact_public_id_manifest(self) -> None:
         block_ids = all_block_ids()
-        self.assertEqual(4678, len(block_ids))
-        self.assertEqual(4678, len(set(block_ids)))
+        self.assertEqual(5084, len(block_ids))
+        self.assertEqual(5084, len(set(block_ids)))
+        self.assertIn("glaux", block_ids)
         self.assertEqual(616, len(self.urn_ids))
         self.assertEqual(280, len(self.plinth_ids))
         self.assertIn("aganite_amphora_urn", block_ids)
@@ -54,7 +55,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
 
         expected_files = {f"{block_id}.json" for block_id in block_ids}
         self.assertEqual(
-            expected_files | {"capital_part.json", "fountain_basin_part.json", "monopteros_part.json", "obeliskos_part.json"},
+            expected_files | {"capital_part.json", "fountain_basin_part.json", "monopteros_part.json", "obeliskos_part.json", "lantern_part.json", "lantern_chain.json"},
             {
                 path.name
                 for path in (DAEDALON_ASSETS / "blockstates").glob("*.json")
@@ -93,7 +94,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         )
 
     def test_exact_world_and_item_mesh_manifests_and_hashes(self) -> None:
-        self.assertEqual(99, len(MESH_EXPECTATIONS))
+        self.assertEqual(113, len(MESH_EXPECTATIONS))
         self.assertEqual(
             {expectation["obj"] for expectation in MESH_EXPECTATIONS.values()} | {"olympian_god_medallion.obj"},
             {path.name for path in MESH_ROOT.glob("*.obj")},
@@ -297,9 +298,13 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             "urn_diota_bronze_handles.png",
             "urn_diota_bronze_handles_s.png",
         }
-        finish_names = {"bronze.png", "bronze_s.png", "silver.png", "silver_s.png", "white.png"}
+        finish_names = {"bronze.png", "bronze_s.png", "silver.png", "silver_s.png", "white.png", "black.png"}
+        lantern_names = {"lantern_lead.png", "lantern_glazing.png", "lantern_glazing_s.png",
+                         "lantern_flame.png", "lantern_flame_s.png"}
+        planter_names = {f"anthophoros_earth_{width}m{suffix}.png"
+                         for width in (2, 3, 4) for suffix in ("", "_n", "_s")}
         self.assertEqual(
-            root_material_names | statue_names | handle_names | finish_names,
+            root_material_names | statue_names | handle_names | finish_names | lantern_names | planter_names,
             {path.name for path in texture_root.glob("*.png")},
         )
         urn_surface_root = texture_root / "urn_surface"
@@ -325,7 +330,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             GENERATOR.bronze_block_id(family)
             for family in GENERATOR.BRONZE_FAMILIES
         }
-        self.assertEqual(70, len(bronze_ids))
+        self.assertEqual(77, len(bronze_ids))
         self.assertTrue(bronze_ids <= set(all_block_ids()))
         self.assertFalse(any("aged" in block_id for block_id in bronze_ids))
         self.assertEqual(
@@ -363,6 +368,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         for kind in ("blocks", "items"):
             tag_root = DAEDALON_DATA / f"tags/{kind}"
             bronze_refs = {f"daedalon:{block_id}" for block_id in bronze_ids}
+            bronze_refs.add("daedalon:glaux")
             if kind == "items":
                 bronze_refs.add("daedalon:bronze_olympian_god_statue")
             self.assertEqual(
@@ -391,7 +397,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
     def test_diota_bronze_handles_remain_isolated_and_yellow_specular(self) -> None:
         actual = parse_obj(MESH_ROOT / "urn_diota.obj")
         self.assertEqual(
-            Counter({"none": 1671, "bronze_handles": 320}),
+            Counter({"none": 5276, "bronze_handles": 672}),
             actual["material_faces"],
         )
         mtl = (MESH_ROOT / "urn_diota.mtl").read_text(encoding="utf-8")
@@ -401,11 +407,11 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         )
         texture_root = DAEDALON_ASSETS / "textures/block"
         self.assertEqual(
-            "4914ed6e10797a09b4504400bc90832d51e9ec5caa6eb99ec1d17c866b8ec1e0",
+            "f14d81775c96c0b117d5e1676d96bb68cf3832e914046935e5243d867d3191dd",
             sha256(texture_root / "urn_diota_bronze_handles.png"),
         )
         self.assertEqual(
-            "097f017c6ebe2dfc2ec986b6fd9d3ed0731390f1e0f1ea1a0fd7183832ffe86f",
+            "f5c522383041ec835a7d5b053bfa2650681365db04d81def6c4eeea01c57020c",
             sha256(texture_root / "urn_diota_bronze_handles_s.png"),
         )
 
@@ -483,11 +489,11 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertEqual(5, plinth_block.count('"plinth_'))
         self.assertNotIn("GeorgianPlinth", registrations)
         self.assertIn("EXPECTED_BLOCK_COUNT", registrations)
-        self.assertIn("exactly 4678 decor blocks and items", registrations)
 
     def test_urn_source_and_decimation_evidence_is_locked(self) -> None:
         evidence = load_json(REPO_ROOT / "docs/evidence/urn-batch-source.json")
-        self.assertEqual(["diota"], evidence["retained_existing_models"])
+        self.assertEqual([], evidence["retained_existing_models"])
+        self.assertEqual(["diota"], evidence["independently_authored_models"])
         preparation = evidence["preparation"]
         self.assertEqual("tools/prepare_urn_mesh.py", preparation["tool"])
         self.assertEqual("5.2.0 LTS", preparation["blender_version"])
@@ -504,7 +510,7 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             self.assertEqual(expected["obj_sha256"], model["runtime_obj_sha256"])
             self.assertEqual(3200, expected["faces"])
 
-    def test_plinth_source_identification_and_decimation_evidence_is_locked(self) -> None:
+    def test_plinth_source_identification_and_current_rebuild_evidence_is_locked(self) -> None:
         evidence = load_json(REPO_ROOT / "docs/evidence/plinth-batch-source.json")
         self.assertEqual(5, evidence["source_file_count"])
         self.assertFalse(evidence["source_files_modified"])
@@ -513,6 +519,10 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertFalse(evidence["preparation"]["authored_uv_search"])
         self.assertFalse(evidence["retired_unpublished_family"]["aliases_required"])
         models = {model["style"]: model for model in evidence["models"]}
+        rebuilt = load_json(REPO_ROOT / "docs/evidence/plinth-rebuild-source.json")
+        current_models = {model["style"]: model for model in rebuilt["models"]}
+        self.assertFalse(rebuilt["source_files_modified"])
+        self.assertEqual(set(models), set(current_models))
         self.assertEqual(
             {family.removesuffix("_plinth") for family in self.plinth_families},
             set(models),
@@ -521,12 +531,16 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
             style = family.removesuffix("_plinth")
             stem = GENERATOR.PLINTH_FAMILIES[family][0]
             expected = MESH_EXPECTATIONS[stem]
-            model = models[style]
+            original = models[style]
+            model = current_models[style]
+            self.assertEqual(original["source_uuid"], model["source_uuid"])
+            self.assertEqual(original["source_sha256"], model["source_sha256"])
+            self.assertEqual(original["runtime_obj_sha256"], model["prior_runtime_obj_sha256"])
             self.assertEqual(expected["vertices"], model["runtime_vertices"])
             self.assertEqual(expected["faces"], model["runtime_faces"])
             self.assertEqual(expected["obj_sha256"], model["runtime_obj_sha256"])
 
-    def test_restricted_license_and_model_attribution_are_packaged(self) -> None:
+    def test_project_license_and_original_diota_provenance(self) -> None:
         fabric_mod = load_json(RESOURCES / "fabric.mod.json")
         self.assertEqual("LicenseRef-Oliver-Restricted-1.0", fabric_mod["license"])
         license_text = (REPO_ROOT / "LICENSE").read_text(encoding="utf-8")
@@ -535,15 +549,11 @@ class ClassicalDecorSafetyTests(unittest.TestCase):
         self.assertIn("modify, adapt, translate", license_text)
         self.assertIn("<Product name> by Oliver", license_text)
 
-        notices = (
-            RESOURCES / "META-INF/THIRD_PARTY_NOTICES.md"
-        ).read_text(encoding="utf-8")
-        self.assertIn('"Neoclassical Urn on Pedestal | Lowpoly Asset"', notices)
-        self.assertIn("tina.hill", notices)
-        self.assertIn("https://skfb.ly/pGAGK", notices)
-        self.assertIn(
-            "https://creativecommons.org/licenses/by/4.0/", notices
-        )
+        self.assertFalse((RESOURCES / "META-INF/THIRD_PARTY_NOTICES.md").exists())
+        evidence = load_json(REPO_ROOT / "docs/evidence/original-vessels.json")
+        self.assertEqual(["diota"], evidence["scope"])
+        self.assertFalse(evidence["models"][0]["source_geometry_loaded"])
+
 
 
 if __name__ == "__main__":

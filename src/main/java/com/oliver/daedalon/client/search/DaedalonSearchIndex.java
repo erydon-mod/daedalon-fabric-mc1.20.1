@@ -46,6 +46,11 @@ public final class DaedalonSearchIndex {
         keys.addAll(materials.get(material));
         keys.add(family);
         keys.addAll(families.get(family));
+        // REI filters items before collapsing them. The labels must match the
+        // individual items, including deliberate overlaps like statue and bust.
+        for (String form : DaedalonCatalogue.FORMS) {
+            if (keys.contains(DaedalonCatalogue.formNoun(form))) keys.add(form);
+        }
         // Preserve searches for the same stone after its configured finish changes.
         if (isStandardStone(entry)) {
             keys.add("honed");
@@ -64,6 +69,9 @@ public final class DaedalonSearchIndex {
     /** The same exact family lookup drives aliases and browser grouping. */
     public Entry entry(String path) {
         if (path == null) return null;
+        // Glaux is a single bronze ornament, rather than a material/size family.
+        if (path.equals("glaux")) return families.containsKey("glaux") && materials.containsKey("bronze")
+                ? new Entry("bronze", "glaux", false) : null;
         // Published stone statues retain their original form-first IDs.
         String statuePrefix = "statue_spartan_promachos_";
         if (path.startsWith(statuePrefix)) {
@@ -82,6 +90,7 @@ public final class DaedalonSearchIndex {
         String family = path.substring(separator + 1);
         boolean aged = family.startsWith("aged_");
         if (aged) family = family.substring("aged_".length());
+        if (family.equals("glaux")) return null;
         List<String> familyKeys = families.get(family);
         if (familyKeys == null) return null;
         return new Entry(material, family, aged);
@@ -97,7 +106,7 @@ public final class DaedalonSearchIndex {
     }
 
     private boolean isStandardStone(Entry entry) {
-        return !entry.aged() && !"white".equals(entry.material())
+        return !entry.aged() && !"white".equals(entry.material()) && !"black".equals(entry.material())
                 && materials.get(entry.material()).contains("stone");
     }
 

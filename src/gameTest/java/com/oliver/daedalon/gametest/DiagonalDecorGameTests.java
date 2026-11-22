@@ -127,7 +127,8 @@ public final class DiagonalDecorGameTests {
                     checkDiagonalBounds(context, straight, turned);
                     context.assertTrue(shape(context, diagonal) == turned, "Diagonal shapes must be cached");
                     var offset = shape(context, diagonal.with(StatueBlock.OFFSET, true)).getBoundingBox();
-                    var centre = turned.getBoundingBox();
+                    var centre = (block instanceof SpartanStatueBlock
+                            ? quarterTurn(turned) : turned).getBoundingBox();
                     double d = Math.sqrt(.5) * DecorShapeTransforms.OFFSET_DISTANCE;
                     double x = d * (facing.getOffsetX() - facing.getOffsetZ());
                     double z = d * (facing.getOffsetX() + facing.getOffsetZ());
@@ -160,11 +161,18 @@ public final class DiagonalDecorGameTests {
             case WEST -> Math.PI * 1.5;
             default -> throw new AssertionError("Statue facing must be horizontal");
         } + halfStep * Math.PI / 4;
-        // Published Spartans keep their existing 90-degree physical-front
-        // offset from the saved facing; no world rotation is migrated here.
-        if (state.getBlock() instanceof SpartanStatueBlock) angle += Math.PI / 2;
-        near(context, Math.sin(angle), front.x, "Rendered front X must match the selected pose: " + state);
-        near(context, -Math.cos(angle), front.z, "Rendered front Z must match the selected pose: " + state);
+        // Centred published Spartans retain their old frame. Every offset
+        // sculpture must look back towards the cell that owns its state.
+        boolean offset = state.get(StatueBlock.OFFSET);
+        angle += state.getBlock() instanceof SpartanStatueBlock && !offset ? Math.PI / 2 : Math.PI;
+        near(context, Math.sin(angle), front.x, "Rendered front X must point into the owner: " + state);
+        near(context, -Math.cos(angle), front.z, "Rendered front Z must point into the owner: " + state);
+        if (offset) {
+            float offsetX = DecorOrientation.rotateX(facing.getOffsetX(), facing.getOffsetZ(), halfStep);
+            float offsetZ = DecorOrientation.rotateZ(facing.getOffsetX(), facing.getOffsetZ(), halfStep);
+            near(context, -1, front.x * offsetX + front.z * offsetZ,
+                    "Offset statue front must point towards its owner, never away or sideways: " + state);
+        }
     }
 
     private static Vec3d renderedFront(BlockState state) {
@@ -174,7 +182,8 @@ public final class DiagonalDecorGameTests {
         float sourceFrontZ = northSource ? -1.0F : 1.0F;
         Direction facing = state.get(StatueBlock.FACING);
         int halfStep = state.get(StatueBlock.ORIENTATION).ordinal();
-        int renderedTurns = ((StatueBlock) state.getBlock()).rotationStepsFromSource(facing) * 2 + halfStep;
+        int renderedTurns = ((StatueBlock) state.getBlock())
+                .rotationStepsForPose(facing, state.get(StatueBlock.OFFSET)) * 2 + halfStep;
         float frontX = DecorOrientation.rotateX(0, sourceFrontZ, renderedTurns);
         float frontZ = DecorOrientation.rotateZ(0, sourceFrontZ, renderedTurns);
         return new Vec3d(frontX, 0, frontZ);
@@ -202,7 +211,7 @@ public final class DiagonalDecorGameTests {
                         new BlockHitResult(Vec3d.of(anchor.down()).add(.5, 1, .5), Direction.UP, anchor.down(), false));
                 context.assertTrue(stack.useOnBlock(usage).isAccepted(), "Actual sculpture item placement must succeed: " + block);
                 BlockState placed = world.getBlockState(anchor);
-                Direction expectedFacing = block instanceof SpartanStatueBlock ? look : look.getOpposite();
+                Direction expectedFacing = look;
                 context.assertTrue(placed == block.getDefaultState().with(StatueBlock.FACING, expectedFacing),
                         "Placement must retain default size/offset/orientation and the intended facing: " + block);
                 assertRenderedFront(context, placed);
@@ -224,7 +233,7 @@ public final class DiagonalDecorGameTests {
     }
 
     @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
-    public void publishedSpartanRetainsEveryLegacyPoseCollisionAndRenderFrame(TestContext context) throws Exception {
+    public void publishedSpartanRetainsCentredLegacyPosesAndCorrectsOnlyOffsetFronts(TestContext context) throws Exception {
         // Frozen pre-correction collision fixture. The production Spartan
         // profile and public helper deliberately retain their published EAST
         // convention, although the inspected OBJ body front points south.
@@ -246,6 +255,11 @@ public final class DiagonalDecorGameTests {
                 float.class, float.class, float.class, VoxelShape.class);
         constructor.setAccessible(true);
         var legacy = constructor.newInstance(Direction.EAST, .41134763F, .0625F, -.14984404F, source);
+        // The same frozen source boxes in their reviewed physical SOUTH frame.
+        // Correct the cardinal source frame before its diagonal approximation:
+        // rotating an already simplified diagonal AABB union can repartition
+        // its conservative boxes and is not an equivalent shape construction.
+        var inward = constructor.newInstance(Direction.SOUTH, .41134763F, .0625F, -.14984404F, source);
         var collision = StatueBlock.Profile.class.getDeclaredMethod("collisionShapeFor",
                 StatueBlock.StatueSize.class, boolean.class, Direction.class, DecorOrientation.class);
         collision.setAccessible(true);
@@ -264,10 +278,11 @@ public final class DiagonalDecorGameTests {
                 context.assertTrue(statue.rotationStepsFromSource(facing) == legacyQuarterTurns[index]
                                 && SpartanStatueBlock.rotationStepsFromEast(facing) == legacyQuarterTurns[index],
                         "Published Spartan renderer and public helper must retain their legacy turns");
-                VoxelShape expected = (VoxelShape) collision.invoke(legacy, state.get(StatueBlock.SIZE),
-                        state.get(StatueBlock.OFFSET), facing, state.get(StatueBlock.ORIENTATION));
+                boolean offset = state.get(StatueBlock.OFFSET);
+                VoxelShape expected = (VoxelShape) collision.invoke(offset ? inward : legacy,
+                        state.get(StatueBlock.SIZE), offset, facing, state.get(StatueBlock.ORIENTATION));
                 context.assertTrue(!VoxelShapes.matchesAnywhere(shape(context, state), expected, BooleanBiFunction.NOT_SAME),
-                        "Published Spartan collision boxes must remain equivalent in every legacy pose: " + state);
+                        "Spartan collision must retain centred poses and follow its corrected offset front: " + state);
                 assertRenderedFront(context, state);
                 poses++;
             }
@@ -299,6 +314,13 @@ public final class DiagonalDecorGameTests {
 
     private static VoxelShape shape(TestContext context, BlockState state) {
         return state.getCollisionShape(context.getWorld(), BlockPos.ORIGIN, ShapeContext.absent());
+    }
+
+    private static VoxelShape quarterTurn(VoxelShape shape) {
+        VoxelShape[] result = {VoxelShapes.empty()};
+        shape.forEachBox((x0, y0, z0, x1, y1, z1) -> result[0] = VoxelShapes.union(result[0],
+                VoxelShapes.cuboid(1 - z1, y0, x0, 1 - z0, y1, x1)));
+        return result[0];
     }
 
     private static void checkDiagonalBounds(TestContext context, VoxelShape straight, VoxelShape diagonal) {

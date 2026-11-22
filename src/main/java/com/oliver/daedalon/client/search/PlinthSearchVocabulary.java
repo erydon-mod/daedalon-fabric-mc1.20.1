@@ -18,7 +18,8 @@ public final class PlinthSearchVocabulary {
             return List.of();
         }
         return List.of("fountain", "fountains", "fountain plinth", "tiered fountain", "water feature",
-                Text.translatable("search.daedalon.plinth.fountain").getString());
+                Text.translatable("search.daedalon.plinth.fountain").getString(),
+                DaedalonCatalogue.formName("fountains").getString());
     }
 
     public static String appendTerms(String existing, ItemStack stack) {

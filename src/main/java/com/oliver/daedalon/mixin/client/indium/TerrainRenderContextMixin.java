@@ -55,6 +55,22 @@ abstract class TerrainRenderContextMixin {
         int i3 = orientation.getVertexIndex(3);
         if (containedWater) {
             ShaderTerrainNormalBridge.publishContainedWater(
+                    quad.tag(), vertices,
+                    quad.normalX(i0), quad.normalY(i0), quad.normalZ(i0),
+                    quad.normalX(i1), quad.normalY(i1), quad.normalZ(i1),
+                    quad.normalX(i2), quad.normalY(i2), quad.normalZ(i2),
+                    quad.normalX(i3), quad.normalY(i3), quad.normalZ(i3)
+            );
+        } else if (ShaderTerrainNormalBridge.isGlazingObjQuad(quad.tag())) {
+            ShaderTerrainNormalBridge.publishGlazing(
+                    vertices,
+                    quad.normalX(i0), quad.normalY(i0), quad.normalZ(i0),
+                    quad.normalX(i1), quad.normalY(i1), quad.normalZ(i1),
+                    quad.normalX(i2), quad.normalY(i2), quad.normalZ(i2),
+                    quad.normalX(i3), quad.normalY(i3), quad.normalZ(i3)
+            );
+        } else if (ShaderTerrainNormalBridge.isFlameObjQuad(quad.tag())) {
+            ShaderTerrainNormalBridge.publishFlame(
                     vertices,
                     quad.normalX(i0), quad.normalY(i0), quad.normalZ(i0),
                     quad.normalX(i1), quad.normalY(i1), quad.normalZ(i1),

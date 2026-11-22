@@ -11,11 +11,16 @@
   "environment": "*",
   "icon": "assets/daedalon/icon.png",
   "entrypoints": {
+    "modmenu": [
+      "com.oliver.daedalon.client.config.DaedalonModMenuIntegration"
+    ],
     "main": [
-      "com.oliver.daedalon.Daedalon"
+      "com.oliver.daedalon.Daedalon",
+      "com.oliver.daedalon.glaux.GlauxMod"
     ],
     "client": [
-      "com.oliver.daedalon.DaedalonClient"
+      "com.oliver.daedalon.DaedalonClient",
+      "com.oliver.daedalon.client.glaux.GlauxClient"
     ],
     "emi": [
       "com.oliver.daedalon.compat.emi.DaedalonEmiPlugin"
@@ -28,6 +33,10 @@
     "daedalon.mixins.json",
     {
       "config": "daedalon-texture-alias.mixins.json",
+      "environment": "client"
+    },
+    {
+      "config": "daedalon-glaux.mixins.json",
       "environment": "client"
     }
   ],
@@ -50,7 +59,7 @@
     "erydon:family_compatibility_generation": 2,
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/qgrK3AGA8T"
+        "modmenu.discord": "https://discord.gg/MaqUvVgTFm"
       }
     }
   }

@@ -16,19 +16,33 @@ creative tab; see [BRANDING.md](../BRANDING.md) for the current rules.
 
 ### 12 August 2026 development update
 
-The urn catalogue now contains Amphora, Konche, Diota, Kylix, Kalyx,
-Lekythos, Pelike, Pithos, Rhabdos, Salpinx, and Stamnos. The ten Meshy-supplied
-models were prepared locally with Blender 5.2 to exactly 3,200 triangles each;
-Diota's existing geometry, materials, bronze handles, and appearance were left
-unchanged. All urns retain four facings, three sizes, centred/offset placement,
-shared material textures, and the established cylindrical runtime projection.
+The urn catalogue expanded to Amphora, Konche, Diota, Kylix, Kalyx,
+Lekythos, Pelike, Pithos, Rhabdos, Salpinx, and Stamnos. Ten Oliver-supplied
+Meshy models, including Kylix and Kalyx, were prepared locally with Blender 5.2
+to exactly 3,200 triangles each. All urns retain four facings, three sizes,
+centred/offset placement, shared material textures, and the established
+cylindrical runtime projection.
 
 Because these registry IDs remain unpublished development content, the urn IDs
 were corrected directly to the programme grammar: `<material>_<shape>_urn` and
 `<material>_aged_<shape>_urn`. The complete development catalogue is now 32
 mesh families and 1,728 block/item IDs. Exact source-folder mappings, hashes,
 counts, Blender build, and output evidence are recorded in
-`docs/evidence/urn-batch-source.json`.
+`docs/evidence/urn-batch-source.json` for the Meshy batch models.
+
+### 15 November 2026 vessel authoring update
+
+Diota now uses independently authored procedural geometry from
+`tools/author_classical_vessels.py`. Its proportions and details were designed
+from scratch for Daedalon, using the general classical two-handled vessel form
+as inspiration. The carved design has deep fluting, paired palmette reliefs,
+crisp neck and rim mouldings, and a stepped square plinth. Little bronze rings
+hang through pierced stone lugs; one shared mesh supplies every finish. Current
+creation provenance, hashes and measured geometry are recorded in
+`docs/evidence/original-vessels.json`. This is a procedural asset authored with
+Codex assistance, not a Meshy export. Existing registry IDs and placed-state
+controls remain in use. Kylix and Kalyx retain their Oliver-supplied Meshy
+geometry and batch provenance.
 
 ## Repository lineage
 
@@ -46,9 +60,9 @@ All 27 standard stone finishes and their aged variants are included.
 | --- | --- | --- | --- | ---: | --- |
 | Spartan Promachos | `spartan_siplified.obj` | `spartan_siplified.mtl` | `statue_spartan_promachos.json` | 54 | Four facings; 1, 2, or 3 blocks high; 2 high by default |
 | Konche | `urn_konche.obj` | `urn_konche.mtl` | `urn_konche.json` | 54 | Four facings; small, medium, or large; centred and alcove offsets |
-| Diota | `urn_diota.obj` | `urn_diota.mtl` | `urn_diota.json` | 54 | Urn controls plus isolated bronze handles and yellow specular |
+| Diota | `urn_diota.obj` | `urn_diota.mtl` | `urn_diota.json` | 54 | Urn controls plus separate bronze handles |
 | Kylix | `urn_kylix.obj` | `urn_kylix.mtl` | `urn_kylix.json` | 54 | Urn controls |
-| Kalyx | `urn_kalyx.obj` | `urn_kalyx.mtl` | `urn_kalyx.json` | 54 | Urn controls plus required double-sided faces |
+| Kalyx | `urn_kalyx.obj` | `urn_kalyx.mtl` | `urn_kalyx.json` | 54 | Urn controls |
 
 The catalogue contains 324 block IDs, 324 blockstates, 324 item models, and
 six display models. Urn collision and outline geometry follows facing, size,
@@ -66,13 +80,13 @@ evidence is locked in `docs/evidence/plinth-batch-source.json`.
 | --- | ---: | ---: | ---: | ---: | --- |
 | Spartan Promachos | 5,173 | 40,815 | 13,605 | 13,605 | `E2F4A7486A8A9F438CD3607B172ED27AFD7BF1C54C50EFD054F4AE935CD189D9` |
 | Konche | 1,226 | 7,344 | 2,448 | 2,448 | `DC9B577A5324B84844CC011D5B783DE4BA360664107C323795BEF2E65524F439` |
-| Diota | 1,983 | 7,912 | 1,991 | 1,991 | `056F640C64745F69AB144C77CF196234016DF40BDE1C44E0AFB311B48EB45C01` |
-| Kylix | 799 | 3,199 | 805 | 805 | `FB030D10B251B9B2C48DD22B2F3FBC1C157B131F0D7B45CC8E723A610BA080C9` |
-| Kalyx | 1,279 | 6,356 | 1,928 | 1,928 | `02F267E0C3ED27EBA0D84F406121ED44E8206D913BD40DD00CA35A2E788964E9` |
 
-The exact source meshes, UV handling, render caching, shader-normal bridge,
-and existing transforms were preserved. Smooth normals use an 80-degree
-threshold as the current automatic hard-edge treatment.
+These measurements describe the original migration checkpoint. Current Diota
+measurements belong to `docs/evidence/original-vessels.json`. Current Kylix and
+Kalyx measurements remain in `docs/evidence/urn-batch-source.json`.
+The shared UV handling, render caching, shader-normal bridge and placed-state
+transforms remain in use. Smooth normals use an 80-degree threshold as the
+automatic hard-edge treatment.
 
 ## Independence and registry safety
 
@@ -150,12 +164,11 @@ prohibits sale, paid access, modification, derivative works, and other
 redistribution without written permission. Third-party components remain
 under their own licences.
 
-Daedalon packages this required notice:
-
-> "Neoclassical Urn on Pedestal | Lowpoly Asset" by tina.hill,
-> <https://skfb.ly/pGAGK>, licensed under CC BY 4.0.
-
-That credited source is used for Diota, Kylix, and Kalyx.
+The independently authored Diota model is covered by the project licence. Its
+creation record is `docs/evidence/original-vessels.json`. Kylix and Kalyx retain
+their Oliver-supplied Meshy provenance in `docs/evidence/urn-batch-source.json`.
+Source build-tool and branding notices remain in `THIRD_PARTY_NOTICES.md` and
+`BRANDING.md`.
 
 Themelios received no functional code, content, registry, or resource change
 during this migration. Its only requested change was the shared licence in
@@ -304,7 +317,7 @@ Recommended test:
    models.
 5. Enable the shared 16x Lite pack with all three mods and inspect every family.
 6. Enable the 64x PBR pack and shaders; inspect all stone materials, Diota
-   bronze/yellow specular, Kalyx faces, UV seams, and triangle reflections.
+   bronze handles, vessel interiors, UV seams, and triangle reflections.
 7. Reload resources and check the log for model, texture, MTL, shader, or
    resource-pack errors.
 8. Confirm ERYDON Oil Burners, architectural plinths, slopes, and POM corners

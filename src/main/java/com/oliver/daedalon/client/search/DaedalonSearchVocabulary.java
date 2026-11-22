@@ -37,6 +37,10 @@ public final class DaedalonSearchVocabulary {
                 if (cache.language.hasTranslation(translationKey)) {
                     result.add(cache.language.get(translationKey));
                 }
+                if (DaedalonCatalogue.FORMS.contains(key)) {
+                    String formLabel = "catalogue.daedalon.form." + key;
+                    if (cache.language.hasTranslation(formLabel)) result.add(cache.language.get(formLabel));
+                }
             }
             // Metal plinths deliberately do not support fountain attachments.
             result.addAll(PlinthSearchVocabulary.terms(stack));

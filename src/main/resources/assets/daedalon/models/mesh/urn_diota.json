@@ -11,7 +11,7 @@
     "bronze_handles": "axis_stabilized_box"
   },
   "face_oriented_uvs": true,
-  "smooth_normals": true,
+  "smooth_normals": false,
   "smooth_angle_degrees": 80.0,
   "fit_to_block": true,
   "scale": [1.0, 1.0, 1.0],

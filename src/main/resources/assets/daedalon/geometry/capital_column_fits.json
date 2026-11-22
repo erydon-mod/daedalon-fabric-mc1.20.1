@@ -1,0 +1,112 @@
+{
+  "styles": {
+    "byzantine": {
+      "square": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "gothic": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "square_shaft": {
+        "standard": 1.565,
+        "double": 1.758
+      },
+      "gothic_shaft": {
+        "standard": 1.555,
+        "double": 1.754
+      }
+    },
+    "corinthian": {
+      "square": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "gothic": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "square_shaft": {
+        "standard": 1.288,
+        "double": 1.731
+      },
+      "gothic_shaft": {
+        "standard": 1.342,
+        "double": 1.729
+      }
+    },
+    "gothic": {
+      "square": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "gothic": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "square_shaft": {
+        "standard": 1.589,
+        "double": 1.844
+      },
+      "gothic_shaft": {
+        "standard": 1.57,
+        "double": 1.829
+      }
+    },
+    "greek_ionic": {
+      "square": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "gothic": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "square_shaft": {
+        "standard": 1.484,
+        "double": 1.683
+      },
+      "gothic_shaft": {
+        "standard": 1.449,
+        "double": 1.681
+      }
+    },
+    "roman_composite": {
+      "square": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "gothic": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "square_shaft": {
+        "standard": 1.468,
+        "double": 1.717
+      },
+      "gothic_shaft": {
+        "standard": 1.435,
+        "double": 1.713
+      }
+    },
+    "tuscan": {
+      "square": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "gothic": {
+        "standard": 1.0,
+        "double": 1.0
+      },
+      "square_shaft": {
+        "standard": 1.457,
+        "double": 1.59
+      },
+      "gothic_shaft": {
+        "standard": 1.455,
+        "double": 1.58
+      }
+    }
+  }
+}

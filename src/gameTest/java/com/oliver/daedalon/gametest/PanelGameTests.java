@@ -17,21 +17,37 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.EnumMap;
+
 public final class PanelGameTests {
     @GameTest(templateName=FabricGameTest.EMPTY_STRUCTURE)
     public void everyFinishHasThreeSquareSizesAndFlushBacking(TestContext context) {
         var panels=ModBlocks.blocks().stream().filter(b->b instanceof PanelBlock).toList();
-        context.assertTrue(panels.size()==57,"Expected one dual-purpose panel per finish");
+        context.assertTrue(panels.size()==PanelBlock.Style.values().length*58,"Expected one dual-purpose panel per style and finish");
+        for (var style:PanelBlock.Style.values()) {
+            context.assertTrue(panels.stream().filter(block->((PanelBlock)block).style()==style).count()==58,
+                    "Missing finishes for panel style "+style);
+        }
+        var representatives=new EnumMap<PanelBlock.Style,PanelBlock>(PanelBlock.Style.class);
+        for (var block:panels) {
+            var panel=(PanelBlock)block;
+            representatives.putIfAbsent(panel.style(),panel);
+        }
         var pos=context.getAbsolutePos(new BlockPos(2,3,2));
         for (Block block:panels) for (var state:block.getStateManager().getStates()) {
             var panel=(PanelBlock)block;
             var shape=state.getOutlineShape(context.getWorld(),pos);
+            var representative=representatives.get(panel.style()).getDefaultState()
+                    .with(PanelBlock.SIZE,state.get(PanelBlock.SIZE)).with(PanelBlock.CEILING,state.get(PanelBlock.CEILING))
+                    .with(PanelBlock.FACING,state.get(PanelBlock.FACING));
+            context.assertTrue(shape==representative.getOutlineShape(context.getWorld(),pos),
+                    "Panel collision profile was allocated per material instead of per style");
             var bounds=shape.getBoundingBox();
             double size=state.get(PanelBlock.SIZE).metres;
             var normal=state.get(PanelBlock.CEILING)?Direction.DOWN:state.get(PanelBlock.FACING);
             context.assertTrue(panel.transform(state).direction(Direction.SOUTH)==normal,"Carving faces into its support");
             for (var axis:Direction.Axis.values()) {
-                double expected=axis==normal.getAxis()?PanelBlock.DEPTH*size:size;
+                double expected=axis==normal.getAxis()?panel.style().depth()*size:size;
                 context.assertTrue(Math.abs((bounds.getMax(axis)-bounds.getMin(axis))-expected)<1e-6,"Wrong panel dimensions");
                 if (axis!=normal.getAxis())
                     context.assertTrue(Math.abs((bounds.getMin(axis)+bounds.getMax(axis))/2-.5)<1e-6,"Resizing moved the panel centre");
@@ -48,7 +64,8 @@ public final class PanelGameTests {
         var world=context.getWorld();var player=context.createMockCreativeServerPlayerInWorld();
         var support=context.getAbsolutePos(new BlockPos(4,4,4));
         world.setBlockState(support,Blocks.STONE.getDefaultState(),Block.NOTIFY_ALL);
-        for (Block block:ModBlocks.blocks().stream().filter(b->b instanceof PanelBlock).limit(2).toList()) {
+        for (var style:PanelBlock.Style.values())
+            for (Block block:ModBlocks.blocks().stream().filter(b->b instanceof PanelBlock panel && panel.style()==style).limit(2).toList()) {
             var panel=(PanelBlock)block;
             for (Direction side:Direction.values()) {
                 if (side==Direction.UP)continue;
@@ -67,7 +84,7 @@ public final class PanelGameTests {
                         context.assertTrue(stored.get(PanelBlock.CEILING),"Underside placement lost ceiling mount");
                         var bounds=stored.getOutlineShape(world,target).getBoundingBox();
                         context.assertTrue(Math.abs(bounds.maxY-1)<1e-6,"Ceiling back must meet its support");
-                        context.assertTrue(Math.abs(bounds.minY-(1-PanelBlock.DEPTH*size.metres))<1e-6,"Ceiling carving must project down");
+                        context.assertTrue(Math.abs(bounds.minY-(1-panel.style().depth()*size.metres))<1e-6,"Ceiling carving must project down");
                     }
                 }
             }

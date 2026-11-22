@@ -36,7 +36,8 @@ public final class DaedalonMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.endsWith(".client.indium.TerrainRenderContextMixin")) {
             return loader.isModLoaded("indium") && loader.isModLoaded("sodium");
         }
-        if (mixinClassName.endsWith(".client.iris.WorldRenderingSettingsMixin")) {
+        if (mixinClassName.endsWith(".client.iris.WorldRenderingSettingsMixin")
+                || mixinClassName.endsWith(".client.iris.ComplementaryWaterProgramMixin")) {
             return loader.isModLoaded("iris");
         }
         if (mixinClassName.endsWith(".client.iris.XHFPTerrainVertexMixin")) {

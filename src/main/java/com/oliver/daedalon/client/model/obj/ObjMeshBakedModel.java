@@ -4,15 +4,22 @@ import com.oliver.daedalon.block.DecorShapeTransforms;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.BenchBlock;
+import com.oliver.daedalon.block.AnthophorosBlock;
+import com.oliver.daedalon.block.AnthophorosFillProfile;
+import com.oliver.daedalon.block.HedraBlock;
 import com.oliver.daedalon.block.DecorOrientation;
 import com.oliver.daedalon.block.ExedraBlock;
 import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.PanelBlock;
+import com.oliver.daedalon.block.LanternBlock;
+import com.oliver.daedalon.block.LanternSupport;
+import com.oliver.daedalon.block.LanternChainBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
 import com.oliver.daedalon.block.FountainAssemblyLayout;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.FountainBowlModel;
 import com.oliver.daedalon.block.FountainWaterShape;
+import com.oliver.daedalon.block.LouterionBasinBlock;
 import com.oliver.daedalon.block.PlinthBlock;
 import com.oliver.daedalon.block.SizedDecorBlock;
 import com.oliver.daedalon.block.StatueBlock;
@@ -62,10 +69,13 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     private static final float NORMAL_EPSILON_SQUARED = 1.0E-24F;
     private static final float UV_AREA_EPSILON = 1.0E-12F;
     private static final long ESTIMATED_BYTES_PER_VERTEX = 36L;
+    private static final ObjTerrainFailureReporter TERRAIN_FAILURES = new ObjTerrainFailureReporter();
 
     private final Mesh mesh;
     private final Mesh itemMesh;
+    private final Mesh largeLouterionMesh;
     private final FriezeMeshParts friezeParts;
+    private final LanternMeshParts lanternParts;
     private final CapitalWorldMesh capitalWorldMesh;
     private final TextureTransform capitalTextureTransform;
     private final BakedModel metadataModel;
@@ -77,12 +87,21 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     private final ObjGuiIconTemplate guiIconTemplate;
     private final List<Identifier> materialTextureIds;
     private final Identifier modelId;
+    private final Identifier sourceObjId;
+    private final int bakedDisplayQuads;
     private final Sprite containedWaterSprite;
     private final RenderMaterial containedWaterMaterial;
+    private final PlanterContentsSurface planterSurface;
+    private static final Identifier LANTERN_SUSPENSION_MODEL = new Identifier("daedalon", "mesh/internal/lantern_suspension");
+    private static final net.minecraft.util.math.Box LANTERN_RENDER_BOUNDS = new net.minecraft.util.math.Box(-1,-1,-1,2,1.3,2);
+    private static final net.minecraft.util.math.Box LARGE_LOUTERION_BOUNDS = new net.minecraft.util.math.Box(-0.5, 0, -0.5, 1.5, 2, 1.5);
+    private final LanternSurfaceEmitter lanternSurfaces;
 
     private ObjMeshBakedModel(Mesh mesh,
                               Mesh itemMesh,
+                              Mesh largeLouterionMesh,
                               FriezeMeshParts friezeParts,
+                              LanternMeshParts lanternParts,
                               CapitalWorldMesh capitalWorldMesh,
                               BakedModel metadataModel,
                               Sprite particleSprite,
@@ -92,28 +111,39 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                               ObjGuiIconTemplate guiIconTemplate,
                               List<Identifier> materialTextureIds,
                               Identifier modelId,
-                              Sprite containedWaterSprite) {
+                              Identifier sourceObjId,
+                              int bakedDisplayQuads,
+                              Sprite containedWaterSprite,
+                              PlanterContentsSurface planterSurface) {
         this.mesh = mesh;
         this.itemMesh = itemMesh;
+        this.largeLouterionMesh = largeLouterionMesh;
         this.friezeParts = friezeParts;
+        this.lanternParts = lanternParts;
         this.capitalWorldMesh = capitalWorldMesh;
         this.capitalTextureTransform = capitalWorldMesh == null ? null
-                : new TextureTransform(materialSprites, worldPhaseMaterials, WorldTexturePhase.blockSurface(), 0, false);
+                : new TextureTransform(materialSprites, worldPhaseMaterials, WorldTexturePhase.blockSurface(), 0, false, materialTextureIds);
         this.metadataModel = metadataModel;
         this.particleSprite = particleSprite;
-        this.textureTransform = new TextureTransform(materialSprites, worldPhaseMaterials, worldTexturePhase, 0, false);
+        this.textureTransform = new TextureTransform(materialSprites, worldPhaseMaterials, worldTexturePhase, 0, false, materialTextureIds);
         this.worldTexturePhase = worldTexturePhase;
         this.worldPhaseMaterials = List.copyOf(worldPhaseMaterials);
         this.worldTextureTransforms = createWorldTextureTransforms(
                 materialSprites,
                 worldPhaseMaterials,
                 worldTexturePhase,
-                friezeParts != null
+                friezeParts != null, materialTextureIds
         );
         this.guiIconTemplate = guiIconTemplate;
         this.materialTextureIds = List.copyOf(materialTextureIds);
+        this.lanternSurfaces = lanternParts == null ? null : new LanternSurfaceEmitter(worldPhaseMaterials,
+                materialTextureIds.indexOf(LanternGlazing.TEXTURE), materialTextureIds.indexOf(LanternFlame.TEXTURE),
+                quad -> ((TextureTransform)this.textureTransform).transformMapped(quad));
         this.modelId = modelId;
+        this.sourceObjId = sourceObjId;
+        this.bakedDisplayQuads = bakedDisplayQuads;
         this.containedWaterSprite = containedWaterSprite;
+        this.planterSurface = planterSurface;
         Renderer renderer = RendererAccess.INSTANCE.getRenderer();
         this.containedWaterMaterial = containedWaterSprite == null || renderer == null
                 ? null
@@ -125,6 +155,10 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     }
 
     static GeometryBakeResult bakeGeometry(ObjMeshDefinition definition, ObjMeshData data) {
+        return bakeGeometry(definition, data, false);
+    }
+
+    private static GeometryBakeResult bakeGeometry(ObjMeshDefinition definition, ObjMeshData data, boolean largeLouterion) {
         long started = System.nanoTime();
         Renderer renderer = RendererAccess.INSTANCE.getRenderer();
         if (renderer == null) {
@@ -134,7 +168,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         Transform transform = Transform.create(definition, data.originalBounds());
         List<ObjMeshData.Vec3> transformedPositions = new ArrayList<>(data.positions().size());
         for (ObjMeshData.Vec3 position : data.positions()) {
-            transformedPositions.add(transform.position(position));
+            ObjMeshData.Vec3 fitted = transform.position(position);
+            transformedPositions.add(largeLouterion ? scaleLouterion(fitted) : fitted);
         }
         ObjMeshData.Bounds transformedBounds = ObjMeshData.Bounds.of(transformedPositions);
         UvProjector uvProjector = UvProjector.create(definition, transformedPositions, transformedBounds);
@@ -152,13 +187,16 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         BakeCounters displayCounters = new BakeCounters(materialNames.size());
         FriezeBlock.Style friezeStyle = FriezeBlock.meshStyle(definition.objId().getPath());
         boolean frieze = friezeStyle != null;
+        boolean lantern = LanternMeshParts.isPath(definition.objId().getPath());
+        boolean suspension = definition.objId().getPath().endsWith("/lantern_suspension.obj");
         int displaySection = frieze ? friezeStyle.displaySection() : 0;
         Map<String, MeshBuilder> partBuilders = new LinkedHashMap<>();
         int displayFaces = 0;
 
         for (ObjMeshData.Face face : data.faces()) {
             int materialTag = materialNames.indexOf(face.material());
-            QuadEmitter target = frieze ? partBuilders.computeIfAbsent(face.objectName(),
+            String partKey=lantern?LanternMeshParts.componentKey(face.objectName()):face.objectName();
+            QuadEmitter target = frieze || lantern ? partBuilders.computeIfAbsent(partKey,
                     ignored -> renderer.meshBuilder()).getEmitter() : emitter;
             emitFace(target, definition, data, transformedPositions, uvProjector, smoothNormals,
                     face, materialTag, counters);
@@ -173,12 +211,21 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         Mesh mesh = meshBuilder.build();
         Map<String, Mesh> parts = new LinkedHashMap<>();
         partBuilders.forEach((name, builder) -> parts.put(name, builder.build()));
-        int emittedQuadCount = (frieze ? displayFaces : data.finalQuadCount()) * (definition.doubleSided() ? 2 : 1);
+        LanternMeshParts lanternParts=lantern?new LanternMeshParts(parts,suspension,materialNames.indexOf("glass")):null;
+        if(lanternParts!=null) mesh=lanternParts.displayMesh();
+        int[] displayCount={0};
+        if(lantern) mesh.forEach(q->displayCount[0]++);
+        int emittedQuadCount = lantern?displayCount[0]:(frieze ? displayFaces : data.finalQuadCount()) * (definition.doubleSided() ? 2 : 1);
         long estimatedVertexBytes = (long) (data.finalQuadCount() + (frieze ? displayFaces : 0))
                 * (definition.doubleSided() ? 2 : 1) * 4L * ESTIMATED_BYTES_PER_VERTEX;
+        Mesh largeMesh = !largeLouterion && definition.objId().getPath().equals("models/mesh/basin_louterion.obj")
+                ? bakeGeometry(definition, data, true).mesh() : null;
         return new GeometryBakeResult(
+                data.objId(),
                 mesh,
+                largeMesh,
                 frieze ? new FriezeMeshParts(parts,friezeStyle) : null,
+                lanternParts,
                 definition.objId().getPath().startsWith("models/mesh/capital_") ? new CapitalWorldMesh(mesh) : null,
                 transformedBounds,
                 materialNames,
@@ -190,9 +237,17 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 counters.materialMaximumUs(),
                 definition.textureUTiles(),
                 definition.cylindricalURepeats(),
-                estimatedVertexBytes,
+                largeMesh == null ? estimatedVertexBytes : estimatedVertexBytes * 2,
                 System.nanoTime() - started
         );
+    }
+
+    private static ObjMeshData.Vec3 scaleLouterion(ObjMeshData.Vec3 position) {
+        float scale = LouterionBasinBlock.LARGE_SCALE;
+        return new ObjMeshData.Vec3(
+                0.5F + (position.x() - 0.5F) * scale,
+                position.y() * scale,
+                0.5F + (position.z() - 0.5F) * scale);
     }
 
     static ObjMeshBakedModel materialize(GeometryBakeResult geometry,
@@ -205,7 +260,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                                          ObjGuiIconTemplate guiIconTemplate,
                                          List<Identifier> materialTextureIds,
                                          Identifier modelId,
-                                         Sprite containedWaterSprite) {
+                                         Sprite containedWaterSprite,
+                                         PlanterContentsSurface planterSurface) {
         if (materialSprites.size() != geometry.materialNames().size()) {
             throw new IllegalArgumentException("Material sprite count does not match baked OBJ material tags");
         }
@@ -218,7 +274,9 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         return new ObjMeshBakedModel(
                 geometry.mesh(),
                 itemMesh,
+                geometry.largeLouterionMesh(),
                 geometry.friezeParts(),
+                geometry.lanternParts(),
                 geometry.capitalWorldMesh(),
                 metadataModel,
                 particleSprite,
@@ -228,7 +286,10 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 guiIconTemplate,
                 materialTextureIds,
                 modelId,
-                containedWaterSprite
+                geometry.sourceObjId(),
+                geometry.emittedQuadCount(),
+                containedWaterSprite,
+                planterSurface
         );
     }
 
@@ -508,17 +569,67 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                                BlockPos pos,
                                Supplier<Random> randomSupplier,
                                RenderContext context) {
+        try {
+            emitTerrainQuads(blockView, state, pos, randomSupplier, context);
+        } catch (OutOfMemoryError failure) {
+            try {
+                TERRAIN_FAILURES.report(failure, () -> {
+                    String route = lanternParts != null && state.getBlock() instanceof LanternChainBlock
+                            ? "lantern-chain-components"
+                            : lanternParts != null && state.getBlock() instanceof LanternBlock
+                            ? "lantern-body-components"
+                            : friezeParts != null && state.getBlock() instanceof FriezeBlock
+                            ? "frieze-components" : "shared-obj-mesh";
+                    com.oliver.daedalon.Daedalon.LOGGER.error(
+                            "DAEDALON_OBJ_TERRAIN_OOM source={} model={} block={} state={} pos={} "
+                                    + "bakedDisplayQuads={} route={} materialTextures={}",
+                            sourceObjId, modelId, net.minecraft.registry.Registries.BLOCK.getId(state.getBlock()),
+                            state, pos, bakedDisplayQuads, route, materialTextureIds);
+                });
+            } catch (Throwable ignored) {
+                // Even allocating the best-effort reporter callback can fail.
+            }
+            throw failure;
+        }
+    }
+
+    private void emitTerrainQuads(BlockRenderView blockView,
+                                  BlockState state,
+                                  BlockPos pos,
+                                  Supplier<Random> randomSupplier,
+                                  RenderContext context) {
+        if (lanternParts != null && state.getBlock() instanceof LanternChainBlock) {
+            emitLanternSuspension(state.get(LanternBlock.SIZE),false,state.get(LanternBlock.CANOPY),context,pos,-1);
+            return;
+        }
+        if (lanternParts != null && state.getBlock() instanceof LanternBlock) {
+            MonopterosRenderBounds.mark(pos,LANTERN_RENDER_BOUNDS);
+            lanternParts.emitWorldBody(state,context,pos,LanternSupport.offset(blockView,pos,state),lanternSurfaces);
+            if(state.get(LanternBlock.MOUNT)==LanternBlock.Mount.HANGING) {
+                BakedModel hardware=MinecraftClient.getInstance().getBakedModelManager().getModel(LANTERN_SUSPENSION_MODEL);
+                if(unwrapAttachedModel(hardware) instanceof ObjMeshBakedModel obj)
+                    obj.emitLanternSuspension(state.get(LanternBlock.SIZE),true,state.get(LanternBlock.CANOPY),context,pos,
+                            materialTextureIds.indexOf(LanternGlazing.LEAD_TEXTURE));
+            }
+            return;
+        }
         if (state.getBlock() instanceof com.oliver.daedalon.block.MonopterosBlock) {
             MonopterosRenderBounds.mark(pos);
         }
+        boolean largeLouterion = largeLouterionMesh != null && LouterionBasinBlock.isLarge(state);
+        if (largeLouterion) {
+            MonopterosRenderBounds.mark(pos, LARGE_LOUTERION_BOUNDS);
+        }
         if (capitalWorldMesh != null && state.getBlock() instanceof CapitalBlock capital
                 && state.get(CapitalBlock.SUPPORT) != com.oliver.daedalon.block.CapitalTransition.NONE) {
+            MonopterosRenderBounds.mark(pos, capital.renderedBounds(state));
             // The fitted carving and collar share physical tile coordinates. This cache
             // belongs to the shared source mesh, never to a material or world position.
             context.pushTransform(capitalTextureTransform);
             try {
                 CapitalTransitionMesh.emit(state.get(CapitalBlock.SUPPORT), state.get(CapitalBlock.SIZE), pos, context);
-                capitalWorldMesh.emit(capital.orientation(state), state.get(CapitalBlock.SIZE), pos, context);
+                capitalWorldMesh.emit(capital.orientation(state), state.get(CapitalBlock.SIZE),
+                        state.get(CapitalBlock.SUPPORT), capital.fitScale(state), pos, context);
             } finally {
                 context.popTransform();
             }
@@ -541,8 +652,9 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             positionTransform = FacingDecorTransform.forState(state);
         } else if (state.getBlock() instanceof SizedDecorBlock) {
             if (state.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE) {
-                MonopterosRenderBounds.mark(pos, SizedDecorBlock.fullShape(SizedDecorBlock.Size.LARGE).getBoundingBox());
-            } else positionTransform = SizedDecorTransform.forState(state);
+                MonopterosRenderBounds.mark(pos, SizedDecorBlock.fullShape(state).getBoundingBox());
+            }
+            positionTransform = SizedDecorTransform.forState(state);
         } else if (state.getBlock() instanceof FountainBasinBlock) {
             positionTransform = BasinTransform.forState(state);
         } else if (state.getBlock() instanceof PlinthBlock) {
@@ -577,6 +689,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             if(positionTransform!=null) { context.pushTransform(positionTransform); positionPushed=true; }
             if (state.getBlock() instanceof SizedDecorBlock && state.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE) {
                 ObeliskSizeMesh.forSource(mesh).outputTo(context.getEmitter());
+            } else if (largeLouterion) {
+                largeLouterionMesh.outputTo(context.getEmitter());
             } else if (friezeParts != null && state.getBlock() instanceof FriezeBlock) {
                 friezeParts.emit(blockView, pos, state, context);
             } else {
@@ -588,11 +702,30 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             }
             context.popTransform();
         }
+        // Contents have their own atlas UVs and must bypass the stone world-phase transform.
+        if (planterSurface != null && state.getBlock() instanceof AnthophorosBlock) {
+            if (state.get(AnthophorosBlock.CONTENTS) == AnthophorosBlock.Contents.EARTH) {
+                planterSurface.emitEarth(state.get(BenchBlock.FACING), context);
+            } else if (state.get(AnthophorosBlock.CONTENTS) == AnthophorosBlock.Contents.WATER) {
+                context.pushTransform(GroundScaleTransform.forBenchState(state));
+                try {
+                    emitPlanterWater(blockView, pos, context,
+                            AnthophorosFillProfile.forWidth(state.get(BenchBlock.WIDTH)));
+                } finally {
+                    context.popTransform();
+                }
+            }
+        }
         emitContainedWater(blockView, state, pos, context,
                 state.getBlock() instanceof FountainBasinBlock ? FountainBasinBlock.baseRise(state) : 0.0F, false);
         if (state.getBlock() instanceof FountainBasinBlock) {
             emitBasinComponents(blockView, state, pos, context);
         }
+    }
+
+    private void emitLanternSuspension(LanternBlock.Size size,boolean half,boolean canopy,RenderContext context,BlockPos pos,int leadTag) {
+        if(lanternParts==null) return;
+        lanternParts.emitWorldSuspension(size,half,canopy,context,pos,lanternSurfaces,leadTag);
     }
 
     private void emitContainedWater(BlockRenderView blockView,
@@ -606,6 +739,15 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             return;
         }
 
+        if (state.getBlock() instanceof LouterionBasinBlock) {
+            if (state.get(LouterionBasinBlock.WATERLOGGED)) {
+                FountainWaterShape outline = FountainWaterShape.LOUTERION;
+                float scale = LouterionBasinBlock.isLarge(state) ? LouterionBasinBlock.LARGE_SCALE : 1.0F;
+                emitWaterProfile(blockView, pos, context, outline, scale, outline.surfaceY() * scale,
+                        ShaderTerrainNormalBridge.stationaryWaterTag());
+            }
+            return;
+        }
         if (!(state.getBlock() instanceof FountainBasinBlock basinBlock)
                 || (!forceFilled && !state.get(FountainBasinBlock.WATERLOGGED))) {
             return;
@@ -628,12 +770,36 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         );
     }
 
+    private void emitPlanterWater(BlockRenderView blockView, BlockPos pos, RenderContext context,
+                                  AnthophorosFillProfile profile) {
+        if (containedWaterSprite == null || containedWaterMaterial == null) return;
+        int waterColor = 0xFF000000 | BiomeColors.getWaterColor(blockView, pos);
+        float x0 = .5F - profile.halfWidth(), x1 = .5F + profile.halfWidth();
+        float z0 = .5F - profile.halfDepth(), z1 = .5F + profile.halfDepth();
+        // Use the fountain's exact sprite, material, tint and shader-water identity.
+        // Its isotropic UV projection keeps ripples round in these long rectangles.
+        for (int edge = 0; edge < 4; edge++) {
+            float currentX = edge == 0 || edge == 3 ? x0 : x1;
+            float currentZ = edge < 2 ? z0 : z1;
+            int next = (edge + 1) & 3;
+            float nextX = next == 0 || next == 3 ? x0 : x1;
+            float nextZ = next < 2 ? z0 : z1;
+            emitWaterTriangle(context.getEmitter(), waterColor, .5F, currentX, currentZ,
+                    nextX, nextZ, profile.halfWidth(), profile.surfaceY());
+        }
+    }
+
     private void emitWaterProfile(BlockRenderView blockView,
                                    BlockPos pos,
                                    RenderContext context,
                                    FountainWaterShape outline,
                                    float scale,
                                    float waterSurfaceY) {
+        emitWaterProfile(blockView, pos, context, outline, scale, waterSurfaceY, ShaderTerrainNormalBridge.containedWaterTag());
+    }
+
+    private void emitWaterProfile(BlockRenderView blockView, BlockPos pos, RenderContext context,
+                                  FountainWaterShape outline, float scale, float waterSurfaceY, int waterTag) {
         int waterColor = 0xFF000000 | BiomeColors.getWaterColor(blockView, pos);
         QuadEmitter emitter = context.getEmitter();
         for (int i = 0; i < outline.vertexCount(); i++) {
@@ -641,7 +807,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             emitWaterTriangle(emitter, waterColor, 0.5F,
                     0.5F + outline.x(i) * scale, 0.5F + outline.z(i) * scale,
                     0.5F + outline.x(next) * scale, 0.5F + outline.z(next) * scale,
-                    outline.halfWidth() * scale, waterSurfaceY);
+                    outline.halfWidth() * scale, waterSurfaceY, waterTag);
         }
     }
 
@@ -808,6 +974,13 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                                    float nextZ,
                                    float halfWidth,
                                    float waterSurfaceY) {
+        emitWaterTriangle(emitter, waterColor, center, currentX, currentZ, nextX, nextZ, halfWidth, waterSurfaceY,
+                ShaderTerrainNormalBridge.containedWaterTag());
+    }
+
+    private void emitWaterTriangle(QuadEmitter emitter, int waterColor, float center,
+                                   float currentX, float currentZ, float nextX, float nextZ,
+                                   float halfWidth, float waterSurfaceY, int waterTag) {
         // Reverse the clockwise X/Z outline order so the triangles face upward.
         emitWaterVertex(emitter, 0, center, center, center, halfWidth, waterSurfaceY);
         emitWaterVertex(emitter, 1, nextX, nextZ, center, halfWidth, waterSurfaceY);
@@ -817,7 +990,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         emitter.material(containedWaterMaterial);
         emitter.cullFace(null);
         emitter.nominalFace(Direction.UP);
-        emitter.tag(ShaderTerrainNormalBridge.containedWaterTag());
+        emitter.tag(waterTag);
         emitter.spriteBake(containedWaterSprite, MutableQuadView.BAKE_NORMALIZED);
         emitter.emit();
     }
@@ -895,9 +1068,22 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
     Mesh previewMesh() { return mesh; }
 
     ObjGuiIconTemplate createAxiomPreviewTemplate() {
-        int[] count = {0};
-        mesh.forEach(quad -> count[0]++);
-        return ObjGuiIconTemplate.create(mesh,
+        return createAxiomPreviewTemplate(null);
+    }
+
+    ObjGuiIconTemplate createAxiomPreviewTemplate(LanternPreview assembly) {
+        Mesh preview=lanternParts==null?mesh:lanternParts.iconMesh();
+        if(assembly!=null && lanternParts!=null) {
+            LanternMeshParts suspension=null;
+            if(assembly.mount()==LanternBlock.Mount.HANGING) {
+                var shared=unwrapAttachedModel(MinecraftClient.getInstance().getBakedModelManager()
+                        .getModel(LANTERN_SUSPENSION_MODEL));
+                if(shared instanceof ObjMeshBakedModel hardware) suspension=hardware.lanternParts;
+            }
+            preview=lanternParts.previewMesh(assembly,suspension,materialTextureIds.indexOf(LanternGlazing.LEAD_TEXTURE));
+        }
+        int[] count={0};preview.forEach(q->count[0]++);
+        return ObjGuiIconTemplate.create(preview,
                 metadataModel.getTransformation().getTransformation(ModelTransformationMode.GUI),
                 count[0], 1.0F, 256);
     }
@@ -932,8 +1118,11 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                 && worldPhaseMaterials.get(materialIndex);
     }
 
-    record GeometryBakeResult(Mesh mesh,
+    record GeometryBakeResult(Identifier sourceObjId,
+                              Mesh mesh,
+                              Mesh largeLouterionMesh,
                               FriezeMeshParts friezeParts,
+                              LanternMeshParts lanternParts,
                               CapitalWorldMesh capitalWorldMesh,
                               ObjMeshData.Bounds transformedBounds,
                               List<String> materialNames,
@@ -987,7 +1176,8 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             List<Sprite> materialSprites,
             List<Boolean> worldPhaseMaterials,
             WorldTexturePhase.Layout worldTexturePhase,
-            boolean friezeRepeat
+            boolean friezeRepeat,
+            List<Identifier> materialTextureIds
     ) {
         TextureTransform[] transforms = new TextureTransform[worldTexturePhase.phaseCount()];
         for (int phaseIndex = 0; phaseIndex < transforms.length; phaseIndex++) {
@@ -996,7 +1186,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                     worldPhaseMaterials,
                     worldTexturePhase,
                     phaseIndex,
-                    friezeRepeat
+                    friezeRepeat,materialTextureIds
             );
         }
         return transforms;
@@ -1007,9 +1197,35 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             List<Boolean> worldPhaseMaterials,
             WorldTexturePhase.Layout worldTexturePhase,
             int phaseIndex,
-            boolean friezeRepeat
+            boolean friezeRepeat,
+            RenderMaterial ordinaryLanternMaterial,
+            RenderMaterial glazingMaterial,
+            int glazingTag,
+            RenderMaterial flameMaterial,
+            int flameTag
     )
             implements RenderContext.QuadTransform {
+        private TextureTransform(List<Sprite> sprites,List<Boolean> phases,WorldTexturePhase.Layout layout,int phase,boolean repeat,List<Identifier> textureIds) {
+            this(sprites,phases,layout,phase,repeat,ordinaryLanternMaterial(textureIds),glazingMaterial(textureIds),textureIds.indexOf(LanternGlazing.TEXTURE),
+                    flameMaterial(textureIds),textureIds.indexOf(LanternFlame.TEXTURE));
+        }
+        private static RenderMaterial ordinaryLanternMaterial(List<Identifier> textures) {
+            if(!textures.contains(LanternGlazing.LEAD_TEXTURE)) return null;
+            // A luminous carrier disables the renderer's DEFAULT ambient occlusion.
+            // These opaque surfaces still receive ordinary world lighting; only the
+            // separately tagged flame emits. TRUE also respects the renderer's global AO option.
+            return java.util.Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).materialFinder()
+                    .ambientOcclusion(TriState.TRUE).find();
+        }
+        private static RenderMaterial glazingMaterial(List<Identifier> textures) {
+            if(!textures.contains(LanternGlazing.TEXTURE)) return null;
+            return java.util.Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).materialFinder()
+                    .blendMode(BlendMode.TRANSLUCENT).disableDiffuse(true).ambientOcclusion(TriState.FALSE).find();
+        }
+        private static RenderMaterial flameMaterial(List<Identifier> textures) {
+            return textures.contains(LanternFlame.TEXTURE)
+                    ? LanternFlame.material(java.util.Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).materialFinder()) : null;
+        }
         private TextureTransform {
             materialSprites = List.copyOf(materialSprites);
             worldPhaseMaterials = List.copyOf(worldPhaseMaterials);
@@ -1026,14 +1242,31 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
 
         @Override
         public boolean transform(MutableQuadView quad) {
+            return transform(quad,false);
+        }
+
+        private boolean transformMapped(MutableQuadView quad) {
+            return transform(quad,true);
+        }
+
+        private boolean transform(MutableQuadView quad, boolean mapped) {
             int materialTag = ShaderTerrainNormalBridge.decodeObjMaterialTag(quad.tag());
+            if(materialTag==glazingTag && glazingMaterial!=null) {
+                quad.material(glazingMaterial);
+                quad.tag(ShaderTerrainNormalBridge.encodeGlazingObjTag(materialTag));
+            } else if(materialTag==flameTag && flameMaterial!=null) {
+                quad.material(flameMaterial);
+                quad.tag(ShaderTerrainNormalBridge.encodeFlameObjTag(materialTag));
+            } else if(mapped && ordinaryLanternMaterial!=null) {
+                quad.material(ordinaryLanternMaterial);
+            }
             Sprite sprite = materialTag >= 0 && materialTag < materialSprites.size()
                     ? materialSprites.get(materialTag)
                     : materialSprites.get(0);
             boolean materialUsesWorldPhase = materialTag >= 0
                     && materialTag < worldPhaseMaterials.size()
                     && worldPhaseMaterials.get(materialTag);
-            if (materialUsesWorldPhase) {
+            if (materialUsesWorldPhase && !mapped) {
                 for (int vertex = 0; vertex < 4; vertex++) {
                     quad.uv(
                             vertex,
@@ -1045,6 +1278,9 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
             // Frieze projection can land exactly on the sprite's outside edge.
             // Select its identical interior repeat before atlas/PBR sampling.
             if (friezeRepeat && materialUsesWorldPhase) FriezeAtlasRepeatGuard.protect(quad);
+            if (mapped && !materialUsesWorldPhase && materialTag!=glazingTag && materialTag!=flameTag) {
+                LanternSpriteUv.protect(quad,sprite.getContents().getWidth(),sprite.getContents().getHeight());
+            }
             quad.spriteBake(sprite, MutableQuadView.BAKE_NORMALIZED);
             return true;
         }
@@ -1106,7 +1342,7 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
                         for (DecorOrientation orientation : DecorOrientation.values()) {
                         cache[size.ordinal()][offsetIndex][horizontalIndex(facing) * 2 + orientation.ordinal()] = new StatueTransform(
                                 size.scale(),
-                                profile.rotationStepsFromSource(facing) * 2 + orientation.ordinal(),
+                                profile.rotationStepsForPose(facing, offset) * 2 + orientation.ordinal(),
                                 profile.modelSupportCenterX(),
                                 profile.modelGroundContactY(),
                                 profile.modelSupportCenterZ(),
@@ -1525,22 +1761,40 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         }; }
     }
 
-    private record SizedDecorTransform(float scale) implements RenderContext.QuadTransform {
-        private static final SizedDecorTransform[] CACHE = Arrays.stream(SizedDecorBlock.Size.values())
-                .map(size -> new SizedDecorTransform(size.scale()))
-                .toArray(SizedDecorTransform[]::new);
+    private record SizedDecorTransform(float scale, float offsetX, float offsetZ) implements RenderContext.QuadTransform {
+        private static final SizedDecorTransform[][][] CACHE = createCache();
+
+        private SizedDecorTransform(float scale) { this(scale, 0, 0); }
+
+        private static SizedDecorTransform[][][] createCache() {
+            var result = new SizedDecorTransform[SizedDecorBlock.Size.values().length][2][4];
+            for (var size : SizedDecorBlock.Size.values()) for (int offset = 0; offset < 2; offset++) {
+                for (Direction facing : Direction.Type.HORIZONTAL) {
+                    int index = switch (facing) { case NORTH -> 0; case EAST -> 1; case SOUTH -> 2; case WEST -> 3; default -> throw new IllegalStateException(); };
+                    // Large is already scaled and repeat-clipped by ObeliskSizeMesh.
+                    result[size.ordinal()][offset][index] = new SizedDecorTransform(
+                            size == SizedDecorBlock.Size.LARGE ? 1 : size.scale(),
+                            offset == 0 ? 0 : facing.getOffsetX() * DecorShapeTransforms.OFFSET_DISTANCE,
+                            offset == 0 ? 0 : facing.getOffsetZ() * DecorShapeTransforms.OFFSET_DISTANCE);
+                }
+            }
+            return result;
+        }
 
         private static SizedDecorTransform forState(BlockState state) {
-            return CACHE[state.get(SizedDecorBlock.SIZE).ordinal()];
+            int facing = switch (state.get(SizedDecorBlock.FACING)) {
+                case NORTH -> 0; case EAST -> 1; case SOUTH -> 2; case WEST -> 3; default -> throw new IllegalStateException();
+            };
+            return CACHE[state.get(SizedDecorBlock.SIZE).ordinal()][state.get(SizedDecorBlock.OFFSET) ? 1 : 0][facing];
         }
 
         @Override
         public boolean transform(MutableQuadView quad) {
             for (int vertex = 0; vertex < 4; vertex++) {
                 quad.pos(vertex,
-                        0.5F + (quad.x(vertex) - 0.5F) * scale,
+                        0.5F + (quad.x(vertex) - 0.5F) * scale + offsetX,
                         quad.y(vertex) * scale,
-                        0.5F + (quad.z(vertex) - 0.5F) * scale);
+                        0.5F + (quad.z(vertex) - 0.5F) * scale + offsetZ);
                 quad.uv(vertex,
                         0.5F + (quad.u(vertex) - 0.5F) * scale,
                         0.5F + (quad.v(vertex) - 0.5F) * scale);
@@ -1680,6 +1934,9 @@ final class ObjMeshBakedModel implements BakedModel, FabricBakedModel {
         private static final GroundScaleTransform[] BENCH_CACHE = createBenchCache();
 
         private static RenderContext.QuadTransform forBenchState(BlockState state) {
+            if (state.getBlock() instanceof HedraBlock) {
+                return DecorOrientationTransform.forTurn(HedraBlock.eighthTurns(state));
+            }
             if (state.getBlock() instanceof ExedraBlock && state.get(ExedraBlock.ORIENTATION) == DecorOrientation.DIAGONAL) {
                 return DecorOrientationTransform.forTurn(BenchBlock.rotationStepsFromSouth(state.get(BenchBlock.FACING)) * 2 + 1);
             }

@@ -9,6 +9,45 @@ import java.lang.reflect.Proxy;
 import static org.junit.jupiter.api.Assertions.*;
 
 final class CapitalOrientationTransformTest {
+    @Test void additionalUniformFitKeepsTheExistingTopAndMovesTheBaseDown() {
+        for (CapitalBlock.Size size : CapitalBlock.Size.values()) for (CapitalOrientation turn : CapitalOrientation.values()) {
+            float top = size == CapitalBlock.Size.DOUBLE ? 2 : 1;
+            float fit = 1.75F;
+            float[][] points = {{.5F, 1, .5F}, {.5F, 0, .5F}, {1, .5F, .5F}, {.5F, .5F, 1}};
+            float[][] normals = {{0, 1, 0}, {0, -1, 0}, {1, 0, 0}, {0, 0, 1}};
+            MutableQuadView quad = (MutableQuadView) Proxy.newProxyInstance(MutableQuadView.class.getClassLoader(),
+                    new Class<?>[]{MutableQuadView.class}, (proxy, method, args) -> switch (method.getName()) {
+                        case "x", "y", "z" -> points[(int) args[0]]["xyz".indexOf(method.getName())];
+                        case "normalX", "normalY", "normalZ" -> normals[(int) args[0]]["XYZ".indexOf(method.getName().charAt(6))];
+                        case "hasNormal" -> true;
+                        case "pos", "normal" -> {
+                            float[] target = (method.getName().equals("pos") ? points : normals)[(int) args[0]];
+                            for (int axis = 0; axis < 3; axis++) target[axis] = (float) args[axis + 1];
+                            yield proxy;
+                        }
+                        case "cullFace", "nominalFace" -> args == null || args.length == 0 ? Direction.UP : proxy;
+                        default -> throw new AssertionError("Placed fit must not alter UVs or vertex channels: " + method.getName());
+                    });
+            CapitalOrientationTransform.forSize(turn, size, fit).transform(quad);
+            assertArrayEquals(new float[]{top * .5F, top, top * .5F}, points[0], 1e-6F);
+            assertEquals(top * (1 - fit), points[1][1], 1e-6F);
+            assertEquals(top * fit * .5F, distance(points[2], points[3]) / Math.sqrt(2), 1e-6);
+            assertArrayEquals(new float[]{0, 1, 0}, normals[0], 1e-6F);
+            assertEquals(turn.cosine, normals[2][0]);
+            assertEquals(turn.sine, normals[2][2]);
+            assertSame(CapitalOrientationTransform.forSize(turn, size),
+                    CapitalOrientationTransform.forSize(turn, size, 1));
+        }
+        for (float invalid : new float[]{0, -1, Float.NaN, Float.POSITIVE_INFINITY})
+            assertThrows(IllegalArgumentException.class, () -> CapitalOrientationTransform.forSize(
+                    CapitalOrientation.STRAIGHT, CapitalBlock.Size.STANDARD, invalid));
+    }
+
+    private static double distance(float[] a, float[] b) {
+        double dx = a[0] - b[0], dy = a[1] - b[1], dz = a[2] - b[2];
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
     @Test
     void doubleCapitalSpansTwoCellsInEveryAxis() {
         float[][] point = {{1F, 1F, 0.5F}, {0F, 0F, 0F}, {0F, 0F, 0F}, {0F, 0F, 0F}};

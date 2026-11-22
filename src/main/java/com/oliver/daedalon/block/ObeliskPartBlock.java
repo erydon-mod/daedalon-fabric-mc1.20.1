@@ -49,7 +49,8 @@ public final class ObeliskPartBlock extends Block implements Waterloggable {
     public static BlockPos resolveAnchorPos(BlockView world, BlockPos pos, BlockState state) {
         BlockPos anchor = anchorPos(pos, state);
         BlockState owner = world.getBlockState(anchor);
-        return owner.getBlock() instanceof SizedDecorBlock && owner.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE ? anchor : null;
+        return owner.getBlock() instanceof SizedDecorBlock && owner.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE
+                && ObeliskPartsGeometry.contains(owner, pos.subtract(anchor)) ? anchor : null;
     }
     public static boolean isOwnedBy(BlockState state, BlockPos pos, BlockPos anchor) {
         return state.getBlock() instanceof ObeliskPartBlock && anchorPos(pos, state).equals(anchor);
@@ -58,12 +59,15 @@ public final class ObeliskPartBlock extends Block implements Waterloggable {
         return state.getBlock() instanceof ObeliskPartBlock && resolveAnchorPos(world, pos, state) == null;
     }
     @Override public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return resolveAnchorPos(world, pos, state) == null ? VoxelShapes.empty()
-                : ObeliskPartsGeometry.outline(state.get(OFFSET_X) - 1, state.get(OFFSET_Y), state.get(OFFSET_Z) - 1);
+        return partShape(state, world, pos);
     }
     @Override public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return resolveAnchorPos(world, pos, state) == null ? VoxelShapes.empty()
-                : ObeliskPartsGeometry.collision(state.get(OFFSET_X) - 1, state.get(OFFSET_Y), state.get(OFFSET_Z) - 1);
+        return partShape(state, world, pos);
+    }
+    private static VoxelShape partShape(BlockState state, BlockView world, BlockPos pos) {
+        BlockPos anchor = resolveAnchorPos(world, pos, state);
+        return anchor == null ? VoxelShapes.empty() : ObeliskPartsGeometry.collision(world.getBlockState(anchor),
+                state.get(OFFSET_X) - 1, state.get(OFFSET_Y), state.get(OFFSET_Z) - 1);
     }
     @Override public boolean canReplace(BlockState state, ItemPlacementContext context) { return isOrphaned(context.getWorld(), context.getBlockPos(), state); }
     @Override public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) { return VoxelShapes.empty(); }
@@ -93,8 +97,10 @@ public final class ObeliskPartBlock extends Block implements Waterloggable {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
     @Override public boolean canFillWithFluid(BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
-        return !state.get(WATERLOGGED) && fluid == Fluids.WATER
-                && ObeliskPartsGeometry.allowsWater(state.get(OFFSET_X) - 1, state.get(OFFSET_Y), state.get(OFFSET_Z) - 1);
+        BlockPos anchor = resolveAnchorPos(world, pos, state);
+        return anchor != null && !state.get(WATERLOGGED) && fluid == Fluids.WATER
+                && ObeliskPartsGeometry.allowsWater(world.getBlockState(anchor),
+                state.get(OFFSET_X) - 1, state.get(OFFSET_Y), state.get(OFFSET_Z) - 1);
     }
     @Override public boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluid) {
         if (!canFillWithFluid(world, pos, state, fluid.getFluid())) return false;

@@ -1,0 +1,579 @@
+{
+  "schema": 1,
+  "status": "All five reviewed, approved and active",
+  "provenance": "Oliver-authored Meshy originals; rights recorded in the historical batch evidence",
+  "historical_evidence": "docs/evidence/plinth-batch-source.json",
+  "source_files_modified": false,
+  "coordinate_contract": "Y-up OBJ; X/Z centred; ground Y0 and top Y1; medium height1m with existing fit_to_block and large scale2",
+  "geometry_method": "Measured clean architectural reconstruction; retained native Stephanos sculpt receives user-requested approximately16000-polygon reduction while its sealed core and support proportions remain exact",
+  "face_count_policy": "Authored editable polygon faces and exported triangles are recorded separately",
+  "authoring_tool": {
+    "path": "tools/rebuild_plinth_meshes.py",
+    "sha256": "32711086cad735dc48eea54a74efac9f474bfea86cebbfd30496e48cad1a1671",
+    "source_root_required": true,
+    "blender_version": "5.2.0",
+    "blender_build": "fbe6228777e7"
+  },
+  "models": [
+    {
+      "style": "astragalos",
+      "status": "approved and active",
+      "source_uuid": "019ff635-649f-7296-a61b-7a4cf1039abe",
+      "source_sha256": "19c2f16926a9b25ae151f9d13186fb6850f1ffdc07f8c9e2cc762e7484ef5c7c",
+      "source_vertices": 999423,
+      "source_polygons": 1998846,
+      "source_triangles": 1998846,
+      "prior_runtime_obj_sha256": "4a705d84abd3704f9248f2e051255841a82c26f1603411205fc38afd7ff360c5",
+      "prior_runtime_vertices": 3000,
+      "prior_runtime_faces": 6000,
+      "runtime_vertices": 3410,
+      "runtime_normals": 13664,
+      "runtime_faces": 5856,
+      "runtime_obj_sha256": "0a9e29e05d932bcc58937d701f422376a5a8e5c33807403e72ca6e716c5c0408",
+      "authored_polygons": 3904,
+      "bounds": {
+        "min": [
+          -0.301554322,
+          0.0,
+          -0.301474929
+        ],
+        "max": [
+          0.301554322,
+          1.0,
+          0.301474929
+        ],
+        "size": [
+          0.603108644,
+          1.0,
+          0.602949858
+        ]
+      },
+      "feature_retention": {
+        "bead_collar_count": 2,
+        "bead_centres_y": [
+          0.181,
+          0.874
+        ],
+        "beads_per_collar": [
+          128,
+          112
+        ],
+        "framed_panel_count": 4,
+        "shaft_y_interval": [
+          0.217,
+          0.851
+        ],
+        "method": "Measured clean square profile, explicit recessed panels and individually modeled bead collars",
+        "bead_geometry": "Closed arc18 rounded forward-ridge barrel relief with flat embedded reverse;18 triangles per bead",
+        "profile_landmarks": [
+          {
+            "label": "broad_base",
+            "y": 0.04,
+            "width": 0.603108644,
+            "depth": 0.602949858
+          },
+          {
+            "label": "lower_shoulder",
+            "y": 0.2,
+            "width": 0.498133332033334,
+            "depth": 0.49800221703332653
+          },
+          {
+            "label": "mid_shaft",
+            "y": 0.5,
+            "width": 0.46125678800245873,
+            "depth": 0.46113537100252927
+          },
+          {
+            "label": "upper_cornice",
+            "y": 0.95,
+            "width": 0.5340333187333443,
+            "depth": 0.5338927610666582
+          }
+        ]
+      },
+      "validation": {
+        "closed_edge_manifold": true,
+        "degenerate_triangles": 0,
+        "unit_finite_normals": true,
+        "uvs": 0,
+        "closed_components": 241,
+        "all_components_positive_volume": true,
+        "vertex_links_single_cycles": true
+      },
+      "mesh": "models/mesh/plinth_astragalos.obj",
+      "definition": "models/mesh/plinth_astragalos.json",
+      "editable_blend_basename": "plinth_astragalos - clean architectural model.blend",
+      "editable_blend_sha256": "cf2021dcd9e044c6d9829177c54c2a0730cc4cc0d92f6898b2895efd83b3d72e",
+      "preview_basename": "plinth_astragalos - clean architectural preview.png",
+      "preview_sha256": "cb83e90859bb77be7606de3fcbef2dc01c1b2010b5545f9a30f7dfffebcd9bb3"
+    },
+    {
+      "style": "bathron",
+      "status": "approved and active",
+      "source_uuid": "019ff635-49b7-7947-a439-55487531c93f",
+      "source_sha256": "89554bb41b077b37c6f58a5675c2a2a1fbb6ea5cea7f6cb28d4d63e2a18504a2",
+      "source_vertices": 992675,
+      "source_polygons": 1985346,
+      "source_triangles": 1985346,
+      "prior_runtime_obj_sha256": "2543b6f83228c87f69bb106a86441813dc2e76d5910468baa8bea025d9c3824e",
+      "prior_runtime_vertices": 3002,
+      "prior_runtime_faces": 6000,
+      "runtime_vertices": 1024,
+      "runtime_normals": 4064,
+      "runtime_faces": 2044,
+      "runtime_obj_sha256": "f1d03fd8dd489da678b11c0c41ab5434fef862ea09c5c28453f38b38bb9899ae",
+      "authored_polygons": 1010,
+      "bounds": {
+        "min": [
+          -0.405893654,
+          0.0,
+          -0.406017125
+        ],
+        "max": [
+          0.405893654,
+          1.0,
+          0.406017125
+        ],
+        "size": [
+          0.811787308,
+          1.0,
+          0.81203425
+        ]
+      },
+      "feature_retention": {
+        "method": "Measured clean square profile with the original taper, base mouldings, neck bead and cornice",
+        "shaft_y_interval": [
+          0.236,
+          0.809
+        ],
+        "profile_landmarks": [
+          {
+            "label": "broad_base",
+            "y": 0.04,
+            "width": 0.811787308,
+            "depth": 0.81203425
+          },
+          {
+            "label": "lower_shoulder",
+            "y": 0.2,
+            "width": 0.7096480166489887,
+            "depth": 0.7098638446497927
+          },
+          {
+            "label": "mid_shaft",
+            "y": 0.5,
+            "width": 0.634114653754127,
+            "depth": 0.6343075217124949
+          },
+          {
+            "label": "upper_cornice",
+            "y": 0.95,
+            "width": 0.72939998,
+            "depth": 0.729621828
+          }
+        ]
+      },
+      "validation": {
+        "closed_edge_manifold": true,
+        "degenerate_triangles": 0,
+        "unit_finite_normals": true,
+        "uvs": 0,
+        "closed_components": 1,
+        "all_components_positive_volume": true,
+        "vertex_links_single_cycles": true
+      },
+      "mesh": "models/mesh/plinth_bathron.obj",
+      "definition": "models/mesh/plinth_bathron.json",
+      "editable_blend_basename": "plinth_bathron - clean architectural model.blend",
+      "editable_blend_sha256": "aa7d5453566746d1392746a473ca425c14afa3d3cfd5cd16614c7f3186b4b3fb",
+      "preview_basename": "plinth_bathron - clean architectural preview.png",
+      "preview_sha256": "89c14ce49bc76bf34dc63350c8b89b48b841a761033e5a3424b3d8c9b9b92391"
+    },
+    {
+      "style": "kion",
+      "status": "approved and active",
+      "source_uuid": "019ff635-2eeb-75b0-9f0a-d82912319224",
+      "source_sha256": "626c5313e045b18cfb5dc9e68ec917dacaa73340d4e5f2485042490265695d0b",
+      "source_vertices": 974063,
+      "source_polygons": 1948122,
+      "source_triangles": 1948122,
+      "prior_runtime_obj_sha256": "04f426f5a9d161eaf78f6aa35eb6babd7c284620047f39aa35f337e4196bd6a8",
+      "prior_runtime_vertices": 3002,
+      "prior_runtime_faces": 6000,
+      "runtime_vertices": 2870,
+      "runtime_normals": 11976,
+      "runtime_faces": 5736,
+      "runtime_obj_sha256": "674f26a9cb06dd994f5654c9ed51f499f7d420ed517de23b6037e82e8488c225",
+      "authored_polygons": 3120,
+      "bounds": {
+        "min": [
+          -0.499477178,
+          0.0,
+          -0.5
+        ],
+        "max": [
+          0.499477178,
+          1.0,
+          0.5
+        ],
+        "size": [
+          0.998954356,
+          1.0,
+          1.0
+        ]
+      },
+      "feature_retention": {
+        "flute_count": 18,
+        "flute_y_interval": [
+          0.25699999999999995,
+          0.743
+        ],
+        "shaft_y_interval": [
+          0.233,
+          0.776
+        ],
+        "shaft_radius": 0.34835,
+        "flute_depth": 0.026,
+        "flute_width": 0.056,
+        "flute_width_unit": "metres along shaft circumference",
+        "cap_quadrant_segments": 4,
+        "recess_capsule_contour_radii": [
+          0.028,
+          0.018666666666666665,
+          0.009333333333333332,
+          0.0
+        ],
+        "cap_boundary_max_chord_error_metres": 0.000538012148709548,
+        "cap_rows": [
+          {
+            "z": 0.25699999999999995,
+            "half_width": 0.0,
+            "unique_vertices": 36
+          },
+          {
+            "z": 0.2591313730896839,
+            "half_width": 0.010715136106222463,
+            "unique_vertices": 54
+          },
+          {
+            "z": 0.26520101012677666,
+            "half_width": 0.019798989873223347,
+            "unique_vertices": 54
+          },
+          {
+            "z": 0.2742848638937775,
+            "half_width": 0.02586862691031604,
+            "unique_vertices": 54
+          },
+          {
+            "z": 0.285,
+            "half_width": 0.028,
+            "unique_vertices": 54
+          },
+          {
+            "z": 0.715,
+            "half_width": 0.028,
+            "unique_vertices": 54
+          },
+          {
+            "z": 0.7257151361062225,
+            "half_width": 0.02586862691031602,
+            "unique_vertices": 54
+          },
+          {
+            "z": 0.7347989898732233,
+            "half_width": 0.019798989873223292,
+            "unique_vertices": 54
+          },
+          {
+            "z": 0.740868626910316,
+            "half_width": 0.0107151361062226,
+            "unique_vertices": 54
+          },
+          {
+            "z": 0.743,
+            "half_width": 0.0,
+            "unique_vertices": 36
+          }
+        ],
+        "method": "Feature-aligned capsule topology: exact semicircular lips, concentric semicircular recess contours, merged tips, six flute interior intervals, analytic surface normals; unchanged architectural profiles",
+        "profile_landmarks": [
+          {
+            "label": "broad_base",
+            "y": 0.04,
+            "width": 0.998954356,
+            "depth": 1.0
+          },
+          {
+            "label": "lower_shoulder",
+            "y": 0.2,
+            "width": 0.8188000186181836,
+            "depth": 0.8196571004391054
+          },
+          {
+            "label": "mid_shaft",
+            "y": 0.5,
+            "width": 0.694450616,
+            "depth": 0.69742924
+          },
+          {
+            "label": "upper_cornice",
+            "y": 0.95,
+            "width": 0.8788085029845917,
+            "depth": 0.8797283966816511
+          }
+        ]
+      },
+      "validation": {
+        "closed_edge_manifold": true,
+        "degenerate_triangles": 0,
+        "unit_finite_normals": true,
+        "uvs": 0,
+        "closed_components": 1,
+        "all_components_positive_volume": true,
+        "vertex_links_single_cycles": true
+      },
+      "mesh": "models/mesh/plinth_kion.obj",
+      "definition": "models/mesh/plinth_kion.json",
+      "editable_blend_basename": "plinth_kion - clean architectural model.blend",
+      "editable_blend_sha256": "a66893c730b174a9914b64f61ad0dc6c4fa65e78f5d71ef56ca6c6f068efcf2f",
+      "preview_basename": "plinth_kion - clean architectural preview.png",
+      "preview_sha256": "6a25c1da4b2469dea0a4f2757bb518020f90490e35a0a4eaeff5f816882cce32"
+    },
+    {
+      "style": "stephanos",
+      "status": "approved and active",
+      "source_uuid": "019ff635-09e0-793e-87d0-f8a5996a2f7c",
+      "source_sha256": "2109f446a760a2f66b53dc080ccfd1e29ca667a868ff64ad72b725d9286e4435",
+      "source_vertices": 995847,
+      "source_polygons": 1991820,
+      "source_triangles": 1991820,
+      "prior_runtime_obj_sha256": "d21862cd4d56b3809737d1b8dc6b5426acc1e33714ecc94aa70617e5abc9fc14",
+      "prior_runtime_vertices": 2937,
+      "prior_runtime_faces": 6000,
+      "runtime_vertices": 7994,
+      "runtime_normals": 47997,
+      "runtime_faces": 15999,
+      "runtime_obj_sha256": "c772ccba681b1e1b8d11dec46e78d2c972b978f77de2ff26bf58590795254995",
+      "authored_polygons": 15999,
+      "bounds": {
+        "min": [
+          -0.415971518,
+          0.0,
+          -0.415967375
+        ],
+        "max": [
+          0.415971518,
+          1.0,
+          0.415967375
+        ],
+        "size": [
+          0.831943036,
+          1.0,
+          0.83193475
+        ]
+      },
+      "feature_retention": {
+        "laurel_wreath_count": 2,
+        "wreath_faces": "Opposing front/back faces",
+        "corner_foliage_applications": 8,
+        "framed_panel_count": 4,
+        "shaft_y_interval": [
+          0.223,
+          0.806
+        ],
+        "method": "Original overlapping leaves, wrapped knot/ribbons, acanthus curls/veins, long corner pilasters and base flares preserved through the user-requested approximately16000-polygon reduction; measured architectural core is exact",
+        "render_topology_evidence": "docs/evidence/plinth-stephanos-relief-topology.json",
+        "hidden_zero_area_cap_triangles_removed": 452,
+        "retained_exported_triangles_positions_normals_exact": false,
+        "profile_landmarks": [
+          {
+            "label": "broad_base",
+            "y": 0.04,
+            "width": 0.8311711531320755,
+            "depth": 0.8311628671320754
+          },
+          {
+            "label": "lower_shoulder",
+            "y": 0.2,
+            "width": 0.696699956770339,
+            "depth": 0.6966930318612168
+          },
+          {
+            "label": "mid_shaft",
+            "y": 0.5,
+            "width": 0.646370629379872,
+            "depth": 0.6485093880039794
+          },
+          {
+            "label": "upper_cornice",
+            "y": 0.95,
+            "width": 0.8173314660286326,
+            "depth": 0.8173233000286326
+          }
+        ],
+        "initial_sculpt_extraction": {
+          "wreath_ratios": [
+            0.04,
+            0.04
+          ],
+          "corner_ratios": [
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025
+          ],
+          "sampled_source_to_candidate_max_error_m": 0.0009334896458312869,
+          "sampled_candidate_to_source_max_error_m": 0.000710299180354923,
+          "error_limit_m": 0.00125,
+          "error_comparison_before_rigid_support_plane_alignment": true
+        },
+        "architectural_core_positions_and_normals_exact": true,
+        "requested_polygon_reduction": {
+          "target_editable_faces": 16000,
+          "actual_editable_faces": 15999,
+          "exported_triangles": 15999,
+          "previous_clean_editable_faces": 36590,
+          "previous_clean_runtime_sha256": "ff06f145cf917c56725049ceefdf9bcd5707228ce47aab9d3c51940bc54b7b1e",
+          "sculpt_only_ratio": 0.40114013146413824,
+          "preserved_core_vertices": 1106,
+          "preserved_core_triangles": 2208,
+          "sampled_surface_error_m": {
+            "source_to_candidate_max": 0.0022610118612647057,
+            "candidate_to_source_max": 0.0009660659125074744
+          },
+          "normal_method": "Barycentric transfer from the prior approved native sculpt; existing core corner normals copied exactly",
+          "approved_full_detail_input": {
+            "basename": "plinth_stephanos - clean architectural model.blend",
+            "sha256": "2c9e2b9d6ad1f3e7e0d6db58230605f1538fbc1b45db05fea5c880c49fe0e5be"
+          }
+        }
+      },
+      "validation": {
+        "closed_edge_manifold": false,
+        "degenerate_triangles": 0,
+        "unit_finite_normals": true,
+        "uvs": 0,
+        "closed_components": null,
+        "sealed_architectural_core": true,
+        "renderer_asset_native_relief_exception": true,
+        "topology_evidence": "docs/evidence/plinth-stephanos-relief-topology.json",
+        "hidden_cap_seam_boundary_edges": 55,
+        "preexisting_native_tessellation_edges_over_two": 35,
+        "exact_retained_exposed_positions_and_normals": false,
+        "exact_architectural_core_positions_and_normals": true,
+        "all_hidden_boundaries_embedded_in_support": true,
+        "minimum_boundary_embedding_axis_clearance_m": 0.0007999529081026413
+      },
+      "mesh": "models/mesh/plinth_stephanos.obj",
+      "definition": "models/mesh/plinth_stephanos.json",
+      "editable_blend_basename": "plinth_stephanos - clean architectural model.blend",
+      "editable_blend_sha256": "804bd1673a1bc2fa6301c951ae1542ec6b0af0c4fb2807194cadb2dbdd3375d0",
+      "preview_basename": "plinth_stephanos - clean architectural preview.png",
+      "preview_sha256": "800e23df1b55134b99b32e21c8f4b2d59197f83c8e8ef852c9e65c6c99449b42"
+    },
+    {
+      "style": "triphyllon",
+      "status": "approved and active",
+      "source_uuid": "019ff657-1127-76a5-a80d-c09b9c06b8b2",
+      "source_sha256": "fdc7f3cebfd78338c6dd044c6a7d6b78eb53253b060360b68b766cb1ba1624fc",
+      "source_vertices": 963909,
+      "source_polygons": 1927846,
+      "source_triangles": 1927846,
+      "prior_runtime_obj_sha256": "9f18250c28fcb761de10d529f03b25bc5d598a4d5c6f970b53a99cf3c7cd160c",
+      "prior_runtime_vertices": 2986,
+      "prior_runtime_faces": 6000,
+      "runtime_vertices": 11802,
+      "runtime_normals": 55600,
+      "runtime_faces": 23472,
+      "runtime_obj_sha256": "07dd6c76a3a350a21071d934e8f48307574d9a9db781ce76239200f96c1d3eed",
+      "authored_polygons": 16064,
+      "bounds": {
+        "min": [
+          -0.478551775,
+          0.0,
+          -0.486964047
+        ],
+        "max": [
+          0.478551775,
+          1.0,
+          0.486964047
+        ],
+        "size": [
+          0.95710355,
+          1.0,
+          0.973928094
+        ]
+      },
+      "feature_retention": {
+        "pointed_panel_count": 8,
+        "trefoil_count": 8,
+        "colonnette_count": 8,
+        "rounded_shafts_per_cluster": 3,
+        "shaft_diameter_m": 0.025,
+        "shaft_cluster_width_m": 0.071,
+        "cluster_capital_width_m": 0.094,
+        "shaft_y_interval": [
+          0.25,
+          0.788
+        ],
+        "capital_y_interval": [
+          0.788,
+          0.871
+        ],
+        "trefoil_opening_y_interval": [
+          0.6479474411,
+          0.737
+        ],
+        "trefoil_integration": "Continuous open-neck cusped head joined to the panel jambs; no separate clover loop",
+        "method": "Source-measured broad triple shafts, shared rounded feet and three cup capitals; smooth true circular pointed arches, layered stone mouldings and continuous deeply cusped trefoil recesses",
+        "profile_landmarks": [
+          {
+            "label": "broad_base",
+            "y": 0.04,
+            "width": 0.95710355,
+            "depth": 0.973928094
+          },
+          {
+            "label": "lower_shoulder",
+            "y": 0.2,
+            "width": 0.7661720131528407,
+            "depth": 0.7796402578397733
+          },
+          {
+            "label": "mid_shaft",
+            "y": 0.5,
+            "width": 0.7066589,
+            "depth": 0.719080984
+          },
+          {
+            "label": "upper_cornice",
+            "y": 0.95,
+            "width": 0.7899127450723529,
+            "depth": 0.803798275635484
+          }
+        ]
+      },
+      "validation": {
+        "closed_edge_manifold": true,
+        "degenerate_triangles": 0,
+        "unit_finite_normals": true,
+        "uvs": 0,
+        "closed_components": 49,
+        "all_components_positive_volume": true,
+        "vertex_links_single_cycles": true
+      },
+      "mesh": "models/mesh/plinth_triphyllon.obj",
+      "definition": "models/mesh/plinth_triphyllon.json",
+      "editable_blend_basename": "plinth_triphyllon - clean architectural model.blend",
+      "editable_blend_sha256": "df1c7ab72e25efa11c2c14f10ae508636bb32ca5da5b5557a67397e047b8e2aa",
+      "preview_basename": "plinth_triphyllon - clean architectural preview.png",
+      "preview_sha256": "99c81073f7fc29898d9644249689e6c85715ea926319f8c48cb736402d8207eb"
+    }
+  ]
+}

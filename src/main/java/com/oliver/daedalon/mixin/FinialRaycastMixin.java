@@ -16,6 +16,7 @@ public interface FinialRaycastMixin {
     @ModifyReturnValue(method="raycastBlock",at=@At("RETURN"))
     default BlockHitResult daedalon$targetFittedFinial(BlockHitResult original,Vec3d start,Vec3d end,
                                                       BlockPos pos,VoxelShape shape,BlockState state) {
-        return FinialRaycast.closest((BlockView)this,start,end,pos,state,original);
+        return com.oliver.daedalon.block.LanternRaycast.closest((BlockView)this,start,end,pos,state,
+                FinialRaycast.closest((BlockView)this,start,end,pos,state,original));
     }
 }

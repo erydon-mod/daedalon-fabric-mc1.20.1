@@ -30,7 +30,14 @@
     "daedalon:bronze_hestia_bust",
     "daedalon:bronze_poseidon_bust",
     "daedalon:bronze_zeus_bust",
+    "daedalon:bronze_georgian_lantern",
+    "daedalon:bronze_gothic_lantern",
+    "daedalon:bronze_byzantine_lantern",
     "daedalon:bronze_gothic_wall_panel",
+    "daedalon:bronze_corinthian_wall_panel",
+    "daedalon:bronze_byzantine_wall_panel",
+    "daedalon:bronze_georgian_wall_panel",
+    "daedalon:bronze_renaissance_wall_panel",
     "daedalon:bronze_byzantine_frieze",
     "daedalon:bronze_gothic_frieze",
     "daedalon:bronze_corinthian_frieze",
@@ -71,6 +78,7 @@
     "daedalon:bronze_kion_plinth",
     "daedalon:bronze_stephanos_plinth",
     "daedalon:bronze_triphyllon_plinth",
+    "daedalon:glaux",
     "daedalon:bronze_olympian_god_statue"
   ]
 }

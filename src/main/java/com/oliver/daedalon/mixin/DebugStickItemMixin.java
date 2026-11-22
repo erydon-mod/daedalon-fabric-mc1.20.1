@@ -2,9 +2,11 @@ package com.oliver.daedalon.mixin;
 
 import com.oliver.daedalon.Daedalon;
 import com.oliver.daedalon.block.CapitalBlock;
+import com.oliver.daedalon.block.AnthophorosBlock;
 import com.oliver.daedalon.block.CapitalPartBlock;
 import com.oliver.daedalon.block.FinialBlock;
 import com.oliver.daedalon.block.FriezeBlock;
+import com.oliver.daedalon.block.HedraBlock;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
 import com.oliver.daedalon.block.MonopterosPartBlock;
@@ -13,6 +15,11 @@ import com.oliver.daedalon.block.SizedDecorBlock;
 import com.oliver.daedalon.block.FountainBasinPartBlock;
 import com.oliver.daedalon.block.FountainBowlModel;
 import com.oliver.daedalon.block.PlinthBlock;
+import com.oliver.daedalon.block.LanternBlock;
+import com.oliver.daedalon.block.LanternChainBlock;
+import com.oliver.daedalon.block.LanternPartBlock;
+import com.oliver.daedalon.block.LanternPlacement;
+import com.oliver.daedalon.block.LouterionBasinBlock;
 import com.oliver.daedalon.block.entity.FountainBasinBlockEntity;
 import com.oliver.daedalon.item.DaedalonDebugProperties;
 import com.oliver.daedalon.item.DecorRotationControl;
@@ -57,6 +64,11 @@ abstract class DebugStickItemMixin {
     ) {
         BlockState targetState = state;
         BlockPos targetPos = pos;
+        if (state.getBlock() instanceof LanternPartBlock || state.getBlock() instanceof LanternChainBlock) {
+            targetPos=LanternPlacement.resolveOwner(world,pos);
+            if (targetPos==null) { callback.setReturnValue(false);return; }
+            targetState=world.getBlockState(targetPos);
+        }
         if (state.getBlock() instanceof CapitalPartBlock) {
             targetPos = CapitalPartBlock.resolveAnchorPos(world, pos, state);
             if (targetPos==null) { callback.setReturnValue(false); return; }
@@ -89,6 +101,10 @@ abstract class DebugStickItemMixin {
             if (anchorPos == null) { callback.setReturnValue(false); return; }
             targetPos = anchorPos;
             targetState = world.getBlockState(anchorPos);
+        }
+        if (com.oliver.daedalon.glaux.GlauxRegistry.isGlaux(targetState)) {
+            targetPos = com.oliver.daedalon.glaux.GlauxRegistry.basePos(world, targetPos);
+            targetState = world.getBlockState(targetPos);
         }
         if (!Daedalon.MOD_ID.equals(Registries.BLOCK.getId(targetState.getBlock()).getNamespace())) {
             return;
@@ -136,6 +152,12 @@ abstract class DebugStickItemMixin {
                     player.shouldCancelInteraction()
             );
             if (updated.getBlock() instanceof FriezeBlock) updated = FriezeBlock.refresh(world, targetPos, updated);
+            if (targetState.getBlock() instanceof LanternBlock && !LanternBlock.canOccupy(world,targetPos,updated)) {
+                sendMessage(player,Text.translatable(selected==LanternBlock.MOUNT
+                        ? "message.daedalon.lantern_mount_blocked" : "message.daedalon.lantern_size_blocked"));
+                callback.setReturnValue(true);
+                return;
+            }
             if (targetState.getBlock() instanceof FinialBlock finial
                     && selected == FinialBlock.SIZE
                     && !finial.canPlaceAt(updated,world,targetPos)) {
@@ -159,18 +181,25 @@ abstract class DebugStickItemMixin {
                 callback.setReturnValue(true);
                 return;
             }
+            if (targetState.getBlock() instanceof LouterionBasinBlock basin
+                    && selected == LouterionBasinBlock.SIZE && !basin.canPlaceAt(updated, world, targetPos)) {
+                sendMessage(player, Text.translatable("message.daedalon.fountain_basin_size_blocked"));
+                callback.setReturnValue(true);
+                return;
+            }
             if (targetState.getBlock() instanceof MonopterosBlock && !MonopterosBlock.canOccupy(world, targetPos, updated)) {
                 sendMessage(player, Text.translatable("message.daedalon.monopteros_size_blocked"));
                 callback.setReturnValue(true);
                 return;
             }
-            if (targetState.getBlock() instanceof SizedDecorBlock && selected == SizedDecorBlock.SIZE
+            if (targetState.getBlock() instanceof SizedDecorBlock
                     && !SizedDecorBlock.canChangeSize(world, targetPos, updated)) {
                 sendMessage(player, Text.translatable("message.daedalon.obelisk_size_blocked"));
                 callback.setReturnValue(true);
                 return;
             }
-            world.setBlockState(targetPos, updated, updated.getBlock() instanceof FriezeBlock ? 3 : 18);
+            world.setBlockState(targetPos, updated, updated.getBlock() instanceof FriezeBlock
+                    || com.oliver.daedalon.glaux.GlauxRegistry.isGlaux(updated) ? 3 : 18);
             sendMessage(player, Text.translatable(
                     "item.minecraft.debug_stick.update",
                     displayPropertyName(updated, selected),
@@ -330,6 +359,12 @@ abstract class DebugStickItemMixin {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static BlockState cycleState(BlockState state, Property property, boolean backwards) {
+        if(state.getBlock() instanceof LanternBlock && property==LanternBlock.LIGHT)
+            return LanternBlock.withLight(state,DaedalonDebugProperties.cycle(DaedalonDebugProperties.orderedValues(LanternBlock.LIGHT),LanternBlock.light(state),backwards));
+        if(state.getBlock() instanceof LanternBlock && property==LanternBlock.MOUNT)
+            return LanternBlock.withMount(state,DaedalonDebugProperties.cycle(DaedalonDebugProperties.orderedValues(LanternBlock.MOUNT),state.get(LanternBlock.MOUNT),backwards));
+        if(state.getBlock() instanceof HedraBlock && property==HedraBlock.ORIENTATION)
+            return HedraBlock.withOrientation(state,DaedalonDebugProperties.cycle(DaedalonDebugProperties.orderedValues(HedraBlock.ORIENTATION),HedraBlock.orientation(state),backwards));
         if (property == Properties.HORIZONTAL_FACING && DecorRotationControl.appliesTo(state)) {
             return DecorRotationControl.cycle(state, backwards);
         }
@@ -344,10 +379,17 @@ abstract class DebugStickItemMixin {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static String valueName(BlockState state, Property property) {
+        if(state.getBlock() instanceof LanternBlock && property==LanternBlock.LIGHT) return LanternBlock.light(state).asString();
+        if(state.getBlock() instanceof HedraBlock && property==HedraBlock.ORIENTATION) return HedraBlock.orientation(state).asString();
         return property.name(state.get(property));
     }
 
     private static Object displayPropertyName(BlockState state, Property<?> property) {
+        if (state.getBlock() instanceof AnthophorosBlock && property == AnthophorosBlock.CONTENTS)
+            return Text.translatable("property.daedalon.planter_contents");
+        if(state.getBlock() instanceof LanternBlock && property==LanternBlock.LIGHT) return Text.translatable("property.daedalon.lantern_light");
+        if(state.getBlock() instanceof LanternBlock && property==LanternBlock.MOUNT) return Text.translatable("property.daedalon.lantern_mount");
+        if(state.getBlock() instanceof HedraBlock && property==HedraBlock.ORIENTATION) return Text.translatable("property.daedalon.orientation");
         if (property == Properties.HORIZONTAL_FACING && DecorRotationControl.appliesTo(state)) {
             return Text.translatable("property.daedalon.orientation");
         }
@@ -359,6 +401,11 @@ abstract class DebugStickItemMixin {
     }
 
     private static Object displayValueName(BlockState state, Property<?> property) {
+        if (state.getBlock() instanceof AnthophorosBlock && property == AnthophorosBlock.CONTENTS)
+            return Text.translatable("option.daedalon.planter.contents." + valueName(state, property));
+        if(state.getBlock() instanceof LanternBlock && property==LanternBlock.LIGHT) return Text.translatable("option.daedalon.lantern.light."+LanternBlock.light(state).asString());
+        if(state.getBlock() instanceof LanternBlock && property==LanternBlock.MOUNT) return Text.translatable("option.daedalon.lantern.mount."+state.get(LanternBlock.MOUNT).asString());
+        if(state.getBlock() instanceof HedraBlock && property==HedraBlock.ORIENTATION) return Text.translatable("option.daedalon.hedra.orientation."+valueName(state,property));
         if (property == Properties.HORIZONTAL_FACING && DecorRotationControl.appliesTo(state)) {
             return Text.translatable("option.daedalon.orientation." + DecorRotationControl.valueName(state));
         }

@@ -1,7 +1,9 @@
 """Prove that selecting the other horizontal frieze repeat preserves every pixel.
 
-Optionally audit both Collection source packs, including native fallback finishes:
-python tools/audit_frieze_repeat_surfaces.py --collection-root <collection repo>
+Optionally compare live ERYDON tiles and both Collection source packs, including
+native fallback finishes:
+python tools/audit_frieze_repeat_surfaces.py --erydon-root <erydon repo>
+    --collection-root <collection repo>
     --report build/reports/prepublication/frieze-repeat-surfaces.json
 """
 from __future__ import annotations
@@ -17,7 +19,7 @@ from PIL import Image
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 NATIVE_ROOT = REPO_ROOT / "src/main/resources/assets/daedalon/textures/block"
-SOLID_FINISHES = ("white", "bronze", "silver")
+SOLID_FINISHES = ("white", "black", "bronze", "silver")
 FRIEZE_FAMILIES = ("byzantine", "corinthian", "gothic", "ionic")
 
 
@@ -108,27 +110,71 @@ def audit_root(root: Path, fallback: Path | None = None) -> dict:
             "surfaces": surfaces}
 
 
+def audit_ctm_tiles(root: Path, ctm_root: Path) -> dict:
+    """Compare the actual sheet cells with the owning ERYDON repeat albedo tiles.
+
+    The frieze renderer selects these cells itself; adding Continuity matchBlocks
+    rules would not repair a mismatched sheet or a misplaced world-coordinate UV.
+    PBR maps retain their separate native/pack authoring and are audited above.
+    """
+    paths = sorted(path for path in root.glob("statue_spartan_promachos_*.png")
+                   if not path.stem.endswith(("_n", "_s")))
+    if not paths:
+        raise ValueError(f"No detailed repeat surfaces found: {root}")
+    comparisons = 0
+    for path in paths:
+        material = path.stem.removeprefix("statue_spartan_promachos_")
+        with Image.open(path) as source:
+            sheet = source.convert("RGBA")
+        width, height = sheet.size
+        if width != 2 * height or height % 6:
+            raise ValueError(f"Not a 12x6 frieze sheet: {path}")
+        tile_size = height // 6
+        for index in range(36):
+            tile_path = ctm_root / material / f"{index}.png"
+            with Image.open(tile_path) as source:
+                tile = source.convert("RGBA")
+            x, y = index % 6 * tile_size, index // 6 * tile_size
+            cell = sheet.crop((x, y, x + tile_size, y + tile_size))
+            if tile.size != cell.size or tile.tobytes() != cell.tobytes():
+                raise ValueError(f"Frieze sheet differs from ERYDON repeat tile: {path} / {tile_path}")
+            comparisons += 1
+    return {"sheet_root": str(root.resolve()), "ctm_root": str(ctm_root.resolve()),
+            "sheet_count": len(paths), "tile_comparisons": comparisons, "different_tiles": 0}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--collection-root", type=Path)
+    parser.add_argument("--erydon-root", type=Path, help="Compare native sheets with the live ERYDON source tiles")
     parser.add_argument("--collection-pack", type=Path, help="Read the actual installed Collection ZIP and aliases")
     parser.add_argument("--report", type=Path)
     args = parser.parse_args()
     roots = {"native": audit_root(NATIVE_ROOT)}
+    ctm_proofs = {}
+    if args.erydon_root:
+        ctm_proofs["native"] = audit_ctm_tiles(NATIVE_ROOT, args.erydon_root /
+                "src/main/resources/assets/minecraft/textures/optifine/ctm")
     if args.collection_root:
         for resolution in ("32x", "64x"):
             root = args.collection_root / "packs" / resolution / "assets/daedalon/textures/block"
             roots[resolution] = audit_root(root, NATIVE_ROOT)
+            ctm_proofs[resolution] = audit_ctm_tiles(root, args.collection_root / "packs" / resolution /
+                    "assets/minecraft/textures/optifine/ctm")
     if args.collection_pack:
         roots["active_collection_pack"] = audit_pack(args.collection_pack)
     report = {"strategy": "whole_quad_horizontal_offset_of_half_sprite_width",
               "frieze_families": FRIEZE_FAMILIES,
-              "geometry_changed": False, "vertical_phase_changed": False, "roots": roots}
+              "geometry_changed": False, "vertical_phase_changed": False,
+              "roots": roots, "erydon_ctm_tile_proofs": ctm_proofs}
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({name: {key: value for key, value in result.items() if key != "surfaces"}
-                      for name, result in roots.items()}, indent=2))
+    summary = {name: {key: value for key, value in result.items() if key != "surfaces"}
+               for name, result in roots.items()}
+    if ctm_proofs:
+        summary["erydon_ctm_tile_proofs"] = ctm_proofs
+    print(json.dumps(summary, indent=2))
 
 
 if __name__ == "__main__":

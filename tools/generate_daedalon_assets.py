@@ -6,8 +6,17 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+CLIENT_SETTINGS_TRANSLATIONS = json.loads(
+    (ROOT / "config/client-settings-language.json").read_text(encoding="utf-8")
+)
 RESOURCES = ROOT / "src/main/resources"
 NAMESPACE = "daedalon"
+try:
+    from tools.glaux_translations import load_metadata as load_glaux_metadata
+except ModuleNotFoundError:
+    from glaux_translations import load_metadata as load_glaux_metadata
+GLAUX_CATALOGUE = load_glaux_metadata()
+ADDITIONAL_BLOCK_IDS = (GLAUX_CATALOGUE["block_id"],)
 
 STATIC_LANGUAGE_ENTRIES = {
     "en_us": {
@@ -149,6 +158,8 @@ MATERIALS = (
 BRONZE_MATERIAL = "bronze"
 SILVER_MATERIAL = "silver"
 WHITE_FINISH = "white"
+BLACK_FINISH = "black"
+PLAIN_ARCHITECTURAL_FINISHES = (WHITE_FINISH, BLACK_FINISH)
 NO_DROP_FAMILIES = frozenset(
     {
         "gothic_fountain_basin",
@@ -277,14 +288,39 @@ PLINTH_FAMILIES = {
 }
 BENCH_FAMILIES = ("exedra", "hedra")
 WIDTH_FAMILIES = (*BENCH_FAMILIES, "anthophoros_planter")
-PANEL_FAMILIES = ("gothic_wall_panel",)
+PANEL_FAMILIES = {
+    "gothic_wall_panel": ("gothic_panel", "Gothic Panel", "Gotisches Paneel", "Panel Gótico"),
+    "corinthian_wall_panel": ("corinthian_panel", "Corinthian Panel", "Korinthisches Paneel", "Panel Corintio"),
+    "byzantine_wall_panel": ("byzantine_panel", "Byzantine Panel", "Byzantinisches Paneel", "Panel Bizantino"),
+    "georgian_wall_panel": ("georgian_panel", "Georgian Panel", "Georgianisches Paneel", "Panel Georgiano"),
+    "renaissance_wall_panel": ("renaissance_panel", "Renaissance Panel", "Renaissance-Paneel", "Panel Renacentista"),
+}
+PANEL_SEARCH_TERMS = {
+    "gothic_wall_panel": ("gothic", "tracery", "ribbed", "vault"),
+    "corinthian_wall_panel": ("corinthian", "acanthus"),
+    "byzantine_wall_panel": ("byzantine", "guilloche", "interlace", "medallion", "rosette"),
+    "georgian_wall_panel": ("georgian", "neoclassical", "regency", "rosette"),
+    "renaissance_wall_panel": ("renaissance", "acanthus", "scroll", "rosette"),
+}
+LANTERN_FAMILIES = {
+    "georgian_lantern": ("lantern_georgian", "Georgian Lantern", "Georgianische Laterne", "Farol Georgiano"),
+    "gothic_lantern": ("lantern_gothic", "Gothic Lantern", "Gotische Laterne", "Farol Gótico"),
+    "byzantine_lantern": ("lantern_byzantine", "Byzantine Lantern", "Byzantinische Laterne", "Farol Bizantino"),
+}
 ARCHITECTURAL_FINISH_FAMILIES = (
+    *PANEL_FAMILIES, "byzantine_frieze", "gothic_frieze",
+    "corinthian_frieze", "ionic_frieze",
+)
+ARCHITECTURAL_FINISHES = (*PLAIN_ARCHITECTURAL_FINISHES, BRONZE_MATERIAL, SILVER_MATERIAL)
+# Only these five unpublished gold drafts were explicitly retired. New panel
+# families must not silently broaden that cleanup scope.
+LEGACY_UNPUBLISHED_ARCHITECTURAL_GOLD_FAMILIES = (
     "gothic_wall_panel", "byzantine_frieze", "gothic_frieze",
     "corinthian_frieze", "ionic_frieze",
 )
-ARCHITECTURAL_FINISHES = (WHITE_FINISH, BRONZE_MATERIAL, SILVER_MATERIAL)
 NEW_DECOR_FAMILIES = {
-    "gothic_wall_panel": ("gothic_panel", "Gothic Panel", "Gotisches Paneel", "Panel Gótico"),
+    **LANTERN_FAMILIES,
+    **PANEL_FAMILIES,
     "byzantine_frieze": ("byzantine_frieze", "Byzantine Frieze", "Byzantinischer Fries", "Friso Bizantino"),
     "gothic_frieze": ("gothic_frieze", "Gothic Frieze", "Gotischer Fries", "Friso Gótico"),
     "corinthian_frieze": ("corinthian_frieze", "Corinthian Frieze", "Korinthischer Fries", "Friso Corintio"),
@@ -355,6 +391,7 @@ HERO_STATUE_FAMILIES = (
 )
 LION_STATUE_FAMILIES = ("lion_couchant", "lion_statant")
 METAL_DECOR_FAMILIES = (
+    *LANTERN_FAMILIES,
     *FINIAL_FAMILIES,
     "spartan",
     *CANONICAL_STATUE_FAMILIES,
@@ -428,7 +465,7 @@ def metal_block_id(family: str, metal: str) -> str:
         return f"{metal}_{BUST_FAMILIES[family][0]}_bust"
     if family in CORBEL_FAMILIES:
         return f"{metal}_{family}_corbel"
-    if family in PLINTH_FAMILIES:
+    if family in PLINTH_FAMILIES or family in LANTERN_FAMILIES:
         return f"{metal}_{family}"
     if family in FINIAL_FAMILIES or family in ("obeliskos_monument", "monopteros_dome", "anthophoros_planter"):
         return metal + "_" + family
@@ -437,8 +474,13 @@ def metal_block_id(family: str, metal: str) -> str:
     raise ValueError(f"Unknown metal decor family: {family}")
 
 
+def architectural_finishes(family: str) -> tuple[str, ...]:
+    # Every carved panel and frieze shares the same four plain/metal finishes.
+    return ARCHITECTURAL_FINISHES
+
+
 def architectural_finish_block_id(family: str, finish: str) -> str:
-    if family not in ARCHITECTURAL_FINISH_FAMILIES or finish not in ARCHITECTURAL_FINISHES:
+    if family not in ARCHITECTURAL_FINISH_FAMILIES or finish not in architectural_finishes(family):
         raise ValueError(f"Unsupported architectural finish: {family} / {finish}")
     return f"{finish}_{family}"
 
@@ -553,7 +595,9 @@ def family_block_ids(family: str) -> list[str]:
         for material in MATERIALS:
             result.extend((f"{material}_{family}", f"{material}_aged_{family}"))
         if family in ARCHITECTURAL_FINISH_FAMILIES:
-            result.append(architectural_finish_block_id(family, WHITE_FINISH))
+            result.extend(architectural_finish_block_id(family, finish)
+                          for finish in PLAIN_ARCHITECTURAL_FINISHES
+                          if finish in architectural_finishes(family))
         return add_metals(family, result)
 
     if family in PLINTH_FAMILIES:
@@ -608,7 +652,7 @@ def remove_obsolete_unpublished_architectural_gold_assets(
     # The five gold IDs existed only in the unpublished local cc6b840d change.
     # The approved finish is silver; no published identifier is renamed here.
     obsolete_paths: list[Path] = []
-    for family in ARCHITECTURAL_FINISH_FAMILIES:
+    for family in LEGACY_UNPUBLISHED_ARCHITECTURAL_GOLD_FAMILIES:
         block_id = f"gold_{family}"
         obsolete_paths.extend((
             RESOURCES / f"assets/{NAMESPACE}/blockstates/{block_id}.json",
@@ -744,6 +788,9 @@ def remove_creative_only_loot(
 
 def blockstate(family: str, block_id: str) -> dict[str, object]:
     model = f"{NAMESPACE}:mesh/{block_id}"
+    if family in LANTERN_FAMILIES:
+        # Mount, size and direction select cached parts of the same family OBJ.
+        return {"variants": {"": {"model": model}}}
     if family in ("corinthian_frieze", "ionic_frieze", "gothic_frieze", "byzantine_frieze"):
         return {"variants": {"": {"model": model}}}
     if family == "monopteros_dome":
@@ -812,7 +859,12 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
             }
         }
     if family in SIZED_DECOR_FAMILIES:
-        return {"variants": {f"size={size}": {"model": model} for size in ("small", "medium", "large")}}
+        return {"variants": {
+            f"size={size},offset={offset},facing={facing}": {"model": model}
+            for size in ("small", "medium", "large")
+            for offset in ("false", "true")
+            for facing in ("north", "east", "south", "west")
+        }}
     if family in PLINTH_FAMILIES:
         return {
             "variants": {
@@ -833,6 +885,8 @@ def blockstate(family: str, block_id: str) -> dict[str, object]:
 
 
 def display_parent(family: str) -> str:
+    if family in LANTERN_FAMILIES:
+        return f"{NAMESPACE}:block/mesh/lantern_display"
     if family in PANEL_FAMILIES:
         return f"{NAMESPACE}:block/mesh/gothic_panel_display"
     if family in ("corinthian_frieze", "ionic_frieze", "gothic_frieze", "byzantine_frieze"):
@@ -894,6 +948,11 @@ def self_drop(block_id: str) -> dict[str, object]:
 def generate_models_and_loot(
     families: tuple[str, ...], check: bool, changed: list[Path]
 ) -> None:
+    if any(family in LANTERN_FAMILIES for family in families):
+        for helper, model in (("lantern_part", "minecraft:block/air"),
+                              ("lantern_chain", f"{NAMESPACE}:mesh/internal/lantern_suspension")):
+            write(RESOURCES / f"assets/{NAMESPACE}/blockstates/{helper}.json",
+                  json_bytes({"variants": {"": {"model": model}}}), check, changed)
     for family in families:
         for block_id in family_block_ids(family):
             write(
@@ -924,8 +983,17 @@ def translated_name(language: str, family: str, material: str, aged: bool) -> st
         else "Plata" if material == SILVER_MATERIAL and language == "es_es"
         else "Weiß" if material == WHITE_FINISH and language == "de_de"
         else "Blanco" if material == WHITE_FINISH and language == "es_es"
+        else "Schwarz" if material == BLACK_FINISH and language == "de_de"
+        else "Negro" if material == BLACK_FINISH and language == "es_es"
         else material.capitalize()
     )
+    if family in LANTERN_FAMILIES:
+        name = LANTERN_FAMILIES[family][{"en_us": 1, "de_de": 2, "es_es": 3}[language]]
+        if language == "de_de":
+            return f"{material_name} {'Gealterte ' if aged else ''}{name}"
+        if language == "es_es":
+            return f"{material_name} {name}{' Envejecido' if aged else ''}"
+        return f"{material_name} {'Aged ' if aged else ''}{name}"
     if family == OLYMPIAN_GOD_ITEM_FAMILY:
         if language == "de_de":
             return f"{material_name} {'Gealterte ' if aged else ''}Olympische Götterstatue"
@@ -1076,6 +1144,13 @@ SEARCH_WORD_TRANSLATIONS = {
     "ionic": ("ionisch", "jónico"),
     "labradorite": ("Labradorit", "labradorita"),
     "lancet": ("Spitzbogen", "lanceta"),
+    "lantern": ("Laterne", "farol"),
+    "pier": ("Pfeiler", "pilar"),
+    "hanging": ("hängend", "colgante"),
+    "gas": ("Gas", "gas"),
+    "burner": ("Brenner", "quemador"),
+    "glazing": ("Verglasung", "acristalamiento"),
+    "chain": ("Kette", "cadena"),
     "leaf": ("Blatt", "hoja"),
     "limestone": ("Kalkstein", "caliza"),
     "lion": ("Löwe", "león"),
@@ -1117,6 +1192,7 @@ SEARCH_WORD_TRANSLATIONS = {
     "rock": ("Gestein", "roca"),
     "roman": ("römisch", "romano"),
     "roof": ("Dach", "tejado"),
+    "rosette": ("Rosette", "rosetón"),
     "rotunda": ("Rotunde", "rotonda"),
     "sandstone": ("Sandstein", "arenisca"),
     "sculpture": ("Skulptur", "escultura"),
@@ -1140,6 +1216,7 @@ SEARCH_WORD_TRANSLATIONS = {
     "volute": ("Volute", "voluta"),
     "wall": ("Wand", "pared"),
     "white": ("weiß", "blanco"),
+    "black": ("schwarz", "negro"),
     "water": ("Wasser", "agua"),
     "weathered": ("verwittert", "desgastado"),
     "worn": ("abgenutzt", "desgastado"),
@@ -1261,10 +1338,12 @@ def search_vocabulary(
                 if item_id.startswith(metal + "_")]
         for metal in METAL_FAMILIES
     })
-    material_ids[WHITE_FINISH] = [
-        architectural_finish_block_id(family, WHITE_FINISH)
-        for family in families if family in ARCHITECTURAL_FINISH_FAMILIES
-    ]
+    for finish in PLAIN_ARCHITECTURAL_FINISHES:
+        material_ids[finish] = [
+            architectural_finish_block_id(family, finish)
+            for family in families if family in ARCHITECTURAL_FINISH_FAMILIES
+            and finish in architectural_finishes(family)
+        ]
     return {
         "families": {
             ("spartan_promachos_statue" if family == "spartan" else
@@ -1279,6 +1358,7 @@ def search_vocabulary(
 
 
 CATALOGUE_FORM_NAMES = {
+    "lanterns": ("Lanterns", "Laternen", "Faroles"),
     "statues": ("Statues", "Statuen", "Estatuas"),
     "busts": ("Busts", "Büsten", "Bustos"),
     "urns": ("Urns", "Urnen", "Urnas"),
@@ -1309,6 +1389,51 @@ def generate_languages(
         for tag in sorted(search_tags):
             entries[f"search.daedalon.tag.{tag}"] = translated_search_tag(tag, language)
         language_index = ("en_us", "de_de", "es_es").index(language)
+        for key, labels in {
+            "property.daedalon.planter_contents": ("Contents", "Inhalt", "Contenido"),
+            "option.daedalon.planter.contents.empty": ("Empty", "Leer", "Vacío"),
+            "option.daedalon.planter.contents.earth": ("Earth", "Erde", "Tierra"),
+            "option.daedalon.planter.contents.water": ("Water", "Wasser", "Agua"),
+            "property.daedalon.lantern_mount": ("Mount", "Montage", "Montaje"),
+            "option.daedalon.lantern.mount.pier": ("Seated", "Stehend", "Apoyado"),
+            "option.daedalon.lantern.mount.wall": ("Wall", "Wand", "Pared"),
+            "option.daedalon.lantern.mount.hanging": ("Hanging", "Hängend", "Colgado"),
+            "property.daedalon.lantern_light": ("Light", "Licht", "Luz"),
+            "option.daedalon.lantern.light.low": ("Low", "Gedimmt", "Baja"),
+            "option.daedalon.lantern.light.bright": ("Bright", "Hell", "Brillante"),
+            "option.daedalon.lantern.light.off": ("Off", "Aus", "Apagado"),
+            "tooltip.daedalon.lantern.mount": (
+                "Click a top, underside or wall face to mount; debug stick Mount selects Seated, Wall or Hanging.",
+                "Klicke zum Platzieren auf Oberseite, Unterseite oder Wand; Debug-Stab Montage wählt Stehend, Wand oder Hängend.",
+                "Haz clic en una cara superior, inferior o lateral para colocarlo; Montaje del palo de depuración elige Apoyado, Pared o Colgado.",
+            ),
+            "tooltip.daedalon.lantern.size": (
+                "Debug stick: Small 0.75m; Large 1.25m. Hanging chain adds 0.5m.",
+                "Debug-Stab: Klein 0,75m; Groß 1,25m. Die Aufhängekette ist zusätzlich 0,5m lang.",
+                "Palo de depuración: Pequeño 0,75m; Grande 1,25m. La cadena añade 0,5m.",
+            ),
+            "tooltip.daedalon.lantern.chain": (
+                "Use a lantern underneath a hanging one to extend its chain; sneak to add another lantern.",
+                "Benutze eine Laterne unter einer hängenden, um die Kette zu verlängern; schleiche für eine weitere Laterne.",
+                "Usa un farol debajo de uno colgado para alargar su cadena; agáchate para añadir otro farol.",
+            ),
+            "tooltip.daedalon.lantern.light": (
+                "Bright (15) by default. Debug stick Light: Low (10), Bright (15), Off.",
+                "Standardmäßig Hell (15). Debug-Stab Licht: Gedimmt (10), Hell (15), Aus.",
+                "Luz Brillante (15) por defecto. Palo de depuración Luz: Baja (10), Brillante (15), Apagado.",
+            ),
+            "message.daedalon.lantern_size_blocked": (
+                "Not enough clear space for that lantern size.",
+                "Nicht genug freier Platz für diese Laternengröße.",
+                "No hay espacio libre suficiente para ese tamaño de farol.",
+            ),
+            "message.daedalon.lantern_mount_blocked": (
+                "Not enough clear space for that lantern mount.",
+                "Nicht genug freier Platz für diese Laternenmontage.",
+                "No hay espacio libre suficiente para ese montaje del farol.",
+            ),
+        }.items():
+            entries[key] = labels[language_index]
         for finish, labels in {
             "honed": ("Honed", "Geschliffen", "Apomazado"),
             "polished": ("Polished", "Poliert", "Pulido"),
@@ -1367,6 +1492,13 @@ def generate_languages(
         entries["property.daedalon.capital_orientation"] = orientation_labels[0]
         for orientation, label in zip(("straight", "diagonal", "straight_90", "diagonal_135"), orientation_labels[1:]):
             entries[f"option.daedalon.capital.orientation.{orientation}"] = label
+        hedra_labels = {
+            "en_us": ("East / West", "Diagonal (45°)", "North / South", "Diagonal (135°)"),
+            "de_de": ("Ost / West", "Diagonal (45°)", "Nord / Süd", "Diagonal (135°)"),
+            "es_es": ("Este / Oeste", "Diagonal (45°)", "Norte / Sur", "Diagonal (135°)"),
+        }[language]
+        for orientation, label in zip(("straight", "diagonal", "straight_90", "diagonal_135"), hedra_labels):
+            entries[f"option.daedalon.hedra.orientation.{orientation}"] = label
         size_labels = {
             "en_us": ("Size", "Small", "Large"),
             "de_de": ("Größe", "Klein", "Groß"),
@@ -1386,9 +1518,9 @@ def generate_languages(
             "es_es": "No hay suficiente espacio libre para este diámetro de cúpula.",
         }[language]
         entries["message.daedalon.obelisk_size_blocked"] = {
-            "en_us": "Not enough clear space for that obelisk size",
-            "de_de": "Nicht genug freier Platz für diese Obeliskengröße",
-            "es_es": "No hay suficiente espacio libre para ese tamaño de obelisco",
+            "en_us": "Not enough clear space for that obelisk size or position.",
+            "de_de": "Nicht genug freier Platz für diese Obeliskengröße oder Position.",
+            "es_es": "No hay suficiente espacio libre para ese tamaño o posición del obelisco.",
         }[language]
         entries["message.daedalon.finial_size_blocked"] = {
             "en_us": "Not enough clear space for that finial size.",
@@ -1413,10 +1545,12 @@ def generate_languages(
                         language, family, metal, False
                     )
             if family in ARCHITECTURAL_FINISH_FAMILIES:
-                block_id = architectural_finish_block_id(family, WHITE_FINISH)
-                entries[f"block.{NAMESPACE}.{block_id}"] = translated_name(
-                    language, family, WHITE_FINISH, False
-                )
+                for finish in PLAIN_ARCHITECTURAL_FINISHES:
+                    if finish in architectural_finishes(family):
+                        block_id = architectural_finish_block_id(family, finish)
+                        entries[f"block.{NAMESPACE}.{block_id}"] = translated_name(
+                            language, family, finish, False
+                        )
         entries[f"catalogue.daedalon.design.{OLYMPIAN_GOD_ITEM_FAMILY}"] = translated_name(
             language, OLYMPIAN_GOD_ITEM_FAMILY, MATERIALS[0], False
         ).removeprefix(MATERIALS[0].capitalize() + " ")
@@ -1439,12 +1573,24 @@ def generate_languages(
             "Seitlich auf eine Statue anwenden, um den Gott zu wechseln; schleichen für die umgekehrte Reihenfolge.",
             "Úsalo en el lateral de una estatua para cambiar de dios; agáchate para retroceder.",
         )[language_index]
+        entries.update(GLAUX_CATALOGUE["translations"].get(language, {}))
+        entries.update(CLIENT_SETTINGS_TRANSLATIONS[language])
         write(
             RESOURCES / f"assets/{NAMESPACE}/lang/{language}.json",
             json_bytes(entries),
             check,
             changed,
         )
+        if language == "en_us":
+            # Keep the new locales tied to this run's English catalogue, including
+            # newly added controls, rather than reading possibly stale resources.
+            try:
+                from tools.daedalon_localization import translate_languages
+            except ModuleNotFoundError:
+                from daedalon_localization import translate_languages
+            for locale, translated in translate_languages(entries).items():
+                write(RESOURCES / f"assets/{NAMESPACE}/lang/{locale}.json",
+                      json_bytes(translated), check, changed)
 
 
 def tag_payload(values: list[str]) -> dict[str, object]:
@@ -1476,6 +1622,7 @@ def generate_tags(
         for family in families
         for block_id in ids_by_family[family]
     ]
+    all_refs.extend(f"{NAMESPACE}:{block_id}" for block_id in ADDITIONAL_BLOCK_IDS)
     aged_refs = [
         f"{NAMESPACE}:{block_id}"
         for family in families
@@ -1489,6 +1636,7 @@ def generate_tags(
         ]
         for metal, metal_families in METAL_FAMILIES.items()
     }
+    refs_by_metal[BRONZE_MATERIAL].extend(f"{NAMESPACE}:{block_id}" for block_id in ADDITIONAL_BLOCK_IDS)
     metal_refs = [ref for refs in refs_by_metal.values() for ref in refs]
     metal_ref_set = set(metal_refs)
     stone_refs = [ref for ref in all_refs if ref not in metal_ref_set]
@@ -1498,12 +1646,14 @@ def generate_tags(
         "aged": aged_refs,
         "stone": stone_refs,
     }
-    white_refs = [
-        f"{NAMESPACE}:{architectural_finish_block_id(family, WHITE_FINISH)}"
-        for family in families if family in ARCHITECTURAL_FINISH_FAMILIES
-    ]
-    if white_refs:
-        direct_tags[WHITE_FINISH] = white_refs
+    for finish in PLAIN_ARCHITECTURAL_FINISHES:
+        refs = [
+            f"{NAMESPACE}:{architectural_finish_block_id(family, finish)}"
+            for family in families if family in ARCHITECTURAL_FINISH_FAMILIES
+            and finish in architectural_finishes(family)
+        ]
+        if refs:
+            direct_tags[finish] = refs
     relation_tags: dict[str, list[str]] = {
         "rock": [f"#{NAMESPACE}:stone"],
         "weathered": [f"#{NAMESPACE}:aged"],
@@ -1618,6 +1768,9 @@ def generate_tags(
             for block_id in ids_by_family[family]
         ]
         direct_tags["bust"] = bust_refs
+        # Players use statue as the broad sculpture search, including busts.
+        # Keep bust as the precise form and share this meaning with explicit tags.
+        direct_tags.setdefault("statue", []).extend(bust_refs)
         relation_tags.setdefault("sculpture", []).append(f"#{NAMESPACE}:bust")
         relation_tags["portrait"] = [f"#{NAMESPACE}:bust"]
         relation_tags["head"] = [f"#{NAMESPACE}:bust"]
@@ -1713,6 +1866,16 @@ def generate_tags(
         ornament_values.append(f"#{NAMESPACE}:plinth")
     new_decor_families = [family for family in families if family in NEW_DECOR_FAMILIES]
     if new_decor_families:
+        for family in LANTERN_FAMILIES:
+            if family not in families:
+                continue
+            lantern = f"#{NAMESPACE}:{family}"
+            style = family.removesuffix("_lantern")
+            for synonym in ("lantern", "pier", "pier_lantern", "wall_lantern", "hanging", "hanging_lantern", "gas", "gas_burner", "glazing", "chain", "ceiling", style):
+                relation_tags.setdefault(synonym, []).append(lantern)
+            if style == "byzantine":
+                relation_tags.setdefault("guilloche", []).append(lantern)
+            ornament_values.append(lantern)
         for family in ("corinthian_frieze", "ionic_frieze", "gothic_frieze", "byzantine_frieze"):
             if family not in families:
                 continue
@@ -1728,7 +1891,7 @@ def generate_tags(
             if family not in families:
                 continue
             panel = f"#{NAMESPACE}:{family}"
-            terms = ("panel", "gothic", "tracery", "ribbed", "vault", "ornamental_panel")
+            terms = ("panel", *PANEL_SEARCH_TERMS[family], "ornamental_panel")
             terms += ("wall_panel", "wall_relief", "ceiling", "coffer", "coffered_ceiling", "ceiling_panel")
             for synonym in terms:
                 relation_tags.setdefault(synonym, []).append(panel)
@@ -1777,6 +1940,7 @@ def generate_tags(
             for family in (
                 "krene_fountain",
                 "pege_fountain",
+                "louterion_basin",
                 *FOUNTAIN_BASIN_FAMILIES,
             )
             if family in families
@@ -1836,6 +2000,8 @@ def generate_tags(
     # without creating invalid block tags, mining rules or loot tables.
     selector_ids = olympian_god_item_ids()
     selector_refs = [f"{NAMESPACE}:{item_id}" for item_id in selector_ids]
+    for tag in GLAUX_CATALOGUE["tags"]:
+        direct_tags.setdefault(tag, []).extend(f"{NAMESPACE}:{block_id}" for block_id in ADDITIONAL_BLOCK_IDS)
     item_direct = {name: list(values) for name, values in direct_tags.items()}
     item_relations = {name: list(values) for name, values in relation_tags.items()}
     item_direct[OLYMPIAN_GOD_ITEM_FAMILY] = selector_refs
@@ -1870,6 +2036,7 @@ def generate_tags(
     vocabulary = search_vocabulary((*families, OLYMPIAN_GOD_ITEM_FAMILY),
                                   ids_by_family | {OLYMPIAN_GOD_ITEM_FAMILY: selector_ids},
                                   item_direct, item_relations)
+    vocabulary["families"][GLAUX_CATALOGUE["block_id"]] = GLAUX_CATALOGUE["search_terms"]
     write(RESOURCES / f"assets/{NAMESPACE}/search_vocabulary.json",
           json_bytes(vocabulary), check, changed)
     return vocabulary

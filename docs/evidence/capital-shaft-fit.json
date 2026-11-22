@@ -1,0 +1,507 @@
+{
+  "method": "actual OBJ triangle cross-section; directed-winding polygon regions; all permitted rotations",
+  "anchor": "Uniform scale about existing top Y=1 (standard) or Y=2 (double)",
+  "maximum_search_scale": 2.5,
+  "scan_step": 0.01,
+  "round_up_scale_step": 0.001,
+  "coverage_tolerance_blocks_normalized": 0,
+  "checked_band_heights_blocks_normalized": [
+    0.0,
+    0.00625,
+    0.0125,
+    0.01875,
+    0.025,
+    0.03125,
+    0.0375,
+    0.04375,
+    0.05,
+    0.05625,
+    0.0625,
+    0.06875,
+    0.075,
+    0.08125,
+    0.0875,
+    0.09375,
+    0.1,
+    0.10625,
+    0.1125,
+    0.11875,
+    0.125
+  ],
+  "shaft_profiles_sha256": "ea2a5308f304ae0901028c4d7173cd8e258546b05794df896ec77d439b23d00f",
+  "head_policy": "Keep existing square/Gothic full-head collars and factor 1.0; only bare-shaft contact is enlarged.",
+  "runtime_dependencies_added": [],
+  "limitations": [
+    "Offline geometric evidence; no in-game visual acceptance.",
+    "Directed slice winding preserves enclosed holes and concavities; no convex hull or coverage buffer is used.",
+    "The supplied Byzantine mesh has some open cut contours; only bounded occupied regions count, which can conservatively increase its scale.",
+    "Existing full-head collars are retained and deliberately excluded from the enlargement search."
+  ],
+  "styles": {
+    "byzantine": {
+      "obj_sha256": "a0e565b4a6d0f71b3798b63eb0842a8597f0021df26b25767ccfcea267c7e943",
+      "definition_sha256": "43adac2db8d2dbd571d07c1bb27d12e3c370dce711f8aa6133a7f372c9b189af",
+      "vertices": 6738,
+      "triangles": 17999,
+      "fits": [
+        {
+          "size": "standard",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.56454758,
+          "safe_scale": 1.565,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.565,
+          "section_polygons": 228,
+          "section_occupied_polygons": 203,
+          "section_cut_length": 0.0421374329,
+          "section_dangle_length": 0.1507706743,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "standard",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.55463751,
+          "safe_scale": 1.555,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.555,
+          "section_polygons": 227,
+          "section_occupied_polygons": 203,
+          "section_cut_length": 0.0420825909,
+          "section_dangle_length": 0.1508842975,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.75769007,
+          "safe_scale": 1.758,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.516,
+          "section_polygons": 203,
+          "section_occupied_polygons": 187,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.75350912,
+          "safe_scale": 1.754,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.508,
+          "section_polygons": 194,
+          "section_occupied_polygons": 181,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        }
+      ]
+    },
+    "corinthian": {
+      "obj_sha256": "a654a67e3589a393afd67f67bd4a4f7a0d8a67fc6fb493595d2f075382759386",
+      "definition_sha256": "4a18ddfcbd8d003324b1a0ca5f8e3013b57b2dbe52b91fc513cd41f00dc4282c",
+      "vertices": 4981,
+      "triangles": 12000,
+      "fits": [
+        {
+          "size": "standard",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.28767448,
+          "safe_scale": 1.288,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.288,
+          "section_polygons": 66,
+          "section_occupied_polygons": 46,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "standard",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.34145992,
+          "safe_scale": 1.342,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.342,
+          "section_polygons": 71,
+          "section_occupied_polygons": 50,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.73079643,
+          "safe_scale": 1.731,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.462,
+          "section_polygons": 90,
+          "section_occupied_polygons": 76,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.72806963,
+          "safe_scale": 1.729,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.458,
+          "section_polygons": 93,
+          "section_occupied_polygons": 76,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        }
+      ]
+    },
+    "gothic": {
+      "obj_sha256": "0d19a83fe836db5993efe5ee4c903ad0a1e4d7c181fa1680a5a232339f971f9f",
+      "definition_sha256": "c455939947649692883544c8be869f405ddb6492d6ee17ed5bb807b381dc645e",
+      "vertices": 2897,
+      "triangles": 5999,
+      "fits": [
+        {
+          "size": "standard",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.58865452,
+          "safe_scale": 1.589,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.589,
+          "section_polygons": 30,
+          "section_occupied_polygons": 30,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "standard",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.56978838,
+          "safe_scale": 1.57,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.57,
+          "section_polygons": 30,
+          "section_occupied_polygons": 30,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.84314543,
+          "safe_scale": 1.844,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.688,
+          "section_polygons": 10,
+          "section_occupied_polygons": 10,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.82871811,
+          "safe_scale": 1.829,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.658,
+          "section_polygons": 7,
+          "section_occupied_polygons": 7,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        }
+      ]
+    },
+    "greek_ionic": {
+      "obj_sha256": "aeb6a3385165b57adacc2de6a494746e6b51ac7e2aaa332e8bde0d532ccdf9a7",
+      "definition_sha256": "c477b8e93750e6a9f08d0a5413d98f1bbfbf4833d1c6524b4fbc3dddab14d1c0",
+      "vertices": 2954,
+      "triangles": 5999,
+      "fits": [
+        {
+          "size": "standard",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.48314331,
+          "safe_scale": 1.484,
+          "orientations_degrees": [
+            0,
+            45,
+            90,
+            135
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.484,
+          "section_polygons": 16,
+          "section_occupied_polygons": 16,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "standard",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.44895584,
+          "safe_scale": 1.449,
+          "orientations_degrees": [
+            0,
+            45,
+            90,
+            135
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.449,
+          "section_polygons": 15,
+          "section_occupied_polygons": 15,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.68257118,
+          "safe_scale": 1.683,
+          "orientations_degrees": [
+            0,
+            45,
+            90,
+            135
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.366,
+          "section_polygons": 5,
+          "section_occupied_polygons": 2,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 2.01676e-05,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.68001696,
+          "safe_scale": 1.681,
+          "orientations_degrees": [
+            0,
+            45,
+            90,
+            135
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.362,
+          "section_polygons": 5,
+          "section_occupied_polygons": 2,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 5.7106e-05,
+          "section_invalid_length": 0.0
+        }
+      ]
+    },
+    "roman_composite": {
+      "obj_sha256": "39e7b39528fdd3d2373ce7bf4006d212fd2bd6ee51316fbe534419e540a4716f",
+      "definition_sha256": "dfdbada8bba6c9a265cec8f3f9e6c2b4c16a8dfc076fe91aede7637020cc7782",
+      "vertices": 5216,
+      "triangles": 11999,
+      "fits": [
+        {
+          "size": "standard",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.46760582,
+          "safe_scale": 1.468,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.468,
+          "section_polygons": 118,
+          "section_occupied_polygons": 71,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "standard",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.43485817,
+          "safe_scale": 1.435,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.435,
+          "section_polygons": 113,
+          "section_occupied_polygons": 67,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.71698805,
+          "safe_scale": 1.717,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.434,
+          "section_polygons": 80,
+          "section_occupied_polygons": 44,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.71290676,
+          "safe_scale": 1.713,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.426,
+          "section_polygons": 83,
+          "section_occupied_polygons": 47,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        }
+      ]
+    },
+    "tuscan": {
+      "obj_sha256": "29e9ace4c2b6391a32350d638710c63baee33187426138d5cf8868d0ccdb0fa0",
+      "definition_sha256": "c87e360d7c02761c77ab3eddba8702aef344c6401da974c4ab9e6855fdb4224b",
+      "vertices": 3002,
+      "triangles": 6000,
+      "fits": [
+        {
+          "size": "standard",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.45676338,
+          "safe_scale": 1.457,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.457,
+          "section_polygons": 1,
+          "section_occupied_polygons": 1,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "standard",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.45483431,
+          "safe_scale": 1.455,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -0.455,
+          "section_polygons": 1,
+          "section_occupied_polygons": 1,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "square_shaft",
+          "minimum_scale_estimate": 1.58947359,
+          "safe_scale": 1.59,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.18,
+          "section_polygons": 1,
+          "section_occupied_polygons": 1,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        },
+        {
+          "size": "double",
+          "support": "gothic_shaft",
+          "minimum_scale_estimate": 1.57913837,
+          "safe_scale": 1.58,
+          "orientations_degrees": [
+            0,
+            45
+          ],
+          "maximum_uncovered_area_normalized": 0.0,
+          "rendered_bottom_blocks": -1.16,
+          "section_polygons": 2,
+          "section_occupied_polygons": 2,
+          "section_cut_length": 0.0,
+          "section_dangle_length": 0.0,
+          "section_invalid_length": 0.0
+        }
+      ]
+    }
+  },
+  "slice_diagnostics": "Maximum over every checked band height at the accepted scale"
+}

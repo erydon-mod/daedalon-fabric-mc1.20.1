@@ -18,14 +18,17 @@ public final class FountainWaterShape {
     public static final FountainWaterShape GOTHIC_BOWL = load("gothic_bowl");
     public static final FountainWaterShape GEORGIAN_BOWL = load("georgian_bowl");
     public static final FountainWaterShape GREEK_BOWL = load("greek_bowl");
+    public static final FountainWaterShape LOUTERION = load("louterion");
     private static final int PRISM_STRIPS = 48;
     private final float[] x;
     private final float[] z;
+    private final float surfaceY;
     private final float halfWidth;
 
-    private FountainWaterShape(float[] x, float[] z) {
+    private FountainWaterShape(float[] x, float[] z, float surfaceY) {
         this.x = x;
         this.z = z;
+        this.surfaceY = surfaceY;
         float width = 0.0F;
         for (int i = 0; i < x.length; i++) {
             width = Math.max(width, Math.max(Math.abs(x[i]), Math.abs(z[i])));
@@ -39,8 +42,8 @@ public final class FountainWaterShape {
             if (stream == null) {
                 throw new IllegalStateException("Missing fountain waterline: " + path);
             }
-            JsonArray points = JsonParser.parseReader(new InputStreamReader(stream, StandardCharsets.UTF_8))
-                    .getAsJsonObject().getAsJsonArray("points");
+            var profile = JsonParser.parseReader(new InputStreamReader(stream, StandardCharsets.UTF_8)).getAsJsonObject();
+            JsonArray points = profile.getAsJsonArray("points");
             if (points.size() < 3 || points.size() > 256) {
                 throw new IllegalStateException("Invalid fountain waterline: " + path);
             }
@@ -50,7 +53,7 @@ public final class FountainWaterShape {
                 x[i] = points.get(i).getAsJsonArray().get(0).getAsFloat();
                 z[i] = points.get(i).getAsJsonArray().get(1).getAsFloat();
             }
-            return new FountainWaterShape(x, z);
+            return new FountainWaterShape(x, z, profile.get("water_surface_y").getAsFloat());
         } catch (IOException exception) {
             throw new IllegalStateException("Cannot read fountain waterline: " + path, exception);
         }
@@ -60,6 +63,7 @@ public final class FountainWaterShape {
     public float x(int index) { return x[index]; }
     public float z(int index) { return z[index]; }
     public float halfWidth() { return halfWidth; }
+    public float surfaceY() { return surfaceY; }
 
     public boolean contains(double px, double pz) {
         boolean inside = false;

@@ -1,0 +1,15 @@
+{
+  "obj": "daedalon:models/mesh/lantern_suspension.obj",
+  "flip_v": false,
+  "repair_degenerate_uvs": true,
+  "force_uv_projection": false,
+  "uv_projection": "axis_stabilized_box",
+  "box_projection_span": 2.0,
+  "smooth_normals": false,
+  "fit_to_block": false,
+  "translate": [0.5, 0.0, 0.5],
+  "particle": "daedalon:block/lantern_lead",
+  "materials": {
+    "lead": "daedalon:block/lantern_lead"
+  }
+}

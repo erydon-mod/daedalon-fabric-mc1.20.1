@@ -1,0 +1,26 @@
+{
+  "providers": [
+    {
+      "type": "reference",
+      "id": "minecraft:include/space"
+    },
+    {
+      "type": "ttf",
+      "file": "daedalon:cinzel.ttf",
+      "shift": [
+        0.0,
+        0.0
+      ],
+      "size": 10.0,
+      "oversample": 4.0
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:include/default"
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:include/unifont"
+    }
+  ]
+}

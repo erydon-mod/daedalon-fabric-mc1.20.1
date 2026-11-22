@@ -1,11 +1,17 @@
 package com.oliver.daedalon.item;
 
 import com.oliver.daedalon.block.DecorOrientation;
+import com.oliver.daedalon.block.BenchBlock;
+import com.oliver.daedalon.block.HedraBlock;
+import com.oliver.daedalon.block.HedraOrientation;
 import com.oliver.daedalon.block.CapitalPartBlock;
 import com.oliver.daedalon.block.FountainBasinPartBlock;
 import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.MonopterosPartBlock;
 import com.oliver.daedalon.block.ObeliskPartBlock;
+import com.oliver.daedalon.block.LanternBlock;
+import com.oliver.daedalon.block.LanternChainBlock;
+import com.oliver.daedalon.block.LanternPartBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Property;
 
@@ -27,13 +33,20 @@ public final class DaedalonDebugProperties {
 
     /** The actual player-visible controls, excluding automatic and helper-only state. */
     public static List<Property<?>> ordered(BlockState state) {
+        if (state.getBlock() instanceof com.oliver.daedalon.glaux.GlauxBlock)
+            return List.of(com.oliver.daedalon.glaux.GlauxBlock.FACING);
         if (state.getBlock() instanceof CapitalPartBlock || state.getBlock() instanceof FountainBasinPartBlock
-                || state.getBlock() instanceof MonopterosPartBlock || state.getBlock() instanceof ObeliskPartBlock) return List.of();
+                || state.getBlock() instanceof MonopterosPartBlock || state.getBlock() instanceof ObeliskPartBlock
+                || state.getBlock() instanceof LanternPartBlock || state.getBlock() instanceof LanternChainBlock) return List.of();
         boolean manual = state.getBlock() instanceof FriezeBlock && state.get(FriezeBlock.MANUAL_CORNER);
         boolean repeating = !(state.getBlock() instanceof FriezeBlock frieze) || frieze.style().sections() > 1;
-        return ordered(state.getBlock().getStateManager().getProperties().stream()
+        List<Property<?>> controls=new ArrayList<>(state.getBlock().getStateManager().getProperties().stream()
                 .filter(property -> property != FriezeBlock.JOIN || manual)
+                .filter(property -> !(state.getBlock() instanceof LanternBlock) || property!=LanternBlock.CANOPY && property!=LanternBlock.LIT && property!=LanternBlock.BRIGHTNESS)
+                .filter(property -> !(state.getBlock() instanceof HedraBlock) || property!=BenchBlock.FACING)
                 .filter(property -> property != FriezeBlock.PATTERN || repeating).toList());
+        if(state.getBlock() instanceof LanternBlock) controls.add(LanternBlock.LIGHT);
+        return ordered(controls);
     }
 
     public static List<String> fountainControls(boolean hasPlinth) {
@@ -61,6 +74,11 @@ public final class DaedalonDebugProperties {
     }
 
     public static Property<?> remembered(List<Property<?>> properties, String rememberedName) {
+        if ("facing".equals(rememberedName) && properties.stream().anyMatch(
+                property -> property.getName().equals("orientation") && property.getType() == HedraOrientation.class)) {
+            rememberedName = "orientation";
+        }
+        if(("lit".equals(rememberedName) || "brightness".equals(rememberedName)) && properties.contains(LanternBlock.LIGHT)) rememberedName="light";
         if ("orientation".equals(rememberedName) && properties.stream().anyMatch(property -> property.getName().equals("facing"))
                 && !properties.contains(DecorOrientation.PROPERTY)) rememberedName = "facing";
         for (Property<?> property : properties) {
@@ -117,10 +135,15 @@ public final class DaedalonDebugProperties {
             case "raised_base" -> 3;
             case "offset" -> 4;
             case "ceiling" -> 5;
+            case "mount" -> 5;
             case "facing", "orientation", "capital_orientation" -> 6;
             case "pattern" -> 7;
             case "manual_corner" -> 8;
             case "join" -> 9;
+            case "lit" -> 10;
+            case "light" -> 10;
+            case "brightness" -> 11;
+            case "contents" -> 90;
             case "waterlogged" -> 100;
             default -> 50;
         };
@@ -130,6 +153,14 @@ public final class DaedalonDebugProperties {
         String valueName = property.name(value);
         if (value instanceof Boolean flag) return flag ? 1 : 0;
         return switch (property.getName()) {
+            case "contents" -> switch (valueName) {
+                case "empty" -> 0;
+                case "earth" -> 1;
+                case "water" -> 2;
+                default -> 100;
+            };
+            case "mount" -> switch(valueName) { case "pier"->0;case "wall"->1;case "hanging"->2;default->100; };
+            case "light" -> switch(valueName) { case "low"->0;case "bright"->1;case "off"->2;default->100; };
             case "orientation", "capital_orientation" -> switch (valueName) {
                 case "straight" -> 0;
                 case "diagonal" -> 1;

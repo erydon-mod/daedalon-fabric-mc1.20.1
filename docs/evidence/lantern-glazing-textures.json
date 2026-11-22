@@ -1,0 +1,22 @@
+{
+  "source_repository": "https://github.com/erydon-mod/erydon",
+  "provenance": "Exact copies of existing ERYDON native glazing and lead artwork; no recolouring or resizing.",
+  "textures": [
+    {
+      "source": "src/main/resources/assets/erydon/textures/block/glazing_crystal.png",
+      "sha256": "54177c079f597b4f1025e3e956ac52b28ee5f6e73a38be0f564ab7614addb515",
+      "destination": "src/main/resources/assets/daedalon/textures/block/lantern_glazing.png"
+    },
+    {
+      "source": "src/main/resources/resourcepacks/high_polish_glazing/assets/erydon/textures/block/glazing_crystal_s.png",
+      "sha256": "4f6f4342e8664dd6ab3bf1da502437e42f4266adbcd66807c430cbde666b0a55",
+      "destination": "src/main/resources/assets/daedalon/textures/block/lantern_glazing_s.png"
+    },
+    {
+      "source": "src/main/resources/assets/erydon/textures/block/lead_black.png",
+      "sha256": "6646e771b925129e929c79b1db09cd999a21d0869c519d5b40a8915e15aef753",
+      "destination": "src/main/resources/assets/daedalon/textures/block/lantern_lead.png"
+    }
+  ],
+  "source_commit": "61ab765c60a3b3adbd242549ea09d47a2473ed4d"
+}

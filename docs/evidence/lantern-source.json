@@ -1,0 +1,5299 @@
+{
+  "schema": 1,
+  "families": {
+    "georgian": {
+      "schema": 1,
+      "provenance": "Oliver's own supplied Meshy creations and approved clean authored derivatives",
+      "blender_version": "5.2.0 LTS",
+      "blender_build": "fbe6228777e7",
+      "coordinate_contract": "Y-up, front+Z; body height1m excluding suspension; pier/hanging centredXZ; wall rearZ0/front+Z",
+      "canonical_burner_height_m": 0.15405888538380652,
+      "mounts": [
+        {
+          "style": "georgian",
+          "mount": "pier",
+          "source": "georgian lantern 2 - clean seated.blend",
+          "source_sha256": "4dd405a9bfd6e0f2cdfc9aa0468e3f5ff5d979831265305655d9cc8bdfd8f11d",
+          "source_original_bounds": [
+            [
+              -0.5291415452957153,
+              -0.6110000014305115,
+              -0.949999988079071
+            ],
+            [
+              0.5291415452957153,
+              0.6110000014305115,
+              0.9520000219345093
+            ]
+          ],
+          "source_mesh_digests": {
+            "01 Clean six-sided arched frame": "495116a4d2c65a70e94d9ab56367ee1d411afdff80b27edd272696e56dcf465f",
+            "01 Fine arched glazing trim - face 1": "0ca8240e9006c47076a6cfa4066cd1d47fe78c506c3155cc1e015556ee0a7c95",
+            "01 Fine arched glazing trim - face 2": "77f88aada82b515b0ebf7a4c50717dcf0e23c2cbe99c4534f60bb4d76e8921f2",
+            "01 Fine arched glazing trim - face 3": "300945ec6c51fdc303035953c53cae7ab7032118a48f7bd25cad20df09e56057",
+            "01 Fine arched glazing trim - face 4": "1c9f0898f55e7ce51db3adbd6dee9c85b9f53bb71ae6ddd4ec94427dd8e97cfa",
+            "01 Fine arched glazing trim - face 5": "dc66db9240cb67cd79698fea8af1822c53bd1433811d53c27eed2461a44fbf9d",
+            "01 Fine arched glazing trim - face 6": "726646456e1112a4f582ae91754a24e0359ae5b1d8968743f1028bac14bcc564",
+            "02 Clean upper cornice and eaves": "2b805a9ecdce34492fd798673d1dbf94ee4c4c93e87c46528d7684eac5124728",
+            "03 Smooth six-panel S-curve roof": "3f3e09883de02c9efbfd0ca9da49266221480fe6b912c4d4f21cd2f0cba43dab",
+            "04 Clean lower sill and mouldings": "d8f5ca73b43f982122de67c640e693e7c4671e03f4830bae5d0ab2befba72a4f",
+            "05 Clean seated pedestal and broad flat foot": "4273a91bf12f37c3dad252c90a6185d7cd7d83c2e03d6da245acf213f56c058f",
+            "06 Clean top finial - moulded collar": "a0c8283fd2f0ee857a609616f4637fe81b9dda9b3e71a0f677728912d605f449",
+            "07 Clean top finial - ovoid": "cd8cc113b80d30d28edbd1b7af2486b2fe9b604b4742f1f124897c80040e91ec"
+          },
+          "source_modifiers_baked": {},
+          "blender_file": "georgian-pier-game-ready.blend",
+          "blender_sha256": "949e6c71f56152f30ac1eda47948aca075f9e8269b71eae70f14f073287435c5",
+          "body_bounds": [
+            [
+              -0.3212408125400543,
+              0.0,
+              -0.27820271253585815
+            ],
+            [
+              0.3212408125400543,
+              1.0,
+              0.27820271253585815
+            ]
+          ],
+          "body_height_m": 1.0,
+          "floor_y": 0.19137747680879488,
+          "normalization_scale": 0.5257623526473377,
+          "source_front": "+X",
+          "runtime_front": "+Z",
+          "wall_rear_z": null,
+          "burner_height_m": 0.15405888538380652,
+          "burner_raise_m": 0,
+          "burner_base_y": 0.19137747680879488,
+          "glass_panes": 6,
+          "objects": [
+            {
+              "name": "01 Clean six-sided arched frame",
+              "role": "stone",
+              "vertices": 1776,
+              "polygons": 1642,
+              "triangles": 3572,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 1",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 2",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 3",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 4",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 5",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 6",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Clean upper cornice and eaves",
+              "role": "stone",
+              "vertices": 144,
+              "polygons": 140,
+              "triangles": 284,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Smooth six-panel S-curve roof",
+              "role": "stone",
+              "vertices": 198,
+              "polygons": 194,
+              "triangles": 392,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Clean lower sill and mouldings",
+              "role": "stone",
+              "vertices": 108,
+              "polygons": 104,
+              "triangles": 212,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "05 Clean seated pedestal and broad flat foot",
+              "role": "stone",
+              "vertices": 144,
+              "polygons": 140,
+              "triangles": 284,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "06 Clean top finial - moulded collar",
+              "role": "stone",
+              "vertices": 126,
+              "polygons": 122,
+              "triangles": 248,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "07 Clean top finial - ovoid",
+              "role": "stone",
+              "vertices": 961,
+              "polygons": 961,
+              "triangles": 1918,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL01 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL02 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL03 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL04 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL05 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL06 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G01 Small floor mounting collar",
+              "role": "bronze",
+              "vertices": 120,
+              "polygons": 98,
+              "triangles": 236,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G02 Sturdier gas riser - diameter 0.032",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G03 Proportional hexagonal union",
+              "role": "bronze",
+              "vertices": 24,
+              "polygons": 20,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G04 Discreet rear valve branch",
+              "role": "bronze",
+              "vertices": 32,
+              "polygons": 18,
+              "triangles": 60,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G05 Proportional rear valve knob",
+              "role": "bronze",
+              "vertices": 64,
+              "polygons": 50,
+              "triangles": 124,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G06 Broader tip retaining collar",
+              "role": "bronze",
+              "vertices": 96,
+              "polygons": 74,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G07 Pale wider burner tip - diameter 0.044",
+              "role": "bronze",
+              "vertices": 72,
+              "polygons": 50,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G08 Dark split-jet slit",
+              "role": "bronze",
+              "vertices": 8,
+              "polygons": 6,
+              "triangles": 12,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            }
+          ],
+          "authoring_polygons": 5115,
+          "authoring_triangles": 11022,
+          "triangles": 11022,
+          "runtime_geometry_policy": "Full approved authoring geometry retained; no runtime reduction",
+          "sources_unchanged": true,
+          "provenance": "Oliver's own Meshy creation, approved clean authored lantern family.",
+          "flame_anchor": [
+            0.0,
+            0.345436364,
+            0.0
+          ],
+          "flame_bounds": [
+            [
+              -0.0175,
+              0.345436364,
+              -0.015155444566227678
+            ],
+            [
+              0.0175,
+              0.420436364,
+              0.015155444566227678
+            ]
+          ],
+          "flame_triangles": 12,
+          "flame_authoring_polygons": 6,
+          "flame_width_m": 0.035,
+          "flame_height_m": 0.075,
+          "flame_group": "pier_flame",
+          "flame_uv_policy": "Runtime bottom V1 / top V0; Blender bottom V0 / top V1",
+          "flame_authoring_file": "georgian lantern 2 - seated limestone and metal.blend",
+          "flame_authoring_sha256": "5a0975e8b82d2d828954f308a5bef9b08a2c86eae2400b44042bf8b24110743d",
+          "clean_flame_authoring_file": "georgian lantern 2 - clean seated.blend",
+          "clean_flame_authoring_sha256": "de6fbcf0f626b580a0743f1b0c3df8ba26e7baab8b95daad40ef41aa26e481ab",
+          "flame_switch": "Scene custom property: Gas flame ON",
+          "non_flame_authoring_geometry_unchanged": true
+        },
+        {
+          "style": "georgian",
+          "mount": "wall",
+          "source": "georgian wall lantern 2 - gas concept.blend",
+          "source_sha256": "04ea21a2cff0aa850bfb8fa11700e354e79d593d94bf543424754fe672f73b0c",
+          "source_original_bounds": [
+            [
+              -0.15000003576278687,
+              -0.6110000014305115,
+              -1.1718000173568726
+            ],
+            [
+              0.5291415452957153,
+              0.6110000014305115,
+              0.9520000219345093
+            ]
+          ],
+          "source_mesh_digests": {
+            "01 Clean arched frame and flush back": "de0b2f14ab40ea25bd95e38aa833d4aedf71e15f0b21151c28d4ea6d98d3221c",
+            "01 Fine arched glazing trim - right": "726646456e1112a4f582ae91754a24e0359ae5b1d8968743f1028bac14bcc564",
+            "01 Fine arched glazing trim - front": "0ca8240e9006c47076a6cfa4066cd1d47fe78c506c3155cc1e015556ee0a7c95",
+            "01 Fine arched glazing trim - left": "77f88aada82b515b0ebf7a4c50717dcf0e23c2cbe99c4534f60bb4d76e8921f2",
+            "02 Clean upper cornice and eaves": "37f7721e0967e595730ec93a64a5381fa8eec5bbb5cf7fc169dfe0682d0faddb",
+            "03 Smooth six-panel S-curve roof": "87e0848cac44c03f72da000aea713d7ab74c570c4e38280014ee5c1d03cd410e",
+            "04 Clean lower sill and mouldings": "1ccb1a4dd24898dff9e7f164ead613f02b70782ef00c4b022bb18bdf3bf5797d",
+            "05 Deeper inverted S-curve underside": "e39fbce9e39465f03e3c704abd901524804ec462d9e009306d7a8530d506c1f9",
+            "06 Clean top finial - moulded collar": "a0c8283fd2f0ee857a609616f4637fe81b9dda9b3e71a0f677728912d605f449",
+            "07 Clean top finial - ovoid": "cd8cc113b80d30d28edbd1b7af2486b2fe9b604b4742f1f124897c80040e91ec",
+            "08 Clean lower finial - inverted collar": "7c002900b6ffb4f84d1f5ee34f7cf0e2cf95eb0ec791b7c92e7cd105dc0db5e0",
+            "09 Clean lower finial - inverted ovoid": "ac19be6520f3041c031b49d9a21b21d89d5d0eae40cdfc78da749310626a030d"
+          },
+          "source_modifiers_baked": {
+            "01 Clean arched frame and flush back": [
+              {
+                "name": "Decimate",
+                "type": "DECIMATE",
+                "viewport": true,
+                "render": true,
+                "ratio": 1.0,
+                "reduces_geometry": false
+              }
+            ]
+          },
+          "blender_file": "georgian-wall-game-ready.blend",
+          "blender_sha256": "9c2c7a73b4cde4aac880d166c5ecd269b414cb3f970a24d16d4cd5dcabf36f93",
+          "body_bounds": [
+            [
+              -0.2876918613910675,
+              0.0,
+              0.0
+            ],
+            [
+              0.2876918613910675,
+              1.0,
+              0.31977662444114685
+            ]
+          ],
+          "body_height_m": 1.0,
+          "floor_y": 0.27582634016710855,
+          "normalization_scale": 0.4708541206796737,
+          "source_front": "+X",
+          "runtime_front": "+Z",
+          "wall_rear_z": 0,
+          "burner_height_m": 0.15405888538380652,
+          "burner_raise_m": 0,
+          "burner_base_y": 0.27582634016710855,
+          "glass_panes": 3,
+          "objects": [
+            {
+              "name": "01 Clean arched frame and flush back",
+              "role": "stone",
+              "vertices": 1032,
+              "polygons": 967,
+              "triangles": 2072,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - right",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - front",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - left",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Clean upper cornice and eaves",
+              "role": "stone",
+              "vertices": 144,
+              "polygons": 118,
+              "triangles": 284,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Smooth six-panel S-curve roof",
+              "role": "stone",
+              "vertices": 200,
+              "polygons": 167,
+              "triangles": 396,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Clean lower sill and mouldings",
+              "role": "stone",
+              "vertices": 108,
+              "polygons": 88,
+              "triangles": 212,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "05 Deeper inverted S-curve underside",
+              "role": "stone",
+              "vertices": 200,
+              "polygons": 169,
+              "triangles": 396,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "06 Clean top finial - moulded collar",
+              "role": "stone",
+              "vertices": 126,
+              "polygons": 122,
+              "triangles": 248,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "07 Clean top finial - ovoid",
+              "role": "stone",
+              "vertices": 961,
+              "polygons": 961,
+              "triangles": 1918,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Clean lower finial - inverted collar",
+              "role": "stone",
+              "vertices": 126,
+              "polygons": 122,
+              "triangles": 248,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Clean lower finial - inverted ovoid",
+              "role": "stone",
+              "vertices": 961,
+              "polygons": 961,
+              "triangles": 1918,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL01 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL02 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL03 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G08 Dark split-jet slit",
+              "role": "bronze",
+              "vertices": 8,
+              "polygons": 6,
+              "triangles": 12,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G07 Pale wider burner tip - diameter 0.044",
+              "role": "bronze",
+              "vertices": 72,
+              "polygons": 50,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G06 Broader tip retaining collar",
+              "role": "bronze",
+              "vertices": 96,
+              "polygons": 74,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G05 Proportional rear valve knob",
+              "role": "bronze",
+              "vertices": 64,
+              "polygons": 50,
+              "triangles": 124,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G04 Discreet rear valve branch",
+              "role": "bronze",
+              "vertices": 32,
+              "polygons": 18,
+              "triangles": 60,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G03 Proportional hexagonal union",
+              "role": "bronze",
+              "vertices": 24,
+              "polygons": 20,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G02 Sturdier gas riser - diameter 0.032",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G01 Small floor mounting collar",
+              "role": "bronze",
+              "vertices": 120,
+              "polygons": 98,
+              "triangles": 236,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            }
+          ],
+          "authoring_polygons": 4752,
+          "authoring_triangles": 10196,
+          "triangles": 10196,
+          "runtime_geometry_policy": "Full approved authoring geometry retained; no runtime reduction",
+          "sources_unchanged": true,
+          "provenance": "Oliver's own Meshy creation, approved clean authored lantern family.",
+          "flame_anchor": [
+            0.0,
+            0.429885238,
+            0.0706281365
+          ],
+          "flame_bounds": [
+            [
+              -0.0175,
+              0.429885238,
+              0.055472691933772314
+            ],
+            [
+              0.0175,
+              0.504885238,
+              0.08578358106622767
+            ]
+          ],
+          "flame_triangles": 12,
+          "flame_authoring_polygons": 6,
+          "flame_width_m": 0.035,
+          "flame_height_m": 0.075,
+          "flame_group": "wall_flame",
+          "flame_uv_policy": "Runtime bottom V1 / top V0; Blender bottom V0 / top V1",
+          "flame_authoring_file": "georgian wall lantern 2 - gas concept.blend",
+          "flame_authoring_sha256": "65ef6107efad76d6de81e447bd12108bc9a3acdde453e65745a526662158dd27",
+          "clean_flame_authoring_file": "georgian wall lantern 2 - wall design.blend",
+          "clean_flame_authoring_sha256": "7b9e9aa7379e7191ca073f5f10f6e514f4046f39c00b6ca356e6715aa59991e3",
+          "flame_switch": "Scene custom property: Gas flame ON",
+          "non_flame_authoring_geometry_unchanged": true
+        },
+        {
+          "style": "georgian",
+          "mount": "hanging",
+          "source": "georgian lantern 2 - hanging limestone and metal.blend",
+          "source_sha256": "77f68d789565d578dcc5b225d8201cf8a05b0f4dcbe77f205f4fa5eac9a88a77",
+          "source_original_bounds": [
+            [
+              -0.5291415452957153,
+              -0.6110000014305115,
+              -1.1718000173568726
+            ],
+            [
+              0.5291415452957153,
+              0.6110000014305115,
+              0.9520000219345093
+            ]
+          ],
+          "source_mesh_digests": {
+            "01 Clean six-sided arched frame": "495116a4d2c65a70e94d9ab56367ee1d411afdff80b27edd272696e56dcf465f",
+            "01 Fine arched glazing trim - face 1": "0ca8240e9006c47076a6cfa4066cd1d47fe78c506c3155cc1e015556ee0a7c95",
+            "01 Fine arched glazing trim - face 2": "77f88aada82b515b0ebf7a4c50717dcf0e23c2cbe99c4534f60bb4d76e8921f2",
+            "01 Fine arched glazing trim - face 3": "300945ec6c51fdc303035953c53cae7ab7032118a48f7bd25cad20df09e56057",
+            "01 Fine arched glazing trim - face 4": "1c9f0898f55e7ce51db3adbd6dee9c85b9f53bb71ae6ddd4ec94427dd8e97cfa",
+            "01 Fine arched glazing trim - face 5": "dc66db9240cb67cd79698fea8af1822c53bd1433811d53c27eed2461a44fbf9d",
+            "01 Fine arched glazing trim - face 6": "726646456e1112a4f582ae91754a24e0359ae5b1d8968743f1028bac14bcc564",
+            "02 Clean upper cornice and eaves": "2b805a9ecdce34492fd798673d1dbf94ee4c4c93e87c46528d7684eac5124728",
+            "03 Smooth six-panel S-curve roof": "3f3e09883de02c9efbfd0ca9da49266221480fe6b912c4d4f21cd2f0cba43dab",
+            "04 Clean lower sill and mouldings": "d8f5ca73b43f982122de67c640e693e7c4671e03f4830bae5d0ab2befba72a4f",
+            "06 Clean top finial - moulded collar": "a0c8283fd2f0ee857a609616f4637fe81b9dda9b3e71a0f677728912d605f449",
+            "07 Clean top finial - ovoid": "cd8cc113b80d30d28edbd1b7af2486b2fe9b604b4742f1f124897c80040e91ec",
+            "05 Full inverted S-curve hanging underside": "15a98c0f9b51c4a8297ba299d3633197da791f8999c4c143c0988279319c213f",
+            "09 Clean lower finial - inverted ovoid": "ac19be6520f3041c031b49d9a21b21d89d5d0eae40cdfc78da749310626a030d",
+            "08 Clean lower finial - inverted collar": "7c002900b6ffb4f84d1f5ee34f7cf0e2cf95eb0ec791b7c92e7cd105dc0db5e0"
+          },
+          "source_modifiers_baked": {},
+          "blender_file": "georgian-hanging-game-ready.blend",
+          "blender_sha256": "9accaa3f803f995e9d691028d7764af9793bb70ad6618a4e4c195f3ba2310db5",
+          "body_bounds": [
+            [
+              -0.2876918613910675,
+              0.0,
+              -0.24914848804473877
+            ],
+            [
+              0.2876918613910675,
+              1.0,
+              0.24914848804473877
+            ]
+          ],
+          "body_height_m": 1.0,
+          "floor_y": 0.27582634016710855,
+          "normalization_scale": 0.4708541206796737,
+          "source_front": "+X",
+          "runtime_front": "+Z",
+          "wall_rear_z": null,
+          "burner_height_m": 0.15405888538380652,
+          "burner_raise_m": 0,
+          "burner_base_y": 0.27582634016710855,
+          "glass_panes": 6,
+          "objects": [
+            {
+              "name": "01 Clean six-sided arched frame",
+              "role": "stone",
+              "vertices": 1776,
+              "polygons": 1642,
+              "triangles": 3572,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 1",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 2",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 3",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 4",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 5",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "01 Fine arched glazing trim - face 6",
+              "role": "lead",
+              "vertices": 216,
+              "polygons": 216,
+              "triangles": 432,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Clean upper cornice and eaves",
+              "role": "stone",
+              "vertices": 144,
+              "polygons": 140,
+              "triangles": 284,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Smooth six-panel S-curve roof",
+              "role": "stone",
+              "vertices": 198,
+              "polygons": 194,
+              "triangles": 392,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Clean lower sill and mouldings",
+              "role": "stone",
+              "vertices": 108,
+              "polygons": 104,
+              "triangles": 212,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "06 Clean top finial - moulded collar",
+              "role": "stone",
+              "vertices": 126,
+              "polygons": 122,
+              "triangles": 248,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "07 Clean top finial - ovoid",
+              "role": "stone",
+              "vertices": 961,
+              "polygons": 961,
+              "triangles": 1918,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "05 Full inverted S-curve hanging underside",
+              "role": "stone",
+              "vertices": 198,
+              "polygons": 194,
+              "triangles": 392,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Clean lower finial - inverted ovoid",
+              "role": "stone",
+              "vertices": 961,
+              "polygons": 961,
+              "triangles": 1918,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Clean lower finial - inverted collar",
+              "role": "stone",
+              "vertices": 126,
+              "polygons": 122,
+              "triangles": 248,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL01 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL02 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL03 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL04 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL05 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL06 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 54,
+              "polygons": 29,
+              "triangles": 104,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G08 Dark split-jet slit",
+              "role": "bronze",
+              "vertices": 8,
+              "polygons": 6,
+              "triangles": 12,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G07 Pale wider burner tip - diameter 0.044",
+              "role": "bronze",
+              "vertices": 72,
+              "polygons": 50,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G06 Broader tip retaining collar",
+              "role": "bronze",
+              "vertices": 96,
+              "polygons": 74,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G05 Proportional rear valve knob",
+              "role": "bronze",
+              "vertices": 64,
+              "polygons": 50,
+              "triangles": 124,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G04 Discreet rear valve branch",
+              "role": "bronze",
+              "vertices": 32,
+              "polygons": 18,
+              "triangles": 60,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G03 Proportional hexagonal union",
+              "role": "bronze",
+              "vertices": 24,
+              "polygons": 20,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G02 Sturdier gas riser - diameter 0.032",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G01 Small floor mounting collar",
+              "role": "bronze",
+              "vertices": 120,
+              "polygons": 98,
+              "triangles": 236,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            }
+          ],
+          "authoring_polygons": 6252,
+          "authoring_triangles": 13296,
+          "triangles": 13296,
+          "runtime_geometry_policy": "Full approved authoring geometry retained; no runtime reduction",
+          "sources_unchanged": true,
+          "provenance": "Oliver's own Meshy creation, approved clean authored lantern family.",
+          "flame_anchor": [
+            0.0,
+            0.429885238,
+            0.0
+          ],
+          "flame_bounds": [
+            [
+              -0.0175,
+              0.429885238,
+              -0.015155444566227678
+            ],
+            [
+              0.0175,
+              0.504885238,
+              0.015155444566227678
+            ]
+          ],
+          "flame_triangles": 12,
+          "flame_authoring_polygons": 6,
+          "flame_width_m": 0.035,
+          "flame_height_m": 0.075,
+          "flame_group": "hanging_flame",
+          "flame_uv_policy": "Runtime bottom V1 / top V0; Blender bottom V0 / top V1",
+          "flame_authoring_file": "georgian lantern 2 - hanging limestone and metal.blend",
+          "flame_authoring_sha256": "48a8c7e9950a65a1660e33d91ef0d6cb5668bd482b876a74539b835a1c3dbc10",
+          "clean_flame_authoring_file": "georgian lantern 2 - clean hanging.blend",
+          "clean_flame_authoring_sha256": "a8de7c6d0f1c45d6b99f4ad5664cb240d12d95558e7be6207af56709628c2cc3",
+          "flame_switch": "Scene custom property: Gas flame ON",
+          "non_flame_authoring_geometry_unchanged": true
+        }
+      ],
+      "export": {
+        "path": "models/mesh/lantern_georgian.obj",
+        "sha256": "c5545e6d86f1fa2f96ca30696d1b5040c7ba9b71e1259e6f427e78aec2f5fdef",
+        "vertices": 17390,
+        "normals": 14023,
+        "uvs": 51,
+        "groups": {
+          "pier_stone": 6910,
+          "pier_lead": 2592,
+          "pier_bronze": 896,
+          "pier_glass": 624,
+          "wall_stone": 7692,
+          "wall_lead": 1296,
+          "wall_bronze": 896,
+          "wall_glass": 312,
+          "hanging_stone": 9184,
+          "hanging_lead": 2592,
+          "hanging_bronze": 896,
+          "hanging_glass": 624,
+          "pier_flame": 12,
+          "wall_flame": 12,
+          "hanging_flame": 12
+        },
+        "validation": {
+          "lf_text": true,
+          "finite_unit_normals": true,
+          "triangulated_no_degenerates": true,
+          "glass_uvs_0_to_1": true,
+          "groups": {
+            "hanging_bronze": 896,
+            "hanging_glass": 624,
+            "hanging_lead": 2592,
+            "hanging_stone": 9184,
+            "pier_bronze": 896,
+            "pier_glass": 624,
+            "pier_lead": 2592,
+            "pier_stone": 6910,
+            "wall_bronze": 896,
+            "wall_glass": 312,
+            "wall_lead": 1296,
+            "wall_stone": 7692,
+            "pier_flame": 12,
+            "wall_flame": 12,
+            "hanging_flame": 12
+          }
+        },
+        "body_prefix_bytes": 2501532,
+        "body_prefix_sha256": "ad334e8a60b75fdb3848ba8e7ed8293859ee8231a54f35ff4a165dbba907ce26",
+        "body_prefix_byte_identical": true,
+        "flame_triangles": 36
+      },
+      "native_bronze": {
+        "path": "textures/block/bronze.png",
+        "sha256": "2d032e11f5d62ed4bb391f29b51c6f0d44d926eebf3e02f17bddd53d22c6c89e"
+      },
+      "runtime_geometry_policy": "Full approved authoring geometry; no simplification",
+      "flame_texture": {
+        "path": "textures/block/lantern_flame.png",
+        "sha256": "e10c1b1208159b78c2585b9bcb7bd1bb583505a9327466eaa0e3ac859aa28504",
+        "width": 64,
+        "height": 128,
+        "rgba": true,
+        "palette": "Warm yellow with pale cream centre"
+      },
+      "flame_policy": "Three crossed, double-sided cards; material flame; runtime top V0/bottom V1; show only when lit. Existing body geometry unchanged."
+    },
+    "gothic": {
+      "schema": 1,
+      "provenance": "Oliver's own supplied Meshy creations and approved clean authored derivatives",
+      "blender_version": "5.2.0 LTS",
+      "blender_build": "fbe6228777e7",
+      "coordinate_contract": "Y-up, front+Z; body height1m excluding suspension; pier/hanging centredXZ; wall rearZ0/front+Z",
+      "canonical_burner_height_m": 0.15405888538380652,
+      "mounts": [
+        {
+          "style": "gothic",
+          "mount": "pier",
+          "source": "gothic lantern - seated limestone and metal.blend",
+          "source_sha256": "149f435e5f4adb61fdc7fd7363b2c594db2e59440bcc950fefb3fea673e137db",
+          "source_original_bounds": [
+            [
+              -0.422552227973938,
+              -0.36632874608039856,
+              -0.9520000219345093
+            ],
+            [
+              0.422552227973938,
+              0.36632874608039856,
+              0.9509999752044678
+            ]
+          ],
+          "source_mesh_digests": {
+            "01 Continuous stone body - pilasters, cornices and softened pinnacles": "4f3f16abc9450182b47f799559f39ee8f9928060a50db58018b594c5e8474a14",
+            "02 Layered pointed arch moulding 1": "4d970cab2157a4851d96bffa40996aecf16c0b1dd4810d04f894330f39b1e46d",
+            "03 Open trefoil tracery 1": "df36a544c971f452d42a56be4192e73b4d1f846253859ae7784d034907272bc2",
+            "03 Cusped tracery branch 1 -1": "b464f500adf1e7df65080f9d81a083ec05aa9abbc166a86ab966e4a220993628",
+            "03 Trefoil support 1 -1": "c73f51f596d3057769248597c4c0e592183abb7ca48cd38fcf09627c4d3aede7",
+            "03 Cusped tracery branch 1 1": "1fa23f79ee85be66e629c103241fd468bcfeb85fe2080326b925eb470dd946de",
+            "03 Trefoil support 1 1": "392d6ca37fcb2b1582a7781aa8d4db9370e43ff739e0e5ae704d4447e25df778",
+            "02 Layered pointed arch moulding 2": "707e12622424c5bea80aaf9c4d4a39aff38ab36fedfc3b56b222e193f3cf05c5",
+            "03 Open trefoil tracery 2": "f4b76ec385877bb5e2aaf682b0b8cde33c0b03f4e367ce9621abcda9520c41b1",
+            "03 Cusped tracery branch 2 -1": "740c5f7ac6191c8eae54dd8bab1482c4546cfa36d0765b4eaa86615224d8dabd",
+            "03 Trefoil support 2 -1": "804062fee6fb9e12050f9c5dbc078ee3c4518f81ff12bf772cfec762771fcb78",
+            "03 Cusped tracery branch 2 1": "03b2fda00538432213a4d7b4d5372d6afbe86549792af04020b634c1126119a3",
+            "03 Trefoil support 2 1": "9d2e9009d8029e2a71eaea79df0af38722379bd3e9c779a71533f3904bb9affe",
+            "02 Layered pointed arch moulding 3": "a2907a1095e9d93b34fc007c626582f72b4e98db92a99f9224bceba5d33b5727",
+            "03 Open trefoil tracery 3": "40489a83776b1f8821d8eef640059a74b7b424e91342a3eac4b55ed3b3b3859c",
+            "03 Cusped tracery branch 3 -1": "5199a133a00f3791b502b2eff5cd77da87f895fe37efe872c86bdd423988db8e",
+            "03 Trefoil support 3 -1": "72b4826a08a5e1f9019b14af71df36cabeae8b66c51cd1ad2e48857328533130",
+            "03 Cusped tracery branch 3 1": "309d0c38faa48b49ee514c1db445cc77465119ca726e54fd778b39f7c1bd8fc3",
+            "03 Trefoil support 3 1": "8b248089f66208e9f5df911858674949e6130f058cf272ac6f261420fbd9654f",
+            "02 Layered pointed arch moulding 4": "d83a8a92b340506084cbcf4192fecb06b0263e91052db07656df4a4a2112da4d",
+            "03 Open trefoil tracery 4": "e36e584640ce532fa0d10655e1da20bc982aa4f2905009e5c8206c0fbe31a3e2",
+            "03 Cusped tracery branch 4 -1": "f342061b12341176bf1baf272ace0a569b76ea9eb03590b2cb8878eb437d6f2b",
+            "03 Trefoil support 4 -1": "b23c3b0b6db1c2db4727a9c4168dc40b6982799673657c3af1480b1893fa8c91",
+            "03 Cusped tracery branch 4 1": "b5ea1f4b48c4d5cdc972d9b5bfba09b215fca58d2d8b8b1c70009cfd8cb0810a",
+            "03 Trefoil support 4 1": "9fe3992a51318b79ba500fb9cbd9603ed203343fadaf65a769c12b6e9c6924ad",
+            "02 Layered pointed arch moulding 5": "fcd87d0a5cdce11a7c585c4317f5a0dee91e93b2bdf9d69f220cbd1f643c1b5a",
+            "03 Open trefoil tracery 5": "2839ea8329bc2f5f4ac8f3d673ae7497be7314c94dd8ec5862cd5987b3feab50",
+            "03 Cusped tracery branch 5 -1": "8d635630b03be14f6da6f2aa838f0b6bbf98ed83af7a01b8cfd48fd75e5abf94",
+            "03 Trefoil support 5 -1": "f7cbde58b24028c29416b0a279ec2609d2fa9af3029137e684c2ce81679ece19",
+            "03 Cusped tracery branch 5 1": "233239b6834c1636fe2cb2309c590cd09031a7619ff6335b1c05470af4dcd9e5",
+            "03 Trefoil support 5 1": "725e4ab67d9cdbd261881f70686e1e1de3388414b82e3ce2483a2d0e65901c87",
+            "02 Layered pointed arch moulding 6": "7758e3918cb225183e289821a9d643ef13bfa98ac328055117cde1cd4ac2f211",
+            "03 Open trefoil tracery 6": "7e9ad791f27442aa84a60b942798868ebb02ae11dcb570e18fbadeb0d49d207b",
+            "03 Cusped tracery branch 6 -1": "160931e27aadf4938ae6e9fe139fc8bc370a1c5cfea2a1b51026103e0f1dece6",
+            "03 Trefoil support 6 -1": "d8a9ff2dcdaf009643d5af837905b0699a9affd4fd6643cd6178bd3e012096d6",
+            "03 Cusped tracery branch 6 1": "59c822b049fb5b589f5c623d96d7f8016677cb8814e215449a702f486bb480ee",
+            "03 Trefoil support 6 1": "3dd8a4866731ece8b673e4346cd7feb7f913b09161efa579767bf5fff2262ded",
+            "08 Crocketed gable 1": "330622a75810864763540987cac5d66e66be0776f5f7ba83e9822f169377baf1",
+            "08 Gable raised edge 1": "c65efe65edb390679a5c1dbcf404ada109d16dc027b08900370b5bcd7d837afe",
+            "08 Gable tip 1": "e27f0d7451298ed70ca8e34f301940776c52ab35ed3ed6a94d00745cfd37f4d2",
+            "08 Crocketed gable 2": "523ca5f13459c4aaf34b20453f5bea14f65a49895078487a621e99510f92fc62",
+            "08 Gable raised edge 2": "20163f890e8490ec41b0d097696ddd5eaa41724528eee2e87f115f29dcae18e6",
+            "08 Gable tip 2": "af7d885ddbf20ecda2572c3b07a9fbef3a3a4dcd6e7a84f9b34bf6fe925902b4",
+            "08 Crocketed gable 3": "9ad9f4e67c82556db9834bd9520f44e334e326f6bd3b0e8277f27a5353a91474",
+            "08 Gable raised edge 3": "51bb8c67ca854bac78dd2e31d1ab1f02b8b258cf9a5870aab5ad7fc8ff4c435a",
+            "08 Gable tip 3": "c0b51f569a076ce1e62036d8705924b50131b0b4d0434f7dc2c68074827b6d03",
+            "08 Crocketed gable 4": "056888a587c5150df1e638afb3e0f12090c4ee934923735702d4e8a8c2f46478",
+            "08 Gable raised edge 4": "3c85c61dc2c80751f2c878857a5a1f423b0f14f6c39a2cccee64d6f65d93643e",
+            "08 Gable tip 4": "a1384b1dddc5da305b84c33285ce0b05f0ce1dcbd6a0dabbf3370f10c0384f3d",
+            "08 Crocketed gable 5": "4209918b68def6c06d1808dff88b6d7ede1e8ea4ba4503767f9e98544a024297",
+            "08 Gable raised edge 5": "2ea2ede0b2057b4b40f531d661d024fd36ac8bb690fcfbe36493779eb79ed172",
+            "08 Gable tip 5": "9f58430ed7b03927c65ac73902da134ad0ce16239213eb8967f211baa1471261",
+            "08 Crocketed gable 6": "76abc378af3b5933968887861ffebc9bdfbb0522c6fd69c3f724b199ff3b6762",
+            "08 Gable raised edge 6": "1b9eaa60f5344ac8f4e704c8f1900f93b4a88b796d36054dceed6f01d582a01b",
+            "08 Gable tip 6": "d24adb46ec352a366d4bd2f4c21abe8f6f081d2c00c4f0e53638ab5e7df616ca",
+            "09 Clean six-panel Gothic roof": "be7032a3446519d17b7d75dd03028bf5bf5ad5bee18694bab2f37e7ea5b9bc81",
+            "09 Raised roof hip rib 1": "5229e17f6c2bd33b4e48ddd5be54a604adf4a52f25ddc8ab73635fa5800cb9c9",
+            "09 Raised roof hip rib 2": "453f7759104a3133842417a44792a4076637c6a89cc93b103ef3eb1b8942df5c",
+            "09 Raised roof hip rib 3": "f5cafbcd15d48e15c6f6933a9f5779591e9c08734d3eb47df70728310747a328",
+            "09 Raised roof hip rib 4": "3c72fe53c7efcf52b4f1363f8b5a8104f2b04348e61b49490480c750db92ad2c",
+            "09 Raised roof hip rib 5": "180dfaf84d8c5c1bee09a2cae785987ee3f67cee7885053df7d63ebd169f057c",
+            "09 Raised roof hip rib 6": "50b09eec322cd18eb93400f397f32b63e7872ad750a891dfd637aaafc2e4d00b",
+            "10 Main top finial collar": "e99537b4996b2717534d309cb2e4c231bef6446aa6f74f1392eabba004e4df60",
+            "10 Main top finial bulb and point": "6c83ddbcaf4f8ea3582f6a7a1f07bb190112aa880d6e01da468b38dad2af113c",
+            "11 Paneled seated pedestal": "b52e2eff5d47c17ba50c98667df0eb485fe359c9a9615e894e086176cb09d9ab"
+          },
+          "source_modifiers_baked": {},
+          "blender_file": "gothic-pier-game-ready.blend",
+          "blender_sha256": "88bbfb7dc4cbd791b398ab45f171933fd7c318ec9ea6cb32d8e8801e445d4e42",
+          "body_bounds": [
+            [
+              -0.19250065088272095,
+              0.0,
+              -0.22204530239105225
+            ],
+            [
+              0.19250065088272095,
+              1.0,
+              0.22204530239105225
+            ]
+          ],
+          "body_height_m": 1.0,
+          "floor_y": 0.27009985766924477,
+          "normalization_scale": 0.5254860754090529,
+          "source_front": "+X",
+          "runtime_front": "+Z",
+          "wall_rear_z": null,
+          "burner_height_m": 0.15405888538380652,
+          "burner_raise_m": 0,
+          "burner_base_y": 0.27009985766924477,
+          "glass_panes": 6,
+          "objects": [
+            {
+              "name": "01 Continuous stone body - pilasters, cornices and softened pinnacles",
+              "role": "stone",
+              "vertices": 5772,
+              "polygons": 5080,
+              "triangles": 11560,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 1",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 2",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 3",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 4",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 5",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 6",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 1",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 1",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 1",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 2",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 2",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 2",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 3",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 3",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 3",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 4",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 4",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 4",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 5",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 5",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 5",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 6",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 6",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 6",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Clean six-panel Gothic roof",
+              "role": "stone",
+              "vertices": 78,
+              "polygons": 74,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 1",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 2",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 3",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 4",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 5",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 6",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "10 Main top finial collar",
+              "role": "stone",
+              "vertices": 72,
+              "polygons": 68,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "10 Main top finial bulb and point",
+              "role": "stone",
+              "vertices": 385,
+              "polygons": 385,
+              "triangles": 766,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "11 Paneled seated pedestal",
+              "role": "stone",
+              "vertices": 792,
+              "polygons": 776,
+              "triangles": 1580,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL01 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL02 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL03 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL04 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL05 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL06 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G08 Dark split-jet slit",
+              "role": "bronze",
+              "vertices": 8,
+              "polygons": 6,
+              "triangles": 12,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G07 Pale wider burner tip - diameter 0.044",
+              "role": "bronze",
+              "vertices": 72,
+              "polygons": 50,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G06 Broader tip retaining collar",
+              "role": "bronze",
+              "vertices": 96,
+              "polygons": 74,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G05 Proportional rear valve knob",
+              "role": "bronze",
+              "vertices": 64,
+              "polygons": 50,
+              "triangles": 124,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G04 Discreet rear valve branch",
+              "role": "bronze",
+              "vertices": 32,
+              "polygons": 18,
+              "triangles": 60,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G03 Proportional hexagonal union",
+              "role": "bronze",
+              "vertices": 24,
+              "polygons": 20,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G02 Sturdier gas riser - diameter 0.032",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G01 Small floor mounting collar",
+              "role": "bronze",
+              "vertices": 120,
+              "polygons": 98,
+              "triangles": 236,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 1",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 2",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 3",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 4",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 5",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 6",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            }
+          ],
+          "authoring_polygons": 15971,
+          "authoring_triangles": 35146,
+          "triangles": 35146,
+          "runtime_geometry_policy": "Full approved authoring geometry retained; no runtime reduction",
+          "sources_unchanged": true,
+          "provenance": "Oliver's own Meshy creation, approved clean authored lantern family.",
+          "flame_anchor": [
+            0.0,
+            0.424158752,
+            0.0
+          ],
+          "flame_bounds": [
+            [
+              -0.0175,
+              0.424158752,
+              -0.015155444566227678
+            ],
+            [
+              0.0175,
+              0.499158752,
+              0.015155444566227678
+            ]
+          ],
+          "flame_triangles": 12,
+          "flame_authoring_polygons": 6,
+          "flame_width_m": 0.035,
+          "flame_height_m": 0.075,
+          "flame_group": "pier_flame",
+          "flame_uv_policy": "Runtime bottom V1 / top V0; Blender bottom V0 / top V1",
+          "flame_authoring_file": "gothic lantern - seated limestone and metal.blend",
+          "flame_authoring_sha256": "7507c40b931aadec48b4bd731734f92aa5d5f1620291563090db18fbe339e2d1",
+          "clean_flame_authoring_file": "gothic lantern - clean seated.blend",
+          "clean_flame_authoring_sha256": "f4b3a62110c162d8f7735d59157b1932cfabac67b56d58df4e83c692bd453620",
+          "flame_switch": "Scene custom property: Gas flame ON",
+          "non_flame_authoring_geometry_unchanged": true,
+          "before_tracery_revision_counts": {
+            "authoring_polygons": 15071,
+            "authoring_triangles": 32794,
+            "triangles": 32794
+          },
+          "current_authoring_file": "gothic lantern - seated limestone and metal.blend",
+          "current_authoring_sha256": "7507c40b931aadec48b4bd731734f92aa5d5f1620291563090db18fbe339e2d1",
+          "current_clean_authoring_file": "gothic lantern - clean seated.blend",
+          "current_clean_authoring_sha256": "f4b3a62110c162d8f7735d59157b1932cfabac67b56d58df4e83c692bd453620",
+          "tracery_revision": "Paired pointed lancets and connected circular quatrefoil; original outer frames and all non-lead parts unchanged",
+          "non_lead_authoring_geometry_unchanged": true,
+          "outer_pointed_frames_unchanged": true
+        },
+        {
+          "style": "gothic",
+          "mount": "wall",
+          "source": "gothic lantern - wall limestone and metal.blend",
+          "source_sha256": "8ad5da5240cbbff4800e4942d399dcf96ff753fa39e02316761ad8475b45d5b1",
+          "source_original_bounds": [
+            [
+              -0.2150000035762787,
+              -0.3420800268650055,
+              -0.950469970703125
+            ],
+            [
+              0.39461225271224976,
+              0.3420800268650055,
+              0.9509999752044678
+            ]
+          ],
+          "source_mesh_digests": {
+            "01 Continuous stone body - pilasters, cornices and softened pinnacles": "a45bda6fd883e6800775906f1c334d150f131db4fe04c90bd5114894ae2969bd",
+            "02 Layered pointed arch moulding 1": "4d970cab2157a4851d96bffa40996aecf16c0b1dd4810d04f894330f39b1e46d",
+            "03 Open trefoil tracery 1": "df36a544c971f452d42a56be4192e73b4d1f846253859ae7784d034907272bc2",
+            "03 Cusped tracery branch 1 -1": "b464f500adf1e7df65080f9d81a083ec05aa9abbc166a86ab966e4a220993628",
+            "03 Trefoil support 1 -1": "c73f51f596d3057769248597c4c0e592183abb7ca48cd38fcf09627c4d3aede7",
+            "03 Cusped tracery branch 1 1": "1fa23f79ee85be66e629c103241fd468bcfeb85fe2080326b925eb470dd946de",
+            "03 Trefoil support 1 1": "392d6ca37fcb2b1582a7781aa8d4db9370e43ff739e0e5ae704d4447e25df778",
+            "02 Layered pointed arch moulding 2": "707e12622424c5bea80aaf9c4d4a39aff38ab36fedfc3b56b222e193f3cf05c5",
+            "03 Open trefoil tracery 2": "f4b76ec385877bb5e2aaf682b0b8cde33c0b03f4e367ce9621abcda9520c41b1",
+            "03 Cusped tracery branch 2 -1": "740c5f7ac6191c8eae54dd8bab1482c4546cfa36d0765b4eaa86615224d8dabd",
+            "03 Trefoil support 2 -1": "804062fee6fb9e12050f9c5dbc078ee3c4518f81ff12bf772cfec762771fcb78",
+            "03 Cusped tracery branch 2 1": "03b2fda00538432213a4d7b4d5372d6afbe86549792af04020b634c1126119a3",
+            "03 Trefoil support 2 1": "9d2e9009d8029e2a71eaea79df0af38722379bd3e9c779a71533f3904bb9affe",
+            "02 Layered pointed arch moulding 5": "fcd87d0a5cdce11a7c585c4317f5a0dee91e93b2bdf9d69f220cbd1f643c1b5a",
+            "03 Open trefoil tracery 5": "2839ea8329bc2f5f4ac8f3d673ae7497be7314c94dd8ec5862cd5987b3feab50",
+            "03 Cusped tracery branch 5 -1": "8d635630b03be14f6da6f2aa838f0b6bbf98ed83af7a01b8cfd48fd75e5abf94",
+            "03 Trefoil support 5 -1": "f7cbde58b24028c29416b0a279ec2609d2fa9af3029137e684c2ce81679ece19",
+            "03 Cusped tracery branch 5 1": "233239b6834c1636fe2cb2309c590cd09031a7619ff6335b1c05470af4dcd9e5",
+            "03 Trefoil support 5 1": "725e4ab67d9cdbd261881f70686e1e1de3388414b82e3ce2483a2d0e65901c87",
+            "02 Layered pointed arch moulding 6": "7758e3918cb225183e289821a9d643ef13bfa98ac328055117cde1cd4ac2f211",
+            "03 Open trefoil tracery 6": "7e9ad791f27442aa84a60b942798868ebb02ae11dcb570e18fbadeb0d49d207b",
+            "03 Cusped tracery branch 6 -1": "160931e27aadf4938ae6e9fe139fc8bc370a1c5cfea2a1b51026103e0f1dece6",
+            "03 Trefoil support 6 -1": "d8a9ff2dcdaf009643d5af837905b0699a9affd4fd6643cd6178bd3e012096d6",
+            "03 Cusped tracery branch 6 1": "59c822b049fb5b589f5c623d96d7f8016677cb8814e215449a702f486bb480ee",
+            "03 Trefoil support 6 1": "3dd8a4866731ece8b673e4346cd7feb7f913b09161efa579767bf5fff2262ded",
+            "08 Crocketed gable 1": "330622a75810864763540987cac5d66e66be0776f5f7ba83e9822f169377baf1",
+            "08 Gable raised edge 1": "c65efe65edb390679a5c1dbcf404ada109d16dc027b08900370b5bcd7d837afe",
+            "08 Gable tip 1": "e27f0d7451298ed70ca8e34f301940776c52ab35ed3ed6a94d00745cfd37f4d2",
+            "08 Crocketed gable 2": "523ca5f13459c4aaf34b20453f5bea14f65a49895078487a621e99510f92fc62",
+            "08 Gable raised edge 2": "20163f890e8490ec41b0d097696ddd5eaa41724528eee2e87f115f29dcae18e6",
+            "08 Gable tip 2": "af7d885ddbf20ecda2572c3b07a9fbef3a3a4dcd6e7a84f9b34bf6fe925902b4",
+            "08 Crocketed gable 5": "4209918b68def6c06d1808dff88b6d7ede1e8ea4ba4503767f9e98544a024297",
+            "08 Gable raised edge 5": "2ea2ede0b2057b4b40f531d661d024fd36ac8bb690fcfbe36493779eb79ed172",
+            "08 Gable tip 5": "9f58430ed7b03927c65ac73902da134ad0ce16239213eb8967f211baa1471261",
+            "08 Crocketed gable 6": "76abc378af3b5933968887861ffebc9bdfbb0522c6fd69c3f724b199ff3b6762",
+            "08 Gable raised edge 6": "1b9eaa60f5344ac8f4e704c8f1900f93b4a88b796d36054dceed6f01d582a01b",
+            "08 Gable tip 6": "d24adb46ec352a366d4bd2f4c21abe8f6f081d2c00c4f0e53638ab5e7df616ca",
+            "09 Clean six-panel Gothic roof": "29647100eff1f285b8ffd8bf61325e4955587d662a1661d3a7bda3dc8e96039d",
+            "09 Raised roof hip rib 1": "5229e17f6c2bd33b4e48ddd5be54a604adf4a52f25ddc8ab73635fa5800cb9c9",
+            "09 Raised roof hip rib 2": "453f7759104a3133842417a44792a4076637c6a89cc93b103ef3eb1b8942df5c",
+            "09 Raised roof hip rib 3": "f5cafbcd15d48e15c6f6933a9f5779591e9c08734d3eb47df70728310747a328",
+            "09 Raised roof hip rib 4": "b04700c5313b1981293e6626a4d1aa9dbbf4731e029013e5fb659dcd7f9b3654",
+            "09 Raised roof hip rib 5": "180dfaf84d8c5c1bee09a2cae785987ee3f67cee7885053df7d63ebd169f057c",
+            "09 Raised roof hip rib 6": "50b09eec322cd18eb93400f397f32b63e7872ad750a891dfd637aaafc2e4d00b",
+            "10 Main top finial collar": "e99537b4996b2717534d309cb2e4c231bef6446aa6f74f1392eabba004e4df60",
+            "10 Main top finial bulb and point": "6c83ddbcaf4f8ea3582f6a7a1f07bb190112aa880d6e01da468b38dad2af113c"
+          },
+          "source_modifiers_baked": {},
+          "blender_file": "gothic-wall-game-ready.blend",
+          "blender_sha256": "4c94cd53161c12d157c4703ccfeaa90d5dd58e2719b151b5aecdc342d5c761aa",
+          "body_bounds": [
+            [
+              -0.17990292608737946,
+              0.0,
+              0.0
+            ],
+            [
+              0.17990292608737946,
+              1.0,
+              0.3206005096435547
+            ]
+          ],
+          "body_height_m": 1.0,
+          "floor_y": 0.2695125306836333,
+          "normalization_scale": 0.525908917020873,
+          "source_front": "+X",
+          "runtime_front": "+Z",
+          "wall_rear_z": 0,
+          "burner_height_m": 0.15405888538380652,
+          "burner_raise_m": 0,
+          "burner_base_y": 0.2695125306836333,
+          "glass_panes": 4,
+          "objects": [
+            {
+              "name": "01 Continuous stone body - pilasters, cornices and softened pinnacles",
+              "role": "stone",
+              "vertices": 5279,
+              "polygons": 4569,
+              "triangles": 10566,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 1",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 2",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 5",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 6",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 1",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 1",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 1",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 2",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 2",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 2",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 5",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 5",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 5",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 6",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 6",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 6",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Clean six-panel Gothic roof",
+              "role": "stone",
+              "vertices": 83,
+              "polygons": 75,
+              "triangles": 162,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 1",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 2",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 3",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 4",
+              "role": "stone",
+              "vertices": 75,
+              "polygons": 70,
+              "triangles": 146,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 5",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 6",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "10 Main top finial collar",
+              "role": "stone",
+              "vertices": 72,
+              "polygons": 68,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "10 Main top finial bulb and point",
+              "role": "stone",
+              "vertices": 385,
+              "polygons": 385,
+              "triangles": 766,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL01 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL02 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL03 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL04 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G08 Dark split-jet slit",
+              "role": "bronze",
+              "vertices": 8,
+              "polygons": 6,
+              "triangles": 12,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G07 Pale wider burner tip - diameter 0.044",
+              "role": "bronze",
+              "vertices": 72,
+              "polygons": 50,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G06 Broader tip retaining collar",
+              "role": "bronze",
+              "vertices": 96,
+              "polygons": 74,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G05 Proportional rear valve knob",
+              "role": "bronze",
+              "vertices": 64,
+              "polygons": 50,
+              "triangles": 124,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G04 Discreet rear valve branch",
+              "role": "bronze",
+              "vertices": 32,
+              "polygons": 18,
+              "triangles": 60,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G03 Proportional hexagonal union",
+              "role": "bronze",
+              "vertices": 24,
+              "polygons": 20,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G02 Sturdier gas riser - diameter 0.032",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G01 Small floor mounting collar",
+              "role": "bronze",
+              "vertices": 120,
+              "polygons": 98,
+              "triangles": 236,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 1",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 2",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 5",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 6",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            }
+          ],
+          "authoring_polygons": 11771,
+          "authoring_triangles": 26248,
+          "triangles": 26248,
+          "runtime_geometry_policy": "Full approved authoring geometry retained; no runtime reduction",
+          "sources_unchanged": true,
+          "provenance": "Oliver's own Meshy creation, approved clean authored lantern family.",
+          "flame_anchor": [
+            0.0,
+            0.423571408,
+            0.113070421
+          ],
+          "flame_bounds": [
+            [
+              -0.0175,
+              0.423571408,
+              0.09791497643377232
+            ],
+            [
+              0.0175,
+              0.498571408,
+              0.12822586556622767
+            ]
+          ],
+          "flame_triangles": 12,
+          "flame_authoring_polygons": 6,
+          "flame_width_m": 0.035,
+          "flame_height_m": 0.075,
+          "flame_group": "wall_flame",
+          "flame_uv_policy": "Runtime bottom V1 / top V0; Blender bottom V0 / top V1",
+          "flame_authoring_file": "gothic lantern - wall limestone and metal.blend",
+          "flame_authoring_sha256": "c87e4633c27df4cd332bf5c9f91a9fb704df88aea2f407a19aeabc4b24f3b545",
+          "clean_flame_authoring_file": "gothic lantern - clean wall.blend",
+          "clean_flame_authoring_sha256": "f2f8c947ff7d4f80a57d104e31c2b6857ccbf0d7d280e012d5601a2b621ddb02",
+          "flame_switch": "Scene custom property: Gas flame ON",
+          "non_flame_authoring_geometry_unchanged": true,
+          "before_tracery_revision_counts": {
+            "authoring_polygons": 11171,
+            "authoring_triangles": 24680,
+            "triangles": 24680
+          },
+          "current_authoring_file": "gothic lantern - wall limestone and metal.blend",
+          "current_authoring_sha256": "c87e4633c27df4cd332bf5c9f91a9fb704df88aea2f407a19aeabc4b24f3b545",
+          "current_clean_authoring_file": "gothic lantern - clean wall.blend",
+          "current_clean_authoring_sha256": "f2f8c947ff7d4f80a57d104e31c2b6857ccbf0d7d280e012d5601a2b621ddb02",
+          "tracery_revision": "Paired pointed lancets and connected circular quatrefoil; original outer frames and all non-lead parts unchanged",
+          "non_lead_authoring_geometry_unchanged": true,
+          "outer_pointed_frames_unchanged": true
+        },
+        {
+          "style": "gothic",
+          "mount": "hanging",
+          "source": "gothic lantern - hanging limestone and metal.blend",
+          "source_sha256": "d01e97c793ffa1f152743027cd9a78767b4d7d3ac036a218da9f1cbaa9755495",
+          "source_original_bounds": [
+            [
+              -0.39461225271224976,
+              -0.3420800268650055,
+              -0.950469970703125
+            ],
+            [
+              0.39461225271224976,
+              0.3420800268650055,
+              0.9509999752044678
+            ]
+          ],
+          "source_mesh_digests": {
+            "01 Continuous stone body - pilasters, cornices and softened pinnacles": "107daf1e1904cef38355401a251b287aef4c28e45b9bb3872eeaa4e9c77e046b",
+            "02 Layered pointed arch moulding 1": "4d970cab2157a4851d96bffa40996aecf16c0b1dd4810d04f894330f39b1e46d",
+            "03 Open trefoil tracery 1": "df36a544c971f452d42a56be4192e73b4d1f846253859ae7784d034907272bc2",
+            "03 Cusped tracery branch 1 -1": "b464f500adf1e7df65080f9d81a083ec05aa9abbc166a86ab966e4a220993628",
+            "03 Trefoil support 1 -1": "c73f51f596d3057769248597c4c0e592183abb7ca48cd38fcf09627c4d3aede7",
+            "03 Cusped tracery branch 1 1": "1fa23f79ee85be66e629c103241fd468bcfeb85fe2080326b925eb470dd946de",
+            "03 Trefoil support 1 1": "392d6ca37fcb2b1582a7781aa8d4db9370e43ff739e0e5ae704d4447e25df778",
+            "02 Layered pointed arch moulding 2": "707e12622424c5bea80aaf9c4d4a39aff38ab36fedfc3b56b222e193f3cf05c5",
+            "03 Open trefoil tracery 2": "f4b76ec385877bb5e2aaf682b0b8cde33c0b03f4e367ce9621abcda9520c41b1",
+            "03 Cusped tracery branch 2 -1": "740c5f7ac6191c8eae54dd8bab1482c4546cfa36d0765b4eaa86615224d8dabd",
+            "03 Trefoil support 2 -1": "804062fee6fb9e12050f9c5dbc078ee3c4518f81ff12bf772cfec762771fcb78",
+            "03 Cusped tracery branch 2 1": "03b2fda00538432213a4d7b4d5372d6afbe86549792af04020b634c1126119a3",
+            "03 Trefoil support 2 1": "9d2e9009d8029e2a71eaea79df0af38722379bd3e9c779a71533f3904bb9affe",
+            "02 Layered pointed arch moulding 3": "a2907a1095e9d93b34fc007c626582f72b4e98db92a99f9224bceba5d33b5727",
+            "03 Open trefoil tracery 3": "40489a83776b1f8821d8eef640059a74b7b424e91342a3eac4b55ed3b3b3859c",
+            "03 Cusped tracery branch 3 -1": "5199a133a00f3791b502b2eff5cd77da87f895fe37efe872c86bdd423988db8e",
+            "03 Trefoil support 3 -1": "72b4826a08a5e1f9019b14af71df36cabeae8b66c51cd1ad2e48857328533130",
+            "03 Cusped tracery branch 3 1": "309d0c38faa48b49ee514c1db445cc77465119ca726e54fd778b39f7c1bd8fc3",
+            "03 Trefoil support 3 1": "8b248089f66208e9f5df911858674949e6130f058cf272ac6f261420fbd9654f",
+            "02 Layered pointed arch moulding 4": "d83a8a92b340506084cbcf4192fecb06b0263e91052db07656df4a4a2112da4d",
+            "03 Open trefoil tracery 4": "e36e584640ce532fa0d10655e1da20bc982aa4f2905009e5c8206c0fbe31a3e2",
+            "03 Cusped tracery branch 4 -1": "f342061b12341176bf1baf272ace0a569b76ea9eb03590b2cb8878eb437d6f2b",
+            "03 Trefoil support 4 -1": "b23c3b0b6db1c2db4727a9c4168dc40b6982799673657c3af1480b1893fa8c91",
+            "03 Cusped tracery branch 4 1": "b5ea1f4b48c4d5cdc972d9b5bfba09b215fca58d2d8b8b1c70009cfd8cb0810a",
+            "03 Trefoil support 4 1": "9fe3992a51318b79ba500fb9cbd9603ed203343fadaf65a769c12b6e9c6924ad",
+            "02 Layered pointed arch moulding 5": "fcd87d0a5cdce11a7c585c4317f5a0dee91e93b2bdf9d69f220cbd1f643c1b5a",
+            "03 Open trefoil tracery 5": "2839ea8329bc2f5f4ac8f3d673ae7497be7314c94dd8ec5862cd5987b3feab50",
+            "03 Cusped tracery branch 5 -1": "8d635630b03be14f6da6f2aa838f0b6bbf98ed83af7a01b8cfd48fd75e5abf94",
+            "03 Trefoil support 5 -1": "f7cbde58b24028c29416b0a279ec2609d2fa9af3029137e684c2ce81679ece19",
+            "03 Cusped tracery branch 5 1": "233239b6834c1636fe2cb2309c590cd09031a7619ff6335b1c05470af4dcd9e5",
+            "03 Trefoil support 5 1": "725e4ab67d9cdbd261881f70686e1e1de3388414b82e3ce2483a2d0e65901c87",
+            "02 Layered pointed arch moulding 6": "7758e3918cb225183e289821a9d643ef13bfa98ac328055117cde1cd4ac2f211",
+            "03 Open trefoil tracery 6": "7e9ad791f27442aa84a60b942798868ebb02ae11dcb570e18fbadeb0d49d207b",
+            "03 Cusped tracery branch 6 -1": "160931e27aadf4938ae6e9fe139fc8bc370a1c5cfea2a1b51026103e0f1dece6",
+            "03 Trefoil support 6 -1": "d8a9ff2dcdaf009643d5af837905b0699a9affd4fd6643cd6178bd3e012096d6",
+            "03 Cusped tracery branch 6 1": "59c822b049fb5b589f5c623d96d7f8016677cb8814e215449a702f486bb480ee",
+            "03 Trefoil support 6 1": "3dd8a4866731ece8b673e4346cd7feb7f913b09161efa579767bf5fff2262ded",
+            "08 Crocketed gable 1": "330622a75810864763540987cac5d66e66be0776f5f7ba83e9822f169377baf1",
+            "08 Gable raised edge 1": "c65efe65edb390679a5c1dbcf404ada109d16dc027b08900370b5bcd7d837afe",
+            "08 Gable tip 1": "e27f0d7451298ed70ca8e34f301940776c52ab35ed3ed6a94d00745cfd37f4d2",
+            "08 Crocketed gable 2": "523ca5f13459c4aaf34b20453f5bea14f65a49895078487a621e99510f92fc62",
+            "08 Gable raised edge 2": "20163f890e8490ec41b0d097696ddd5eaa41724528eee2e87f115f29dcae18e6",
+            "08 Gable tip 2": "af7d885ddbf20ecda2572c3b07a9fbef3a3a4dcd6e7a84f9b34bf6fe925902b4",
+            "08 Crocketed gable 3": "9ad9f4e67c82556db9834bd9520f44e334e326f6bd3b0e8277f27a5353a91474",
+            "08 Gable raised edge 3": "51bb8c67ca854bac78dd2e31d1ab1f02b8b258cf9a5870aab5ad7fc8ff4c435a",
+            "08 Gable tip 3": "c0b51f569a076ce1e62036d8705924b50131b0b4d0434f7dc2c68074827b6d03",
+            "08 Crocketed gable 4": "056888a587c5150df1e638afb3e0f12090c4ee934923735702d4e8a8c2f46478",
+            "08 Gable raised edge 4": "3c85c61dc2c80751f2c878857a5a1f423b0f14f6c39a2cccee64d6f65d93643e",
+            "08 Gable tip 4": "a1384b1dddc5da305b84c33285ce0b05f0ce1dcbd6a0dabbf3370f10c0384f3d",
+            "08 Crocketed gable 5": "4209918b68def6c06d1808dff88b6d7ede1e8ea4ba4503767f9e98544a024297",
+            "08 Gable raised edge 5": "2ea2ede0b2057b4b40f531d661d024fd36ac8bb690fcfbe36493779eb79ed172",
+            "08 Gable tip 5": "9f58430ed7b03927c65ac73902da134ad0ce16239213eb8967f211baa1471261",
+            "08 Crocketed gable 6": "76abc378af3b5933968887861ffebc9bdfbb0522c6fd69c3f724b199ff3b6762",
+            "08 Gable raised edge 6": "1b9eaa60f5344ac8f4e704c8f1900f93b4a88b796d36054dceed6f01d582a01b",
+            "08 Gable tip 6": "d24adb46ec352a366d4bd2f4c21abe8f6f081d2c00c4f0e53638ab5e7df616ca",
+            "09 Clean six-panel Gothic roof": "be7032a3446519d17b7d75dd03028bf5bf5ad5bee18694bab2f37e7ea5b9bc81",
+            "09 Raised roof hip rib 1": "5229e17f6c2bd33b4e48ddd5be54a604adf4a52f25ddc8ab73635fa5800cb9c9",
+            "09 Raised roof hip rib 2": "453f7759104a3133842417a44792a4076637c6a89cc93b103ef3eb1b8942df5c",
+            "09 Raised roof hip rib 3": "f5cafbcd15d48e15c6f6933a9f5779591e9c08734d3eb47df70728310747a328",
+            "09 Raised roof hip rib 4": "3c72fe53c7efcf52b4f1363f8b5a8104f2b04348e61b49490480c750db92ad2c",
+            "09 Raised roof hip rib 5": "180dfaf84d8c5c1bee09a2cae785987ee3f67cee7885053df7d63ebd169f057c",
+            "09 Raised roof hip rib 6": "50b09eec322cd18eb93400f397f32b63e7872ad750a891dfd637aaafc2e4d00b",
+            "10 Main top finial collar": "e99537b4996b2717534d309cb2e4c231bef6446aa6f74f1392eabba004e4df60",
+            "10 Main top finial bulb and point": "6c83ddbcaf4f8ea3582f6a7a1f07bb190112aa880d6e01da468b38dad2af113c",
+            "14 Lower inverted finial collar": "99b8d9f139f370815f716beb2fe7fa2a1459080c9a8fea6bfc0c9f4960addf71",
+            "14 Lower inverted finial bulb and point": "40358221be893c06d6119965e97c1b1cf406b511b82635f217a381ae5c3ed79c"
+          },
+          "source_modifiers_baked": {},
+          "blender_file": "gothic-hanging-game-ready.blend",
+          "blender_sha256": "2efa74d7fe76ffae94013113ae6aca02acfeb4bee98fa0e9f1b2c11ab51ca46c",
+          "body_bounds": [
+            [
+              -0.17990292608737946,
+              0.0,
+              -0.20753009617328644
+            ],
+            [
+              0.17990292608737946,
+              1.0,
+              0.20753009617328644
+            ]
+          ],
+          "body_height_m": 1.0,
+          "floor_y": 0.2695125463569404,
+          "normalization_scale": 0.525908917020873,
+          "source_front": "+X",
+          "runtime_front": "+Z",
+          "wall_rear_z": null,
+          "burner_height_m": 0.15405888538380652,
+          "burner_raise_m": 0,
+          "burner_base_y": 0.2695125463569404,
+          "glass_panes": 6,
+          "objects": [
+            {
+              "name": "01 Continuous stone body - pilasters, cornices and softened pinnacles",
+              "role": "stone",
+              "vertices": 5820,
+              "polygons": 5124,
+              "triangles": 11656,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 1",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 2",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 3",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 4",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 5",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Layered pointed arch moulding 6",
+              "role": "lead",
+              "vertices": 390,
+              "polygons": 390,
+              "triangles": 780,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 1",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 1",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 1",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 2",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 2",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 2",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 3",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 3",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 3",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 4",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 4",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 4",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 5",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 5",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 5",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Crocketed gable 6",
+              "role": "stone",
+              "vertices": 258,
+              "polygons": 223,
+              "triangles": 516,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable raised edge 6",
+              "role": "stone",
+              "vertices": 24,
+              "polygons": 18,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "08 Gable tip 6",
+              "role": "stone",
+              "vertices": 37,
+              "polygons": 37,
+              "triangles": 70,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Clean six-panel Gothic roof",
+              "role": "stone",
+              "vertices": 78,
+              "polygons": 74,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 1",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 2",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 3",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 4",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 5",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "09 Raised roof hip rib 6",
+              "role": "stone",
+              "vertices": 104,
+              "polygons": 98,
+              "triangles": 204,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "10 Main top finial collar",
+              "role": "stone",
+              "vertices": 72,
+              "polygons": 68,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "10 Main top finial bulb and point",
+              "role": "stone",
+              "vertices": 385,
+              "polygons": 385,
+              "triangles": 766,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "14 Lower inverted finial collar",
+              "role": "stone",
+              "vertices": 72,
+              "polygons": 68,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "14 Lower inverted finial bulb and point",
+              "role": "stone",
+              "vertices": 385,
+              "polygons": 385,
+              "triangles": 766,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL01 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL02 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL03 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL04 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL05 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL06 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 78,
+              "polygons": 41,
+              "triangles": 152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G08 Dark split-jet slit",
+              "role": "bronze",
+              "vertices": 8,
+              "polygons": 6,
+              "triangles": 12,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G07 Pale wider burner tip - diameter 0.044",
+              "role": "bronze",
+              "vertices": 72,
+              "polygons": 50,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G06 Broader tip retaining collar",
+              "role": "bronze",
+              "vertices": 96,
+              "polygons": 74,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G05 Proportional rear valve knob",
+              "role": "bronze",
+              "vertices": 64,
+              "polygons": 50,
+              "triangles": 124,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G04 Discreet rear valve branch",
+              "role": "bronze",
+              "vertices": 32,
+              "polygons": 18,
+              "triangles": 60,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G03 Proportional hexagonal union",
+              "role": "bronze",
+              "vertices": 24,
+              "polygons": 20,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G02 Sturdier gas riser - diameter 0.032",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G01 Small floor mounting collar",
+              "role": "bronze",
+              "vertices": 120,
+              "polygons": 98,
+              "triangles": 236,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 1",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 2",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 3",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 4",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 5",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            },
+            {
+              "name": "03 Gothic twin lancets and quatrefoil 6",
+              "role": "lead",
+              "vertices": 788,
+              "polygons": 734,
+              "triangles": 1576,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0,
+              "components": 1
+            }
+          ],
+          "authoring_polygons": 15692,
+          "authoring_triangles": 34568,
+          "triangles": 34568,
+          "runtime_geometry_policy": "Full approved authoring geometry retained; no runtime reduction",
+          "sources_unchanged": true,
+          "provenance": "Oliver's own Meshy creation, approved clean authored lantern family.",
+          "flame_anchor": [
+            0.0,
+            0.423571438,
+            0.0
+          ],
+          "flame_bounds": [
+            [
+              -0.0175,
+              0.423571438,
+              -0.015155444566227678
+            ],
+            [
+              0.0175,
+              0.49857143800000003,
+              0.015155444566227678
+            ]
+          ],
+          "flame_triangles": 12,
+          "flame_authoring_polygons": 6,
+          "flame_width_m": 0.035,
+          "flame_height_m": 0.075,
+          "flame_group": "hanging_flame",
+          "flame_uv_policy": "Runtime bottom V1 / top V0; Blender bottom V0 / top V1",
+          "flame_authoring_file": "gothic lantern - hanging limestone and metal.blend",
+          "flame_authoring_sha256": "ab3c159d451a476ae3f0e4f7c223d310a18e394563dcf721d4b5b01254301db1",
+          "clean_flame_authoring_file": "gothic lantern - clean hanging.blend",
+          "clean_flame_authoring_sha256": "40e50251270bbd20d6b913f429a41372eae1c119ae9edb74b707378d52b11aac",
+          "flame_switch": "Scene custom property: Gas flame ON",
+          "non_flame_authoring_geometry_unchanged": true,
+          "before_tracery_revision_counts": {
+            "authoring_polygons": 14792,
+            "authoring_triangles": 32216,
+            "triangles": 32216
+          },
+          "current_authoring_file": "gothic lantern - hanging limestone and metal.blend",
+          "current_authoring_sha256": "ab3c159d451a476ae3f0e4f7c223d310a18e394563dcf721d4b5b01254301db1",
+          "current_clean_authoring_file": "gothic lantern - clean hanging.blend",
+          "current_clean_authoring_sha256": "40e50251270bbd20d6b913f429a41372eae1c119ae9edb74b707378d52b11aac",
+          "tracery_revision": "Paired pointed lancets and connected circular quatrefoil; original outer frames and all non-lead parts unchanged",
+          "non_lead_authoring_geometry_unchanged": true,
+          "outer_pointed_frames_unchanged": true
+        }
+      ],
+      "export": {
+        "path": "models/mesh/lantern_gothic.obj",
+        "sha256": "e127a7893d4823326107b20933c9f9ef2444332c89dc38823b87efefb5c61772",
+        "vertices": 57788,
+        "normals": 62183,
+        "uvs": 65,
+        "groups": {
+          "hanging_bronze": 896,
+          "hanging_flame": 12,
+          "hanging_glass": 912,
+          "hanging_lead": 14136,
+          "hanging_stone": 18624,
+          "pier_bronze": 896,
+          "pier_flame": 12,
+          "pier_glass": 912,
+          "pier_lead": 14136,
+          "pier_stone": 19202,
+          "wall_bronze": 896,
+          "wall_flame": 12,
+          "wall_glass": 608,
+          "wall_lead": 9424,
+          "wall_stone": 15320
+        },
+        "validation": {
+          "lf_text": true,
+          "finite_unit_normals": true,
+          "triangulated_no_degenerates": true,
+          "glass_uvs_0_to_1": true,
+          "groups": {
+            "hanging_bronze": 896,
+            "hanging_flame": 12,
+            "hanging_glass": 912,
+            "hanging_lead": 14136,
+            "hanging_stone": 18624,
+            "pier_bronze": 896,
+            "pier_flame": 12,
+            "pier_glass": 912,
+            "pier_lead": 14136,
+            "pier_stone": 19202,
+            "wall_bronze": 896,
+            "wall_flame": 12,
+            "wall_glass": 608,
+            "wall_lead": 9424,
+            "wall_stone": 15320
+          }
+        },
+        "flame_triangles": 36,
+        "retention_evidence": "docs/evidence/gothic-lantern-tracery.json",
+        "non_lead_roles_exact": true,
+        "outer_frames_exact": true
+      },
+      "native_bronze": {
+        "path": "textures/block/bronze.png",
+        "sha256": "2d032e11f5d62ed4bb391f29b51c6f0d44d926eebf3e02f17bddd53d22c6c89e"
+      },
+      "runtime_geometry_policy": "Full approved authoring geometry; no simplification",
+      "flame_texture": {
+        "path": "textures/block/lantern_flame.png",
+        "sha256": "e10c1b1208159b78c2585b9bcb7bd1bb583505a9327466eaa0e3ac859aa28504",
+        "width": 64,
+        "height": 128,
+        "rgba": true,
+        "palette": "Warm yellow with pale cream centre"
+      },
+      "flame_policy": "Three crossed, double-sided cards; material flame; runtime top V0/bottom V1; show only when lit. Existing body geometry unchanged.",
+      "before_tracery_revision_export": {
+        "path": "models/mesh/lantern_gothic.obj",
+        "sha256": "814a88a3c33fea116c7fb9a18284bc11c4597a29bc3256934df56d06917143e8",
+        "vertices": 45180,
+        "normals": 45714,
+        "uvs": 65,
+        "groups": {
+          "pier_stone": 19202,
+          "pier_lead": 11784,
+          "pier_bronze": 896,
+          "pier_glass": 912,
+          "wall_stone": 15320,
+          "wall_lead": 7856,
+          "wall_bronze": 896,
+          "wall_glass": 608,
+          "hanging_stone": 18624,
+          "hanging_lead": 11784,
+          "hanging_bronze": 896,
+          "hanging_glass": 912,
+          "pier_flame": 12,
+          "wall_flame": 12,
+          "hanging_flame": 12
+        },
+        "validation": {
+          "lf_text": true,
+          "finite_unit_normals": true,
+          "triangulated_no_degenerates": true,
+          "glass_uvs_0_to_1": true,
+          "groups": {
+            "hanging_bronze": 896,
+            "hanging_glass": 912,
+            "hanging_lead": 11784,
+            "hanging_stone": 18624,
+            "pier_bronze": 896,
+            "pier_glass": 912,
+            "pier_lead": 11784,
+            "pier_stone": 19202,
+            "wall_bronze": 896,
+            "wall_glass": 608,
+            "wall_lead": 7856,
+            "wall_stone": 15320,
+            "pier_flame": 12,
+            "wall_flame": 12,
+            "hanging_flame": 12
+          }
+        },
+        "body_prefix_bytes": 7151221,
+        "body_prefix_sha256": "e2370d7a941f7522e937058d867c0ad3b91eb3c05d838a9038d1da8e3fec1436",
+        "body_prefix_byte_identical": true,
+        "flame_triangles": 36
+      },
+      "tracery_revision": {
+        "design": "Paired pointed lancets, continuous mullion and supported four-circular-lobed quatrefoil",
+        "evidence": "docs/evidence/gothic-lantern-tracery.json",
+        "tool": {
+          "path": "tools/rebuild_gothic_lantern_tracery.py",
+          "sha256": "c9a5a9e0d23ed02b31514719484e6dcf53abb1d44f726a9c753cb7c441929743",
+          "blender": "5.2.0 LTS"
+        }
+      }
+    },
+    "byzantine": {
+      "schema": 1,
+      "provenance": "Oliver's own supplied Meshy creations and approved clean authored derivatives",
+      "blender_version": "5.2.0 LTS",
+      "blender_build": "fbe6228777e7",
+      "coordinate_contract": "Y-up, front+Z; body height1m excluding suspension; pier/hanging centredXZ; wall rearZ0/front+Z",
+      "canonical_burner_height_m": 0.15405888538380652,
+      "mounts": [
+        {
+          "style": "byzantine",
+          "mount": "pier",
+          "source": "byzantine lantern - seated limestone.blend",
+          "source_sha256": "f6183b55e8cd53832dbbbd06df3cac180681a64f2bd2ff7f1857b8072479ffbc",
+          "source_original_bounds": [
+            [
+              -0.4984280467033386,
+              -0.43214666843414307,
+              -0.9520000219345093
+            ],
+            [
+              0.4984280467033386,
+              0.43214666843414307,
+              0.949999988079071
+            ]
+          ],
+          "source_mesh_digests": {
+            "01 Continuous Byzantine stone lantern": "f24e168f3dfcd72e85a0a6a5b3bd84c95c3d83fec2a296d98393e4efc6e9b1fe",
+            "02 Rounded stone archivolt 1": "f5c91732add2aff3c706b1447c026a271da7410bf368293c1d79b0a8126439dc",
+            "03 Rounded spring-line impost 1 -1": "f9f36c257c1e0beffd2639d7d7fdd114d706a666407e1094772548fa44fe87dd",
+            "03 Rounded spring-line impost 1 1": "64c8807892dc79cb4ef445dffc980a0cfcd67fb3c1d4795a2d9ea85eccd380b0",
+            "04 Carved medallion ring 1": "0b9ed625867c3df3fb6a8137543c2e38fbdf08c53a9eed3e9b5042a0b99c9658",
+            "04 Rounded Byzantine cross relief 1": "52df3ff835c75084f30d4587189e1d139172098c99170ea4bafe2bf664642c4e",
+            "02 Rounded stone archivolt 2": "4cbb67eaafe11e5cae3c62f6dcbb7666908b33ed3ec13832bf512ca6621103d5",
+            "03 Rounded spring-line impost 2 -1": "9d11edb0f04107c94c29a7c10f739d48212865efa208c594fc76a110b0925415",
+            "03 Rounded spring-line impost 2 1": "439d31e90bbef0f10b13e089d22a66c2f67accddea9cb3bc8bff87fbccbba8c3",
+            "04 Carved medallion ring 2": "b6a3d1c4203139e7ae19978986cca38699acd7abdb899dbaf97f15db973114ab",
+            "04 Rounded Byzantine cross relief 2": "18ecb0f7a75ff497f1695357c00ecf8a19efdd49a8c24d9d089a377e5e959b2a",
+            "02 Rounded stone archivolt 3": "2627720d12dd1393e4386c35f7db7c00cde92ff094357d35d418d71753987ca4",
+            "03 Rounded spring-line impost 3 -1": "0a7f9cce5e5fa5f94fc35a83995993f3f51058acc5fe5c3a055756ec1a9686c3",
+            "03 Rounded spring-line impost 3 1": "d022d8931b8b797f09a5e59b0a169504b6be1a4d101a6072a2d945c6262e160c",
+            "04 Carved medallion ring 3": "f2ee72b7b4addc651fe895e6040318eac173aa2c0be92b12fe6eed66322bf801",
+            "04 Rounded Byzantine cross relief 3": "cb158dd6d718a046ec0888b570bcc7f83df28a502a64952b09f4b39da880a325",
+            "02 Rounded stone archivolt 4": "574af9ceca7b60aec50e0460894c9698da482e780c1038d96bd540efdae9bfe4",
+            "03 Rounded spring-line impost 4 -1": "2c1f29b324b9b0b1c706c4451dbea4243d05f75eee8170250b5fd7e287f7cc9e",
+            "03 Rounded spring-line impost 4 1": "669c3e0c3ec698a3d840c46d18e8fabb7507983ee8fd2db754590287f8df982f",
+            "04 Carved medallion ring 4": "a4aa4aec28ae94102f8bd4dece9767b0906bcb4e2a207994902379ea4fb4078a",
+            "04 Rounded Byzantine cross relief 4": "c0ba32b3af59932bf95f515f1f8de96213672b2fa8658677ddf3093f8c88e9e0",
+            "02 Rounded stone archivolt 5": "4b83240bfb033483169cab2b22434375fed5957e1fafcd5bf2dbaddd65d46bba",
+            "03 Rounded spring-line impost 5 -1": "ee2ae489c4b62d799207ab81e414c77522d866890f813abe54acd461532fb78e",
+            "03 Rounded spring-line impost 5 1": "e828deb6e8e59ed76ddc2085e31033c1a5e31883b658e68251f0241817455fdc",
+            "04 Carved medallion ring 5": "5deae20870be8561cd95c992810d30018ab48252b1c496e5eef69d55d2147ac3",
+            "04 Rounded Byzantine cross relief 5": "8fb6b0e1e1b7dca53a386579a7574e64637c8d7a074149eb6735a53ff6484116",
+            "02 Rounded stone archivolt 6": "0868e2c266b7d68abbc09130d82383be1e88b6173979d6b013cade125ca320ab",
+            "03 Rounded spring-line impost 6 -1": "15e6436f23c57c8db601ce6c311478a75bc16f19e1bf31fe517509526ed35434",
+            "03 Rounded spring-line impost 6 1": "d413fbd779b328b5c67a6195afecc347c2bb0be3a0a42d9334740175fa9b3431",
+            "04 Carved medallion ring 6": "66dc1a976852d629c5fcaf7979ec29a6716b6e38276a8891fc8c649b753c6db5",
+            "04 Rounded Byzantine cross relief 6": "f149eaaa9b26c9db1f6eb737d7fbc215046f31879da75de39aaa91d42b14e7ac"
+          },
+          "source_modifiers_baked": {},
+          "blender_file": "byzantine-pier-game-ready.blend",
+          "blender_sha256": "6b85a3ec29405eaeb62fc379615ed9bacad27fc123f5b8ee915a57dec45457c5",
+          "body_bounds": [
+            [
+              -0.2620547115802765,
+              0.0,
+              -0.22720645368099213
+            ],
+            [
+              0.2620547115802765,
+              1.0,
+              0.22720645368099213
+            ]
+          ],
+          "body_height_m": 1.0,
+          "floor_y": 0.1861198896342603,
+          "normalization_scale": 0.5257623526473377,
+          "source_front": "-Y",
+          "runtime_front": "+Z",
+          "wall_rear_z": null,
+          "burner_height_m": 0.15405888538380652,
+          "burner_raise_m": 0.0773554088691556,
+          "burner_base_y": 0.2634752985034159,
+          "glass_panes": 6,
+          "objects": [
+            {
+              "name": "01 Continuous Byzantine stone lantern",
+              "role": "stone",
+              "vertices": 4904,
+              "polygons": 4413,
+              "triangles": 9824,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 1",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 1 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 1 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 1",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 1",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 2",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 2 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 2 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 2",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 2",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 3",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 3 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 3 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 3",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 3",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 4",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 4 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 4 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 4",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 4",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 5",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 5 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 5 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 5",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 5",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 6",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 6 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 6 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 6",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 6",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL01 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L01 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL02 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L02 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL03 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L03 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL04 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L04 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL05 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L05 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL06 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L06 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G08 Dark split-jet slit",
+              "role": "bronze",
+              "vertices": 8,
+              "polygons": 6,
+              "triangles": 12,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G07 Pale wider burner tip - diameter 0.044",
+              "role": "bronze",
+              "vertices": 72,
+              "polygons": 50,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G06 Broader tip retaining collar",
+              "role": "bronze",
+              "vertices": 96,
+              "polygons": 74,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G05 Proportional rear valve knob",
+              "role": "bronze",
+              "vertices": 64,
+              "polygons": 50,
+              "triangles": 124,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G04 Discreet rear valve branch",
+              "role": "bronze",
+              "vertices": 32,
+              "polygons": 18,
+              "triangles": 60,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G03 Proportional hexagonal union",
+              "role": "bronze",
+              "vertices": 24,
+              "polygons": 20,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G02 Sturdier gas riser - diameter 0.032",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G01 Small floor mounting collar",
+              "role": "bronze",
+              "vertices": 120,
+              "polygons": 98,
+              "triangles": 236,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G09 Plain bronze supply riser to raised burner",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            }
+          ],
+          "authoring_polygons": 17471,
+          "authoring_triangles": 37236,
+          "triangles": 37236,
+          "runtime_geometry_policy": "Full approved authoring geometry retained; no runtime reduction",
+          "sources_unchanged": true,
+          "provenance": "Oliver's own Meshy creation, approved clean authored lantern family.",
+          "flame_anchor": [
+            0.0,
+            0.417534202,
+            0.0
+          ],
+          "flame_bounds": [
+            [
+              -0.0175,
+              0.417534202,
+              -0.015155444566227678
+            ],
+            [
+              0.0175,
+              0.49253420200000003,
+              0.015155444566227678
+            ]
+          ],
+          "flame_triangles": 12,
+          "flame_authoring_polygons": 6,
+          "flame_width_m": 0.035,
+          "flame_height_m": 0.075,
+          "flame_group": "pier_flame",
+          "flame_uv_policy": "Runtime bottom V1 / top V0; Blender bottom V0 / top V1",
+          "flame_authoring_file": "byzantine lantern - seated limestone.blend",
+          "flame_authoring_sha256": "1900132a5eb90d7620728bb39be16bbf9f2f2ea189c7880f4efcb61b4c2cc1cc",
+          "clean_flame_authoring_file": "byzantine lantern - clean seated.blend",
+          "clean_flame_authoring_sha256": "b94954fa131ba01dec7c0ca570029f76a683ef20e0c5c7a7b685b42ab361b2bb",
+          "flame_switch": "Scene custom property: Gas flame ON",
+          "non_flame_authoring_geometry_unchanged": true
+        },
+        {
+          "style": "byzantine",
+          "mount": "wall",
+          "source": "byzantine lantern - wall limestone.blend",
+          "source_sha256": "e061b396160011c16c244d58728f30748c7a3e00f5a4f80478f521152d1b8618",
+          "source_original_bounds": [
+            [
+              -0.25999999046325684,
+              -0.40703195333480835,
+              -0.9369999766349792
+            ],
+            [
+              0.4694198668003082,
+              0.40703195333480835,
+              0.949999988079071
+            ]
+          ],
+          "source_mesh_digests": {
+            "01 Continuous Byzantine stone lantern": "10f40815edb6811d00a1d07f9c5cc63969994fb02ef655f364370105ea86855f",
+            "02 Rounded stone archivolt 1": "f5c91732add2aff3c706b1447c026a271da7410bf368293c1d79b0a8126439dc",
+            "03 Rounded spring-line impost 1 -1": "f9f36c257c1e0beffd2639d7d7fdd114d706a666407e1094772548fa44fe87dd",
+            "03 Rounded spring-line impost 1 1": "64c8807892dc79cb4ef445dffc980a0cfcd67fb3c1d4795a2d9ea85eccd380b0",
+            "04 Carved medallion ring 1": "0b9ed625867c3df3fb6a8137543c2e38fbdf08c53a9eed3e9b5042a0b99c9658",
+            "04 Rounded Byzantine cross relief 1": "c04f996a961d3844c81ef4f362713f91d95ca3884821d2462d408a116b7bd135",
+            "02 Rounded stone archivolt 2": "4cbb67eaafe11e5cae3c62f6dcbb7666908b33ed3ec13832bf512ca6621103d5",
+            "03 Rounded spring-line impost 2 -1": "9d11edb0f04107c94c29a7c10f739d48212865efa208c594fc76a110b0925415",
+            "03 Rounded spring-line impost 2 1": "439d31e90bbef0f10b13e089d22a66c2f67accddea9cb3bc8bff87fbccbba8c3",
+            "04 Carved medallion ring 2": "b6a3d1c4203139e7ae19978986cca38699acd7abdb899dbaf97f15db973114ab",
+            "04 Rounded Byzantine cross relief 2": "270a3605a143d5ed86c8822afd0345807eac42fefce612aa437cd3307302e5cf",
+            "02 Rounded stone archivolt 5": "4b83240bfb033483169cab2b22434375fed5957e1fafcd5bf2dbaddd65d46bba",
+            "03 Rounded spring-line impost 5 -1": "ee2ae489c4b62d799207ab81e414c77522d866890f813abe54acd461532fb78e",
+            "03 Rounded spring-line impost 5 1": "e828deb6e8e59ed76ddc2085e31033c1a5e31883b658e68251f0241817455fdc",
+            "04 Carved medallion ring 5": "5deae20870be8561cd95c992810d30018ab48252b1c496e5eef69d55d2147ac3",
+            "04 Rounded Byzantine cross relief 5": "2c2538502201519dce4f9219024d6261740df51bfded7086b8f75dbcfffbae47",
+            "02 Rounded stone archivolt 6": "0868e2c266b7d68abbc09130d82383be1e88b6173979d6b013cade125ca320ab",
+            "03 Rounded spring-line impost 6 -1": "15e6436f23c57c8db601ce6c311478a75bc16f19e1bf31fe517509526ed35434",
+            "03 Rounded spring-line impost 6 1": "d413fbd779b328b5c67a6195afecc347c2bb0be3a0a42d9334740175fa9b3431",
+            "04 Carved medallion ring 6": "66dc1a976852d629c5fcaf7979ec29a6716b6e38276a8891fc8c649b753c6db5",
+            "04 Rounded Byzantine cross relief 6": "f72767c34b8ae7b1d0ed1c08814ecd313dfb00a385f1f96ce0a522ef94a48968"
+          },
+          "source_modifiers_baked": {},
+          "blender_file": "byzantine-wall-game-ready.blend",
+          "blender_sha256": "ea1bd25428358727761569c9387f48ceea51981a4e9fd615f049ca55c90c33e0",
+          "body_bounds": [
+            [
+              -0.21570321917533875,
+              0.0,
+              0.0
+            ],
+            [
+              0.21570321917533875,
+              1.0,
+              0.38655003905296326
+            ]
+          ],
+          "body_height_m": 1.0,
+          "floor_y": 0.17965020317066394,
+          "normalization_scale": 0.5299417163219379,
+          "source_front": "+X",
+          "runtime_front": "+Z",
+          "wall_rear_z": 0,
+          "burner_height_m": 0.15405888538380652,
+          "burner_raise_m": 0.07919498733566821,
+          "burner_base_y": 0.25884519050633215,
+          "glass_panes": 4,
+          "objects": [
+            {
+              "name": "01 Continuous Byzantine stone lantern",
+              "role": "stone",
+              "vertices": 3775,
+              "polygons": 3268,
+              "triangles": 7558,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 1",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 1 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 1 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 1",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 1",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 2",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 2 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 2 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 2",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 2",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 5",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 5 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 5 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 5",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 5",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 6",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 6 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 6 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 6",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 6",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL01 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L01 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL02 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L02 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL03 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L03 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL04 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L04 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G08 Dark split-jet slit",
+              "role": "bronze",
+              "vertices": 8,
+              "polygons": 6,
+              "triangles": 12,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G07 Pale wider burner tip - diameter 0.044",
+              "role": "bronze",
+              "vertices": 72,
+              "polygons": 50,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G06 Broader tip retaining collar",
+              "role": "bronze",
+              "vertices": 96,
+              "polygons": 74,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G05 Proportional rear valve knob",
+              "role": "bronze",
+              "vertices": 64,
+              "polygons": 50,
+              "triangles": 124,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G04 Discreet rear valve branch",
+              "role": "bronze",
+              "vertices": 32,
+              "polygons": 18,
+              "triangles": 60,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G03 Proportional hexagonal union",
+              "role": "bronze",
+              "vertices": 24,
+              "polygons": 20,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G02 Sturdier gas riser - diameter 0.032",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G01 Small floor mounting collar",
+              "role": "bronze",
+              "vertices": 120,
+              "polygons": 98,
+              "triangles": 236,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G09 Plain bronze supply riser to raised burner",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            }
+          ],
+          "authoring_polygons": 12096,
+          "authoring_triangles": 26162,
+          "triangles": 26162,
+          "runtime_geometry_policy": "Full approved authoring geometry retained; no runtime reduction",
+          "sources_unchanged": true,
+          "provenance": "Oliver's own Meshy creation, approved clean authored lantern family.",
+          "flame_anchor": [
+            0.0,
+            0.412904084,
+            0.1377848385
+          ],
+          "flame_bounds": [
+            [
+              -0.0175,
+              0.412904084,
+              0.12262939393377233
+            ],
+            [
+              0.0175,
+              0.487904084,
+              0.15294028306622767
+            ]
+          ],
+          "flame_triangles": 12,
+          "flame_authoring_polygons": 6,
+          "flame_width_m": 0.035,
+          "flame_height_m": 0.075,
+          "flame_group": "wall_flame",
+          "flame_uv_policy": "Runtime bottom V1 / top V0; Blender bottom V0 / top V1",
+          "flame_authoring_file": "byzantine lantern - wall limestone.blend",
+          "flame_authoring_sha256": "ae80a0773defd7162be28562959d668fae925ebae19860719afd166f20d12e6c",
+          "clean_flame_authoring_file": "byzantine lantern - clean wall.blend",
+          "clean_flame_authoring_sha256": "33bee3e035a01951c0082c3e4568b51d4785528b58c269abc954fd87c52b291e",
+          "flame_switch": "Scene custom property: Gas flame ON",
+          "non_flame_authoring_geometry_unchanged": true
+        },
+        {
+          "style": "byzantine",
+          "mount": "hanging",
+          "source": "byzantine lantern - hanging limestone and metal.blend",
+          "source_sha256": "ba2660799888ec099cafbbdb8296fe69fddeba005cfedd10b9e78348fa31476e",
+          "source_original_bounds": [
+            [
+              -0.4694198668003082,
+              -0.40703195333480835,
+              -0.9369999766349792
+            ],
+            [
+              0.4694198668003082,
+              0.40703195333480835,
+              0.949999988079071
+            ]
+          ],
+          "source_mesh_digests": {
+            "01 Continuous Byzantine hanging stone lantern": "aabd28f4f061a632f496c38aba79a1f635f457fb93bec000a8d06ed354de0151",
+            "02 Rounded stone archivolt 1": "f5c91732add2aff3c706b1447c026a271da7410bf368293c1d79b0a8126439dc",
+            "03 Rounded spring-line impost 1 -1": "f9f36c257c1e0beffd2639d7d7fdd114d706a666407e1094772548fa44fe87dd",
+            "03 Rounded spring-line impost 1 1": "64c8807892dc79cb4ef445dffc980a0cfcd67fb3c1d4795a2d9ea85eccd380b0",
+            "04 Carved medallion ring 1": "0b9ed625867c3df3fb6a8137543c2e38fbdf08c53a9eed3e9b5042a0b99c9658",
+            "04 Rounded Byzantine cross relief 1": "52df3ff835c75084f30d4587189e1d139172098c99170ea4bafe2bf664642c4e",
+            "02 Rounded stone archivolt 2": "4cbb67eaafe11e5cae3c62f6dcbb7666908b33ed3ec13832bf512ca6621103d5",
+            "03 Rounded spring-line impost 2 -1": "9d11edb0f04107c94c29a7c10f739d48212865efa208c594fc76a110b0925415",
+            "03 Rounded spring-line impost 2 1": "439d31e90bbef0f10b13e089d22a66c2f67accddea9cb3bc8bff87fbccbba8c3",
+            "04 Carved medallion ring 2": "b6a3d1c4203139e7ae19978986cca38699acd7abdb899dbaf97f15db973114ab",
+            "04 Rounded Byzantine cross relief 2": "18ecb0f7a75ff497f1695357c00ecf8a19efdd49a8c24d9d089a377e5e959b2a",
+            "02 Rounded stone archivolt 3": "2627720d12dd1393e4386c35f7db7c00cde92ff094357d35d418d71753987ca4",
+            "03 Rounded spring-line impost 3 -1": "0a7f9cce5e5fa5f94fc35a83995993f3f51058acc5fe5c3a055756ec1a9686c3",
+            "03 Rounded spring-line impost 3 1": "d022d8931b8b797f09a5e59b0a169504b6be1a4d101a6072a2d945c6262e160c",
+            "04 Carved medallion ring 3": "f2ee72b7b4addc651fe895e6040318eac173aa2c0be92b12fe6eed66322bf801",
+            "04 Rounded Byzantine cross relief 3": "cb158dd6d718a046ec0888b570bcc7f83df28a502a64952b09f4b39da880a325",
+            "02 Rounded stone archivolt 4": "574af9ceca7b60aec50e0460894c9698da482e780c1038d96bd540efdae9bfe4",
+            "03 Rounded spring-line impost 4 -1": "2c1f29b324b9b0b1c706c4451dbea4243d05f75eee8170250b5fd7e287f7cc9e",
+            "03 Rounded spring-line impost 4 1": "669c3e0c3ec698a3d840c46d18e8fabb7507983ee8fd2db754590287f8df982f",
+            "04 Carved medallion ring 4": "a4aa4aec28ae94102f8bd4dece9767b0906bcb4e2a207994902379ea4fb4078a",
+            "04 Rounded Byzantine cross relief 4": "c0ba32b3af59932bf95f515f1f8de96213672b2fa8658677ddf3093f8c88e9e0",
+            "02 Rounded stone archivolt 5": "4b83240bfb033483169cab2b22434375fed5957e1fafcd5bf2dbaddd65d46bba",
+            "03 Rounded spring-line impost 5 -1": "ee2ae489c4b62d799207ab81e414c77522d866890f813abe54acd461532fb78e",
+            "03 Rounded spring-line impost 5 1": "e828deb6e8e59ed76ddc2085e31033c1a5e31883b658e68251f0241817455fdc",
+            "04 Carved medallion ring 5": "5deae20870be8561cd95c992810d30018ab48252b1c496e5eef69d55d2147ac3",
+            "04 Rounded Byzantine cross relief 5": "8fb6b0e1e1b7dca53a386579a7574e64637c8d7a074149eb6735a53ff6484116",
+            "02 Rounded stone archivolt 6": "0868e2c266b7d68abbc09130d82383be1e88b6173979d6b013cade125ca320ab",
+            "03 Rounded spring-line impost 6 -1": "15e6436f23c57c8db601ce6c311478a75bc16f19e1bf31fe517509526ed35434",
+            "03 Rounded spring-line impost 6 1": "d413fbd779b328b5c67a6195afecc347c2bb0be3a0a42d9334740175fa9b3431",
+            "04 Carved medallion ring 6": "66dc1a976852d629c5fcaf7979ec29a6716b6e38276a8891fc8c649b753c6db5",
+            "04 Rounded Byzantine cross relief 6": "f149eaaa9b26c9db1f6eb737d7fbc215046f31879da75de39aaa91d42b14e7ac"
+          },
+          "source_modifiers_baked": {},
+          "blender_file": "byzantine-hanging-game-ready.blend",
+          "blender_sha256": "1e7f4aa681e5e563467aa85d831ab877fdb1fd4e89fb01f221ea50fade85cbf2",
+          "body_bounds": [
+            [
+              -0.24876518547534943,
+              0.0,
+              -0.21570321917533875
+            ],
+            [
+              0.24876518547534943,
+              1.0,
+              0.21570321917533875
+            ]
+          ],
+          "body_height_m": 1.0,
+          "floor_y": 0.17965023475765168,
+          "normalization_scale": 0.5299417163219379,
+          "source_front": "-Y",
+          "runtime_front": "+Z",
+          "wall_rear_z": null,
+          "burner_height_m": 0.15405888538380652,
+          "burner_raise_m": 0.07919495574868046,
+          "burner_base_y": 0.25884519050633215,
+          "glass_panes": 6,
+          "objects": [
+            {
+              "name": "01 Continuous Byzantine hanging stone lantern",
+              "role": "stone",
+              "vertices": 4371,
+              "polygons": 3831,
+              "triangles": 8758,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 1",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 1 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 1 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 1",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 1",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 2",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 2 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 2 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 2",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 2",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 3",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 3 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 3 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 3",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 3",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 4",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 4 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 4 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 4",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 4",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 5",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 5 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 5 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 5",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 5",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "02 Rounded stone archivolt 6",
+              "role": "stone",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 6 -1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "03 Rounded spring-line impost 6 1",
+              "role": "stone",
+              "vertices": 96,
+              "polygons": 98,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Carved medallion ring 6",
+              "role": "stone",
+              "vertices": 576,
+              "polygons": 576,
+              "triangles": 1152,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "04 Rounded Byzantine cross relief 6",
+              "role": "stone",
+              "vertices": 1008,
+              "polygons": 938,
+              "triangles": 2012,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL01 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L01 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL02 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L02 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL03 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L03 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL04 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L04 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL05 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L05 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "GL06 Inset clear glazing pane",
+              "role": "glass",
+              "vertices": 62,
+              "polygons": 33,
+              "triangles": 120,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "L06 Lead glazing border inside stone archivolt",
+              "role": "lead",
+              "vertices": 186,
+              "polygons": 186,
+              "triangles": 372,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G08 Dark split-jet slit",
+              "role": "bronze",
+              "vertices": 8,
+              "polygons": 6,
+              "triangles": 12,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G07 Pale wider burner tip - diameter 0.044",
+              "role": "bronze",
+              "vertices": 72,
+              "polygons": 50,
+              "triangles": 140,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G06 Broader tip retaining collar",
+              "role": "bronze",
+              "vertices": 96,
+              "polygons": 74,
+              "triangles": 188,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G05 Proportional rear valve knob",
+              "role": "bronze",
+              "vertices": 64,
+              "polygons": 50,
+              "triangles": 124,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G04 Discreet rear valve branch",
+              "role": "bronze",
+              "vertices": 32,
+              "polygons": 18,
+              "triangles": 60,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G03 Proportional hexagonal union",
+              "role": "bronze",
+              "vertices": 24,
+              "polygons": 20,
+              "triangles": 44,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G02 Sturdier gas riser - diameter 0.032",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G01 Small floor mounting collar",
+              "role": "bronze",
+              "vertices": 120,
+              "polygons": 98,
+              "triangles": 236,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            },
+            {
+              "name": "G09 Plain bronze supply riser to raised burner",
+              "role": "bronze",
+              "vertices": 48,
+              "polygons": 26,
+              "triangles": 92,
+              "boundary": 0,
+              "nonmanifold": 0,
+              "degenerate": 0
+            }
+          ],
+          "authoring_polygons": 16889,
+          "authoring_triangles": 36170,
+          "triangles": 36170,
+          "runtime_geometry_policy": "Full approved authoring geometry retained; no runtime reduction",
+          "sources_unchanged": true,
+          "provenance": "Oliver's own Meshy creation, approved clean authored lantern family.",
+          "flame_anchor": [
+            0.0,
+            0.412904084,
+            0.0
+          ],
+          "flame_bounds": [
+            [
+              -0.0175,
+              0.412904084,
+              -0.015155444566227678
+            ],
+            [
+              0.0175,
+              0.487904084,
+              0.015155444566227678
+            ]
+          ],
+          "flame_triangles": 12,
+          "flame_authoring_polygons": 6,
+          "flame_width_m": 0.035,
+          "flame_height_m": 0.075,
+          "flame_group": "hanging_flame",
+          "flame_uv_policy": "Runtime bottom V1 / top V0; Blender bottom V0 / top V1",
+          "flame_authoring_file": "byzantine lantern - hanging limestone and metal.blend",
+          "flame_authoring_sha256": "f326ed492cdcb77bf69922462775f090c2f1c097a4eae7788f2af894d1a88c49",
+          "clean_flame_authoring_file": "byzantine lantern - clean hanging.blend",
+          "clean_flame_authoring_sha256": "7a5e2a7fd5d41148b9f15fc258e2094d0633fe636013d3e499dd62660ffc0cb1",
+          "flame_switch": "Scene custom property: Gas flame ON",
+          "non_flame_authoring_geometry_unchanged": true
+        }
+      ],
+      "export": {
+        "path": "models/mesh/lantern_byzantine.obj",
+        "sha256": "906d79994e0fa2730aa4ef72ad864af08a6128dbddb6a6df246559f3364e1d4a",
+        "vertices": 49982,
+        "normals": 54773,
+        "uvs": 49,
+        "groups": {
+          "pier_stone": 33296,
+          "pier_bronze": 988,
+          "pier_glass": 720,
+          "pier_lead": 2232,
+          "wall_stone": 23206,
+          "wall_bronze": 988,
+          "wall_glass": 480,
+          "wall_lead": 1488,
+          "hanging_stone": 32230,
+          "hanging_bronze": 988,
+          "hanging_glass": 720,
+          "hanging_lead": 2232,
+          "pier_flame": 12,
+          "wall_flame": 12,
+          "hanging_flame": 12
+        },
+        "validation": {
+          "lf_text": true,
+          "finite_unit_normals": true,
+          "triangulated_no_degenerates": true,
+          "glass_uvs_0_to_1": true,
+          "groups": {
+            "hanging_bronze": 988,
+            "hanging_glass": 720,
+            "hanging_lead": 2232,
+            "hanging_stone": 32230,
+            "pier_bronze": 988,
+            "pier_glass": 720,
+            "pier_lead": 2232,
+            "pier_stone": 33296,
+            "wall_bronze": 988,
+            "wall_glass": 480,
+            "wall_lead": 1488,
+            "wall_stone": 23206,
+            "pier_flame": 12,
+            "wall_flame": 12,
+            "hanging_flame": 12
+          }
+        },
+        "body_prefix_bytes": 8114303,
+        "body_prefix_sha256": "0259d7213355696cbad6d84a3db76caf6941993bc072ccbe7f26ef4ab5bea22a",
+        "body_prefix_byte_identical": true,
+        "flame_triangles": 36
+      },
+      "native_bronze": {
+        "path": "textures/block/bronze.png",
+        "sha256": "2d032e11f5d62ed4bb391f29b51c6f0d44d926eebf3e02f17bddd53d22c6c89e"
+      },
+      "runtime_geometry_policy": "Full approved authoring geometry; no simplification",
+      "flame_texture": {
+        "path": "textures/block/lantern_flame.png",
+        "sha256": "e10c1b1208159b78c2585b9bcb7bd1bb583505a9327466eaa0e3ac859aa28504",
+        "width": 64,
+        "height": 128,
+        "rgba": true,
+        "palette": "Warm yellow with pale cream centre"
+      },
+      "flame_policy": "Three crossed, double-sided cards; material flame; runtime top V0/bottom V1; show only when lit. Existing body geometry unchanged."
+    }
+  },
+  "suspension": {
+    "export": {
+      "path": "models/mesh/lantern_suspension.obj",
+      "sha256": "e22306a47b622b51adc92aad6e77361c98c9fe400e6020bf96ccc1c2bbcf4006",
+      "vertices": 42943,
+      "normals": 29211,
+      "uvs": 0,
+      "groups": {
+        "half_chain": 9660,
+        "full_chain": 18304,
+        "canopy": 1148,
+        "half_chain_small": 19516,
+        "full_chain_small": 36608,
+        "canopy_small": 1148
+      },
+      "validation": {
+        "lf_text": true,
+        "finite_unit_normals": true,
+        "triangulated_no_degenerates": true,
+        "glass_uvs_0_to_1": true,
+        "groups": {
+          "canopy": 1148,
+          "canopy_small": 1148,
+          "full_chain": 18304,
+          "full_chain_small": 36608,
+          "half_chain": 9660,
+          "half_chain_small": 19516
+        }
+      }
+    },
+    "components": {
+      "half_chain": {
+        "logical_anchor_span_m": 0.5,
+        "geometric_bounds": [
+          [
+            -0.02365930750966072,
+            -0.007886434905230999,
+            -0.01445846538990736
+          ],
+          [
+            0.02365930750966072,
+            0.5144584774971008,
+            0.01445846538990736
+          ]
+        ],
+        "rectangular_links": 6,
+        "round_join_rings": 7,
+        "direct_eye": true,
+        "stock_scale": 1.0,
+        "minimum_stock_clearance_m": 0.0017627599979682142,
+        "end_seam_ring_owned": true,
+        "triangles": 9660
+      },
+      "full_chain": {
+        "logical_anchor_span_m": 1.0,
+        "geometric_bounds": [
+          [
+            -0.017875911667943,
+            0.0011324798688292503,
+            -0.01445846538990736
+          ],
+          [
+            0.017875911667943,
+            1.014458417892456,
+            0.01445846538990736
+          ]
+        ],
+        "rectangular_links": 13,
+        "round_join_rings": 13,
+        "direct_eye": false,
+        "stock_scale": 1.0,
+        "minimum_stock_clearance_m": 0.0015125450160939813,
+        "end_seam_ring_owned": true,
+        "triangles": 18304
+      },
+      "canopy": {
+        "ceiling_contact_y": 0.0,
+        "geometric_bounds": [
+          [
+            -0.07045215368270874,
+            -0.05152470991015434,
+            -0.07045215368270874
+          ],
+          [
+            0.07045215368270874,
+            0.0,
+            0.07045215368270874
+          ]
+        ],
+        "stock_scale": 1.0,
+        "triangles": 1148
+      },
+      "half_chain_small": {
+        "logical_anchor_span_m": 0.5,
+        "geometric_bounds": [
+          [
+            -0.01182965375483036,
+            -0.0039432174526154995,
+            -0.00722923269495368
+          ],
+          [
+            0.01182965375483036,
+            0.507229208946228,
+            0.00722923269495368
+          ]
+        ],
+        "rectangular_links": 13,
+        "round_join_rings": 14,
+        "direct_eye": true,
+        "stock_scale": 0.5,
+        "minimum_stock_clearance_m": 0.0008825686756024761,
+        "end_seam_ring_owned": true,
+        "triangles": 19516
+      },
+      "full_chain_small": {
+        "logical_anchor_span_m": 1.0,
+        "geometric_bounds": [
+          [
+            -0.0089379558339715,
+            0.0005662399344146252,
+            -0.00722923269495368
+          ],
+          [
+            0.0089379558339715,
+            1.0072293281555176,
+            0.00722923269495368
+          ]
+        ],
+        "rectangular_links": 26,
+        "round_join_rings": 26,
+        "direct_eye": false,
+        "stock_scale": 0.5,
+        "minimum_stock_clearance_m": 0.0007598383022537204,
+        "end_seam_ring_owned": true,
+        "triangles": 36608
+      },
+      "canopy_small": {
+        "ceiling_contact_y": 0.0,
+        "geometric_bounds": [
+          [
+            -0.03522607684135437,
+            -0.02576235495507717,
+            -0.03522607684135437
+          ],
+          [
+            0.03522607684135437,
+            0.0,
+            0.03522607684135437
+          ]
+        ],
+        "stock_scale": 0.5,
+        "triangles": 1148
+      }
+    },
+    "material": "lead",
+    "units": "metres",
+    "coordinate_contract": "Y-up; canopy contactY0; half-chain anchors0/.5; full-chain anchors0/1",
+    "blender_source": "lantern-suspension-authoring.blend",
+    "blender_sha256": "9900b2fa30fe2a942c2bc86e290f07a0f5136dd7de78c0b5b8953dbc59eb82c3",
+    "tessellation": "Approved full 32x8 rings, 28x16 rectangular paths/stock, 48-sample canopy"
+  },
+  "preparation_tool": {
+    "path": "tools/prepare_lantern_mesh.py",
+    "sha256": "411e429a8c9d79046ed94904d2bf21de9c6c35ce265f8b23a0295d4d62211b9a",
+    "source_root_required": true,
+    "geometry_policy": "All approved source polygons retained; triangulation only, without simplification",
+    "face_count_policy": "Authored polygon faces and exported triangles are recorded separately"
+  }
+}

@@ -13,6 +13,12 @@ import net.fabricmc.api.ClientModInitializer;
 public final class DaedalonClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        if (Boolean.getBoolean("daedalon.debug.lanternFlameChecks")) {
+            com.oliver.daedalon.client.model.obj.LanternFlameClientChecks.register();
+        }
+        if (Boolean.getBoolean("daedalon.debug.finialChecks")) {
+            com.oliver.daedalon.client.model.obj.FinialRebuildClientChecks.register();
+        }
         com.oliver.daedalon.client.FountainParticleOption.register();
         CollectionResourcePackNotice.register();
         ObjGuiIconCache.register();

@@ -247,28 +247,37 @@ public final class UrnBlock extends Block {
     }
 
     private static VoxelShape makeDiotaShape() {
+        // Measured triangle-clipped bands retain the square base, carved body,
+        // small stone ears and separate hanging-ring arcs. The gaps through
+        // the hoops stay open; every size and facing shares the cached shape.
         return VoxelShapes.union(
-                Block.createCuboidShape(4.5, 0.0, 4.5, 11.5, 1.25, 11.5),
-                Block.createCuboidShape(5.0, 1.25, 5.0, 11.0, 2.75, 11.0),
-                Block.createCuboidShape(5.5, 2.75, 5.5, 10.5, 5.5, 10.5),
-                DecorShapeTransforms.octagonalLayer(
-                        4.75, 5.5, 4.75, 11.25, 7.25, 11.25
-                ),
-                DecorShapeTransforms.octagonalLayer(
-                        4.25, 7.25, 4.25, 11.75, 9.5, 11.75
-                ),
-                DecorShapeTransforms.octagonalLayer(
-                        3.5, 9.5, 3.75, 12.5, 11.5, 12.25
-                ),
-                DecorShapeTransforms.octagonalLayer(
-                        3.5, 11.5, 3.5, 12.5, 12.75, 12.5
-                ),
-                DecorShapeTransforms.octagonalLayer(
-                        3.25, 12.75, 3.75, 12.75, 15.0, 12.25
-                ),
-                DecorShapeTransforms.octagonalLayer(
-                        4.75, 15.0, 4.75, 11.25, 16.0, 11.25
-                )
+                Block.createCuboidShape(4.48, 0.0, 4.48, 11.52, 0.736, 11.52),
+                Block.createCuboidShape(4.83, 0.736, 4.83, 11.17, 2.08, 11.17),
+                DecorShapeTransforms.octagonalLayer(5.12, 2.08, 4.81, 10.88, 3.28, 11.19),
+                DecorShapeTransforms.octagonalLayer(6.23, 3.28, 6.04, 9.77, 4.48, 9.96),
+                DecorShapeTransforms.octagonalLayer(5.9, 4.48, 5.67, 10.1, 5.36, 10.33),
+                DecorShapeTransforms.octagonalLayer(5.31, 5.36, 5.02, 10.69, 6.64, 10.98),
+                DecorShapeTransforms.octagonalLayer(4.8, 6.64, 4.45, 11.2, 8, 11.55),
+                DecorShapeTransforms.octagonalLayer(4.38, 8, 3.99, 11.62, 9.44, 12.01),
+                DecorShapeTransforms.octagonalLayer(4.14, 9.44, 3.72, 11.86, 10.72, 12.28),
+                DecorShapeTransforms.octagonalLayer(4.04, 10.72, 3.61, 11.96, 12.048, 12.39),
+                DecorShapeTransforms.octagonalLayer(4.04, 12.048, 3.61, 11.96, 13.2, 12.39),
+                DecorShapeTransforms.octagonalLayer(5.4, 13.2, 5.11, 10.6, 14.4, 10.89),
+                DecorShapeTransforms.octagonalLayer(4.65, 14.4, 4.29, 11.35, 16, 11.71),
+                Block.createCuboidShape(11.35, 12.048, 7.71, 11.96, 12.8, 8.38),
+                Block.createCuboidShape(11.34, 12.8, 7.71, 12.22, 13.44, 8.38),
+                Block.createCuboidShape(11.34, 13.44, 7.71, 12.25, 14.256, 8.38),
+                Block.createCuboidShape(4.04, 12.048, 7.71, 4.65, 12.8, 8.38),
+                Block.createCuboidShape(3.78, 12.8, 7.71, 4.66, 13.44, 8.38),
+                Block.createCuboidShape(3.75, 13.44, 7.71, 4.66, 14.256, 8.38),
+                Block.createCuboidShape(12.23, 11.2, 7.15, 12.66, 11.76, 8.6),
+                Block.createCuboidShape(11.77, 11.76, 7.04, 12.4, 13.2, 7.43),
+                Block.createCuboidShape(11.97, 11.76, 8.42, 12.59, 13.2, 8.8),
+                Block.createCuboidShape(11.7, 13.2, 7.25, 12.13, 13.76, 8.69),
+                Block.createCuboidShape(3.34, 11.2, 7.15, 3.77, 11.76, 8.6),
+                Block.createCuboidShape(3.6, 11.76, 7.04, 4.23, 13.2, 7.43),
+                Block.createCuboidShape(3.41, 11.76, 8.42, 4.03, 13.2, 8.8),
+                Block.createCuboidShape(3.87, 13.2, 7.25, 4.3, 13.76, 8.69)
         ).simplify();
     }
 

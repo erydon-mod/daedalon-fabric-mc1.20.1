@@ -1,6 +1,7 @@
 package com.oliver.daedalon.client;
 
 import com.oliver.daedalon.Daedalon;
+import com.oliver.daedalon.client.config.FamilyClientOptions;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
@@ -45,9 +46,7 @@ public final class FountainParticleOption {
 
     private static int set(FabricClientCommandSource source, boolean enabled) {
         try {
-            Files.createDirectories(FILE.getParent());
-            Files.writeString(FILE, "high=" + enabled + "\nsound=" + sound + "\n");
-            high = enabled;
+            save(enabled, sound);
             return report(source);
         } catch (IOException exception) {
             source.sendError(Text.translatable("message.daedalon.fountain_particles.save_failed"));
@@ -57,14 +56,22 @@ public final class FountainParticleOption {
 
     private static int setSound(FabricClientCommandSource source, boolean enabled) {
         try {
-            Files.createDirectories(FILE.getParent());
-            Files.writeString(FILE, "high=" + high + "\nsound=" + enabled + "\n");
-            sound = enabled;
+            save(high, enabled);
             return reportSound(source);
         } catch (IOException exception) {
             source.sendError(Text.translatable("message.daedalon.fountain_particles.save_failed"));
             return 0;
         }
+    }
+
+    /** Commands and Mod Menu share the same file and live consumers; failed writes keep live values. */
+    public static void save(boolean newHigh, boolean newSound) throws IOException {
+        Properties properties = FamilyClientOptions.readProperties(FILE);
+        properties.setProperty("high", Boolean.toString(newHigh));
+        properties.setProperty("sound", Boolean.toString(newSound));
+        FamilyClientOptions.writeProperties(FILE, properties);
+        high = newHigh;
+        sound = newSound;
     }
 
     private static int reportSound(FabricClientCommandSource source) {

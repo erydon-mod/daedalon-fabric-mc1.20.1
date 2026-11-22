@@ -98,4 +98,61 @@ final class ObjGuiIconWorkQueueTest {
         image.value().close();
         assertEquals(0, queue.pendingCount());
     }
+
+    @Test void oneShotPaletteCaptureWaitsForUploadRatherThanSavingTheLoadingSquare() {
+        ManualExecutor executor = new ManualExecutor();
+        var queue = new ObjGuiIconWorkQueue<Object, Image>(executor, 1);
+        Object model = new Object();
+        AtomicInteger generated = new AtomicInteger();
+        Runnable request = () -> queue.request(model, () -> {
+            generated.incrementAndGet();
+            return new Image();
+        });
+        assertTrue(ObjGuiIconCapturePolicy.shouldWait(false, false, request));
+        assertTrue(ObjGuiIconCapturePolicy.shouldWait(false, false, request));
+        assertEquals(0, generated.get(), "A palette request must not rasterise synchronously");
+        assertEquals(1, queue.pendingCount());
+        executor.run();
+        assertTrue(ObjGuiIconCapturePolicy.shouldWait(false, false, request),
+                "Finished CPU pixels must not be captured before GPU upload publishes the cell");
+        assertEquals(1, generated.get());
+        var completed = queue.poll();
+        assertSame(model, completed.key());
+        assertNull(completed.failure());
+        // The uploader owns the image and publishes readiness only after upload.
+        completed.value().close();
+        assertFalse(ObjGuiIconCapturePolicy.shouldWait(true, false,
+                () -> fail("Warm palette capture must not request new work")));
+        assertEquals(0, queue.pendingCount());
+        // Resource reload clears readiness and permits the next generation.
+        queue.reset();
+        assertTrue(ObjGuiIconCapturePolicy.shouldWait(false, false, request));
+        executor.run();
+        var refreshed = queue.poll();
+        assertNotSame(completed.value(), refreshed.value());
+        refreshed.value().close();
+        assertEquals(2, generated.get());
+    }
+
+    @Test void failedAndCapacityLimitedIconsAllowTerminalFallbackWithoutEndlessCaptureRetries() {
+        ManualExecutor executor = new ManualExecutor();
+        var queue = new ObjGuiIconWorkQueue<Object, Image>(executor, 1);
+        Object model = new Object();
+        assertTrue(ObjGuiIconCapturePolicy.shouldWait(false, false,
+                () -> queue.request(model, () -> { throw new IOException("Invalid pack texture"); })));
+        executor.run();
+        var failed = queue.poll();
+        assertInstanceOf(IOException.class, failed.failure());
+        assertFalse(ObjGuiIconCapturePolicy.shouldWait(false, true,
+                () -> fail("A permanent failure must not be retried by the palette")));
+        assertFalse(ObjGuiIconCapturePolicy.shouldWait(false, true,
+                () -> fail("An exhausted atlas must allow its bounded fallback")));
+        // Saturation of the work queue is temporary, unlike atlas exhaustion.
+        assertTrue(queue.request(model, Image::new));
+        assertTrue(ObjGuiIconCapturePolicy.shouldWait(false, false,
+                () -> assertFalse(queue.request(new Object(), Image::new))));
+        executor.run();
+        queue.reset();
+        assertEquals(0, queue.pendingCount());
+    }
 }

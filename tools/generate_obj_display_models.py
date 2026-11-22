@@ -98,6 +98,10 @@ def payload(particle: str, display: dict[str, object]) -> bytes:
 
 def expected_files() -> dict[str, bytes]:
     files = {
+        "lantern_display.json": payload(
+            "daedalon:block/statue_spartan_promachos_aganite",
+            {**ONE_BLOCK_DISPLAY, "gui": transform([15, 200, 0], scale=0.65)}
+        ),
         "gothic_panel_display.json": payload(
             "daedalon:block/statue_spartan_promachos_aganite",
             {**ONE_BLOCK_DISPLAY, "gui": transform([15, 10, 0], scale=0.6)}

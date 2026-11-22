@@ -58,3 +58,13 @@ approved export; never resize an entire animation atlas as if it were one frame.
 The matching `tools/test_branding.py` checks rejection of damaged, mistimed,
 unreferenced or oversized branding assets. Gradle source/resource checks run
 these gates automatically; resource-pack CI runs the same source audit.
+
+## Settings menus
+
+The standalone settings renderer reuses the shared marble panel, Portorium
+control textures and bronze frame with Oliver's authorisation. Their exact
+source hashes and paths are recorded in `config/client-settings-style-assets.json`;
+see [docs/SETTINGS_STYLE.md](docs/SETTINGS_STYLE.md). The existing approved logo
+and emblem exports are unchanged. An unmodified Cinzel Regular runtime font is
+bundled separately under SIL OFL 1.1 for titles and controls, with its complete
+notice in `src/main/resources/assets/daedalon/font/OFL-1.1.txt`. Body text uses Minecraft's default font.

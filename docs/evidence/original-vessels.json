@@ -1,0 +1,577 @@
+{
+  "recorded": "2026-11-15",
+  "scope": [
+    "diota"
+  ],
+  "creation_provenance": "New procedural geometry authored by Codex at Oliver's direction for Daedalon; not a Meshy output, imported mesh, retopology, trace or deformation.",
+  "source": "Numeric designs in tools/author_classical_vessels.py and tools/diota_handle_design.py; no source geometry or images are imported. Blender validates topology and supplies corner normals.",
+  "models": [
+    {
+      "vertices": 2994,
+      "normals": 12160,
+      "authored_polygons": 3106,
+      "runtime_triangles": 5948,
+      "material_triangles": {
+        "none": 5276,
+        "bronze_handles": 672
+      },
+      "edge_counts": {
+        "boundary": 0,
+        "nonmanifold": 0
+      },
+      "degenerate_triangles": 0,
+      "signed_volume_m3": 0.05808693314553573,
+      "design_envelope_m": [
+        0.582233804,
+        1.0,
+        0.547980138
+      ],
+      "bounds_obj_y_up": {
+        "min": [
+          -0.2911168932914734,
+          0.0,
+          -0.27399006485939026
+        ],
+        "max": [
+          0.2911168932914734,
+          1.0,
+          0.27399006485939026
+        ],
+        "size": [
+          0.5822337865829468,
+          1.0,
+          0.5479801297187805
+        ]
+      },
+      "family": "diota",
+      "tool": "tools/author_classical_vessels.py",
+      "tool_sha256": "de126783dd9d8a3f705994565a405d1bd7a90864e20a74ea004c9dc6d64bb812",
+      "blender_version": "5.2.0 LTS",
+      "blender_build_hash": "fbe6228777e7",
+      "runtime_obj_sha256": "9420e4067593175b80c761e9aeb03a46a4648b8d17481e2ce6a615d9bb15722e",
+      "mtl_sha256": "75618096def99806b8165aae7e6f39c75f8842caa39857b55a950476abfa9799",
+      "texture_sha256": {
+        "urn_diota_bronze_handles.png": "f14d81775c96c0b117d5e1676d96bb68cf3832e914046935e5243d867d3191dd",
+        "urn_diota_bronze_handles_s.png": "f5c522383041ec835a7d5b053bfa2650681365db04d81def6c4eeea01c57020c"
+      },
+      "source_geometry_loaded": false,
+      "source_facing": "paired palmettes face +Z/-Z; pierced lugs stand on +X/-X; rings hang outward; runtime Y-up; ground Y=0; centred support pivot X=Z=0",
+      "handle_design": {
+        "design": "Small hanging oval bronze drop rings threaded through pierced carved-stone leaf ears; outward hanging lean with a slightly turned horizontal axis",
+        "vertices": 672,
+        "authored_polygons": 672,
+        "runtime_triangles": 1344,
+        "bounds_y_up": {
+          "min": [
+            -0.2885655554,
+            0.7007202457,
+            -0.0529796123
+          ],
+          "max": [
+            0.2885655554,
+            0.891,
+            0.0445163553
+          ]
+        },
+        "components": 4,
+        "lug_segments": 24,
+        "ring_segments": 28,
+        "wire_segments": 6,
+        "stone_lug_hole_centre_y": 0.85,
+        "stone_lug_hole_radii_xy": [
+          0.014,
+          0.017
+        ],
+        "ring_vertical_diameter_m": 0.15,
+        "ring_tangential_diameter_m": 0.09,
+        "ring_wire_diameter_m": 0.009,
+        "outward_lean_degrees": 18,
+        "horizontal_turn_degrees": 10,
+        "source_geometry_loaded": false
+      },
+      "design_source_sha256": {
+        "author_classical_vessels.py": "de126783dd9d8a3f705994565a405d1bd7a90864e20a74ea004c9dc6d64bb812",
+        "diota_handle_design.py": "57d0a2aaf4c961bb5ad1e6f1ee2a2e1c6686a676db3f9c54f41bd55796c728b5"
+      }
+    }
+  ],
+  "design_features": [
+    "440mm stepped square plinth with planar faces and narrow corner chamfers",
+    "Turned collared stem, twelve deep concave flutes and crisp neck/rim fillets",
+    "Paired original seven-leaf palmette reliefs on the shoulder",
+    "Little oval bronze rings hang through pierced carved-stone leaf lugs",
+    "Closed inner bowl with a real opening; no double-sided shell"
+  ],
+  "compatibility": {
+    "public_ids_changed": false,
+    "placed_states_changed": false,
+    "material_variants": 56,
+    "sizes": [
+      0.6156,
+      1.0,
+      1.3844
+    ],
+    "offset_distance_m": 0.8003375,
+    "ground_contact_y": 0,
+    "support_pivot_xz": [
+      0,
+      0
+    ],
+    "uv_policy": "Existing cylindrical runtime projection, 2 U repeats within 4x1 window; bronze handles retain axis-stabilized box projection. Authored normals preserve lip and pedestal edges.",
+    "kylix_and_kalyx": "Unmodified Oliver-supplied Meshy designs; evidence remains urn-batch-source.json."
+  },
+  "texture_creation": "Fresh 16x16 RGBA constant-colour swatches from the existing bronze material scalar values, generated without loading images. Diffuse=(229,160,29,255); specular=(255,255,0,255).",
+  "offline_validation": {
+    "pilot_reviewed_before_activation": true,
+    "views": [
+      "front",
+      "three-quarter",
+      "top"
+    ],
+    "render_tool": "Blender 5.2.0 LTS Workbench",
+    "runtime_triangle_budget": 6000,
+    "in_game_visuals": "Deferred at Oliver's request; no game launch or install.",
+    "deterministic_replay": "Two fresh runs of the current 6k recipe produced byte-identical OBJ, MTL and material swatches.",
+    "authored_polygon_budget": 6000,
+    "ring_attachment": "Both bronze hoops are threaded through genuinely empty stone eyelets. Triangle clips through lug depth remain inside the hole; each hoop crosses the eyelet plane inside the hole and below the lug.",
+    "closed_outward_components": 20,
+    "flat_plinth_corner_normals_checked": 372,
+    "minimum_flat_plinth_normal_alignment": 0.999999941046319,
+    "complete_triangles_contained_by_collision": 5948,
+    "hanging_ring_centres_remain_clear_in_every_transform": true,
+    "package_build_for_this_revision": "Not run; Oliver requested source preparation only for later combined testing."
+  },
+  "collision": {
+    "source": "UrnBlock.makeDiotaShape()",
+    "square_plinth_bands": 2,
+    "body_height_bands": 11,
+    "separate_lug_boxes": 6,
+    "separate_hoop_arc_boxes": 8,
+    "raw_box_count": 38,
+    "body_octagonal_envelopes_owner_cell_m": [
+      [
+        0.32,
+        0.13,
+        0.300625,
+        0.68,
+        0.205,
+        0.699375
+      ],
+      [
+        0.389375,
+        0.205,
+        0.3775,
+        0.610625,
+        0.28,
+        0.6225
+      ],
+      [
+        0.36875,
+        0.28,
+        0.354375,
+        0.63125,
+        0.335,
+        0.645625
+      ],
+      [
+        0.331875,
+        0.335,
+        0.31375,
+        0.668125,
+        0.415,
+        0.68625
+      ],
+      [
+        0.3,
+        0.415,
+        0.278125,
+        0.7,
+        0.5,
+        0.721875
+      ],
+      [
+        0.27375,
+        0.5,
+        0.249375,
+        0.72625,
+        0.59,
+        0.750625
+      ],
+      [
+        0.25875,
+        0.59,
+        0.2325,
+        0.74125,
+        0.67,
+        0.7675
+      ],
+      [
+        0.2525,
+        0.67,
+        0.225625,
+        0.7475,
+        0.753,
+        0.774375
+      ],
+      [
+        0.2525,
+        0.753,
+        0.225625,
+        0.7475,
+        0.825,
+        0.774375
+      ],
+      [
+        0.3375,
+        0.825,
+        0.319375,
+        0.6625,
+        0.9,
+        0.680625
+      ],
+      [
+        0.290625,
+        0.9,
+        0.268125,
+        0.709375,
+        1.0,
+        0.731875
+      ]
+    ],
+    "conservative_box_union_owner_cell_m": [
+      [
+        0.28,
+        0.0,
+        0.28,
+        0.72,
+        0.046,
+        0.72
+      ],
+      [
+        0.301875,
+        0.046,
+        0.301875,
+        0.698125,
+        0.13,
+        0.698125
+      ],
+      [
+        0.365,
+        0.13,
+        0.300625,
+        0.635,
+        0.205,
+        0.699375
+      ],
+      [
+        0.32,
+        0.13,
+        0.34562499999999996,
+        0.68,
+        0.205,
+        0.6543749999999999
+      ],
+      [
+        0.41703125,
+        0.205,
+        0.3775,
+        0.58296875,
+        0.28,
+        0.6225
+      ],
+      [
+        0.389375,
+        0.205,
+        0.40515625,
+        0.610625,
+        0.28,
+        0.5948437500000001
+      ],
+      [
+        0.40156250000000004,
+        0.28,
+        0.354375,
+        0.5984375,
+        0.335,
+        0.645625
+      ],
+      [
+        0.36875,
+        0.28,
+        0.3871875,
+        0.63125,
+        0.335,
+        0.6128125
+      ],
+      [
+        0.37390625,
+        0.335,
+        0.31375,
+        0.62609375,
+        0.415,
+        0.68625
+      ],
+      [
+        0.331875,
+        0.335,
+        0.35578125,
+        0.668125,
+        0.415,
+        0.6442187500000001
+      ],
+      [
+        0.35,
+        0.415,
+        0.278125,
+        0.6499999999999999,
+        0.5,
+        0.721875
+      ],
+      [
+        0.3,
+        0.415,
+        0.328125,
+        0.7,
+        0.5,
+        0.671875
+      ],
+      [
+        0.3303125,
+        0.5,
+        0.249375,
+        0.6696875,
+        0.59,
+        0.750625
+      ],
+      [
+        0.27375,
+        0.5,
+        0.30593750000000003,
+        0.72625,
+        0.59,
+        0.6940625
+      ],
+      [
+        0.31906249999999997,
+        0.59,
+        0.2325,
+        0.6809375,
+        0.67,
+        0.7675
+      ],
+      [
+        0.25875,
+        0.59,
+        0.29281250000000003,
+        0.74125,
+        0.67,
+        0.7071875
+      ],
+      [
+        0.314375,
+        0.67,
+        0.225625,
+        0.685625,
+        0.753,
+        0.774375
+      ],
+      [
+        0.2525,
+        0.67,
+        0.2875,
+        0.7475,
+        0.753,
+        0.7125
+      ],
+      [
+        0.314375,
+        0.753,
+        0.225625,
+        0.685625,
+        0.825,
+        0.774375
+      ],
+      [
+        0.2525,
+        0.753,
+        0.2875,
+        0.7475,
+        0.825,
+        0.7125
+      ],
+      [
+        0.37812500000000004,
+        0.825,
+        0.319375,
+        0.621875,
+        0.9,
+        0.680625
+      ],
+      [
+        0.3375,
+        0.825,
+        0.36,
+        0.6625,
+        0.9,
+        0.64
+      ],
+      [
+        0.34296875000000004,
+        0.9,
+        0.268125,
+        0.65703125,
+        1.0,
+        0.731875
+      ],
+      [
+        0.290625,
+        0.9,
+        0.32046874999999997,
+        0.709375,
+        1.0,
+        0.67953125
+      ],
+      [
+        0.709375,
+        0.753,
+        0.481875,
+        0.7475,
+        0.8,
+        0.52375
+      ],
+      [
+        0.70875,
+        0.8,
+        0.481875,
+        0.76375,
+        0.84,
+        0.52375
+      ],
+      [
+        0.70875,
+        0.84,
+        0.481875,
+        0.765625,
+        0.891,
+        0.52375
+      ],
+      [
+        0.2525,
+        0.753,
+        0.481875,
+        0.290625,
+        0.8,
+        0.52375
+      ],
+      [
+        0.23625,
+        0.8,
+        0.481875,
+        0.29125,
+        0.84,
+        0.52375
+      ],
+      [
+        0.234375,
+        0.84,
+        0.481875,
+        0.29125,
+        0.891,
+        0.52375
+      ],
+      [
+        0.764375,
+        0.7,
+        0.446875,
+        0.79125,
+        0.735,
+        0.5375
+      ],
+      [
+        0.735625,
+        0.735,
+        0.44,
+        0.775,
+        0.825,
+        0.464375
+      ],
+      [
+        0.748125,
+        0.735,
+        0.52625,
+        0.786875,
+        0.825,
+        0.55
+      ],
+      [
+        0.73125,
+        0.825,
+        0.453125,
+        0.758125,
+        0.86,
+        0.543125
+      ],
+      [
+        0.20875,
+        0.7,
+        0.446875,
+        0.235625,
+        0.735,
+        0.5375
+      ],
+      [
+        0.225,
+        0.735,
+        0.44,
+        0.264375,
+        0.825,
+        0.464375
+      ],
+      [
+        0.213125,
+        0.735,
+        0.52625,
+        0.251875,
+        0.825,
+        0.55
+      ],
+      [
+        0.241875,
+        0.825,
+        0.453125,
+        0.26875,
+        0.86,
+        0.543125
+      ]
+    ],
+    "validation": "Complete runtime triangles are clipped against the box union. Separate hoop arcs and ear bands leave the hanging ring centres clear; the existing cached size, offset and facing transforms are retained."
+  },
+  "optimization": {
+    "method": "Reduced authored tessellation and near-collinear profile samples; no blind decimation",
+    "complete_runtime_triangles": 5948,
+    "hard_complete_runtime_triangle_limit": 6000,
+    "includes": [
+      "vessel exterior and interior",
+      "square plinth",
+      "all fourteen palmette leaves",
+      "both pierced stone lugs",
+      "both hanging bronze rings"
+    ],
+    "retained_features": [
+      "twelve concave flutes",
+      "seven leaves in each of two shoulder carvings",
+      "all crisp moulding datums",
+      "open mouth",
+      "flat square plinth",
+      "threaded hanging rings"
+    ],
+    "component_triangle_counts": {
+      "plinth": 124,
+      "exterior": 3032,
+      "interior": 888,
+      "palmettes": 560,
+      "stone_lugs": 672,
+      "bronze_rings": 672
+    }
+  }
+}

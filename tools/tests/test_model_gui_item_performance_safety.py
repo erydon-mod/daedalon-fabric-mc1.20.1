@@ -97,6 +97,25 @@ class GuiItemPerformanceSafetyTests(unittest.TestCase):
         self.assertIn("Registries.ITEM.getId(stack.getItem())", self.axiom_mixin)
         self.assertIn("callbackInfo.setReturnValue(true)", self.axiom_mixin)
 
+    def test_axiom_palette_waits_only_for_pending_uploaded_obj_icons(self) -> None:
+        mixins = load_json(RESOURCES / "daedalon.mixins.json")["client"]
+        self.assertIn("client.axiom.AxiomPaletteStateAccessor", mixins)
+        self.assertIn('method = "renderSizedBlock", at = @At("HEAD")', self.axiom_mixin)
+        self.assertIn("!capture.daedalon$forceAsBlock()", self.axiom_mixin)
+        self.assertIn("ObjGuiIconCache.isPendingAxiomPaletteIcon(capture.daedalon$state())", self.axiom_mixin)
+        self.assertIn("callbackInfo.cancel()", self.axiom_mixin)
+        probe = self.cache[self.cache.index("public static boolean isPendingAxiomPaletteIcon("):
+                           self.cache.index("private static boolean renderWorldIcon(")]
+        self.assertIn("if (state == null) return false", probe)
+        self.assertIn("Registries.ITEM.getId(item).getNamespace()", probe)
+        self.assertIn("ObjMeshBakedModel.unwrapAttachedModel", probe)
+        self.assertIn("model.guiIconTemplate() == null", probe)
+        self.assertIn("cells.containsKey(model)", probe)
+        self.assertIn("failedModels.contains(model) || nextCellIndex >= MAX_CACHED_ICONS", probe)
+        self.assertIn("() -> getOrCreate(model)", probe)
+        for work in ("generateCell(", "renderIcon(", "new NativeImage", ".upload("):
+            self.assertNotIn(work, probe, "Palette capture must only request asynchronous work")
+
     def test_each_family_template_rasterizes_every_baked_quad(self) -> None:
         self.assertIn("mesh.forEach(quad ->", self.template)
         self.assertIn("ProjectionBounds.measure", self.template)
@@ -181,7 +200,7 @@ class GuiItemPerformanceSafetyTests(unittest.TestCase):
 
         self.assertEqual(2048, page_size)
         self.assertEqual(128, icon_size)
-        self.assertEqual(22, max_pages)
+        self.assertEqual(24, max_pages)
         self.assertEqual(128, icon_size * self.integer_constant(self.template, "SUPERSAMPLE"))
         self.assertGreaterEqual(capacity, len(all_block_ids()) + 56)
         self.assertIn("nextCellIndex >= MAX_CACHED_ICONS", self.cache)

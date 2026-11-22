@@ -16,6 +16,8 @@ base { archivesName = "${archives_base_name}-compat${familyCompatibilityGenerati
 def textureDedupeEnabled = providers.gradleProperty('textureDedupe')
         .map { it.toBoolean() }
         .getOrElse(true)
+def daedalonClientDirectory = providers.gradleProperty('daedalonClientDirectory')
+        .getOrElse('run-dev')
 def textureDedupePython = providers.gradleProperty('textureDedupePython')
         .getOrElse('python')
 def textureDedupeTool = file('tools/texture_dedupe.py')
@@ -54,6 +56,9 @@ dependencies {
     mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    // Optional settings entry point; Mod Menu is never bundled or required.
+    modCompileOnly "com.terraformersmc:modmenu:7.2.2"
+    modRuntimeOnly "com.terraformersmc:modmenu:7.2.2"
 
     // Optional rendering integrations used by the migrated OBJ renderer.
     modCompileOnly "maven.modrinth:sodium:mc1.20.1-0.5.13-fabric"
@@ -94,15 +99,48 @@ loom {
     }
     runs {
         client {
-            programArgs '--gameDir', file('run-dev').absolutePath
+            programArgs '--gameDir', file(daedalonClientDirectory).absolutePath
+            if (providers.gradleProperty('daedalonLanternFlameChecks').map { it.toBoolean() }.getOrElse(false)) {
+                vmArg '-Ddaedalon.debug.lanternFlameChecks=true'
+            }
+            if (providers.gradleProperty('daedalonFinialChecks').map { it.toBoolean() }.getOrElse(false)) {
+                vmArg '-Ddaedalon.debug.finialChecks=true'
+            }
+            if (providers.gradleProperty('daedalonGlauxChecks').map { it.toBoolean() }.getOrElse(false)) {
+                vmArg '-Ddaedalon.debug.glauxChecks=true'
+            }
         }
         gameTest {
             server()
             name 'Fountain regression tests'
             source sourceSets.gameTest
             vmArg '-Dfabric-api.gametest'
-            vmArg "-Dfabric-api.gametest.report-file=${layout.buildDirectory.file('reports/gametest/fountains.xml').get().asFile}"
+            def testReport = providers.gradleProperty('daedalonGlauxGameTests').map { it.toBoolean() }.getOrElse(false) ? 'glaux.xml' : 'fountains.xml'
+            vmArg "-Dfabric-api.gametest.report-file=${layout.buildDirectory.file('reports/gametest/' + testReport).get().asFile}"
             runDir 'build/gametest'
+        }
+    }
+}
+
+// Fabric API for 1.20.1 has no runtime test-name filter. Select only the owl
+// holder in this development-only metadata when its focused suite is requested.
+tasks.named('processGameTestResources', ProcessResources) {
+    def glauxOnly = providers.gradleProperty('daedalonGlauxGameTests').map { it.toBoolean() }.getOrElse(false)
+    inputs.property('glauxOnly', glauxOnly)
+    doLast {
+        if (!glauxOnly) return
+        def metadataFile = new File(destinationDir, 'fabric.mod.json')
+        def metadata = new groovy.json.JsonSlurper().parse(metadataFile)
+        metadata.entrypoints['fabric-gametest'] = ['com.oliver.daedalon.gametest.GlauxGameTests']
+        metadataFile.setText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(metadata)) + '\n', 'UTF-8')
+    }
+}
+
+tasks.named('runClient') {
+    doFirst {
+        def clientDirectory = file(daedalonClientDirectory)
+        if (!clientDirectory.isDirectory() && !clientDirectory.mkdirs()) {
+            throw new GradleException("Cannot create client directory: ${clientDirectory}")
         }
     }
 }
@@ -117,6 +155,33 @@ tasks.withType(JavaCompile).configureEach {
     options.release = 17
     options.encoding = 'UTF-8'
 }
+
+tasks.register('verifyCollectionPackProfiles', JavaExec) {
+    group = 'verification'
+    description = 'Checks real Collection pack profiles, cached marker diagnostics and asset gating without opening Minecraft.'
+    dependsOn tasks.named('testClasses')
+    def probeRoot = layout.buildDirectory.dir('collection-pack-profiles')
+    def probeMod = probeRoot.map { it.dir('probe-mod') }
+    classpath = sourceSets.test.runtimeClasspath + files(probeMod)
+    mainClass = 'net.fabricmc.loader.impl.launch.knot.KnotClient'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) }
+    maxHeapSize = '1G'
+    systemProperty 'fabric.development', 'true'
+    systemProperty 'fabric.remapClasspathFile', file('.gradle/loom-cache/remapClasspath.txt').absolutePath
+    systemProperty 'fabric.log.disableAnsi', 'true'
+    doFirst {
+        def root = probeRoot.get().asFile
+        root.mkdirs()
+        workingDir = root
+        def metadata = probeMod.get().file('fabric.mod.json').asFile
+        metadata.parentFile.mkdirs()
+        metadata.text = groovy.json.JsonOutput.toJson([
+                schemaVersion: 1, id: 'daedalon_collection_pack_profile_probe', version: '1.0.0', environment: 'client',
+                entrypoints: [preLaunch: ['com.oliver.daedalon.client.texturealias.CollectionPackProfileLaunchProbe']]
+        ])
+    }
+}
+tasks.named('check') { dependsOn tasks.named('verifyCollectionPackProfiles') }
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
@@ -187,13 +252,27 @@ tasks.register('verifyDaedalonAssets', Exec) {
     inputs.files(
             fileTree('tools') {
                 include 'generate_daedalon_assets.py'
+                include 'generate_glaux_assets.py'
+                include 'author_glaux_mesh.cjs'
+                include 'glaux_translations.py'
+                include 'daedalon_localization.py'
                 include 'generate_obj_display_models.py'
+                include 'author_coffered_panels.py'
+                include 'coffered_panel_*.py'
+                include 'generate_lantern_flame_texture.py'
+                include 'prepare_lantern_mesh.py'
+                include 'rebuild_gothic_lantern_tracery.py'
+                include 'rebuild_plinth_meshes.py'
                 include 'extend_repeat_surface_textures.py'
                 include 'tests/**/*.py'
             },
             fileTree('src/main/java'),
             fileTree('src/main/resources')
     )
+    inputs.file('docs/evidence/coffered-panels-source.json')
+    inputs.files('config/glaux-catalogue.json', 'config/client-settings-language.json',
+            'config/client-settings-style-assets.json',
+            'docs/evidence/glaux-source.json', 'tools/glaux_mesh_source.json.gz')
     commandLine(
             pythonCommand.get(),
             '-m',

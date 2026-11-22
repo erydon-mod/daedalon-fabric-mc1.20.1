@@ -26,6 +26,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 
 /**
  * Invisible per-cell interaction geometry for a fountain basin anchor.
@@ -43,6 +44,7 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
     );
     public static final IntProperty OFFSET_Z = IntProperty.of("offset_z", 0, 4);
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    private static final BooleanProperty LOUTERION = BooleanProperty.of("louterion");
 
     public FountainBasinPartBlock(Settings settings) {
         // The visible owner emits material-correct debris when broken. These
@@ -52,12 +54,13 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
                 .with(OFFSET_X, HORIZONTAL_OFFSET_BIAS)
                 .with(OFFSET_Y, 0)
                 .with(OFFSET_Z, HORIZONTAL_OFFSET_BIAS)
+                .with(LOUTERION, false)
                 .with(WATERLOGGED, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(OFFSET_X, OFFSET_Y, OFFSET_Z, WATERLOGGED);
+        builder.add(OFFSET_X, OFFSET_Y, OFFSET_Z, WATERLOGGED, LOUTERION);
     }
 
     @Override
@@ -77,6 +80,14 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
                 .with(OFFSET_X, offsetX + HORIZONTAL_OFFSET_BIAS)
                 .with(OFFSET_Y, offsetY)
                 .with(OFFSET_Z, offsetZ + HORIZONTAL_OFFSET_BIAS);
+    }
+
+    BlockState louterionStateForOffset(BlockPos offset) {
+        return stateForOffset(offset.getX(), offset.getY(), offset.getZ()).with(LOUTERION, true);
+    }
+
+    static boolean isLouterionPart(BlockState state) {
+        return state.getBlock() instanceof FountainBasinPartBlock && state.get(LOUTERION);
     }
 
     @Override
@@ -110,6 +121,10 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
         if (anchor == null) {
             return VoxelShapes.empty();
         }
+        if (LouterionBasinBlock.isLarge(anchor.state())) {
+            return LouterionBasinGeometry.part(anchor.state().get(LouterionBasinBlock.WATERLOGGED),
+                    offsetX(state), state.get(OFFSET_Y), offsetZ(state));
+        }
         return FountainBasinBlock.outlinePartShape(
                 world,
                 anchor.pos(),
@@ -133,6 +148,9 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
         Anchor anchor = resolveAnchor(world, pos, state);
         if (anchor == null) {
             return VoxelShapes.empty();
+        }
+        if (LouterionBasinBlock.isLarge(anchor.state())) {
+            return LouterionBasinGeometry.part(false, offsetX(state), state.get(OFFSET_Y), offsetZ(state));
         }
         return FountainBasinBlock.collisionPartShape(
                 world,
@@ -172,7 +190,7 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
         Anchor anchor = resolveAnchor(world, pos, state);
         return anchor == null
                 ? ItemStack.EMPTY
-                : anchor.state().getBlock().asItem().getDefaultStack();
+                : anchor.state().getBlock().getPickStack(world, anchor.pos(), anchor.state());
     }
 
     // Keep the hit in its real cell until vanilla validates reach. The anchor
@@ -181,14 +199,14 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
     @Override
     public boolean canFillWithFluid(BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
         Anchor anchor = resolveAnchor(world, pos, state);
-        return anchor != null && ((FountainBasinBlock) anchor.state().getBlock())
+        return anchor != null && ((Waterloggable) anchor.state().getBlock())
                 .canFillWithFluid(world, anchor.pos(), anchor.state(), fluid);
     }
 
     @Override
     public boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluid) {
         Anchor anchor = resolveAnchor(world, pos, state);
-        return anchor != null && ((FountainBasinBlock) anchor.state().getBlock())
+        return anchor != null && ((Waterloggable) anchor.state().getBlock())
                 .tryFillWithFluid(world, anchor.pos(), anchor.state(), fluid);
     }
 
@@ -196,7 +214,7 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
     public ItemStack tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
         Anchor anchor = resolveAnchor(world, pos, state);
         return anchor == null ? ItemStack.EMPTY
-                : ((FountainBasinBlock) anchor.state().getBlock())
+                : ((Waterloggable) anchor.state().getBlock())
                         .tryDrainFluid(world, anchor.pos(), anchor.state());
     }
 
@@ -208,10 +226,10 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
                               Hand hand,
                               BlockHitResult hit) {
         Anchor anchor = resolveAnchor(world, pos, state);
-        if (anchor == null || !(anchor.state().getBlock() instanceof FountainBasinBlock basin)) {
+        if (anchor == null) {
             return ActionResult.PASS;
         }
-        return basin.onUse(
+        return anchor.state().getBlock().onUse(
                 anchor.state(),
                 world,
                 anchor.pos(),
@@ -219,6 +237,15 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
                 hand,
                 hit.withBlockPos(anchor.pos())
         );
+    }
+
+    @Override
+    public float calcBlockBreakingDelta(BlockState state, PlayerEntity player, BlockView world, BlockPos pos) {
+        Anchor anchor = resolveAnchor(world, pos, state);
+        if (anchor != null && LouterionBasinBlock.isLarge(anchor.state())) {
+            return anchor.state().calcBlockBreakingDelta(player, world, anchor.pos());
+        }
+        return super.calcBlockBreakingDelta(state, player, world, pos);
     }
 
     @Override
@@ -251,13 +278,17 @@ public final class FountainBasinPartBlock extends Block implements Waterloggable
             return null;
         }
         BlockPos anchorPos = anchorPos(partPos, partState);
+        boolean louterionPart = partState.get(LOUTERION);
+        if (louterionPart && world instanceof WorldView view && !view.isChunkLoaded(anchorPos)) return null;
         BlockState anchorState = world.getBlockState(anchorPos);
-        return anchorState.getBlock() instanceof FountainBasinBlock
-                ? new Anchor(anchorPos, anchorState)
-                : null;
+        boolean valid = louterionPart
+                ? LouterionBasinBlock.isLarge(anchorState)
+                    && !LouterionBasinGeometry.part(true, offsetX(partState), partState.get(OFFSET_Y), offsetZ(partState)).isEmpty()
+                : anchorState.getBlock() instanceof FountainBasinBlock;
+        return valid ? new Anchor(anchorPos, anchorState) : null;
     }
 
-    private static BlockPos anchorPos(BlockPos partPos, BlockState state) {
+    static BlockPos anchorPos(BlockPos partPos, BlockState state) {
         return partPos.add(
                 -offsetX(state),
                 -state.get(OFFSET_Y),

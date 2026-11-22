@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "source_repository": "https://github.com/erydon-mod/erydon",
+  "assets": [
+    {
+      "path": "src/main/resources/assets/daedalon/textures/gui/glacium_config_background.png",
+      "source_path": "src/main/resources/assets/erydon/textures/gui/glacium_config_background.png",
+      "sha256": "abea866cb4d6011e593a8cc62514932c30f62dfaadcd549241080cd00a6a8254",
+      "bytes": 305176,
+      "license": "LicenseRef-Oliver-Restricted-1.0",
+      "size": [
+        720,
+        376
+      ]
+    },
+    {
+      "path": "src/main/resources/assets/daedalon/textures/gui/nerium_control_background.png",
+      "source_path": "src/main/resources/assets/erydon/textures/gui/nerium_control_background.png",
+      "sha256": "f71070c4f7c6b91c1a5cd7bd9a4613b46d9f0c87ecf0c767a153d7757af35321",
+      "bytes": 1277221,
+      "license": "LicenseRef-Oliver-Restricted-1.0",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "path": "src/main/resources/assets/daedalon/textures/gui/portorium_control_background.png",
+      "source_path": "src/main/resources/assets/erydon/textures/gui/portorium_control_background.png",
+      "sha256": "452f119d7ba1134cf528bf2b1884a7490044b3693bd718e11143eaea222287da",
+      "bytes": 2152626,
+      "license": "LicenseRef-Oliver-Restricted-1.0",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "path": "src/main/resources/assets/daedalon/textures/gui/portorium_control_frame.png",
+      "source_path": "src/main/resources/assets/erydon/textures/gui/portorium_control_frame.png",
+      "sha256": "79d2d53a7f178f7de38bd5e12cb8a740065eaf6d8ebe4c6bdfac09b475bdb1cd",
+      "bytes": 701,
+      "license": "LicenseRef-Oliver-Restricted-1.0",
+      "size": [
+        128,
+        80
+      ]
+    },
+    {
+      "path": "src/main/resources/assets/daedalon/font/cinzel.ttf",
+      "source_path": "src/main/resources/assets/erydon/font/cinzel.ttf",
+      "sha256": "f4d83d34d1f6c741193e4acf4b3dff9531e5a67b6aa65228d00a7db72a4e0f34",
+      "bytes": 125468,
+      "license": "SIL-OFL-1.1"
+    },
+    {
+      "path": "src/main/resources/assets/daedalon/textures/gui/portorium_control_background.png.mcmeta",
+      "source_path": "src/main/resources/assets/erydon/textures/gui/portorium_control_background.png.mcmeta",
+      "sha256": "c01a8f77c3720cc5ff7b9bf9868b931beb03a0369f316e872610bfbf43ab05ef",
+      "bytes": 59,
+      "license": "LicenseRef-Oliver-Restricted-1.0",
+      "transformation": "LF line endings; original texture settings retained"
+    },
+    {
+      "path": "src/main/resources/assets/daedalon/textures/gui/portorium_control_frame.png.mcmeta",
+      "source_path": "src/main/resources/assets/erydon/textures/gui/portorium_control_frame.png.mcmeta",
+      "sha256": "c01a8f77c3720cc5ff7b9bf9868b931beb03a0369f316e872610bfbf43ab05ef",
+      "bytes": 59,
+      "license": "LicenseRef-Oliver-Restricted-1.0",
+      "transformation": "LF line endings; original texture settings retained"
+    },
+    {
+      "path": "src/main/resources/assets/daedalon/textures/gui/slider_handle_slim.png",
+      "source_path": "src/main/resources/assets/erydon/textures/gui/slider_handle_slim.png",
+      "sha256": "6bac6c5b61168157ed506cd15c9ef2af0f8fd427d2091a458c2199ce999ef19c",
+      "bytes": 1842,
+      "license": "LicenseRef-Oliver-Restricted-1.0",
+      "size": [
+        18,
+        40
+      ]
+    }
+  ],
+  "font_license": {
+    "path": "src/main/resources/assets/daedalon/font/OFL-1.1.txt",
+    "sha256": "a46624198eeb4c2e442c38b0ff3bd8f52caeefd76675c36f410e2fb69014a239"
+  }
+}

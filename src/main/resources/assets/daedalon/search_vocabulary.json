@@ -328,6 +328,7 @@
       "ornament",
       "portrait",
       "sculpture",
+      "statue",
       "venus"
     ],
     "apollo_bust": [
@@ -347,7 +348,8 @@
       "olympian",
       "ornament",
       "portrait",
-      "sculpture"
+      "sculpture",
+      "statue"
     ],
     "ares_bust": [
       "architecture",
@@ -366,7 +368,8 @@
       "olympian",
       "ornament",
       "portrait",
-      "sculpture"
+      "sculpture",
+      "statue"
     ],
     "artemis_bust": [
       "architecture",
@@ -386,7 +389,8 @@
       "olympian",
       "ornament",
       "portrait",
-      "sculpture"
+      "sculpture",
+      "statue"
     ],
     "athena_bust": [
       "architecture",
@@ -407,7 +411,8 @@
       "olympian",
       "ornament",
       "portrait",
-      "sculpture"
+      "sculpture",
+      "statue"
     ],
     "demeter_bust": [
       "architecture",
@@ -427,7 +432,8 @@
       "olympian",
       "ornament",
       "portrait",
-      "sculpture"
+      "sculpture",
+      "statue"
     ],
     "dionysus_bust": [
       "architecture",
@@ -449,7 +455,8 @@
       "olympian",
       "ornament",
       "portrait",
-      "sculpture"
+      "sculpture",
+      "statue"
     ],
     "hephaestus_bust": [
       "architecture",
@@ -469,6 +476,7 @@
       "ornament",
       "portrait",
       "sculpture",
+      "statue",
       "vulcan",
       "vulcanus"
     ],
@@ -490,7 +498,8 @@
       "olympian",
       "ornament",
       "portrait",
-      "sculpture"
+      "sculpture",
+      "statue"
     ],
     "hermes_bust": [
       "architecture",
@@ -510,7 +519,8 @@
       "olympian",
       "ornament",
       "portrait",
-      "sculpture"
+      "sculpture",
+      "statue"
     ],
     "hestia_bust": [
       "architecture",
@@ -530,6 +540,7 @@
       "ornament",
       "portrait",
       "sculpture",
+      "statue",
       "vesta"
     ],
     "poseidon_bust": [
@@ -550,7 +561,8 @@
       "portrait",
       "poseidon",
       "poseidon_bust",
-      "sculpture"
+      "sculpture",
+      "statue"
     ],
     "zeus_bust": [
       "architecture",
@@ -570,8 +582,70 @@
       "ornament",
       "portrait",
       "sculpture",
+      "statue",
       "zeus",
       "zeus_bust"
+    ],
+    "georgian_lantern": [
+      "architecture",
+      "ceiling",
+      "chain",
+      "decor",
+      "decoration",
+      "decorative",
+      "gas",
+      "gas_burner",
+      "georgian",
+      "georgian_lantern",
+      "glazing",
+      "hanging",
+      "hanging_lantern",
+      "lantern",
+      "ornament",
+      "pier",
+      "pier_lantern",
+      "wall_lantern"
+    ],
+    "gothic_lantern": [
+      "architecture",
+      "ceiling",
+      "chain",
+      "decor",
+      "decoration",
+      "decorative",
+      "gas",
+      "gas_burner",
+      "glazing",
+      "gothic",
+      "gothic_lantern",
+      "hanging",
+      "hanging_lantern",
+      "lantern",
+      "ornament",
+      "pier",
+      "pier_lantern",
+      "wall_lantern"
+    ],
+    "byzantine_lantern": [
+      "architecture",
+      "byzantine",
+      "byzantine_lantern",
+      "ceiling",
+      "chain",
+      "decor",
+      "decoration",
+      "decorative",
+      "gas",
+      "gas_burner",
+      "glazing",
+      "guilloche",
+      "hanging",
+      "hanging_lantern",
+      "lantern",
+      "ornament",
+      "pier",
+      "pier_lantern",
+      "wall_lantern"
     ],
     "gothic_wall_panel": [
       "architecture",
@@ -590,6 +664,85 @@
       "ribbed",
       "tracery",
       "vault",
+      "wall_panel",
+      "wall_relief"
+    ],
+    "corinthian_wall_panel": [
+      "acanthus",
+      "architecture",
+      "ceiling",
+      "ceiling_panel",
+      "coffer",
+      "coffered_ceiling",
+      "corinthian",
+      "corinthian_wall_panel",
+      "decor",
+      "decoration",
+      "decorative",
+      "ornament",
+      "ornamental_panel",
+      "panel",
+      "wall_panel",
+      "wall_relief"
+    ],
+    "byzantine_wall_panel": [
+      "architecture",
+      "byzantine",
+      "byzantine_wall_panel",
+      "ceiling",
+      "ceiling_panel",
+      "coffer",
+      "coffered_ceiling",
+      "decor",
+      "decoration",
+      "decorative",
+      "guilloche",
+      "interlace",
+      "medallion",
+      "ornament",
+      "ornamental_panel",
+      "panel",
+      "rosette",
+      "wall_panel",
+      "wall_relief"
+    ],
+    "georgian_wall_panel": [
+      "architecture",
+      "ceiling",
+      "ceiling_panel",
+      "coffer",
+      "coffered_ceiling",
+      "decor",
+      "decoration",
+      "decorative",
+      "georgian",
+      "georgian_wall_panel",
+      "neoclassical",
+      "ornament",
+      "ornamental_panel",
+      "panel",
+      "regency",
+      "rosette",
+      "wall_panel",
+      "wall_relief"
+    ],
+    "renaissance_wall_panel": [
+      "acanthus",
+      "architecture",
+      "ceiling",
+      "ceiling_panel",
+      "coffer",
+      "coffered_ceiling",
+      "decor",
+      "decoration",
+      "decorative",
+      "ornament",
+      "ornamental_panel",
+      "panel",
+      "renaissance",
+      "renaissance_wall_panel",
+      "rosette",
+      "scroll",
       "wall_panel",
       "wall_relief"
     ],
@@ -772,10 +925,12 @@
       "decor",
       "decoration",
       "decorative",
+      "fountain",
       "louterion",
       "louterion_basin",
       "rock",
-      "stone"
+      "stone",
+      "water_feature"
     ],
     "pege_fountain": [
       "architecture",
@@ -1296,6 +1451,20 @@
       "sequence",
       "statue",
       "statue_cycle"
+    ],
+    "glaux": [
+      "assistant",
+      "bronze",
+      "decor",
+      "decoration",
+      "glaux",
+      "metal",
+      "oracle",
+      "ornament",
+      "owl",
+      "sculpture",
+      "statue",
+      "wisdom"
     ]
   },
   "materials": {
@@ -1601,6 +1770,17 @@
       "stone",
       "wall_relief",
       "white"
+    ],
+    "black": [
+      "architecture",
+      "black",
+      "decor",
+      "decoration",
+      "decorative",
+      "ornament",
+      "rock",
+      "stone",
+      "wall_relief"
     ]
   }
 }

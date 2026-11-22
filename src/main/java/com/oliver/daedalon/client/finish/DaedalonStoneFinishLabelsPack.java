@@ -56,8 +56,9 @@ public final class DaedalonStoneFinishLabelsPack implements ResourcePack {
                 String label = original.get("finish.daedalon." + finish);
                 var entry = index.entry(path);
                 String material = Character.toUpperCase(entry.material().charAt(0)) + entry.material().substring(1);
-                String prefix = material + " ";
-                if (name != null && label != null && name.startsWith(prefix)) {
+                // Material position follows the locale's grammar (French suffix,
+                // Japanese prefix), while invented stone names stay unchanged.
+                if (name != null && label != null && name.contains(material)) {
                     labels.addProperty(key, name + " (" + label + ")");
                 }
             });
@@ -93,7 +94,7 @@ public final class DaedalonStoneFinishLabelsPack implements ResourcePack {
 
     static Map<String, Map<String, String>> readLanguages() throws IOException {
         Map<String, Map<String, String>> languages = new LinkedHashMap<>();
-        for (String language : List.of("en_us", "de_de", "es_es")) {
+        for (String language : List.of("en_us", "de_de", "es_es", "fr_fr", "ja_jp")) {
             String path = "/assets/daedalon/lang/" + language + ".json";
             try (InputStream input = DaedalonStoneFinishLabelsPack.class.getResourceAsStream(path)) {
                 if (input == null) throw new IOException("Missing bundled language: " + path);

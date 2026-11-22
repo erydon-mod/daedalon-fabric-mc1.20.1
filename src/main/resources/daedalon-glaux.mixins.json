@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.oliver.daedalon.mixin.glaux",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "GlauxKeyboardMixin",
+    "GlauxMouseMixin",
+    "GlauxKeyBindingMixin",
+    "GlauxMinecraftClientMixin"
+  ],
+  "injectors": { "defaultRequire": 1 }
+}

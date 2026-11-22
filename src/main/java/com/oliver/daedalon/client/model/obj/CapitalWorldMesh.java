@@ -2,6 +2,7 @@ package com.oliver.daedalon.client.model.obj;
 
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CapitalOrientation;
+import com.oliver.daedalon.block.CapitalTransition;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
@@ -21,16 +22,22 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 /** World-only carving geometry, shared across every material and placed position. */
 final class CapitalWorldMesh {
     private static final int ORIENTATIONS = CapitalOrientation.values().length;
+    private static final int SIZES = CapitalBlock.Size.values().length;
     private final Mesh source;
     private final AtomicReferenceArray<Variant> variants = new AtomicReferenceArray<>(
-            CapitalBlock.Size.values().length * ORIENTATIONS);
+            CapitalTransition.values().length * SIZES * ORIENTATIONS);
 
     CapitalWorldMesh(Mesh source) {
         this.source = source;
     }
 
     void emit(CapitalOrientation orientation, CapitalBlock.Size size, BlockPos anchor, RenderContext context) {
-        for (CellMesh cell : variant(orientation, size).cells) {
+        emit(orientation, size, CapitalTransition.NONE, 1.0F, anchor, context);
+    }
+
+    void emit(CapitalOrientation orientation, CapitalBlock.Size size, CapitalTransition support, float fitScale,
+              BlockPos anchor, RenderContext context) {
+        for (CellMesh cell : variant(orientation, size, support, fitScale).cells) {
             context.pushTransform(CapitalTransitionUvTransform.forCell(anchor, cell.cell.x, cell.cell.y, cell.cell.z));
             try { cell.mesh.outputTo(context.getEmitter()); }
             finally { context.popTransform(); }
@@ -38,7 +45,11 @@ final class CapitalWorldMesh {
     }
 
     Stats stats(CapitalOrientation orientation, CapitalBlock.Size size) {
-        return variant(orientation, size).stats;
+        return stats(orientation, size, CapitalTransition.NONE, 1.0F);
+    }
+
+    Stats stats(CapitalOrientation orientation, CapitalBlock.Size size, CapitalTransition support, float fitScale) {
+        return variant(orientation, size, support, fitScale).stats;
     }
 
     int cachedVariantCount() {
@@ -47,26 +58,32 @@ final class CapitalWorldMesh {
         return result;
     }
 
-    private Variant variant(CapitalOrientation orientation, CapitalBlock.Size size) {
-        int index = size.ordinal() * ORIENTATIONS + orientation.ordinal();
+    private Variant variant(CapitalOrientation orientation, CapitalBlock.Size size, CapitalTransition support, float fitScale) {
+        if (!Float.isFinite(fitScale) || fitScale <= 0) throw new IllegalArgumentException("Invalid capital fit scale");
+        int index = (support.ordinal() * SIZES + size.ordinal()) * ORIENTATIONS + orientation.ordinal();
         Variant value = variants.get(index);
-        if (value != null) return value;
+        if (value != null) return checkedFit(value, fitScale);
         synchronized (variants) {
             value = variants.get(index);
             if (value == null) {
-                value = build(orientation, size);
+                value = build(orientation, size, fitScale);
                 variants.set(index, value);
             }
         }
-        return value;
+        return checkedFit(value, fitScale);
     }
 
-    private Variant build(CapitalOrientation orientation, CapitalBlock.Size size) {
+    private static Variant checkedFit(Variant variant, float fitScale) {
+        if (variant.fitScale != fitScale) throw new IllegalStateException("Capital fit policy changed within one baked source");
+        return variant;
+    }
+
+    private Variant build(CapitalOrientation orientation, CapitalBlock.Size size, float fitScale) {
         var renderer = RendererAccess.INSTANCE.getRenderer();
         if (renderer == null) throw new IllegalStateException("No renderer while preparing a capital world mesh");
         Map<Cell, MeshBuilder> builders = new LinkedHashMap<>();
         QuadEmitter scratch = renderer.meshBuilder().getEmitter();
-        var transform = CapitalOrientationTransform.forSize(orientation, size);
+        var transform = CapitalOrientationTransform.forSize(orientation, size, fitScale);
         double centre = size == CapitalBlock.Size.DOUBLE ? 1 : .5;
         int[] counts = new int[3];
         double[] discardedArea = new double[1];
@@ -103,7 +120,7 @@ final class CapitalWorldMesh {
         });
         CellMesh[] cells = builders.entrySet().stream()
                 .map(entry -> new CellMesh(entry.getKey(), entry.getValue().build())).toArray(CellMesh[]::new);
-        return new Variant(cells, new Stats(counts[0], counts[1], cells.length,
+        return new Variant(fitScale, cells, new Stats(counts[0], counts[1], cells.length,
                 (long) counts[1] * 4 * 36, counts[2], discardedArea[0]));
     }
 
@@ -278,5 +295,5 @@ final class CapitalWorldMesh {
     record Stats(int sourceTriangles, int emittedTriangles, int cellCount, long estimatedVertexBytes,
                  int discardedFloatTriangles, double discardedArea) { }
     private record CellMesh(Cell cell, Mesh mesh) { }
-    private record Variant(CellMesh[] cells, Stats stats) { }
+    private record Variant(float fitScale, CellMesh[] cells, Stats stats) { }
 }

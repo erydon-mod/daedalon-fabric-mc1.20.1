@@ -2,6 +2,7 @@ package com.oliver.daedalon;
 
 import com.oliver.daedalon.compat.FamilyReleaseCompatibility;
 import com.oliver.daedalon.block.FinialRaycast;
+import com.oliver.daedalon.block.LouterionChunkRepair;
 import com.oliver.daedalon.registry.ModBlockEntities;
 import com.oliver.daedalon.registry.ModBlocks;
 import com.oliver.daedalon.registry.ModItemGroups;
@@ -31,6 +32,7 @@ public final class Daedalon implements ModInitializer {
         ModItemGroups.register();
         ModParticles.register();
         FinialRaycast.registerServer();
+        LouterionChunkRepair.register();
     }
 
     private static void logStartupTextLogo() {

@@ -78,7 +78,7 @@ class WorldTexturePhaseSafetyTest(unittest.TestCase):
         self.assertIn("worldTexturePhase.mapV(v)", baked)
         self.assertIn("model.guiTextureU", icon_cache)
         self.assertIn("model.guiTextureV", icon_cache)
-        self.assertIn("worldPhaseMaterials.add(textureId == null)", plugin)
+        self.assertIn("worldPhaseMaterials.add(textureId == null", plugin)
         self.assertIn("materials.worldPhaseMaterials()", plugin)
 
     def test_native_repeat_surfaces_are_two_exact_six_by_six_periods(self) -> None:

@@ -16,6 +16,7 @@ PROFILES = {
     "gothic_bowl": ("gothic", "bowl", 0.87),
     "georgian_bowl": ("georgian", "bowl", 0.562),
     "greek_bowl": ("greek", "bowl", 0.63),
+    "louterion": ("louterion", "basin", 0.9525),
 }
 INSET = 0.003
 TOLERANCE = 0.0007
@@ -27,7 +28,8 @@ def cross(a, b):
 
 def sections(style, level, kind="basin"):
     vertices, faces = [], []
-    for line in (MESH_ROOT / f"fountain_{style}_{kind}.obj").read_text().splitlines():
+    mesh_name = "basin_louterion.obj" if style == "louterion" else f"fountain_{style}_{kind}.obj"
+    for line in (MESH_ROOT / mesh_name).read_text().splitlines():
         if line.startswith("v "):
             vertices.append(tuple(map(float, line.split()[1:4])))
         elif line.startswith("f "):

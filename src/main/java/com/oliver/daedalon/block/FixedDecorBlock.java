@@ -10,7 +10,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
 /** A one-block freestanding decor mesh with no meaningless state properties. */
-public final class FixedDecorBlock extends Block {
+public class FixedDecorBlock extends Block {
     private final Style style;
 
     public FixedDecorBlock(Settings settings, Style style) {

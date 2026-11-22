@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "#daedalon:corinthian_frieze"
+    "#daedalon:corinthian_frieze",
+    "#daedalon:corinthian_wall_panel",
+    "#daedalon:renaissance_wall_panel"
   ]
 }

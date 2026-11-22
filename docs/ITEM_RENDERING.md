@@ -34,6 +34,23 @@ If an OBJ icon cannot be cached, its material sprite is drawn flat instead.
 Neither cache failures nor enchanted items restore the expensive item mesh.
 The atlas is refreshed when resources reload.
 
+Axiom's main block-list windows copy item pictures into a separate persistent
+palette cache. Their first capture now waits while a Daedalon OBJ icon is still
+being prepared or uploaded, so the temporary material square cannot become its
+saved picture. The check queues the existing asynchronous work and cancels before
+Axiom allocates a capture slot; its normal request loop retries on a later tick.
+Ready icons use the ordinary atlas, while unsupported models, failed resources
+and exhausted atlas capacity retain their bounded fallback. Other mods and
+explicit forced-block previews are unchanged. This applies to palette windows,
+separately from camera-facing copied-region previews.
+
+The hook layout was checked against Axiom 5.4.2 and 6.1.5 bytecode. Queue tests
+cover pending pixels, publication after upload, warm requests, failure and a
+new resource epoch. These are offline checks; the block-list windows still need
+visual acceptance in IntelliJ. Axiom's already-captured palette snapshots have
+their own lifetime; this fix does not add a global palette reset on resource
+reload, so use a fresh client when accepting changed resource-pack pictures.
+
 Visible item draws enqueue colour work, then immediately use the cached picture
 or a temporary flat material sprite. They never decode PNGs, resolve a material
 raster or upload textures. One daemon worker colours requested icons from each

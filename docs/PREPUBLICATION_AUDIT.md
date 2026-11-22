@@ -78,9 +78,16 @@ measurement of live REI frame rate.
 - Foreign packaged entries, foreign mod dependencies and nested JARs: zero.
 - Exact-byte texture aliases: 140, backed by 22 content-addressed blobs.
 
-The restricted project licence and separately credited CC BY model material
-retain their respective notices. Documentation branding stays outside runtime
-assets; current static/animated runtime emblems match their approved contracts.
+The restricted project licence remains in the packaged mod. Source build-tool
+and branding notices are recorded in `THIRD_PARTY_NOTICES.md` and `BRANDING.md`.
+Documentation branding stays outside runtime assets; current static/animated
+runtime emblems match their approved contracts.
+
+The Diota vessel asset has since been replaced with an independently authored
+procedural design. Its current creation provenance and geometry measurements
+are recorded in `docs/evidence/original-vessels.json`; the historical artifact
+and test counts above do not validate that replacement. Kylix and Kalyx retain
+their Oliver-supplied Meshy assets and existing batch evidence.
 
 ## Reproduction
 

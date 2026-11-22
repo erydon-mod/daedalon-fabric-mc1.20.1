@@ -1,6 +1,7 @@
 package com.oliver.daedalon.client;
 
 import com.oliver.daedalon.client.texturealias.FamilyTextureAliasCoordinator;
+import com.oliver.daedalon.client.config.FamilyClientOptions;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.ClickEvent;
@@ -28,7 +29,7 @@ public final class CollectionResourcePackNotice {
 
     private static void showIfNeeded(MinecraftClient client) {
         if (!FamilyTextureAliasCoordinator.isLeader()
-                || client.player == null) {
+                || client.player == null || !FamilyClientOptions.showResourcePackNotice()) {
             return;
         }
 

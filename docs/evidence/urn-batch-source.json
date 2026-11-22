@@ -4,9 +4,7 @@
   "source_root": "External Oliver-authored Meshy batch; source Blender files are not distributed in this repository.",
   "source_file_count": 10,
   "name_mapping_basis": "Oliver-provided Meshy library screenshots; every source Blender scene, object, mesh and material name was generic.",
-  "retained_existing_models": [
-    "diota"
-  ],
+  "retained_existing_models": [],
   "preparation": {
     "tool": "tools/prepare_urn_mesh.py",
     "blender_version": "5.2.0 LTS",
@@ -109,5 +107,9 @@
       "runtime_obj_sha256": "59653359311e684c11c378defedcf9194e240e7cbb0f896202b83c56822c6d80"
     }
   ],
-  "distribution_rights_status": "Oliver confirms authorship and authorizes public redistribution of the included runtime assets under the repository licence (2026-08-31)."
+  "distribution_rights_status": "Oliver confirms authorship and authorizes public redistribution of the included runtime assets under the repository licence (2026-08-31).",
+  "independently_authored_models": [
+    "diota"
+  ],
+  "current_independent_evidence": "docs/evidence/original-vessels.json"
 }

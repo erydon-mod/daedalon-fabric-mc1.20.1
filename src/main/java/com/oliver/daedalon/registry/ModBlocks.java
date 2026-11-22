@@ -10,11 +10,15 @@ import com.oliver.daedalon.block.HedraBlock;
 import com.oliver.daedalon.block.AnthophorosBlock;
 import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.PanelBlock;
+import com.oliver.daedalon.block.LanternBlock;
+import com.oliver.daedalon.block.LanternPartBlock;
+import com.oliver.daedalon.block.LanternChainBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
 import com.oliver.daedalon.block.MonopterosPartBlock;
 import com.oliver.daedalon.block.FacingDecorBlock;
 import com.oliver.daedalon.block.FinialBlock;
 import com.oliver.daedalon.block.FixedDecorBlock;
+import com.oliver.daedalon.block.LouterionBasinBlock;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.FountainBasinPartBlock;
 import com.oliver.daedalon.block.PlinthBlock;
@@ -56,17 +60,20 @@ public final class ModBlocks {
                     + CapitalBlock.Style.values().length
                     + FixedDecorBlock.Style.values().length
                     + FountainBasinBlock.Style.values().length
-                    + PlinthBlock.Style.values().length + 7 + FriezeBlock.Style.values().length;
+                    + PlinthBlock.Style.values().length + 6 + PanelBlock.Style.values().length
+                    + FriezeBlock.Style.values().length
+                    + LanternBlock.Style.values().length;
     private static final int METAL_FAMILY_COUNT =
             2 + UrnBlock.UrnStyle.values().length
                     + ClassicalStatueBlock.Style.values().length
                     + BustBlock.Style.values().length
                     + CorbelBlock.Style.values().length
-                    + PlinthBlock.Style.values().length
+                    + PlinthBlock.Style.values().length + LanternBlock.Style.values().length
                     + (int) java.util.Arrays.stream(FixedDecorBlock.Style.values()).filter(FixedDecorBlock.Style::isFinial).count();
     private static final int EXPECTED_BLOCK_COUNT =
             STONE_VARIANTS_PER_FAMILY * FAMILY_COUNT + DecorMetal.values().length * METAL_FAMILY_COUNT + 3
-                    + ArchitecturalFinish.values().length * (FriezeBlock.Style.values().length + 1);
+                    + ArchitecturalFinish.values().length * FriezeBlock.Style.values().length
+                    + (int) java.util.Arrays.stream(ArchitecturalFinish.values()).filter(ArchitecturalFinish::supportsPanel).count() * PanelBlock.Style.values().length;
 
     private static final Map<Identifier, Block> BY_ID = new LinkedHashMap<>();
     private static final List<Block> SPARTAN_PROMACHOS_STATUES = new ArrayList<>();
@@ -96,6 +103,10 @@ public final class ModBlocks {
     private static FountainBasinPartBlock fountainBasinPart;
     private static CapitalPartBlock capitalPart;
     public static CapitalPartBlock capitalPart() { return capitalPart; }
+    private static LanternPartBlock lanternPart;
+    private static LanternChainBlock lanternChain;
+    public static LanternPartBlock lanternPart() { return lanternPart; }
+    public static LanternChainBlock lanternChain() { return lanternChain; }
     private static boolean registered;
 
     private ModBlocks() {
@@ -142,13 +153,14 @@ public final class ModBlocks {
         registerFriezes();
         registerPanels();
         registerMonopterosDomes();
+        registerLanterns();
 
         if (BY_ID.size() != EXPECTED_BLOCK_COUNT
                 || ModItems.blockItems().size() != EXPECTED_BLOCK_COUNT
                 || SPARTAN_PROMACHOS_STATUES.size() != METAL_FAMILY_VARIANTS
                 || ZEUS_STATUES.size() != METAL_FAMILY_VARIANTS) {
             throw new IllegalStateException(
-                    "Daedalon must register exactly 4678 decor blocks and items"
+                    "Daedalon must register exactly " + EXPECTED_BLOCK_COUNT + " decor blocks and items"
             );
         }
         for (UrnBlock.UrnStyle style : UrnBlock.UrnStyle.values()) {
@@ -287,6 +299,12 @@ public final class ModBlocks {
     }
 
     private static void registerInternalBlocks() {
+        lanternPart = Registry.register(Registries.BLOCK, id("lantern_part"),
+                new LanternPartBlock(AbstractBlock.Settings.create().strength(1.5F, 6.0F)
+                        .dropsNothing().nonOpaque().dynamicBounds().pistonBehavior(PistonBehavior.BLOCK)));
+        lanternChain = Registry.register(Registries.BLOCK, id("lantern_chain"),
+                new LanternChainBlock(AbstractBlock.Settings.create().mapColor(MapColor.IRON_GRAY)
+                        .strength(1.5F, 6.0F).dropsNothing().nonOpaque().pistonBehavior(PistonBehavior.BLOCK)));
         obeliskosPart = Registry.register(Registries.BLOCK, id("obeliskos_part"),
                 new ObeliskPartBlock(AbstractBlock.Settings.create().strength(1.5F, 6.0F)
                         .dropsNothing().nonOpaque().dynamicBounds().pistonBehavior(PistonBehavior.BLOCK)));
@@ -493,12 +511,15 @@ public final class ModBlocks {
         for (DecorMaterial material : DecorMaterial.values()) {
             for (boolean aged : new boolean[]{false, true}) {
                 String path = material.id() + (aged ? "_aged" : "") + "_" + style.idSuffix();
-                Block block = registerBlock(
-                        path,
-                        style.isFinial()
-                                ? new FinialBlock(decorSettings(), style)
-                                : new FixedDecorBlock(decorSettings(), style)
-                );
+                Block decor;
+                if (style == FixedDecorBlock.Style.LOUTERION_BASIN) {
+                    decor = new LouterionBasinBlock(decorSettings());
+                } else if (style.isFinial()) {
+                    decor = new FinialBlock(decorSettings(), style);
+                } else {
+                    decor = new FixedDecorBlock(decorSettings(), style);
+                }
+                Block block = registerBlock(path, decor);
                 FIXED_DECOR_BY_STYLE.computeIfAbsent(style, ignored -> new ArrayList<>()).add(block);
             }
         }
@@ -548,6 +569,21 @@ public final class ModBlocks {
         registerBlock("bronze_monopteros_dome", new MonopterosBlock(decorSettings()));
     }
 
+    private static void registerLanterns() {
+        for (LanternBlock.Style style : LanternBlock.Style.values()) {
+            for (DecorMaterial material : DecorMaterial.values()) {
+                for (boolean aged : new boolean[]{false, true}) {
+                    registerBlock(material.id() + (aged ? "_aged" : "") + "_" + style.id() + "_lantern",
+                            new LanternBlock(decorSettings().pistonBehavior(PistonBehavior.BLOCK)
+                                    .luminance(LanternBlock::lightLevel), style));
+                }
+            }
+            registerMetalBlocks(style.id() + "_lantern",
+                    () -> new LanternBlock(decorSettings().pistonBehavior(PistonBehavior.BLOCK)
+                            .luminance(LanternBlock::lightLevel), style));
+        }
+    }
+
     private static void registerAnthophorosPlanters() {
         for (DecorMaterial material : DecorMaterial.values()) {
             for (boolean aged : new boolean[]{false, true}) {
@@ -559,12 +595,15 @@ public final class ModBlocks {
     }
 
     private static void registerPanels() {
-        for (DecorMaterial material : DecorMaterial.values()) for (boolean aged : new boolean[]{false,true}) {
-            String prefix=material.id()+(aged?"_aged":"");
-            registerBlock(prefix+"_gothic_wall_panel",new PanelBlock(decorSettings()));
-        }
-        for (ArchitecturalFinish finish : ArchitecturalFinish.values()) {
-            registerBlock(finish.id() + "_gothic_wall_panel", new PanelBlock(decorSettings()));
+        for (PanelBlock.Style style : PanelBlock.Style.values()) {
+            for (DecorMaterial material : DecorMaterial.values()) for (boolean aged : new boolean[]{false,true}) {
+                String prefix=material.id()+(aged?"_aged":"");
+                registerBlock(prefix+"_"+style.id(),new PanelBlock(decorSettings(),style));
+            }
+            for (ArchitecturalFinish finish : ArchitecturalFinish.values()) {
+                if (!finish.supportsPanel()) continue;
+                registerBlock(finish.id() + "_" + style.id(), new PanelBlock(decorSettings(),style));
+            }
         }
     }
 

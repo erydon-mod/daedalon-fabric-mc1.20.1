@@ -1,0 +1,6 @@
+{
+  "parent": "daedalon:block/mesh/glaux_display",
+  "textures": {
+    "particle": "daedalon:block/bronze"
+  }
+}

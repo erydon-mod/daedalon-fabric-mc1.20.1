@@ -14,12 +14,20 @@ final class CapitalOrientationTransform implements RenderContext.QuadTransform {
     private final float sine;
     private final float scale;
     private final float center;
+    private final float top;
+    private final boolean fitted;
 
     private CapitalOrientationTransform(CapitalOrientation orientation, CapitalBlock.Size size) {
+        this(orientation, size, 1.0F);
+    }
+
+    private CapitalOrientationTransform(CapitalOrientation orientation, CapitalBlock.Size size, float fitScale) {
         cosine = orientation.cosine;
         sine = orientation.sine;
-        scale = size == CapitalBlock.Size.DOUBLE ? 2.0F : 1.0F;
-        center = scale * 0.5F;
+        top = size == CapitalBlock.Size.DOUBLE ? 2.0F : 1.0F;
+        scale = top * fitScale;
+        center = top * 0.5F;
+        fitted = fitScale != 1.0F;
     }
 
     private static CapitalOrientationTransform[][] createCache() {
@@ -42,6 +50,14 @@ final class CapitalOrientationTransform implements RenderContext.QuadTransform {
                 ? null : CACHE[size.ordinal()][orientation.ordinal()];
     }
 
+    /** Additional fit is uniform about the existing top plane, so growth extends downwards.
+     * Non-default transforms are used once while preparing a cached placed mesh. */
+    static CapitalOrientationTransform forSize(CapitalOrientation orientation, CapitalBlock.Size size, float fitScale) {
+        if (!Float.isFinite(fitScale) || fitScale <= 0) throw new IllegalArgumentException("Invalid capital fit scale");
+        return fitScale == 1.0F ? forSize(orientation, size)
+                : new CapitalOrientationTransform(orientation, size, fitScale);
+    }
+
     static CapitalOrientationTransform forOrientation(CapitalOrientation orientation) {
         return orientation == CapitalOrientation.STRAIGHT ? null
                 : CACHE[CapitalBlock.Size.STANDARD.ordinal()][orientation.ordinal()];
@@ -53,7 +69,8 @@ final class CapitalOrientationTransform implements RenderContext.QuadTransform {
             float x = quad.x(vertex) - 0.5F;
             float z = quad.z(vertex) - 0.5F;
             quad.pos(vertex, center + scale * (cosine * x - sine * z),
-                    quad.y(vertex) * scale, center + scale * (sine * x + cosine * z));
+                    fitted ? top + (quad.y(vertex) - 1.0F) * scale : quad.y(vertex) * scale,
+                    center + scale * (sine * x + cosine * z));
             if (quad.hasNormal(vertex)) {
                 float nx = quad.normalX(vertex), nz = quad.normalZ(vertex);
                 quad.normal(vertex, cosine * nx - sine * nz, quad.normalY(vertex), sine * nx + cosine * nz);

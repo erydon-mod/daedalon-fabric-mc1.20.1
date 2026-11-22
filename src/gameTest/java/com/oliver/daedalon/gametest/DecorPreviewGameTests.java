@@ -4,6 +4,7 @@ import com.oliver.daedalon.block.DecorPreviewBounds;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.MonopterosBlock;
 import com.oliver.daedalon.block.SizedDecorBlock;
+import com.oliver.daedalon.block.LanternBlock;
 import net.minecraft.registry.Registries;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.test.GameTest;
@@ -33,7 +34,7 @@ public final class DecorPreviewGameTests {
                             "Double capital preview must include both vertical cells");
                 }
                 if (block instanceof SizedDecorBlock) {
-                    var full = SizedDecorBlock.fullShape(state.get(SizedDecorBlock.SIZE)).getBoundingBox();
+                    var full = SizedDecorBlock.fullShape(state).getBoundingBox();
                     context.assertTrue(box.minX == full.minX && box.minY == full.minY && box.minZ == full.minZ
                                     && box.maxX == full.maxX && box.maxY == full.maxY && box.maxZ == full.maxZ,
                             "Every obelisk preview must retain its complete body bounds");
@@ -42,9 +43,13 @@ public final class DecorPreviewGameTests {
                                 "Large previews must include the five-block height and scaled overhang");
                     }
                 }
+                if (block instanceof LanternBlock && state.get(LanternBlock.MOUNT)==LanternBlock.Mount.HANGING) {
+                    context.assertTrue(Math.abs(box.minY-(.5-state.get(LanternBlock.SIZE).metres))<1e-6 && box.maxY==1,
+                            "Hanging lantern preview must include the complete body below its anchor cell");
+                }
             }
         }
-        context.assertTrue(supported > 4000 && helpers == 4, "Missing decorations or duplicate helper previews");
+        context.assertTrue(supported > 4000 && helpers == 6, "Missing decorations or duplicate helper previews");
         context.complete();
     }
 }

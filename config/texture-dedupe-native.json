@@ -81,6 +81,7 @@
       ],
       "metadata_overrides": {},
       "intentionally_native_high_res": [
+        "textures/block/anthophoros_earth_*m*.png",
         "textures/**/*fire*.png",
         "textures/**/*flame*.png",
         "textures/**/oil.png",

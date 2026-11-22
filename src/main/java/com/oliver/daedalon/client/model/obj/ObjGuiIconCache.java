@@ -1,6 +1,7 @@
 package com.oliver.daedalon.client.model.obj;
 
 import com.oliver.daedalon.Daedalon;
+import net.minecraft.block.BlockState;
 import com.mojang.blaze3d.platform.TextureUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -59,9 +60,9 @@ public final class ObjGuiIconCache {
     static final int ICON_CELL_SIZE = ObjGuiIconTemplate.ICON_RESOLUTION + ICON_GUTTER * 2;
     static final int CELLS_PER_ROW = ATLAS_PAGE_SIZE / ICON_CELL_SIZE;
     static final int CELLS_PER_PAGE = CELLS_PER_ROW * CELLS_PER_ROW;
-    // 225 cells/page: all 4,734 catalogue items fit in 22 pages. GPU storage is
-    // allocated only as visited (352 MiB worst case), without full CPU page copies.
-    static final int MAX_ATLAS_PAGES = 22;
+    // 225 cells/page: 24 pages cover the catalogue including the four new panels.
+    // GPU storage is allocated only as visited (384 MiB worst case), without CPU page copies.
+    static final int MAX_ATLAS_PAGES = 24;
     static final int MAX_CACHED_ICONS = CELLS_PER_PAGE * MAX_ATLAS_PAGES;
     static final int MAX_PENDING_ICONS = 512;
     static final int MAX_UPLOADS_PER_TICK = 16;
@@ -86,11 +87,14 @@ public final class ObjGuiIconCache {
     private static final float[][] PREVIEW_QUAD = {
             {-.5F,-.5F,0,1},{.5F,-.5F,1,1},{.5F,.5F,1,0},{-.5F,.5F,0,0}
     };
-    private final Map<ObjMeshBakedModel, PreviewImage> previewImages = new LinkedHashMap<>(128, .75F, true);
-    private final Map<net.fabricmc.fabric.api.renderer.v1.mesh.Mesh, ObjGuiIconTemplate> previewTemplates = new LinkedHashMap<>(8, .75F, true);
-    private final Set<ObjMeshBakedModel> failedPreviews = Collections.newSetFromMap(new IdentityHashMap<>());
+    private final Map<PreviewKey, PreviewImage> previewImages = new LinkedHashMap<>(128, .75F, true);
+    private final Map<PreviewTemplateKey, ObjGuiIconTemplate> previewTemplates = new LinkedHashMap<>(8, .75F, true);
+    private final Set<PreviewKey> failedPreviews = new java.util.HashSet<>();
     private long nextPreviewGeneration;
     private record PreviewImage(Identifier id, long usedAt) {}
+    // Baked model/mesh identity keeps material images and family projections in their resource epoch.
+    private record PreviewKey(ObjMeshBakedModel model, LanternPreview assembly) {}
+    private record PreviewTemplateKey(net.fabricmc.fabric.api.renderer.v1.mesh.Mesh mesh, LanternPreview assembly) {}
     private ResourceEpoch resources;
     private int nextCellIndex;
 
@@ -137,6 +141,10 @@ public final class ObjGuiIconCache {
         if (!Daedalon.MOD_ID.equals(Registries.ITEM.getId(stack.getItem()).getNamespace())) {
             return false;
         }
+        // Continuity also wraps inventory models for emissive textures. Resolve
+        // our shared geometry before classifying the item, otherwise those
+        // wrappers bypass the bounded flat-icon path and render the full OBJ.
+        bakedModel = ObjMeshBakedModel.unwrapAttachedModel(bakedModel);
         // Cancel before requesting an icon or emitting geometry, including the off hand.
         if (renderMode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND
                 || renderMode == ModelTransformationMode.FIRST_PERSON_RIGHT_HAND) {
@@ -175,6 +183,27 @@ public final class ObjGuiIconCache {
         vertex(consumer, positionMatrix, normalMatrix,
                 0.5F, -0.5F, cell.maxU(), cell.maxV(), light, overlay);
         return true;
+    }
+
+    /**
+     * Axiom's block-list windows capture an item into another persistent atlas.
+     * Queue our normal background icon work before it captures a temporary square.
+     * Unsupported models and terminal failures keep their established fallback.
+     */
+    public static boolean isPendingAxiomPaletteIcon(BlockState state) {
+        if (state == null) return false;
+        var item = state.getBlock().asItem();
+        if (!Daedalon.MOD_ID.equals(Registries.ITEM.getId(item).getNamespace())) return false;
+        BakedModel baked = ObjMeshBakedModel.unwrapAttachedModel(MinecraftClient.getInstance()
+                .getItemRenderer().getModel(item.getDefaultStack(), null, null, 0));
+        if (!(baked instanceof ObjMeshBakedModel model) || model.guiIconTemplate() == null) return false;
+        return INSTANCE.isPendingPaletteIcon(model);
+    }
+
+    private synchronized boolean isPendingPaletteIcon(ObjMeshBakedModel model) {
+        return ObjGuiIconCapturePolicy.shouldWait(cells.containsKey(model),
+                failedModels.contains(model) || nextCellIndex >= MAX_CACHED_ICONS,
+                () -> getOrCreate(model));
     }
 
     private static boolean renderWorldIcon(ItemStack stack,
@@ -240,11 +269,18 @@ public final class ObjGuiIconCache {
     /** One image quad; the caller provides the camera-facing world matrix. */
     public static void renderAxiomPreview(ItemStack stack, MatrixStack matrices,
                                           VertexConsumerProvider.Immediate consumers, float opacity) {
+        renderAxiomPreview(stack, null, matrices, consumers, opacity);
+    }
+
+    public static void renderAxiomPreview(ItemStack stack, LanternPreview assembly, MatrixStack matrices,
+                                          VertexConsumerProvider.Immediate consumers, float opacity) {
         if (!Daedalon.MOD_ID.equals(Registries.ITEM.getId(stack.getItem()).getNamespace())) return;
         BakedModel baked = ObjMeshBakedModel.unwrapAttachedModel(MinecraftClient.getInstance()
                 .getItemRenderer().getModel(stack, null, null, 0));
         if (!(baked instanceof ObjMeshBakedModel model)) return;
-        Identifier image = INSTANCE.previewImage(model, consumers);
+        Identifier image = INSTANCE.previewImage(model, assembly, consumers);
+        // A pier inventory picture cannot stand in for a wall or a complete hanging assembly.
+        if (image == null && assembly != null) return;
         IconCell cell = image == null ? INSTANCE.getOrCreate(model) : new IconCell(image, 0, 0, 1, 1);
         if (cell == null) return;
         VertexConsumer consumer = consumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(cell.atlasId()));
@@ -257,14 +293,16 @@ public final class ObjGuiIconCache {
                 .normal(entry.getNormalMatrix(),0,0,1).next();
     }
 
-    private synchronized Identifier previewImage(ObjMeshBakedModel model, VertexConsumerProvider.Immediate consumers) {
+    private synchronized Identifier previewImage(ObjMeshBakedModel model, LanternPreview assembly,
+                                                   VertexConsumerProvider.Immediate consumers) {
+        PreviewKey key = new PreviewKey(model, assembly);
         long now = System.nanoTime();
-        PreviewImage cached = previewImages.get(model);
+        PreviewImage cached = previewImages.get(key);
         if (cached != null) {
-            previewImages.put(model, new PreviewImage(cached.id(), now));
+            previewImages.put(key, new PreviewImage(cached.id(), now));
             return cached.id();
         }
-        if (failedPreviews.contains(model) || now < nextPreviewGeneration) return null;
+        if (failedPreviews.contains(key) || now < nextPreviewGeneration) return null;
         var oldest = previewImages.isEmpty() ? null : previewImages.entrySet().iterator().next();
         // Keep images used by the current selection; excess materials use the existing GUI atlas.
         boolean full = previewImages.size() >= MAX_PREVIEW_IMAGES;
@@ -272,8 +310,8 @@ public final class ObjGuiIconCache {
         nextPreviewGeneration = now + 50_000_000L;
         NativeImage image = null;
         try {
-            ObjGuiIconTemplate template = previewTemplates.computeIfAbsent(model.previewMesh(),
-                    ignored -> model.createAxiomPreviewTemplate());
+            ObjGuiIconTemplate template = previewTemplates.computeIfAbsent(new PreviewTemplateKey(model.previewMesh(), assembly),
+                    ignored -> model.createAxiomPreviewTemplate(assembly));
             if (previewTemplates.size() > 8) previewTemplates.remove(previewTemplates.keySet().iterator().next());
             ResourceEpoch epoch = resourceEpoch();
             List<SourceTexture> materials = new ArrayList<>();
@@ -294,10 +332,10 @@ public final class ObjGuiIconCache {
             MinecraftClient.getInstance().getTextureManager().registerTexture(id, texture);
             texture.setFilter(true, false);
             image = null; // Owned by the texture manager until resource reload.
-            previewImages.put(model, new PreviewImage(id, now));
+            previewImages.put(key, new PreviewImage(id, now));
             return id;
         } catch (IOException | RuntimeException exception) {
-            failedPreviews.add(model);
+            failedPreviews.add(key);
             Daedalon.LOGGER.warn("Unable to create Axiom decoration preview for {}: {}", model.modelId(), exception.getMessage());
             return null;
         } finally {
@@ -428,10 +466,11 @@ public final class ObjGuiIconCache {
         // Worker and Axiom can share immutable ABGR pixels. Never retain/close a source
         // NativeImage under another reader, including when a resource reload cancels work.
         try (InputStream input = resource.get().getInputStream(); NativeImage image = NativeImage.read(input)) {
+            boolean transparentSource = allowsTransparentSource(logicalTextureId);
             int[] pixels = new int[image.getWidth() * image.getHeight()];
             for (int y = 0; y < image.getHeight(); y++) {
                 for (int x = 0; x < image.getWidth(); x++) {
-                    if ((image.getOpacity(x, y) & 0xFF) != 0xFF) {
+                    if (!transparentSource && (image.getOpacity(x, y) & 0xFF) != 0xFF) {
                         throw new IOException("transparent texture " + logicalTextureId);
                     }
                     pixels[y * image.getWidth() + x] = image.getColor(x, y);
@@ -439,6 +478,13 @@ public final class ObjGuiIconCache {
             }
             return new SourceTexture(image.getWidth(), image.getHeight(), pixels);
         }
+    }
+
+    static boolean allowsTransparentSource(Identifier texture) {
+        // Lantern material lists retain panes even when the icon mesh omits them.
+        // Flame previews need authored alpha; lead retains its artist's 254/255 edges.
+        return LanternGlazing.isGlazingTexture(texture) || LanternGlazing.LEAD_TEXTURE.equals(texture)
+                || LanternFlame.isFlameTexture(texture);
     }
 
     private AtlasPage atlasPage(int pageIndex) {

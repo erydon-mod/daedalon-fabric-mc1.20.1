@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#daedalon:renaissance_corbel"
+    "#daedalon:renaissance_corbel",
+    "#daedalon:renaissance_wall_panel"
   ]
 }

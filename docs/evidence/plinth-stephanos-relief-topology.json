@@ -1,0 +1,2605 @@
+{
+  "sha256": "c772ccba681b1e1b8d11dec46e78d2c972b978f77de2ff26bf58590795254995",
+  "vertices": 7994,
+  "normals": 47997,
+  "triangles": 15999,
+  "all_exported_triangles_nonzero": true,
+  "minimum_exported_squared_cross_product": 1.0340115414174397e-18,
+  "all_normals_unit": true,
+  "sealed_core_component_index": 961,
+  "sealed_core_signed_volume": 0.4616112971600999,
+  "sealed_core_edges_valence_two_opposite": true,
+  "sealed_core": {
+    "vertex_count": 1106,
+    "triangle_count": 2208
+  },
+  "hidden_boundary_edges": 55,
+  "hidden_nonmanifold_edges": 35,
+  "topology_exceptions": [
+    {
+      "vertex_indices": [
+        1173,
+        3725
+      ],
+      "positions": [
+        [
+          -0.060331091,
+          0.340000033,
+          -0.29489705
+        ],
+        [
+          -0.06032829,
+          0.340000063,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        2240
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1268,
+        3545
+      ],
+      "positions": [
+        [
+          -0.06239723,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          -0.062433217,
+          0.340136439,
+          -0.301902205
+        ]
+      ],
+      "face_indices": [
+        6527,
+        6802,
+        7494,
+        7495
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        1234,
+        1268
+      ],
+      "positions": [
+        [
+          -0.061334051,
+          0.340000033,
+          -0.29489705
+        ],
+        [
+          -0.06239723,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6527
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        2706,
+        3728
+      ],
+      "positions": [
+        [
+          0.068836406,
+          0.340088934,
+          -0.302439779
+        ],
+        [
+          0.068617865,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6593,
+        6824,
+        6825,
+        6848
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        1232,
+        1234
+      ],
+      "positions": [
+        [
+          -0.061239466,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          -0.061334051,
+          0.340000033,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6594
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1232,
+        3725
+      ],
+      "positions": [
+        [
+          -0.061239466,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          -0.06032829,
+          0.340000063,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6595
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1173,
+        1232
+      ],
+      "positions": [
+        [
+          -0.060331091,
+          0.340000033,
+          -0.29489705
+        ],
+        [
+          -0.061239466,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6670
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1196,
+        1206
+      ],
+      "positions": [
+        [
+          -0.028085992,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          -0.028111998,
+          0.340000033,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6672
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1195,
+        3724
+      ],
+      "positions": [
+        [
+          -0.0283358,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          -0.028222183,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6684
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1195,
+        3546
+      ],
+      "positions": [
+        [
+          -0.0283358,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          -0.028301604,
+          0.340006173,
+          -0.297106683
+        ]
+      ],
+      "face_indices": [
+        6684,
+        6685,
+        6820,
+        7493
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        3546,
+        3723
+      ],
+      "positions": [
+        [
+          -0.028301604,
+          0.340006173,
+          -0.297106683
+        ],
+        [
+          -0.028355468,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6685,
+        6819,
+        6820,
+        6821
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        2706,
+        3726
+      ],
+      "positions": [
+        [
+          0.068836406,
+          0.340088934,
+          -0.302439779
+        ],
+        [
+          0.068618953,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6686,
+        6823,
+        6824,
+        6848
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        1187,
+        3726
+      ],
+      "positions": [
+        [
+          0.068636559,
+          0.340000033,
+          -0.29489705
+        ],
+        [
+          0.068618953,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6686
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1205,
+        1245
+      ],
+      "positions": [
+        [
+          0.032409221,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          0.033934474,
+          0.340008259,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6688
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1205,
+        2496
+      ],
+      "positions": [
+        [
+          0.032409221,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          0.03248607,
+          0.340004116,
+          -0.300328791
+        ]
+      ],
+      "face_indices": [
+        6688,
+        6891,
+        7491,
+        7492
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        1177,
+        1247
+      ],
+      "positions": [
+        [
+          0.06781175,
+          0.340000212,
+          -0.29489705
+        ],
+        [
+          0.032544985,
+          0.340000063,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6803
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1163,
+        3726
+      ],
+      "positions": [
+        [
+          0.068754882,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          0.068618953,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6823
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1163,
+        1187
+      ],
+      "positions": [
+        [
+          0.068754882,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          0.068636559,
+          0.340000033,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6892
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1196,
+        3727
+      ],
+      "positions": [
+        [
+          -0.028085992,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          -0.028094269,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6894
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1206,
+        3727
+      ],
+      "positions": [
+        [
+          -0.028111998,
+          0.340000033,
+          -0.29489705
+        ],
+        [
+          -0.028094269,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6895
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1177,
+        1245
+      ],
+      "positions": [
+        [
+          0.06781175,
+          0.340000212,
+          -0.29489705
+        ],
+        [
+          0.033934474,
+          0.340008259,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        6909
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1209,
+        3724
+      ],
+      "positions": [
+        [
+          -0.028057596,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          -0.028222183,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        7490
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1205,
+        1247
+      ],
+      "positions": [
+        [
+          0.032409221,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          0.032544985,
+          0.340000063,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        7491
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1195,
+        1209
+      ],
+      "positions": [
+        [
+          -0.0283358,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          -0.028057596,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        7493
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        1232,
+        1268
+      ],
+      "positions": [
+        [
+          -0.061239466,
+          0.340000004,
+          -0.29489705
+        ],
+        [
+          -0.06239723,
+          0.340000004,
+          -0.29489705
+        ]
+      ],
+      "face_indices": [
+        7494
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.29489706107769253,
+        "embedding_plane": -0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        5311,
+        6328
+      ],
+      "positions": [
+        [
+          0.068969138,
+          0.340040654,
+          0.301800162
+        ],
+        [
+          0.068643019,
+          0.340000004,
+          0.29489705
+        ]
+      ],
+      "face_indices": [
+        12022,
+        12024,
+        12158,
+        12189
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        3838,
+        6327
+      ],
+      "positions": [
+        [
+          0.068628699,
+          0.340000004,
+          0.29489705
+        ],
+        [
+          0.068343893,
+          0.340000272,
+          0.29489702
+        ]
+      ],
+      "face_indices": [
+        12023
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.29489706107769253,
+        "embedding_plane": 0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 4.1077692525259835e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        3838,
+        5311
+      ],
+      "positions": [
+        [
+          0.068628699,
+          0.340000004,
+          0.29489705
+        ],
+        [
+          0.068969138,
+          0.340040654,
+          0.301800162
+        ]
+      ],
+      "face_indices": [
+        12023,
+        12024,
+        12159,
+        12189
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        3823,
+        3959
+      ],
+      "positions": [
+        [
+          -0.060228653,
+          0.340000093,
+          0.29489705
+        ],
+        [
+          -0.028484669,
+          0.339999527,
+          0.29489705
+        ]
+      ],
+      "face_indices": [
+        12029
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.29489706107769253,
+        "embedding_plane": 0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        6180,
+        6326
+      ],
+      "positions": [
+        [
+          -0.06227535,
+          0.340101808,
+          0.302613556
+        ],
+        [
+          -0.062295161,
+          0.340000004,
+          0.29489705
+        ]
+      ],
+      "face_indices": [
+        12157,
+        12186,
+        12187,
+        12222
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        3903,
+        6180
+      ],
+      "positions": [
+        [
+          -0.062429328,
+          0.340000004,
+          0.29489705
+        ],
+        [
+          -0.06227535,
+          0.340101808,
+          0.302613556
+        ]
+      ],
+      "face_indices": [
+        12157,
+        12185,
+        12187,
+        12268
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        3838,
+        4636
+      ],
+      "positions": [
+        [
+          0.068628699,
+          0.340000004,
+          0.29489705
+        ],
+        [
+          0.032873042,
+          0.339999259,
+          0.294897079
+        ]
+      ],
+      "face_indices": [
+        12159
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.29489706107769253,
+        "embedding_plane": 0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.7922307471440746e-08,
+        "minimum_inward_axis_clearance_m": 0.000799974105031187
+      }
+    },
+    {
+      "vertex_indices": [
+        6180,
+        6332
+      ],
+      "positions": [
+        [
+          -0.06227535,
+          0.340101808,
+          0.302613556
+        ],
+        [
+          -0.062506549,
+          0.340000004,
+          0.29489705
+        ]
+      ],
+      "face_indices": [
+        12185,
+        12223,
+        12268,
+        12269
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        3823,
+        6326
+      ],
+      "positions": [
+        [
+          -0.060228653,
+          0.340000093,
+          0.29489705
+        ],
+        [
+          -0.062295161,
+          0.340000004,
+          0.29489705
+        ]
+      ],
+      "face_indices": [
+        12186
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.29489706107769253,
+        "embedding_plane": 0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        3891,
+        6326
+      ],
+      "positions": [
+        [
+          -0.062101118,
+          0.340000004,
+          0.29489705
+        ],
+        [
+          -0.062295161,
+          0.340000004,
+          0.29489705
+        ]
+      ],
+      "face_indices": [
+        12222
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.29489706107769253,
+        "embedding_plane": 0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        3823,
+        3891
+      ],
+      "positions": [
+        [
+          -0.060228653,
+          0.340000093,
+          0.29489705
+        ],
+        [
+          -0.062101118,
+          0.340000004,
+          0.29489705
+        ]
+      ],
+      "face_indices": [
+        12270
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.29489706107769253,
+        "embedding_plane": 0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.107769254105051e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        3959,
+        4636
+      ],
+      "positions": [
+        [
+          -0.028484669,
+          0.339999527,
+          0.29489705
+        ],
+        [
+          0.032873042,
+          0.339999259,
+          0.294897079
+        ]
+      ],
+      "face_indices": [
+        12293
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.29489706107769253,
+        "embedding_plane": 0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 1.7922307471440746e-08,
+        "minimum_inward_axis_clearance_m": 0.000799974105031187
+      }
+    },
+    {
+      "vertex_indices": [
+        3823,
+        6327
+      ],
+      "positions": [
+        [
+          -0.060228653,
+          0.340000093,
+          0.29489705
+        ],
+        [
+          0.068343893,
+          0.340000272,
+          0.29489702
+        ]
+      ],
+      "face_indices": [
+        12533
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.29489706107769253,
+        "embedding_plane": 0.2956970531050312,
+        "maximum_rear_plane_deviation_m": 4.1077692525259835e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000031050311995
+      }
+    },
+    {
+      "vertex_indices": [
+        6820,
+        6847
+      ],
+      "positions": [
+        [
+          0.235017255,
+          0.779054046,
+          -0.320843786
+        ],
+        [
+          0.234999999,
+          0.778998196,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        13188,
+        13690,
+        13691,
+        13693
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        6641,
+        6818
+      ],
+      "positions": [
+        [
+          0.234999999,
+          0.804221094,
+          -0.318396837
+        ],
+        [
+          0.235004365,
+          0.804216862,
+          -0.324504703
+        ]
+      ],
+      "face_indices": [
+        13676,
+        13677,
+        13689,
+        13749
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        6853,
+        7167
+      ],
+      "positions": [
+        [
+          -0.323210716,
+          0.223029956,
+          -0.321753711
+        ],
+        [
+          -0.323132485,
+          0.223000005,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        13775,
+        13779,
+        13781,
+        14315
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        6853,
+        7171
+      ],
+      "positions": [
+        [
+          -0.323210716,
+          0.223029956,
+          -0.321753711
+        ],
+        [
+          -0.323123246,
+          0.223000005,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        13775,
+        13778,
+        13779,
+        14324
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        6853,
+        7008
+      ],
+      "positions": [
+        [
+          -0.323210716,
+          0.223029956,
+          -0.321753711
+        ],
+        [
+          -0.32320708,
+          0.223000005,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        13780,
+        14279,
+        14280,
+        14294
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        6853,
+        6888
+      ],
+      "positions": [
+        [
+          -0.323210716,
+          0.223029956,
+          -0.321753711
+        ],
+        [
+          -0.323200285,
+          0.223000005,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        13780,
+        13781,
+        14279,
+        14315
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        6853,
+        7165
+      ],
+      "positions": [
+        [
+          -0.323210716,
+          0.223029956,
+          -0.321753711
+        ],
+        [
+          -0.323245645,
+          0.223000005,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        14278,
+        14286,
+        14287,
+        14385
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        6853,
+        6992
+      ],
+      "positions": [
+        [
+          -0.323210716,
+          0.223029956,
+          -0.321753711
+        ],
+        [
+          -0.323220581,
+          0.223000005,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        14278,
+        14280,
+        14286,
+        14294
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7163,
+        7164
+      ],
+      "positions": [
+        [
+          -0.234999999,
+          0.804163218,
+          -0.318396837
+        ],
+        [
+          -0.234999999,
+          0.804260194,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        14311
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.31839682688076404,
+        "embedding_plane": -0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7139,
+        7169
+      ],
+      "positions": [
+        [
+          -0.235046133,
+          0.778565705,
+          -0.326729625
+        ],
+        [
+          -0.234999999,
+          0.778400183,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        14312,
+        14325,
+        14379,
+        14381
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7139,
+        7166
+      ],
+      "positions": [
+        [
+          -0.235046133,
+          0.778565705,
+          -0.326729625
+        ],
+        [
+          -0.234999999,
+          0.778373957,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        14316,
+        14325,
+        14380,
+        14381
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        6995,
+        7163
+      ],
+      "positions": [
+        [
+          -0.235097691,
+          0.805009961,
+          -0.318393797
+        ],
+        [
+          -0.234999999,
+          0.804163218,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        14386
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.31839682688076404,
+        "embedding_plane": -0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 3.029880764060522e-06,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        6995,
+        7164
+      ],
+      "positions": [
+        [
+          -0.235097691,
+          0.805009961,
+          -0.318393797
+        ],
+        [
+          -0.234999999,
+          0.804260194,
+          -0.318396837
+        ]
+      ],
+      "face_indices": [
+        14387
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": -0.31839682688076404,
+        "embedding_plane": -0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 3.029880764060522e-06,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7282,
+        7341
+      ],
+      "positions": [
+        [
+          -0.324132651,
+          0.223005101,
+          0.322272003
+        ],
+        [
+          -0.318399996,
+          0.223000005,
+          0.322431654
+        ]
+      ],
+      "face_indices": [
+        14688,
+        14711,
+        14712,
+        14714
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7338,
+        7341
+      ],
+      "positions": [
+        [
+          -0.318399996,
+          0.223000005,
+          0.322402298
+        ],
+        [
+          -0.318399996,
+          0.223000005,
+          0.322431654
+        ]
+      ],
+      "face_indices": [
+        14688
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 0,
+        "rear_plane": -0.3184,
+        "embedding_plane": -0.3192,
+        "maximum_rear_plane_deviation_m": 3.999999997894577e-09,
+        "minimum_inward_axis_clearance_m": 0.0008000039999999653
+      }
+    },
+    {
+      "vertex_indices": [
+        7282,
+        7355
+      ],
+      "positions": [
+        [
+          -0.324132651,
+          0.223005101,
+          0.322272003
+        ],
+        [
+          -0.318399996,
+          0.223000005,
+          0.3224819
+        ]
+      ],
+      "face_indices": [
+        14697,
+        14698,
+        14710,
+        14713,
+        14714,
+        14718
+      ],
+      "valence": 6,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7354,
+        7355
+      ],
+      "positions": [
+        [
+          -0.318399996,
+          0.223000005,
+          0.322476953
+        ],
+        [
+          -0.318399996,
+          0.223000005,
+          0.3224819
+        ]
+      ],
+      "face_indices": [
+        14698
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 0,
+        "rear_plane": -0.3184,
+        "embedding_plane": -0.3192,
+        "maximum_rear_plane_deviation_m": 3.999999997894577e-09,
+        "minimum_inward_axis_clearance_m": 0.0008000039999999653
+      }
+    },
+    {
+      "vertex_indices": [
+        7341,
+        7354
+      ],
+      "positions": [
+        [
+          -0.318399996,
+          0.223000005,
+          0.322431654
+        ],
+        [
+          -0.318399996,
+          0.223000005,
+          0.322476953
+        ]
+      ],
+      "face_indices": [
+        14711
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 0,
+        "rear_plane": -0.3184,
+        "embedding_plane": -0.3192,
+        "maximum_rear_plane_deviation_m": 3.999999997894577e-09,
+        "minimum_inward_axis_clearance_m": 0.0008000039999999653
+      }
+    },
+    {
+      "vertex_indices": [
+        7340,
+        7341
+      ],
+      "positions": [
+        [
+          -0.318399966,
+          0.223001093,
+          0.321679354
+        ],
+        [
+          -0.318399996,
+          0.223000005,
+          0.322431654
+        ]
+      ],
+      "face_indices": [
+        14712
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 0,
+        "rear_plane": -0.3184,
+        "embedding_plane": -0.3192,
+        "maximum_rear_plane_deviation_m": 3.400000003761505e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000039999999653
+      }
+    },
+    {
+      "vertex_indices": [
+        7341,
+        7355
+      ],
+      "positions": [
+        [
+          -0.318399996,
+          0.223000005,
+          0.322431654
+        ],
+        [
+          -0.318399996,
+          0.223000005,
+          0.3224819
+        ]
+      ],
+      "face_indices": [
+        14714
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 0,
+        "rear_plane": -0.3184,
+        "embedding_plane": -0.3192,
+        "maximum_rear_plane_deviation_m": 3.999999997894577e-09,
+        "minimum_inward_axis_clearance_m": 0.0008000039999999653
+      }
+    },
+    {
+      "vertex_indices": [
+        7338,
+        7340
+      ],
+      "positions": [
+        [
+          -0.318399996,
+          0.223000005,
+          0.322402298
+        ],
+        [
+          -0.318399966,
+          0.223001093,
+          0.321679354
+        ]
+      ],
+      "face_indices": [
+        14715
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 0,
+        "rear_plane": -0.3184,
+        "embedding_plane": -0.3192,
+        "maximum_rear_plane_deviation_m": 3.400000003761505e-08,
+        "minimum_inward_axis_clearance_m": 0.0008000039999999653
+      }
+    },
+    {
+      "vertex_indices": [
+        7638,
+        7650
+      ],
+      "positions": [
+        [
+          -0.326016724,
+          0.751338363,
+          0.326694906
+        ],
+        [
+          -0.326000005,
+          0.751215816,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        14936,
+        14941,
+        15259,
+        15261
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7553,
+        7638
+      ],
+      "positions": [
+        [
+          -0.326000005,
+          0.751313329,
+          0.318396837
+        ],
+        [
+          -0.326016724,
+          0.751338363,
+          0.326694906
+        ]
+      ],
+      "face_indices": [
+        14939,
+        14944,
+        15246,
+        15247
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7638,
+        7649
+      ],
+      "positions": [
+        [
+          -0.326016724,
+          0.751338363,
+          0.326694906
+        ],
+        [
+          -0.326000005,
+          0.751262367,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        14939,
+        14940,
+        15246,
+        15260
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7531,
+        7638
+      ],
+      "positions": [
+        [
+          -0.326000005,
+          0.751253784,
+          0.318396837
+        ],
+        [
+          -0.326016724,
+          0.751338363,
+          0.326694906
+        ]
+      ],
+      "face_indices": [
+        14940,
+        14941,
+        15260,
+        15261
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7525,
+        7586
+      ],
+      "positions": [
+        [
+          -0.325999677,
+          0.769216657,
+          0.318396866
+        ],
+        [
+          -0.326000005,
+          0.761748016,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        14942
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 3.9119235961670995e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999529081026413
+      }
+    },
+    {
+      "vertex_indices": [
+        7530,
+        7557
+      ],
+      "positions": [
+        [
+          -0.326000005,
+          0.751381993,
+          0.318396837
+        ],
+        [
+          -0.326000005,
+          0.751324058,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        14943
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7557,
+        7638
+      ],
+      "positions": [
+        [
+          -0.326000005,
+          0.751324058,
+          0.318396837
+        ],
+        [
+          -0.326016724,
+          0.751338363,
+          0.326694906
+        ]
+      ],
+      "face_indices": [
+        14943,
+        14944,
+        15247,
+        15258
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7574,
+        7586
+      ],
+      "positions": [
+        [
+          -0.326000243,
+          0.759796858,
+          0.318396837
+        ],
+        [
+          -0.326000005,
+          0.761748016,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        14945
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7530,
+        7574
+      ],
+      "positions": [
+        [
+          -0.326000005,
+          0.751381993,
+          0.318396837
+        ],
+        [
+          -0.326000243,
+          0.759796858,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        14947
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7525,
+        7574
+      ],
+      "positions": [
+        [
+          -0.325999677,
+          0.769216657,
+          0.318396866
+        ],
+        [
+          -0.326000243,
+          0.759796858,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        14948
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 3.9119235961670995e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999529081026413
+      }
+    },
+    {
+      "vertex_indices": [
+        7557,
+        7574
+      ],
+      "positions": [
+        [
+          -0.326000005,
+          0.751324058,
+          0.318396837
+        ],
+        [
+          -0.326000243,
+          0.759796858,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15258
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7516,
+        7651
+      ],
+      "positions": [
+        [
+          -0.326000035,
+          0.803833067,
+          0.318396568
+        ],
+        [
+          -0.326000005,
+          0.803825915,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15267
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 2.588807640480084e-07,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7512,
+        7516
+      ],
+      "positions": [
+        [
+          -0.326000005,
+          0.803798318,
+          0.318396837
+        ],
+        [
+          -0.326000035,
+          0.803833067,
+          0.318396568
+        ]
+      ],
+      "face_indices": [
+        15327
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 2.588807640480084e-07,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7512,
+        7651
+      ],
+      "positions": [
+        [
+          -0.326000005,
+          0.803798318,
+          0.318396837
+        ],
+        [
+          -0.326000005,
+          0.803825915,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15328
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7835,
+        7985
+      ],
+      "positions": [
+        [
+          0.234999999,
+          0.778430283,
+          0.318396837
+        ],
+        [
+          0.234999999,
+          0.77843523,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15436
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7807,
+        7986
+      ],
+      "positions": [
+        [
+          0.235000953,
+          0.77862519,
+          0.318396538
+        ],
+        [
+          0.234999999,
+          0.778595805,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15464
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 2.8888076403221774e-07,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7836,
+        7985
+      ],
+      "positions": [
+        [
+          0.234999999,
+          0.77854538,
+          0.318396837
+        ],
+        [
+          0.234999999,
+          0.77843523,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15861
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7836,
+        7986
+      ],
+      "positions": [
+        [
+          0.234999999,
+          0.77854538,
+          0.318396837
+        ],
+        [
+          0.234999999,
+          0.778595805,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15877
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7717,
+        7937
+      ],
+      "positions": [
+        [
+          0.323073864,
+          0.223000005,
+          0.318396837
+        ],
+        [
+          0.323118836,
+          0.223057538,
+          0.322942466
+        ]
+      ],
+      "face_indices": [
+        15899,
+        15902,
+        15904,
+        15925
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7934,
+        7937
+      ],
+      "positions": [
+        [
+          0.323136747,
+          0.223000005,
+          0.318396837
+        ],
+        [
+          0.323118836,
+          0.223057538,
+          0.322942466
+        ]
+      ],
+      "face_indices": [
+        15899,
+        15901,
+        15902,
+        15907
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7937,
+        7993
+      ],
+      "positions": [
+        [
+          0.323118836,
+          0.223057538,
+          0.322942466
+        ],
+        [
+          0.323183537,
+          0.223000005,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15900,
+        15909,
+        15927,
+        15929
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7937,
+        7989
+      ],
+      "positions": [
+        [
+          0.323118836,
+          0.223057538,
+          0.322942466
+        ],
+        [
+          0.323146015,
+          0.223000005,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15900,
+        15901,
+        15907,
+        15927
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7990,
+        7992
+      ],
+      "positions": [
+        [
+          0.323066086,
+          0.223000005,
+          0.318396837
+        ],
+        [
+          0.323067218,
+          0.223000005,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15903
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7937,
+        7992
+      ],
+      "positions": [
+        [
+          0.323118836,
+          0.223057538,
+          0.322942466
+        ],
+        [
+          0.323067218,
+          0.223000005,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15903,
+        15904,
+        15925,
+        15934
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7937,
+        7983
+      ],
+      "positions": [
+        [
+          0.323118836,
+          0.223057538,
+          0.322942466
+        ],
+        [
+          0.323188633,
+          0.223000005,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15905,
+        15926,
+        15928,
+        15933
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7937,
+        7984
+      ],
+      "positions": [
+        [
+          0.323118836,
+          0.223057538,
+          0.322942466
+        ],
+        [
+          0.323185772,
+          0.223000005,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15909,
+        15928,
+        15929,
+        15933
+      ],
+      "valence": 4,
+      "classification": "preexisting_native_tessellation_edge"
+    },
+    {
+      "vertex_indices": [
+        7990,
+        7991
+      ],
+      "positions": [
+        [
+          0.323066086,
+          0.223000005,
+          0.318396837
+        ],
+        [
+          0.323050022,
+          0.223000005,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15920
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7942,
+        7992
+      ],
+      "positions": [
+        [
+          0.32298249,
+          0.223000005,
+          0.318396837
+        ],
+        [
+          0.323067218,
+          0.223000005,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15934
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7942,
+        7991
+      ],
+      "positions": [
+        [
+          0.32298249,
+          0.223000005,
+          0.318396837
+        ],
+        [
+          0.323050022,
+          0.223000005,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15938
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7835,
+        7836
+      ],
+      "positions": [
+        [
+          0.234999999,
+          0.778430283,
+          0.318396837
+        ],
+        [
+          0.234999999,
+          0.77854538,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15996
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 1.0119235949179739e-08,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    },
+    {
+      "vertex_indices": [
+        7807,
+        7836
+      ],
+      "positions": [
+        [
+          0.235000953,
+          0.77862519,
+          0.318396538
+        ],
+        [
+          0.234999999,
+          0.77854538,
+          0.318396837
+        ]
+      ],
+      "face_indices": [
+        15997
+      ],
+      "valence": 1,
+      "classification": "retained_hidden_rear_seam_after_requested_reduction",
+      "support": {
+        "axis": 2,
+        "rear_plane": 0.31839682688076404,
+        "embedding_plane": 0.31919681890810264,
+        "maximum_rear_plane_deviation_m": 2.8888076403221774e-07,
+        "minimum_inward_axis_clearance_m": 0.0007999819081026538
+      }
+    }
+  ],
+  "unembedded_boundary_exceptions": [],
+  "positions_and_normals_exact_for_core_only": true,
+  "whole_visible_relief_reduced_at_user_request": true,
+  "sealed_core_vertex_links_single_cycles": true,
+  "all_boundary_edges_remain_embedded_in_support": true,
+  "minimum_boundary_embedding_axis_clearance_m": 0.0007999529081026413,
+  "face_count_policy": "User requested approximately16000 editable Blender faces; final15999 polygons are triangles",
+  "requested_editable_faces": 16000,
+  "authored_polygons": 15999,
+  "core_geometry_and_corner_normals_exact": true,
+  "core_attribute_sha256": "6764089dcffd6b05be1ebb67b4efc851b40c317201a2e56708ed8d77fd708f11",
+  "all_over_two_edges_preexist_in_native_tessellation": true,
+  "pre_reduction_mesh_sha256": "ff06f145cf917c56725049ceefdf9bcd5707228ce47aab9d3c51940bc54b7b1e",
+  "prior_hidden_zero_area_cap_triangles_removed": 452,
+  "requested_reduction": {
+    "method": "Collapse reduction applied only to the already-approved native ornament, followed by nearest-original-triangle barycentric corner-normal transfer",
+    "sculpt_only_ratio": 0.40114013146413824,
+    "sampled_surface_error_m": {
+      "source_to_candidate_max": 0.0022610118612647057,
+      "candidate_to_source_max": 0.0009660659125074744
+    }
+  },
+  "topology_policy": "Strict sealed architectural core; remaining native rear seams lie inside opaque supporting stone and are inventoried explicitly"
+}

@@ -1,0 +1,14 @@
+{
+  "model": "minishlab/potion-base-2M",
+  "revision": "389b9f64be5aa4ae7a6bc6fe95ef20ce485ae5da",
+  "license": "MIT",
+  "modelCard": "https://huggingface.co/minishlab/potion-base-2M",
+  "derivative": "Full64-dimensional per-token int8 Potion semantic embeddings, Glaux-trained prototypes/head and separately trained word/character hybrid. Java inference is a port of the frozen local prototype.",
+  "reviewBoundary": "Authored answer cards and current-source-reviewed facts; no general generative model or claim of universal phrasing/release compatibility.",
+  "resources": {
+    "answers.json": 35353,
+    "collection.json": 19653,
+    "MODEL-LICENSE.txt": 1826,
+    "model.json.gz": 2452014
+  }
+}

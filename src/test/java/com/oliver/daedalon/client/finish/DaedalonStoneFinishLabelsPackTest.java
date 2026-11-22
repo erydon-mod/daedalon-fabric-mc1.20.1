@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DaedalonStoneFinishLabelsPackTest {
     @Test
-    void everyFreshNamedStoneUsesTheCapturedFinishAcrossAllThreeLocales() throws Exception {
+    void everyFreshNamedStoneUsesTheCapturedFinishAcrossAllFiveLocales() throws Exception {
         var index = DaedalonSearchVocabulary.index();
         var languages = DaedalonStoneFinishLabelsPack.readLanguages();
         Map<String, String> finishes = new LinkedHashMap<>();
@@ -29,7 +29,7 @@ class DaedalonStoneFinishLabelsPackTest {
                 if (index.isStandardStone(path)) finishes.put(path, "mirror");
             }
         }
-        assertEquals(2295, finishes.size());
+        assertEquals(2484, finishes.size());
         finishes.put("glacium_hedra", "honed");
         finishes.put("latmion_zeus_statue", "polished");
         // A malformed/overbroad optional provider must not rename unrelated finishes.
@@ -38,11 +38,12 @@ class DaedalonStoneFinishLabelsPackTest {
             finishes.put(path, "mirror");
         }
         var pack = DaedalonStoneFinishLabelsPack.create(index, languages, finishes);
-        for (String language : List.of("en_us", "de_de", "es_es")) {
+        assertEquals(5, languages.size());
+        for (String language : List.of("en_us", "de_de", "es_es", "fr_fr", "ja_jp")) {
             JsonObject labels = labels(pack, language);
-            assertEquals(2295, labels.size());
+            assertEquals(2484, labels.size());
             var original = languages.get(language);
-            assertEquals("Ganosis", original.get("finish.daedalon.mirror"));
+            assertEquals(language.equals("ja_jp") ? "ガノーシス" : "Ganosis", original.get("finish.daedalon.mirror"));
             for (var pair : Map.of("glacium_hedra", "honed", "latmion_zeus_statue", "polished",
                     "statue_spartan_promachos_glacium", "mirror", "glacium_olympian_god_statue", "mirror").entrySet()) {
                 String key = DaedalonStoneFinishLabelsPack.translationKey(original, pair.getKey());

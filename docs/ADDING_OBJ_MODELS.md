@@ -17,20 +17,24 @@ materials, aged variants, sizes, facings, texture density, and geometry caches.
    Measure the actual runtime OBJ front; do not assume every source faces north.
    The original statue/bust batches (including Zeus and Spartan Promachos)
    face south. Only the normalized Hermes, Hephaestus and Hestia statues and
-   Hestia bust face north. The profile aligns both mesh and collision while
-   offset remains relative to the selected placed facing. The complete audit
+   Hestia bust face north. The shared pose transform turns both mesh and
+   collision towards the owner cell, opposite the selected offset direction.
+   Offset translation remains relative to the selected placed facing. The complete audit
    and unchanged source hashes are in `docs/evidence/statue-source-facing.json`.
    Hestia's bust uses its own shared GUI display, turned 180 degrees from the
    older bust view, so its inventory picture shows the same front. This view
    does not rotate placed geometry or alter the measured collision profile.
    Hermes, Hephaestus and Hestia full statues similarly share one north-facing
    GUI display, with Y 135 degrees instead of the older south-facing view's 315.
-   All other statue icons and every placed profile remain unchanged.
+   All other statue icons and every measured source profile remain unchanged.
    Spartan Promachos is a published compatibility exception: retain its EAST
-   profile convention, public helper and existing world/collision orientation,
-   including its 90-degree offset between the saved facing and physical front.
-   Corrected unreleased sculptures place facing the player (opposite the player's
-   horizontal look direction); Spartan retains its published placement value.
+   profile convention, public helper and centred world/collision orientation,
+   including its legacy 90-degree difference between saved facing and physical
+   front. Its offset poses use the reviewed SOUTH source front so they also
+   look back towards the owner cell. Fresh sculptures save the player's
+   horizontal look direction; the corrected 35 profiles render opposite that
+   value and therefore face the player. Do not reverse offset translation to
+   correct a model's front: that would move existing alcove placements.
 4. Declare one mesh family, then register its 27 standard and 27 aged material
    IDs, plus the shared Bronze and Silver finishes where supported. New IDs use
    `<material>_aged_<descriptors>_<form>` for aged variants.
@@ -42,6 +46,12 @@ materials, aged variants, sizes, facings, texture density, and geometry caches.
    UV policy, and texture reuse.
 
 ## Authored UV workflow
+
+Glaux is the fixed-size bronze character exception: its two-cell body and rigid
+head/feathers share the OBJ parser, material pipeline, display model and mesh
+audit, with one data-driven pose recipe instead of the static statue size/finish
+profile. Use `tools/generate_glaux_assets.py` and the locked authoring source;
+do not create material-specific geometry. See [Glaux](GLAUX.md).
 
 UV discovery and normal generation are deliberately separate:
 
@@ -82,6 +92,36 @@ layers and UV results are in
 without changing canonical Greek display names or IDs.
 
 ## Fast urn preparation
+
+### Independently authored Diota
+
+Diota uses a procedural design from `tools/author_classical_vessels.py` and
+`tools/diota_handle_design.py`. Its numeric profiles, carved palmettes, pierced
+stone lugs and hanging bronze rings are the editable source; the tools never
+load an existing model. Run the authoring tool with `--output-dir <staging>`
+using the locked Blender 5.2 build, then review front, three-quarter and top views before replacing
+the single shared OBJ/MTL and two freshly generated bronze scalar swatches.
+Kylix and Kalyx remain Oliver-supplied Meshy models and are not generator inputs.
+
+The medium envelope stays 0.582233804m wide, 1m high and 0.547980138m deep,
+with ground Y=0 and a centred support pivot. All 56 finishes retain the existing
+IDs, sizes, facings, offsets and cylindrical UV policy. Keep the authored corner
+normals with `smooth_normals=false`; the measured `makeDiotaShape()` profile
+must contain the fluted body, square plinth, lugs and suspended rings at every
+placed size/facing. Keep the 440mm square plinth planar: restore its flat-face
+flags after Blender's sharp-angle operation, which enables smooth faces. The
+body's curve normals and selected moulding fillets are authored separately.
+Enforce a hard limit of 6,000 runtime triangles for the complete model,
+including the interior, plinth, carvings, stone lugs and both bronze rings.
+The current authored recipe exports 5,948 triangles, shared across every finish.
+Creation provenance, hashes and topology are locked in
+`docs/evidence/original-vessels.json`. Run the original-Diota safety tests,
+asset checks and final JAR audit after any redesign. Geometry is created from
+scratch with Codex assistance at Oliver's direction, rather than supplied by
+Meshy. The new open interior requires neither double-sided rendering nor a
+new block state.
+
+### Supplied Meshy urns
 
 Meshy urns use the established cylindrical runtime projection rather than the
 statue unwrap search. Keep the source Blender file unchanged and prepare one
@@ -178,6 +218,27 @@ Urns, statues, busts, corbels and plinths also share the `DecorMetal` bronze/sil
 variants. Use `withMetals` in the family loader and the generator's
 `METAL_DECOR_FAMILIES` list; do not add a separate OBJ or material-specific mesh
 family. Metal plinths use the decorative constructor without a fountain material.
+
+### Rebuilt architectural finials
+
+The five existing finial designs use the measured reconstruction path in
+`tools/rebuild_finial_meshes.py`; see [the finial guide](FINIAL_REBUILD.md).
+All five active models meet the requested budget of at most 6,000 editable
+Blender polygon faces per complete model. Their separately recorded runtime
+triangle counts and retained ornament are listed in the guide. Validate
+one reviewed pilot before activating the next design. Keep the original sources,
+cached footprints, foot widths, upright mounting and existing 1m/2m sizes.
+Retain authored corner normals with `smooth_normals=false` and preserve the
+shared cylindrical UV window and all 56 material finishes.
+
+### Rebuilt architectural plinths
+
+The five existing plinths now have a measured reconstruction path in
+`tools/rebuild_plinth_meshes.py`; use [the plinth guide](PLINTH_REBUILD.md)
+for their source evidence, feature retention and metric contact contract.
+Keep the authored corner normals, flat support planes and existing cached
+footprints when changing these models. Their historical 6,000-triangle exports
+remain provenance records rather than targets for later reconstruction.
 See [metal decor finishes](METAL_DECOR_FINISHES.md) for texture provenance,
 component handling and verification.
 
@@ -410,8 +471,17 @@ The item source and bounds are locked in `docs/evidence/exedra-item.json`.
 
 ### Width-selectable Hedra
 
-Hedra shares `BenchBlock` width/facing controls, cached shapes, mesh families,
-projection, and the optional item-mesh path with Exedra. Prepare each width with
+Hedra shares `BenchBlock` width meshes, projection and the optional item-mesh
+path with Exedra. Its debug stick offers Width and four Orientation
+choices: East/West, Diagonal (45°, North-west/South-east), North/South and
+Diagonal (135°, North-east/South-west). Fresh placement snaps the player's look
+to the nearest 45-degree axis. Saved cardinal facing values
+remain readable but are hidden from the debug controls; a new orientation edit
+selects an absolute axis. Structure rotations and mirrors retain their geometric
+result, including both reflected diagonals. The appended `diagonal_135` value
+leaves all three earlier orientation names and their facing composition unchanged.
+Both collision and selection use cached rotated shapes shared by all finishes.
+Prepare each width with
 `--name hedra_2m --width-meters 2 --height-meters 0.6
 --stretch-middle-meters 0.6 --target-faces 13012 --save-blend --preview`,
 then repeat for 3m and 4m. The source is uniformly sized to 0.6m high;
@@ -511,6 +581,67 @@ Then check the pilot in-game at all four facings and all three heights, includin
 ground contact, selection/collision, item view, self-drop, native textures, both
 current Collection packs, shaders, and a resource reload. Confirm one geometry
 bake per family rather than one per material variant.
+
+## Placement-aware stone lanterns
+
+Georgian, Gothic and Byzantine lanterns register one item per stone/aged finish,
+using `<material>[_aged]_<style>_lantern`. The clicked support face alone chooses
+Pier (UP), Hanging (DOWN), or Wall (horizontal). Large bodies are exactly 1.25m
+high and Small bodies are 0.75m; both hanging sizes add a fixed 0.5m suspension.
+Pier feet sit at the support boundary, and wall backs are flush with the clicked
+face with their bodies centred vertically. All eighth-depth solid/translucent
+vertical-layer faces use their actual recessed plane and transverse centre.
+Size, facing and one Light control use the debug stick; mount and canopy remain
+automatic. Light cycles Low (10), Bright (15), Off, with Bright the default.
+The saved `lit` and `brightness` fields retain world compatibility. Picking
+retains size/light; placement discards automatic mount/facing/canopy item tags
+and always uses the original clicked support face.
+
+`tools/prepare_lantern_mesh.py` runs the locked Blender build in background mode
+with `--source-root <approved originals> --style <style> --mounts pier wall hanging
+--output-dir <staging> --preview`.
+Each style exports one neutral Y-up OBJ with `pier_`, `wall_` and `hanging_`
+components, using fixed `stone`, `lead`, `bronze` and `glass` material roles.
+The authored bodies span Y=0..1; wall backs are Z=0 and face +Z. The stone role
+uses the selected stone, aged, bronze or silver finish. Lead, the enlarged bronze
+burner and clear glazing keep their dedicated sprites across all 56 finishes.
+Glass sits behind the lead borders;
+its translucent material and per-quad shader proxy never classify the lead.
+See `LANTERN_GLAZING.md` and the source/texture evidence files.
+
+Each mount also has a tiny separate `<mount>_flame` component with material
+`flame`, placed on its actual burner nozzle. These appended cards retain authored
+0..1 UVs and leave all approved body geometry intact. Only the on state emits
+this translucent, emissive component; stone, bronze and lead remain ordinary
+surfaces. `tools/generate_lantern_flame_texture.py` owns the shared gas-flame
+colour and LabPBR emission textures.
+
+All styles share `lantern_suspension.obj`, whose logical half/full chain anchor
+intervals are 0.5m/1m. Small hardware uses additional uniformly smaller links,
+preserving round joins and fixed chain length. Tiny overhangs at component
+boundaries interlock the closed links. Canopy contact is exactly Y=0.
+Normal lantern use underneath a hanging assembly lowers its existing body and
+adds a metre of chain without consuming another body; sneaking places a separate
+lantern. Static chain cells and upper/lower interaction cells provide collision,
+picking and breaking for the enlarged bodies without entities or ticking.
+Lanterns use ordinary Axiom box selection alongside other blocks; include the
+entire body and chain when copying or stacking. Chain edits are bounded,
+validate space first and preserve builds.
+
+Opaque world surfaces are projected after size, facing, mounting and support
+translation at one tile per metre. Full two-dimensional ERYDON repeat phase
+matches the active Collection sheets; crossing primitives are clipped rather
+than wrapping individual UV vertices. See [world UV mapping](LANTERN_UV_MAPPING.md).
+
+One shared geometry bake per style selects only the current mount. The shared
+suspension is baked once for all styles and finishes. GUI and Axiom image
+templates omit clear glass from their nearest-surface raster pass so the burner
+and rear frame remain visible; world geometry retains the complete glazing.
+Run the lantern asset tests, Java tests and `runGameTest` before accepting changes.
+For a separate client test directory use
+`gradlew runClient -PdaedalonClientDirectory=build/lantern-client --no-daemon`.
+Add `-PdaedalonLanternFlameChecks=true` to check the real loaded materials and
+ON/OFF meshes at both sizes and light levels after the loading screen closes.
 
 ## Shared behaviour to preserve
 

@@ -4,7 +4,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CapitalOrientation;
+import com.oliver.daedalon.block.CapitalTransition;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.junit.jupiter.api.Test;
@@ -78,13 +80,39 @@ final class CapitalWorldMeshTest {
         assertEquals(0, floatAreaSquared(a, b, c));
     }
 
-    @Test void cacheStartsEmptyAndHasOnlyEightGeometrySlots() throws Exception {
+    @Test void cacheStartsEmptyAndHasOnlyFortySupportSizeOrientationSlots() throws Exception {
         Mesh source = (Mesh) Proxy.newProxyInstance(Mesh.class.getClassLoader(), new Class<?>[]{Mesh.class},
                 (proxy, method, args) -> { throw new AssertionError("Constructor must not traverse or copy the source mesh"); });
         CapitalWorldMesh cache = new CapitalWorldMesh(source);
         assertEquals(0, cache.cachedVariantCount());
         var field = CapitalWorldMesh.class.getDeclaredField("variants"); field.setAccessible(true);
-        assertEquals(8, ((AtomicReferenceArray<?>) field.get(cache)).length());
+        assertEquals(40, ((AtomicReferenceArray<?>) field.get(cache)).length());
+        assertEquals(CapitalTransition.values().length * CapitalBlock.Size.values().length
+                * CapitalOrientation.values().length, ((AtomicReferenceArray<?>) field.get(cache)).length());
+    }
+
+    @Test void widestEnlargedCapitalKeepsItsTopAndAllPhysicalCellsInsideTheProjectorDomain() throws Exception {
+        Source source = source("greek_ionic");
+        var size = CapitalBlock.Size.DOUBLE;
+        List<Vertex> points = source.transform(size, CapitalOrientation.DIAGONAL, 2.5F);
+        assertEquals(2, points.stream().mapToDouble(Vertex::y).max().orElseThrow(), 2e-5);
+        assertTrue(points.stream().mapToDouble(Vertex::y).min().orElseThrow() < -2);
+        java.util.Set<Cell> cells = new java.util.HashSet<>();
+        double before = 0, after = 0;
+        for (int[] indices : source.triangles) {
+            Vertex a = points.get(indices[0]), b = points.get(indices[1]), c = points.get(indices[2]);
+            before += Math.sqrt(areaSquared(a, b, c)) * .5;
+            for (Patch patch : splitTriangle(a, b, c, 1)) {
+                after += polygonArea(patch.vertices());
+                cells.add(patch.cell());
+                for (Vertex point : patch.vertices()) assertCellContains(patch, point);
+            }
+        }
+        assertEquals(before, after, before * 1e-10);
+        assertTrue(cells.stream().anyMatch(cell -> cell.y() < 0), "The audit must reach below the capital cell");
+        assertTrue(cells.stream().anyMatch(cell -> cell.x() < -1 || cell.x() > 2), "The audit must reach the wider overhang domain");
+        for (Cell cell : cells) assertNotNull(CapitalTransitionUvTransform.forCell(
+                BlockPos.ORIGIN, cell.x(), cell.y(), cell.z()), "Enlarged real mesh cell " + cell);
     }
 
     @Test void realCapitalTrianglesKeepTheirSurfaceWithBoundedSplitGrowth() throws Exception {
@@ -130,7 +158,7 @@ final class CapitalWorldMeshTest {
         report.put("all_48_variant_estimated_vertex_bytes", totalQuads * 144);
         report.put("discarded_area", discardedArea);
         report.put("source_surface_area", originalArea);
-        report.put("cache_policy", "At most eight lazy variants per shared source geometry; no material, position or support keys");
+        report.put("cache_policy", "At most forty lazy support/size/orientation variants per shared source geometry; no material or position keys");
         Path output = Path.of("build/reports/prepublication/capital-world-mesh-audit.json");
         Files.createDirectories(output.getParent());
         Files.writeString(output, new GsonBuilder().setPrettyPrinting().create().toJson(report) + "\n", StandardCharsets.UTF_8);
@@ -150,7 +178,9 @@ final class CapitalWorldMeshTest {
             }
         }
         float[] scale = new float[3]; for (int i = 0; i < 3; i++) scale[i] = document.getAsJsonArray("scale").get(i).getAsFloat();
-        return new Source(points, triangles, scale);
+        float[] translate = new float[3];
+        for (int i = 0; i < 3; i++) translate[i] = document.getAsJsonArray("translate").get(i).getAsFloat();
+        return new Source(points, triangles, scale, translate);
     }
 
     private static InputStreamReader reader(String path) {
@@ -159,21 +189,40 @@ final class CapitalWorldMeshTest {
         return new InputStreamReader(input, StandardCharsets.UTF_8);
     }
 
-    private record Source(List<float[]> raw, List<int[]> triangles, float[] scale) {
+    private record Source(List<float[]> raw, List<int[]> triangles, float[] scale, float[] translate) {
         List<Vertex> transform(CapitalBlock.Size size, CapitalOrientation orientation) {
+            return transform(size, orientation, 1.0F);
+        }
+
+        List<Vertex> transform(CapitalBlock.Size size, CapitalOrientation orientation, float fitScale) {
             float[] min = {Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY};
             float[] max = {Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY};
             for (float[] point : raw) for (int i = 0; i < 3; i++) { min[i] = Math.min(min[i], point[i]); max[i] = Math.max(max[i], point[i]); }
             float fit = 1F / Math.max(max[0] - min[0], Math.max(max[1] - min[1], max[2] - min[2]));
             float cx = (min[0] + max[0]) * .5F, cz = (min[2] + max[2]) * .5F;
-            float multiple = size == CapitalBlock.Size.DOUBLE ? 2 : 1, centre = multiple * .5F;
+            float[][] placed = new float[4][3];
+            MutableQuadView quad = (MutableQuadView) Proxy.newProxyInstance(MutableQuadView.class.getClassLoader(),
+                    new Class<?>[]{MutableQuadView.class}, (proxy, method, args) -> switch (method.getName()) {
+                        case "x", "y", "z" -> placed[(int) args[0]]["xyz".indexOf(method.getName())];
+                        case "hasNormal" -> false;
+                        case "pos" -> {
+                            for (int axis = 0; axis < 3; axis++) placed[(int) args[0]][axis] = (float) args[axis + 1];
+                            yield proxy;
+                        }
+                        case "cullFace", "nominalFace" -> args == null || args.length == 0 ? Direction.UP : proxy;
+                        default -> throw new AssertionError("Unexpected placed geometry operation: " + method.getName());
+                    });
+            var transform = CapitalOrientationTransform.forSize(orientation, size, fitScale);
             List<Vertex> result = new ArrayList<>();
             for (float[] p : raw) {
-                float x = (p[0] - cx) * fit * scale[0] + .5F, y = (p[1] - min[1]) * fit * scale[1];
-                float z = (p[2] - cz) * fit * scale[2] + .5F;
-                x -= .5F; z -= .5F;
-                result.add(Vertex.point(centre + multiple * (orientation.cosine * x - orientation.sine * z),
-                        y * multiple, centre + multiple * (orientation.sine * x + orientation.cosine * z)));
+                float x = (p[0] - cx) * fit * scale[0] + .5F + translate[0];
+                float y = (p[1] - min[1]) * fit * scale[1] + translate[1];
+                float z = (p[2] - cz) * fit * scale[2] + .5F + translate[2];
+                for (int vertex = 0; vertex < 4; vertex++) {
+                    placed[vertex][0] = x; placed[vertex][1] = y; placed[vertex][2] = z;
+                }
+                if (transform != null) transform.transform(quad);
+                result.add(Vertex.point(placed[0][0], placed[0][1], placed[0][2]));
             }
             return result;
         }

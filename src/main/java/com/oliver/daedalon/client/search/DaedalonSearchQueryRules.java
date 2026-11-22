@@ -15,7 +15,8 @@ import java.util.concurrent.ConcurrentMap;
 /** Keep the administrative daedalon_blocks tag out of a plain full-block search. */
 public final class DaedalonSearchQueryRules {
     private static final Set<String> BLOCK_TERMS = Set.of("block", "blocks", "full block", "full blocks",
-            "blocke", "blöcke", "vollblock", "vollblöcke", "bloque", "bloques");
+            "blocke", "blöcke", "vollblock", "vollblöcke", "bloque", "bloques",
+            "bloc", "blocs", "ブロック");
     private static final ConcurrentMap<Item, Boolean> CATALOGUE_ITEMS = new ConcurrentHashMap<>();
     private static final ThreadLocal<Boolean> EMI_DEFAULT_BLOCK_TOKEN = ThreadLocal.withInitial(() -> false);
 

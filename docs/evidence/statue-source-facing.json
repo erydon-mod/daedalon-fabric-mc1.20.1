@@ -22,14 +22,14 @@
     ]
   },
   "review": "Orthographic north/south views of all 36 runtime meshes were reviewed against facial/chest/animal-front features; Spartan Promachos was also checked from east/west. All 23 full statues and 13 busts are covered. These are source directions before the shared placed-state transform.",
-  "policy": "Only the shared source-facing profiles of the 35 unreleased sculptures change. The published Spartan retains its exact EAST profile/render path and public helper. All OBJ positions, normals, indices, authored UVs, support pivots and size/offset values remain unchanged. Positive fit scale and translation preserve each measured source-front vector.",
+  "policy": "The shared placed-pose transform turns the 35 corrected sculptures opposite their saved facing, with matching collision, so their front looks back towards the owner cell when offset. Offset translation, source profiles, all OBJ positions, normals, indices, authored UVs, support pivots and size values remain unchanged. Published Spartan retains its EAST profile, public helper and centred render/collision frame; its offset poses alone use the reviewed SOUTH source front to face the owner.",
   "normalized_north_sources": [
     "hermes",
     "hephaestus",
     "hestia",
     "bust_hestia"
   ],
-  "saved_state_effect": "The 35 unreleased sculptures retain their saved facing values and align their physical front with the selected cardinal or diagonal facing; offsets remain in that selected direction. The published Spartan retains its existing world orientation and collision in every saved pose, including the legacy 90-degree physical-front offset from its facing label.",
+  "saved_state_effect": "The 35 corrected sculptures retain their saved facing values and offset positions, but their physical front and collision turn 180 degrees from the earlier outward-facing correction. Published Spartan centred poses remain identical; its offset mesh and collision turn 90 degrees clockwise relative to the legacy pose so its measured front points back towards the owner cell. Every cardinal and diagonal offset uses this inward-facing contract.",
   "models": {
     "spartan": {
       "obj": "spartan_siplified.obj",
@@ -37,9 +37,11 @@
       "source_front": "south",
       "published_profile_facing": "east",
       "retained_physical_front_clockwise_offset_degrees": 90,
+      "retained_physical_front_offset_applies_to": "centred poses only",
+      "offset_physical_front_clockwise_offset_degrees": 180,
       "legacy_profile_source": "src/main/java/com/oliver/daedalon/block/SpartanStatueBlock.java",
       "legacy_profile_source_lf_sha256": "1afa83e21e8901e0692aaa8248a39519e3100df8a0249f7de11181c1a9f41915",
-      "compatibility_policy": "The actual OBJ body front points south, but the published EAST source-frame convention is retained without changing the profile class, render geometry, collision boxes or rotationStepsFromEast API."
+      "compatibility_policy": "The actual OBJ body front points south. The published EAST source-frame class, source collision boxes, centred world poses and rotationStepsFromEast API are retained. Only offset poses add a 90-degree clockwise turn to mesh and collision while retaining their positions, making the front face the owner cell."
     },
     "zeus": {
       "obj": "zeus.obj",
@@ -225,5 +227,5 @@
       "source_front": "south"
     }
   },
-  "placement_policy": "Fresh placements of the 35 corrected unreleased sculptures save the opposite of the horizontal player look direction so their measured physical front faces the player. Default states, sizes, offsets and explicit BlockStateTag overrides are unchanged. Published Spartan placements continue saving the horizontal player look direction, preserving their existing rendered world orientation."
+  "placement_policy": "Fresh placements save the horizontal player look direction. The 35 corrected sculpture profiles render opposite that value so their measured front faces the player. Default states, sizes, offset translation and explicit BlockStateTag overrides are unchanged. Published Spartan centred placements preserve their existing rendered world orientation."
 }

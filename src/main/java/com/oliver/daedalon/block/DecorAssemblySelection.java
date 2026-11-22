@@ -23,6 +23,15 @@ public final class DecorAssemblySelection {
         }
         if (anchor == null) return List.of();
         BlockState owner = world.getBlockState(anchor);
+        if (LouterionBasinBlock.isLarge(owner)) {
+            List<BlockPos> cells = new ArrayList<>();
+            cells.add(anchor.toImmutable());
+            for (BlockPos offset : LouterionBasinGeometry.LARGE_OFFSETS) {
+                BlockPos pos = anchor.add(offset);
+                if (FountainBasinPartBlock.isOwnedBy(world.getBlockState(pos), pos, anchor)) cells.add(pos);
+            }
+            return List.copyOf(cells);
+        }
         boolean dome = owner.getBlock() instanceof MonopterosBlock;
         boolean obelisk = owner.getBlock() instanceof SizedDecorBlock && owner.get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.LARGE;
         if (!dome && !obelisk && !(owner.getBlock() instanceof FountainBasinBlock)) return List.of();

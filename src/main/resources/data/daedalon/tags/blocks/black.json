@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "daedalon:black_gothic_wall_panel",
+    "daedalon:black_corinthian_wall_panel",
+    "daedalon:black_byzantine_wall_panel",
+    "daedalon:black_georgian_wall_panel",
+    "daedalon:black_renaissance_wall_panel",
+    "daedalon:black_byzantine_frieze",
+    "daedalon:black_gothic_frieze",
+    "daedalon:black_corinthian_frieze",
+    "daedalon:black_ionic_frieze"
+  ]
+}

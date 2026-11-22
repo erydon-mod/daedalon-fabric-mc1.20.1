@@ -18,6 +18,12 @@ public final class DecorPreviewBounds {
     }
 
     public static Box bounds(BlockState state) {
+        if (state.getBlock() instanceof CapitalBlock capital) {
+            return capital.renderedBounds(state);
+        }
+        if (state.getBlock() instanceof LanternBlock lantern) {
+            return LanternGeometry.fullShape(lantern.style(),state.get(LanternBlock.MOUNT),state.get(LanternBlock.SIZE),state.get(LanternBlock.FACING),state.get(LanternBlock.CANOPY)).getBoundingBox();
+        }
         if (state.getBlock() instanceof MonopterosBlock) {
             var size = state.get(MonopterosBlock.DIAMETER);
             double radius = size.metres * .5;
@@ -25,7 +31,10 @@ public final class DecorPreviewBounds {
         }
         if (state.getBlock() instanceof SizedDecorBlock) {
             // XL collision is split among helper cells; the preview represents the complete monument.
-            return SizedDecorBlock.fullShape(state.get(SizedDecorBlock.SIZE)).getBoundingBox();
+            return SizedDecorBlock.fullShape(state).getBoundingBox();
+        }
+        if (state.getBlock() instanceof LouterionBasinBlock) {
+            return LouterionBasinBlock.fullCollisionShape(state).getBoundingBox();
         }
         // A copied region already supplies the persisted join; no neighbour refresh is needed.
         if (state.getBlock() instanceof FriezeBlock) state = state.with(FriezeBlock.MANUAL_CORNER, true);

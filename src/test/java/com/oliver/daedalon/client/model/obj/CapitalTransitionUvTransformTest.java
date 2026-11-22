@@ -10,6 +10,35 @@ import java.lang.reflect.Proxy;
 import static org.junit.jupiter.api.Assertions.*;
 
 final class CapitalTransitionUvTransformTest {
+    @Test void enlargedOverhangCellsKeepWorldPhaseBelowAndOutsideTheOwnerFootprint() {
+        for (Direction face : Direction.values()) for (int n = -7; n <= 7; n++)
+            for (int x : new int[]{-4, -1, 0, 2, 5}) for (int y : new int[]{-3, -1, 0, 2})
+                for (int z : new int[]{-4, -1, 0, 2, 5}) {
+                    BlockPos anchor = new BlockPos(n, n + 1, -n);
+                    float[] actual = new float[2], reference = new float[2];
+                    var transform = CapitalTransitionUvTransform.forCell(anchor, x, y, z);
+                    assertSame(transform, CapitalTransitionUvTransform.forCell(anchor.add(6, 6, 6), x, y, z));
+                    transform.transform(quad(x + .17F, y + .23F, z + .31F, face, actual));
+                    CapitalTransitionUvTransform.forCell(anchor.add(x, y, z), 0, 0, 0)
+                            .transform(quad(.17F, .23F, .31F, face, reference));
+                    assertArrayEquals(reference, actual, 1e-6F,
+                            "Overhang phase must equal a normal block at the physical owner cell");
+                    assertTrue(actual[0] >= 0 && actual[0] <= 6 && actual[1] >= 0 && actual[1] <= 6);
+                }
+        assertThrows(IllegalArgumentException.class, () -> CapitalTransitionUvTransform.forCell(BlockPos.ORIGIN, 0, -4, 0));
+        assertThrows(IllegalArgumentException.class, () -> CapitalTransitionUvTransform.forCell(BlockPos.ORIGIN, 6, 0, 0));
+    }
+
+    @Test void downwardOverlapMeetsTheOwnerCellAtOneContinuousTexturePhase() {
+        for (Direction face : Direction.values()) for (int n = -7; n <= 7; n++) {
+            BlockPos anchor = new BlockPos(n, n, -n);
+            float[] below = new float[2], owner = new float[2];
+            CapitalTransitionUvTransform.forCell(anchor, 0, -1, 0).transform(quad(.3F, 0, .4F, face, below));
+            CapitalTransitionUvTransform.forCell(anchor, 0, 0, 0).transform(quad(.3F, 0, .4F, face, owner));
+            assertSamePhase(below, owner);
+        }
+    }
+
     @Test void everyFaceAndDoubleCellUsesTheColumnsHandedWorldPhaseAtNegativeCoordinates() {
         for (Direction face : Direction.values()) for (int n = -13; n <= 13; n++)
             for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {

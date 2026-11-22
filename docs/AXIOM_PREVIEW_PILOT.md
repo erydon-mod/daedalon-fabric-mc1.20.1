@@ -30,8 +30,9 @@ rendering remain unchanged. No entities or extra world blocks are created.
 - Each image is one quad. Up to 1,024 decorations are shown per region render.
 - Preview opacity follows Axiom; rendering restores projection, model-view and
   framebuffer bindings. Optional mixins are skipped when Axiom is absent.
-- Only Axiom region previews are hooked; tools using other rendering paths
-  are outside this support.
+- This billboard path covers Axiom region previews. The separate main-UI
+  palette hook uses the shared inventory cache and waits for uploaded icons;
+  see `ITEM_RENDERING.md`. Other tool-specific renderers remain outside this path.
 
 ## Verification
 

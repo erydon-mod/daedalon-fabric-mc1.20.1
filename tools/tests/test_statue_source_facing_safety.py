@@ -27,6 +27,8 @@ class StatueSourceFacingSafetyTests(unittest.TestCase):
         self.assertEqual("south", evidence["source_front"])
         self.assertEqual("east", evidence["published_profile_facing"])
         self.assertEqual(90, evidence["retained_physical_front_clockwise_offset_degrees"])
+        self.assertEqual("centred poses only", evidence["retained_physical_front_offset_applies_to"])
+        self.assertEqual(180, evidence["offset_physical_front_clockwise_offset_degrees"])
         source = (REPO_ROOT / evidence["legacy_profile_source"]).read_text(encoding="utf-8")
         self.assertEqual(evidence["legacy_profile_source_lf_sha256"], hashlib.sha256(source.encode()).hexdigest(),
                          "Published Spartan source, collision fixture and public helper must remain unchanged")

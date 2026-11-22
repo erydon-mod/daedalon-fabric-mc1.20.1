@@ -128,7 +128,7 @@ class OlympianCompletionSafetyTests(unittest.TestCase):
                     self.assertEqual({f"daedalon:{block_id}" for block_id in ids}, set(refs))
 
     def test_supplemental_meshes_preserve_historical_batch_locks(self) -> None:
-        self.assertEqual(99, len(MESH_EXPECTATIONS))
+        self.assertEqual(113, len(MESH_EXPECTATIONS))
         self.assertEqual(18, len(CLASSICAL_STATUE_MESHES))
         self.assertEqual(12, len(BUST_MESHES))
         self.assertEqual({"hermes", "hephaestus", "hestia", "bust_hestia"}, set(OLYMPIAN_COMPLETION_MESHES))

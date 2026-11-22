@@ -17,7 +17,7 @@ import java.util.function.Function;
 public final class DaedalonCatalogue {
     public static final List<String> FORMS = List.of("statues", "busts", "urns", "capitals", "corbels",
             "plinths", "finials", "friezes", "panels", "benches", "planters", "domes", "basins",
-            "fountains", "monuments");
+            "fountains", "monuments", "lanterns");
 
     private DaedalonCatalogue() { }
 
@@ -54,12 +54,16 @@ public final class DaedalonCatalogue {
     }
 
     public static String form(String family) {
+        if (family.equals("glaux")) return "statues";
         if (family.equals("hedra") || family.equals("exedra")) return "benches";
         for (String form : FORMS) {
-            String suffix = form.equals("busts") ? "bust" : form.substring(0, form.length() - 1);
-            if (family.endsWith("_" + suffix)) return form;
+            if (family.endsWith("_" + formNoun(form))) return form;
         }
         throw new IllegalArgumentException("Unclassified Daedalon catalogue design: " + family);
+    }
+
+    static String formNoun(String form) {
+        return form.equals("benches") ? "bench" : form.substring(0, form.length() - 1);
     }
 
     /** Accepting an explicit list also lets browser registration tests use the real grouping path. */
@@ -73,11 +77,11 @@ public final class DaedalonCatalogue {
             if (!"daedalon".equals(id.getNamespace())) continue;
             var entry = index.entry(id.getPath());
             if (entry == null) continue;
-            ItemStack stack = item.getDefaultStack();
-            ordered.add(stack);
-            designs.get(entry.family()).add(stack);
-            forms.get(form(entry.family())).add(stack);
-            materials.get(entry.material()).add(stack);
+            List<ItemStack> stacks = ModItems.catalogueStacks(item);
+            ordered.addAll(stacks);
+            designs.get(entry.family()).addAll(stacks);
+            forms.get(form(entry.family())).addAll(stacks);
+            materials.get(entry.material()).addAll(stacks);
         }
         return new Groups(List.copyOf(ordered), freeze(designs), freeze(forms), freeze(materials));
     }

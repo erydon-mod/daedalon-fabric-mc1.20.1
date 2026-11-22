@@ -4,11 +4,18 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 /** Cached, face-handed tile-unit projection for fitted capitals before blockSurface sprite baking. */
 final class CapitalTransitionUvTransform implements RenderContext.QuadTransform {
-    private static final int CELL_VARIANTS = 4 * 3 * 4;
-    private static final CapitalTransitionUvTransform[] CACHE = createCache();
+    private static final int MIN_HORIZONTAL_CELL = -4, MAX_HORIZONTAL_CELL = 5;
+    private static final int MIN_VERTICAL_CELL = -3, MAX_VERTICAL_CELL = 2;
+    private static final int HORIZONTAL_CELLS = MAX_HORIZONTAL_CELL - MIN_HORIZONTAL_CELL + 1;
+    private static final int VERTICAL_CELLS = MAX_VERTICAL_CELL - MIN_VERTICAL_CELL + 1;
+    // Allocate phase arrays only for cells reached by a prepared mesh, then publish
+    // each immutable transform once. Warm lookups need no allocation or locks.
+    private static final AtomicReferenceArray<AtomicReferenceArray<CapitalTransitionUvTransform>> CACHE =
+            new AtomicReferenceArray<>(HORIZONTAL_CELLS * VERTICAL_CELLS * HORIZONTAL_CELLS);
     private final int xTile, yTile, zTile, cellX, cellY, cellZ;
 
     private CapitalTransitionUvTransform(int x, int y, int z, int cellX, int cellY, int cellZ) {
@@ -16,28 +23,35 @@ final class CapitalTransitionUvTransform implements RenderContext.QuadTransform 
         this.cellX = cellX; this.cellY = cellY; this.cellZ = cellZ;
     }
 
-    private static CapitalTransitionUvTransform[] createCache() {
-        var result = new CapitalTransitionUvTransform[216 * CELL_VARIANTS];
-        for (int x = 0; x < 6; x++) for (int y = 0; y < 6; y++) for (int z = 0; z < 6; z++)
-            for (int cx = -1; cx <= 2; cx++) for (int cy = 0; cy < 3; cy++) for (int cz = -1; cz <= 2; cz++)
-                result[(x * 36 + y * 6 + z) * CELL_VARIANTS + cellIndex(cx, cy, cz)] =
-                        new CapitalTransitionUvTransform(x, y, z, cx, cy, cz);
-        return result;
-    }
-
     static CapitalTransitionUvTransform forCell(BlockPos anchor, int cellX, int cellZ) {
         return forCell(anchor, cellX, 0, cellZ);
     }
 
     static CapitalTransitionUvTransform forCell(BlockPos anchor, int cellX, int cellY, int cellZ) {
-        if (cellX < -1 || cellX > 2 || cellY < 0 || cellY > 2 || cellZ < -1 || cellZ > 2)
+        if (cellX < MIN_HORIZONTAL_CELL || cellX > MAX_HORIZONTAL_CELL
+                || cellY < MIN_VERTICAL_CELL || cellY > MAX_VERTICAL_CELL
+                || cellZ < MIN_HORIZONTAL_CELL || cellZ > MAX_HORIZONTAL_CELL)
             throw new IllegalArgumentException("Capital texture cell outside the current fitted geometry bounds");
-        int phase = Math.floorMod(anchor.getX() + cellX, 6) * 36
-                + Math.floorMod(anchor.getY() + cellY, 6) * 6 + Math.floorMod(anchor.getZ() + cellZ, 6);
-        return CACHE[phase * CELL_VARIANTS + cellIndex(cellX, cellY, cellZ)];
+        int index = cellIndex(cellX, cellY, cellZ);
+        var phases = CACHE.get(index);
+        if (phases == null) {
+            var created = new AtomicReferenceArray<CapitalTransitionUvTransform>(216);
+            phases = CACHE.compareAndSet(index, null, created) ? created : CACHE.get(index);
+        }
+        int x = Math.floorMod(anchor.getX() + cellX, 6), y = Math.floorMod(anchor.getY() + cellY, 6);
+        int z = Math.floorMod(anchor.getZ() + cellZ, 6), phase = x * 36 + y * 6 + z;
+        var transform = phases.get(phase);
+        if (transform == null) {
+            var created = new CapitalTransitionUvTransform(x, y, z, cellX, cellY, cellZ);
+            transform = phases.compareAndSet(phase, null, created) ? created : phases.get(phase);
+        }
+        return transform;
     }
 
-    private static int cellIndex(int x, int y, int z) { return x + 1 + y * 4 + (z + 1) * 12; }
+    private static int cellIndex(int x, int y, int z) {
+        return x - MIN_HORIZONTAL_CELL + HORIZONTAL_CELLS * (y - MIN_VERTICAL_CELL
+                + VERTICAL_CELLS * (z - MIN_HORIZONTAL_CELL));
+    }
 
     /** UV-only metadata for a cached patch. Lighting face and terrain normals remain untouched. */
     static void markProjection(MutableQuadView quad, Direction face) {

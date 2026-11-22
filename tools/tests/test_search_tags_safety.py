@@ -51,9 +51,9 @@ class SearchTagSafetyTests(unittest.TestCase):
         return result
 
     def test_tag_graph_has_parity_and_only_finite_public_memberships(self) -> None:
-        self.assertEqual(4678, len(self.block_refs))
+        self.assertEqual(5084, len(self.block_refs))
         self.assertEqual(56, len(self.selector_refs))
-        self.assertEqual(4734, len(self.public_refs))
+        self.assertEqual(5140, len(self.public_refs))
         self.assertEqual(self.block_refs, self.members("daedalon_blocks"))
         self.assertEqual(self.public_refs, self.members("daedalon_items"))
         for name in self.tags["blocks"]:
@@ -68,7 +68,7 @@ class SearchTagSafetyTests(unittest.TestCase):
         for name in ("decor", "decoration", "decorative", "architecture"):
             with self.subTest(tag=name):
                 self.assertEqual(self.public_refs, self.members(name))
-        for name in ("emblem", "fountain_basin_part", "capital_part", "monopteros_part", "obeliskos_part"):
+        for name in ("emblem", "fountain_basin_part", "capital_part", "monopteros_part", "obeliskos_part", "lantern_part", "lantern_chain"):
             self.assertNotIn(f"daedalon:{name}", self.public_refs)
 
     def test_material_categories_keep_stone_and_metals_separate(self) -> None:
@@ -84,16 +84,22 @@ class SearchTagSafetyTests(unittest.TestCase):
                 shared = load_json(DAEDALON_DATA / f"../material/tags/{kind}/{name}.json")
                 self.assertEqual(expected if kind == "items" else expected & self.block_refs,
                                  set(shared["values"]), (kind, name))
-        self.assertTrue(all(value.split(":")[1].startswith(("bronze_", "silver_")) for value in metal))
+        # Glaux is one named bronze character, rather than a material family.
+        self.assertIn("daedalon:glaux", self.members("bronze"))
+        self.assertNotIn("daedalon:glaux", self.members("silver"))
+        self.assertTrue(all(value.split(":")[1].startswith(("bronze_", "silver_"))
+                            for value in metal - {"daedalon:glaux"}))
         self.assertFalse(any(value.split(":")[1].startswith(("bronze_", "silver_")) for value in stone))
-        self.assertEqual(5, len(self.members("white")))
+        self.assertEqual(9, len(self.members("white")))
         self.assertTrue(self.members("white") <= stone)
+        self.assertEqual(9, len(self.members("black")))
+        self.assertTrue(self.members("black") <= stone)
 
     def test_weathered_search_exactly_matches_aged_stone(self) -> None:
         aged = frozenset(
             ref for ref in self.public_refs if "_aged_" in ref or ref.endswith("_aged")
         )
-        self.assertEqual(2295, len(aged))
+        self.assertEqual(2484, len(aged))
         for name in ("aged", "weathered", "worn"):
             self.assertEqual(aged, self.members(name), name)
         self.assertTrue(aged <= self.members("stone"))
@@ -128,9 +134,27 @@ class SearchTagSafetyTests(unittest.TestCase):
         self.assertEqual(self.members("statue") | self.members("bust"), self.members("sculpture"))
 
     def test_byzantine_and_guilloche_search_both_find_architecture(self) -> None:
-        expected = self.members("byzantine_capital") | self.members("byzantine_frieze")
+        expected = (self.members("byzantine_capital") | self.members("byzantine_frieze")
+                    | self.members("byzantine_lantern") | self.members("byzantine_wall_panel"))
         for name in ("byzantine", "guilloche"):
             self.assertEqual(expected, self.members(name), name)
+
+    def test_statue_search_includes_full_statues_busts_and_the_placement_item(self) -> None:
+        # Derive the expected public sculptures independently from their item
+        # models, including published form-first Spartan names and all finishes.
+        expected = {
+            ref for ref in self.public_refs
+            if ref.endswith(("_statue", "_bust"))
+            or ref.startswith("daedalon:statue_spartan_promachos_")
+        }
+        expected.add("daedalon:glaux")
+        self.assertEqual(2073, len(expected))
+        self.assertEqual(expected, self.members("statue"))
+        self.assertEqual(expected, self.members("sculpture"))
+        self.assertTrue(self.members("bust") <= self.members("statue"))
+        self.assertTrue(self.selector_refs <= self.members("statue"))
+        self.assertEqual(expected & self.block_refs, self.members("statue", kind="blocks"))
+        self.assertFalse(self.selector_refs & self.members("statue", kind="blocks"))
 
     def test_greek_and_roman_names_find_every_finish_of_the_same_subject(self) -> None:
         # Independent identity table: aliases must not leak into other gods.
@@ -221,28 +245,42 @@ class SearchTagSafetyTests(unittest.TestCase):
                 with self.subTest(language=language, name=name):
                     self.assertEqual(translations[index], entries[f"search.daedalon.tag.{name}"])
 
-    def test_fountain_search_keeps_supported_plinths_and_excludes_metals(self) -> None:
+    def test_fountain_search_includes_all_fountain_designs_and_compatible_plinths(self) -> None:
         supported = frozenset(
             ref for ref in self.members("plinth") if not ref.split(":")[1].startswith(("bronze_", "silver_"))
         )
         self.assertEqual(270, len(supported))
         self.assertEqual(supported, self.members("fountain_plinth"))
-        self.assertEqual(self.members("fountain"), self.members("water_feature"))
-        self.assertTrue(supported <= self.members("fountain"))
-        self.assertFalse(self.members("metal") & self.members("fountain"))
-        self.assertFalse(self.members("metal") & self.members("water_feature"))
+        for kind in ("blocks", "items"):
+            with self.subTest(kind=kind):
+                louterion = self.members("louterion_basin", kind=kind)
+                self.assertEqual(louterion, self.members("louterion", kind=kind))
+                self.assertTrue(louterion <= self.members("basin", kind=kind))
+                expected = (self.members("basin", kind=kind) | supported
+                            | self.members("krene_fountain", kind=kind)
+                            | self.members("pege_fountain", kind=kind))
+                self.assertEqual(expected, self.members("fountain", kind=kind))
+                self.assertEqual(expected, self.members("water_feature", kind=kind))
+                self.assertFalse(self.members("metal", kind=kind) & expected)
+        vocabulary = load_json(DAEDALON_ASSETS / "search_vocabulary.json")
+        self.assertTrue({"louterion", "basin", "fountain", "water_feature"}
+                        <= set(vocabulary["families"]["louterion_basin"]))
 
     def test_browser_manifest_covers_public_items_without_false_material_aliases(self) -> None:
         vocabulary = load_json(DAEDALON_ASSETS / "search_vocabulary.json")
         self.assertEqual({"families", "materials"}, set(vocabulary))
         families = vocabulary["families"]
         materials = vocabulary["materials"]
-        self.assertEqual(30, len(materials))
+        self.assertEqual(31, len(materials))
         self.assertNotIn("aged", materials)
         reached_families: set[str] = set()
         for block_id in sorted(self.public_ids):
             with self.subTest(block_id=block_id):
-                if block_id.startswith("statue_spartan_promachos_"):
+                if block_id == "glaux":
+                    # The fixed bronze oracle deliberately has no material prefix.
+                    matches = ["bronze"]
+                    family = "glaux"
+                elif block_id.startswith("statue_spartan_promachos_"):
                     # Published Spartan stone IDs keep their original layout;
                     # normalizing a browser lookup must never rename them.
                     material_path = block_id.removeprefix("statue_spartan_promachos_").removesuffix("_aged")
@@ -259,7 +297,8 @@ class SearchTagSafetyTests(unittest.TestCase):
                 for tag in (*materials[material], *families[family]):
                     self.assertIn(ref, self.members(tag), (block_id, tag))
                 self.assertIn(material, materials[material])
-                self.assertTrue({"decor", "architecture"} <= set(families[family]))
+                expected_categories = {"decor", "owl", "oracle"} if family == "glaux" else {"decor", "architecture"}
+                self.assertTrue(expected_categories <= set(families[family]))
                 self.assertNotIn("daedalon_blocks", families[family])
                 self.assertNotIn("daedalon_blocks", materials[material])
         self.assertEqual(set(families), reached_families, "Manifest must not expose proxy or obsolete families")

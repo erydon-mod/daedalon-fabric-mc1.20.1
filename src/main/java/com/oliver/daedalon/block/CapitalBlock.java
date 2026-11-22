@@ -15,6 +15,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -131,6 +132,15 @@ public class CapitalBlock extends Block {
         return style.shape(orientation(state), state.get(SUPPORT), state.get(SIZE), x, y, z);
     }
 
+    public float fitScale(BlockState state) {
+        return CapitalFit.scale(style.styleId(), state.get(SUPPORT), state.get(SIZE));
+    }
+
+    /** Full render envelope, independently of the cells reserved for placement and collision. */
+    public Box renderedBounds(BlockState state) {
+        return style.renderBounds[orientation(state).ordinal()][state.get(SUPPORT).ordinal()][state.get(SIZE).ordinal()];
+    }
+
     @Override public BlockState getPlacementState(ItemPlacementContext context) {
         Size size = CapitalSupportPlacement.isLargeColumnTop(context.getWorld(), context.getBlockPos())
                 || context.getPlayer() != null && context.getPlayer().isSneaking()
@@ -225,12 +235,14 @@ public class CapitalBlock extends Block {
         private final String displayName;
         private final String resourceStem;
         private final VoxelShape[][][][] shapes;
+        private final Box[][][] renderBounds;
 
         Style(String styleId, String displayName, double width, double depth) {
             this.styleId = styleId;
             this.displayName = displayName;
             this.resourceStem = "capital_" + styleId;
             this.shapes = new VoxelShape[CapitalOrientation.values().length][CapitalTransition.values().length][Size.values().length][8];
+            this.renderBounds = new Box[CapitalOrientation.values().length][CapitalTransition.values().length][Size.values().length];
             for (CapitalOrientation orientation : CapitalOrientation.values()) {
                 double halfX = (Math.abs(orientation.cosine) * width + Math.abs(orientation.sine) * depth) * 0.5;
                 double halfZ = (Math.abs(orientation.sine) * width + Math.abs(orientation.cosine) * depth) * 0.5;
@@ -243,6 +255,13 @@ public class CapitalBlock extends Block {
                         var profile = transition == CapitalTransition.NONE ? null : transition.profile(size);
                         VoxelShape source = transition == CapitalTransition.NONE ? capital : VoxelShapes.union(capital,
                                 VoxelShapes.cuboid(profile.minX(), 0, profile.minZ(), profile.maxX(), CapitalTransition.HEIGHT, profile.maxZ()));
+                        Box bounds = CapitalFit.bounds(width, depth, orientation, size, CapitalFit.scale(styleId, transition, size));
+                        if (profile != null) {
+                            double multiple = size == Size.DOUBLE ? 2 : 1;
+                            bounds = bounds.union(new Box(profile.minX() * multiple, 0, profile.minZ() * multiple,
+                                    profile.maxX() * multiple, CapitalTransition.HEIGHT * multiple, profile.maxZ() * multiple));
+                        }
+                        renderBounds[orientation.ordinal()][transition.ordinal()][size.ordinal()] = bounds;
                         for (int y = 0; y < 2; y++)
                         for (int x = 0; x < 2; x++) for (int z = 0; z < 2; z++) {
                             double scale = size == Size.DOUBLE ? 2 : 1;

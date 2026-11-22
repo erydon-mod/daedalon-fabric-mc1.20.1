@@ -1,6 +1,13 @@
 {
   "replace": false,
   "values": [
-    "#daedalon:gothic_wall_panel"
+    "#daedalon:georgian_lantern",
+    "#daedalon:gothic_lantern",
+    "#daedalon:byzantine_lantern",
+    "#daedalon:gothic_wall_panel",
+    "#daedalon:corinthian_wall_panel",
+    "#daedalon:byzantine_wall_panel",
+    "#daedalon:georgian_wall_panel",
+    "#daedalon:renaissance_wall_panel"
   ]
 }

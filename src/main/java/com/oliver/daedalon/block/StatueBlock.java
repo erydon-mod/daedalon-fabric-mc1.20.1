@@ -60,11 +60,10 @@ public abstract class StatueBlock extends Block {
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         Direction look = context.getHorizontalPlayerFacing();
-        // Corrected source profiles give FACING its physical meaning. Fresh
-        // sculptures face the player; the published Spartan keeps its saved
-        // placement convention as well as its unchanged legacy render frame.
-        return getDefaultState().with(FACING,
-                this instanceof SpartanStatueBlock ? look : look.getOpposite());
+        // FACING also selects the alcove offset direction. The sculpture looks
+        // back towards its owner cell, so a fresh centred placement still faces
+        // the player when its saved facing follows the player's look.
+        return getDefaultState().with(FACING, look);
     }
 
     public final StatueSize effectiveSize(BlockState state) {
@@ -143,6 +142,10 @@ public abstract class StatueBlock extends Block {
 
     public final int rotationStepsFromSource(Direction facing) {
         return profile.rotationStepsFromSource(facing);
+    }
+
+    public final int rotationStepsForPose(Direction facing, boolean offset) {
+        return profile.rotationStepsForPose(facing, offset);
     }
 
     public final Profile statueProfile() {
@@ -243,6 +246,19 @@ public abstract class StatueBlock extends Block {
             return rotationSteps(sourceFacing, facing);
         }
 
+        /** Saved facing selects the offset; the physical front looks back at the owner. */
+        public int rotationStepsForPose(Direction facing, boolean offset) {
+            // EAST is the published Spartan's historical source-frame label,
+            // although its reviewed OBJ front is SOUTH. Keep centred legacy
+            // poses and the public source-frame API intact; correct its offset
+            // poses using the measured front, just like every other sculpture.
+            if (sourceFacing == Direction.EAST) {
+                return offset ? rotationSteps(Direction.SOUTH, facing.getOpposite())
+                        : rotationStepsFromSource(facing);
+            }
+            return rotationStepsFromSource(facing.getOpposite());
+        }
+
         private VoxelShape collisionShapeFor(
                 StatueSize size,
                 boolean offset,
@@ -283,14 +299,18 @@ public abstract class StatueBlock extends Block {
                         size.scale()
                 );
                 for (Direction direction : HORIZONTAL_DIRECTIONS) {
-                    VoxelShape cardinal = rotateFromSource(scaled, direction);
+                    VoxelShape cardinal = rotateFromSource(scaled, direction, false);
+                    VoxelShape offsetCardinal = sourceFacing == Direction.EAST
+                            ? rotateFromSource(scaled, direction, true) : cardinal;
                     for (DecorOrientation orientation : DecorOrientation.values()) {
                         int directionIndex = horizontalIndex(direction) * 2 + orientation.ordinal();
                         VoxelShape centred = orientation == DecorOrientation.DIAGONAL
                                 ? DecorShapeTransforms.diagonal(cardinal) : cardinal;
                         float offsetX = DecorOrientation.rotateX(direction.getOffsetX(), direction.getOffsetZ(), orientation.ordinal());
                         float offsetZ = DecorOrientation.rotateZ(direction.getOffsetX(), direction.getOffsetZ(), orientation.ordinal());
-                        VoxelShape offset = translate(centred,
+                        VoxelShape offsetPose = orientation == DecorOrientation.DIAGONAL
+                                ? DecorShapeTransforms.diagonal(offsetCardinal) : offsetCardinal;
+                        VoxelShape offset = translate(offsetPose,
                                 offsetX * DecorShapeTransforms.OFFSET_DISTANCE,
                                 DecorShapeTransforms.OFFSET_BASE_Y,
                                 offsetZ * DecorShapeTransforms.OFFSET_DISTANCE);
@@ -347,9 +367,9 @@ public abstract class StatueBlock extends Block {
             return scaled[0];
         }
 
-        private VoxelShape rotateFromSource(VoxelShape shape, Direction facing) {
+        private VoxelShape rotateFromSource(VoxelShape shape, Direction facing, boolean offset) {
             VoxelShape rotated = shape;
-            int steps = rotationStepsFromSource(facing);
+            int steps = rotationStepsForPose(facing, offset);
             for (int step = 0; step < steps; step++) {
                 final VoxelShape[] next = {VoxelShapes.empty()};
                 rotated.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) ->

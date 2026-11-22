@@ -24,7 +24,7 @@ ALIAS_MANIFEST_ENTRY = (
 )
 ALIAS_BLOB_PREFIX = f"assets/{ALIAS_NAMESPACE}/texture_blobs/"
 INTERNAL_BLOCK_IDS = frozenset({
-    "capital_part", "fountain_basin_part", "monopteros_part", "obeliskos_part",
+    "capital_part", "fountain_basin_part", "monopteros_part", "obeliskos_part", "lantern_part", "lantern_chain",
 })
 SHARED_ITEM_MODEL_IDS = frozenset({"emblem", "olympian_god", "olympian_god_display"})
 # The medallion is item-only: do not add it to the placed-block mesh catalogue.
@@ -37,6 +37,10 @@ ITEM_ONLY_MESH_EXPECTATIONS = {
         "display": None,
     },
 }
+# Never accept superseded Diota geometry, even under a different OBJ path.
+RETIRED_VESSEL_OBJ_SHA256 = frozenset({
+    "056f640c64745f69ab144c77cf196234016df40bde1c44e0afb311b48eb45c01",
+})
 
 
 def project_property(name: str) -> str:
@@ -384,6 +388,13 @@ def audit(
             f"JAR must contain exactly {len(expected_mtl_entries)} approved MTLs",
         )
 
+        for entry in sorted(entries):
+            if entry.lower().endswith(".obj"):
+                require(
+                    sha256(archive.read(entry)) not in RETIRED_VESSEL_OBJ_SHA256,
+                    f"JAR contains retired Diota geometry: {entry}",
+                )
+
         for family, expected in all_meshes.items():
             obj_entry = f"assets/daedalon/models/mesh/{expected['obj']}"
             require(
@@ -518,18 +529,10 @@ def audit(
         )
 
         notice_entry = "META-INF/THIRD_PARTY_NOTICES.md"
-        require(notice_entry in entries, "Third-party notice is not packaged")
-        notice = archive.read(notice_entry).decode("utf-8")
-        for required_notice in (
-            "Neoclassical Urn on Pedestal | Lowpoly Asset",
-            "tina.hill",
-            "https://skfb.ly/pGAGK",
-            "https://creativecommons.org/licenses/by/4.0/",
-        ):
-            require(
-                required_notice in notice,
-                f"Third-party notice is missing {required_notice}",
-            )
+        require(
+            notice_entry not in entries,
+            "JAR contains an obsolete vessel notice",
+        )
 
         nested_jars = sorted(
             entry for entry in entries if entry.endswith(".jar") and entry != jar_path.name

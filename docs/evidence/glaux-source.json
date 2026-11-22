@@ -1,0 +1,264 @@
+{
+  "schema": 1,
+  "source": {
+    "sourceFile": "Athena's owl.obj",
+    "sourceSha256": "664b4644c643206956e3f4bfe4a53bf70a28a1714e46fb8b4b0a55662ab713c1",
+    "conceptSha256": "ffa5852235c1d79bef45b58f02625e2c05a79042c51d60f943604487f65d1933",
+    "ownership": "Oliver supplied Meshy creation; public distribution confirmed",
+    "sourceBounds": [
+      [
+        -0.642171,
+        0.645084
+      ],
+      [
+        -0.952151,
+        0.951294
+      ],
+      [
+        -0.593311,
+        0.595459
+      ]
+    ],
+    "sourceScale": 1.0507264459966008,
+    "front": "+Z",
+    "height": 2
+  },
+  "authoringDataSha256": "f6f1518eb8704adce0fbd0e373deaacb0cdec6e9053fa827dc4eebe205fcc085",
+  "finish": "bronze only",
+  "heightMetres": 2,
+  "sourceRig": {
+    "method": "Feathered join, lower face/neck-feather band and closed joint; no weighted deformation",
+    "cutHeight": 1.4,
+    "pivot": [
+      0.17818823,
+      1.4,
+      0.10094695
+    ],
+    "originalTriangles": 130862,
+    "bodyTriangles": 98536,
+    "headTriangles": 28742,
+    "lowerFaceAndFeatherBandTriangles": 6687,
+    "crossingTriangles": 459,
+    "maximumRigidDistanceError": 1.1102230246251565e-16,
+    "neckJoinStatus": "Layered rigid feather overlap; concept inspection before game authoring",
+    "sourceChanged": false,
+    "featherOverlap": {
+      "upperCount": 29,
+      "underCount": 27,
+      "addedTriangles": 20160,
+      "continuousSleeveRemoved": true,
+      "scallopedSourceEdge": true,
+      "bodyReliefMillimetres": 3,
+      "shape": "Staggered curved solid feathers with crowns and tapered tips",
+      "headRowHeightRange": [
+        1.3070696928216892,
+        1.4861919460033393
+      ],
+      "rigidFeathers": true,
+      "beakProtected": true,
+      "restingEnvelope": "Fitted to source radial profiles with millimetre crowns; not a uniform enlarged collar",
+      "rigidTipFollowing": "Individual rigid feather hinges keep tips close to the stationary chest as the head turns"
+    }
+  },
+  "outputs": {
+    "glaux_body_lower": {
+      "vertices": 32813,
+      "triangles": 34982,
+      "bounds": [
+        -0.1749855821782892,
+        0.001214639749377966,
+        -0.12453603744506836,
+        1.1738402983418603,
+        1.0,
+        1.1180349702531984
+      ],
+      "sha256": "78dbe740123be0516f80dd9bdb91ddfae8d079ffd77d7cbdc20a988fba2c0de8",
+      "bytes": 4866009,
+      "objects": [
+        "body"
+      ]
+    },
+    "glaux_body_upper": {
+      "vertices": 21343,
+      "triangles": 23386,
+      "bounds": [
+        -0.010261683590537696,
+        0.0,
+        -0.036333300310156136,
+        1.176276445388794,
+        0.45097899436950684,
+        1.1245360374450684
+      ],
+      "sha256": "28ee03ad5209a062e7505af89a1b5547d78245f87d769a0b0a52fa42f878b258",
+      "bytes": 3155598,
+      "objects": [
+        "body",
+        "under_feather_00",
+        "under_feather_01",
+        "under_feather_02",
+        "under_feather_03",
+        "under_feather_04",
+        "under_feather_05",
+        "under_feather_06",
+        "under_feather_07",
+        "under_feather_08",
+        "under_feather_09",
+        "under_feather_10",
+        "under_feather_11",
+        "under_feather_12",
+        "under_feather_13",
+        "under_feather_14",
+        "under_feather_15",
+        "under_feather_16",
+        "under_feather_17",
+        "under_feather_18",
+        "under_feather_19",
+        "under_feather_20",
+        "under_feather_21",
+        "under_feather_22",
+        "under_feather_23",
+        "under_feather_24",
+        "under_feather_25",
+        "under_feather_26"
+      ]
+    },
+    "glaux_head_near": {
+      "vertices": 15709,
+      "triangles": 16725,
+      "bounds": [
+        -0.47000211477279663,
+        -0.09293030947446823,
+        -0.4332757890224457,
+        0.44400468468666077,
+        0.5997567772865295,
+        0.48710888624191284
+      ],
+      "sha256": "75a2e1d561d4879f447c1f8e2aace6695bf43c2c8b582238679121d8357f5aa5",
+      "bytes": 2271349,
+      "objects": [
+        "head",
+        "feather_00",
+        "feather_01",
+        "feather_02",
+        "feather_03",
+        "feather_04",
+        "feather_05",
+        "feather_06",
+        "feather_07",
+        "feather_08",
+        "feather_09",
+        "feather_10",
+        "feather_11",
+        "feather_12",
+        "feather_13",
+        "feather_14",
+        "feather_15",
+        "feather_16",
+        "feather_17",
+        "feather_18",
+        "feather_19",
+        "feather_20",
+        "feather_21",
+        "feather_22",
+        "feather_23",
+        "feather_24",
+        "feather_25",
+        "feather_26",
+        "feather_27",
+        "feather_28"
+      ]
+    },
+    "glaux_head_mid": {
+      "vertices": 3701,
+      "triangles": 2940,
+      "bounds": [
+        -0.47000211477279663,
+        -0.09293030947446823,
+        -0.43137630820274353,
+        0.44199506837187463,
+        0.5961079746484756,
+        0.4809293474965883
+      ],
+      "sha256": "7383a6075a024aa853064591263632d3efdf94931c0f8553908edafd5782d6de",
+      "bytes": 471620,
+      "objects": [
+        "head",
+        "feather_00",
+        "feather_01",
+        "feather_02",
+        "feather_03",
+        "feather_04",
+        "feather_05",
+        "feather_06",
+        "feather_07",
+        "feather_08",
+        "feather_09",
+        "feather_10",
+        "feather_11",
+        "feather_12",
+        "feather_13",
+        "feather_14",
+        "feather_15",
+        "feather_16",
+        "feather_17",
+        "feather_18",
+        "feather_19",
+        "feather_20",
+        "feather_21",
+        "feather_22",
+        "feather_23",
+        "feather_24",
+        "feather_25",
+        "feather_26",
+        "feather_27",
+        "feather_28"
+      ]
+    },
+    "glaux_head_far": {
+      "vertices": 607,
+      "triangles": 438,
+      "bounds": [
+        -0.4671907204168814,
+        -0.09292995929718018,
+        -0.3638344567468148,
+        0.4348003000526105,
+        0.5917101936825251,
+        0.47441960432950186
+      ],
+      "sha256": "076563bda601a03cb2cf36d6e15616b1d3a9bea926ccd229a96ff04ec12c9573",
+      "bytes": 71891,
+      "objects": [
+        "head"
+      ]
+    },
+    "glaux_item": {
+      "vertices": 7041,
+      "triangles": 5979,
+      "bounds": [
+        -0.17203345469066078,
+        0.012089595812615306,
+        -0.10902891829609873,
+        1.1708516447167647,
+        1.9974780321121208,
+        1.11644913411055
+      ],
+      "sha256": "3529fa7c13b7aecab38a87bc6d907df6cbc4004aea240e1e65fb668b7e52779f",
+      "bytes": 917647,
+      "objects": [
+        "body",
+        "head"
+      ]
+    }
+  },
+  "uvLayout": {
+    "origin": [
+      -0.7,
+      -5e-07,
+      -0.65
+    ],
+    "span": 2.000001,
+    "policy": "Authored once in whole-owl rest space before clipping, LOD and local pivot translation; projection seam identities retained"
+  },
+  "runtimePolicy": "Static body split across lower/upper chunk cells; cached moving head LOD; no runtime parsing per frame",
+  "ctm": "canonical daedalon:block/bronze sprite, no Continuity dependency; in-game native and active Collection-pack appearance remains a required check"
+}

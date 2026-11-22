@@ -1,12 +1,16 @@
 package com.oliver.daedalon.mixin.client.iris;
 
 import com.oliver.daedalon.client.model.obj.ShaderTerrainNormalBridge;
+import com.oliver.daedalon.client.model.obj.ContainedWaterShaderIds;
+import com.oliver.daedalon.client.model.obj.LanternGlazing;
+import com.oliver.daedalon.client.model.obj.LanternFlame;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.Material;
 import me.jellysquid.mods.sodium.client.render.chunk.vertex.format.ChunkVertexEncoder;
 import net.irisshaders.iris.compat.sodium.impl.vertex_format.terrain_xhfp.XHFPTerrainVertex;
 import net.irisshaders.iris.shaderpack.materialmap.WorldRenderingSettings;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluids;
 import org.lwjgl.system.MemoryUtil;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,7 +36,7 @@ abstract class XHFPTerrainVertexMixin {
                                          CallbackInfoReturnable<Long> cir) {
         ShaderTerrainNormalBridge.claim(vertices);
         if (ShaderTerrainNormalBridge.isClaimedContainedWater()) {
-            daedalon$containedWaterBlockId = daedalon$resolveWaterBlockId();
+            daedalon$containedWaterBlockId = daedalon$resolveWaterBlockId(ShaderTerrainNormalBridge.isClaimedStationaryWater());
         }
     }
 
@@ -46,12 +50,21 @@ abstract class XHFPTerrainVertexMixin {
             remap = false
     )
     private void daedalon$writeBlockId(long address, short blockId) {
-        // Match the exact block identity Iris assigns to a vanilla water fluid.
+        // Only explicitly tagged panes/flames borrow glass/fire identities. Stone,
+        // lead frames, bronze fittings and ordinary OBJ faces keep the real block.
+        short resolved = blockId;
+        if (ShaderTerrainNormalBridge.isClaimedContainedWater()) {
+            resolved = daedalon$containedWaterBlockId;
+        } else if (ShaderTerrainNormalBridge.isClaimedGlazing()) {
+            resolved = (short) LanternGlazing.shaderBlockId(
+                    WorldRenderingSettings.INSTANCE.getBlockStateIds(), blockId);
+        } else if (ShaderTerrainNormalBridge.isClaimedFlame()) {
+            resolved = (short) LanternFlame.shaderBlockId(
+                    WorldRenderingSettings.INSTANCE.getBlockStateIds(), blockId);
+        }
         MemoryUtil.memPutShort(
                 address,
-                ShaderTerrainNormalBridge.isClaimedContainedWater()
-                        ? daedalon$containedWaterBlockId
-                        : blockId
+                resolved
         );
     }
 
@@ -97,14 +110,17 @@ abstract class XHFPTerrainVertexMixin {
     }
 
     @Unique
-    private static short daedalon$resolveWaterBlockId() {
+    private static short daedalon$resolveWaterBlockId(boolean stationaryWater) {
         Object2IntMap<BlockState> blockStateIds = WorldRenderingSettings.INSTANCE.getBlockStateIds();
         if (blockStateIds == null) {
             return -1;
         }
-        return (short) blockStateIds.getOrDefault(
+        int water = blockStateIds.getOrDefault(
                 Fluids.WATER.getDefaultState().getBlockState(),
                 -1
         );
+        return (short) (stationaryWater
+                ? ContainedWaterShaderIds.stationaryWater(water, blockStateIds.getOrDefault(Blocks.WATER_CAULDRON.getDefaultState(), -1))
+                : water);
     }
 }

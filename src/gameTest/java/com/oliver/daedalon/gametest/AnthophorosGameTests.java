@@ -6,6 +6,7 @@ import com.oliver.daedalon.registry.ModBlocks;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
 import net.minecraft.server.OperatorEntry;
@@ -36,7 +37,9 @@ public final class AnthophorosGameTests {
         Direction[] facings = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
         for (var block : blocks) {
             context.assertTrue(block.getDefaultState().get(AnthophorosBlock.WIDTH) == 3, "Default width must be 3m");
-            context.assertTrue(block.getStateManager().getStates().size() == 12, "Only width and facing are needed");
+            context.assertTrue(block.getDefaultState().get(AnthophorosBlock.CONTENTS) == AnthophorosBlock.Contents.EMPTY,
+                    "Existing planters and new placements must default to empty");
+            context.assertTrue(block.getStateManager().getStates().size() == 36, "Width, facing and three exclusive contents are needed");
             for (int width = 2; width <= 4; width++) {
                 for (int f = 0; f < facings.length; f++) {
                     var state = block.getDefaultState().with(AnthophorosBlock.WIDTH, width).with(AnthophorosBlock.FACING, facings[f]);
@@ -54,6 +57,16 @@ public final class AnthophorosGameTests {
                     var floorHit = shape.raycast(Vec3d.of(anchor).add(.5, 2, .5), Vec3d.of(anchor).add(.5, 0, .5), anchor);
                     context.assertTrue(floorHit != null && Math.abs(floorHit.getPos().y - anchor.getY() - AnthophorosBlock.FLOOR_HEIGHT) < 1e-6,
                             "Interior must remain hollow and selectable down to the floor");
+                    for (var contents : AnthophorosBlock.Contents.values()) {
+                        var filled = state.with(AnthophorosBlock.CONTENTS, contents);
+                        world.setBlockState(anchor, filled, Block.NOTIFY_ALL);
+                        context.assertTrue(filled.getCollisionShape(world, anchor) == shape,
+                                "Every content state must keep the same cached hollow collision");
+                        context.assertTrue(filled.getOutlineShape(world, anchor) == state.getOutlineShape(world, anchor),
+                                "Changing contents must retain the planter selection shape");
+                        context.assertTrue(world.getFluidState(anchor).isEmpty(),
+                                "Contained water must not become a spilling world fluid");
+                    }
                     context.assertTrue(world.getBlockEntity(anchor) == null, "No controller is needed");
                 }
             }
@@ -72,9 +85,77 @@ public final class AnthophorosGameTests {
             Items.DEBUG_STICK.canMine(world.getBlockState(anchor), world, anchor, player);
             Items.DEBUG_STICK.useOnBlock(new ItemUsageContext(player, Hand.MAIN_HAND, hit));
             context.assertTrue(world.getBlockState(anchor).get(AnthophorosBlock.FACING) == Direction.WEST, "Facing must cycle independently");
+            Items.DEBUG_STICK.canMine(world.getBlockState(anchor), world, anchor, player);
+            for (var contents : new AnthophorosBlock.Contents[]{AnthophorosBlock.Contents.EARTH,
+                    AnthophorosBlock.Contents.WATER, AnthophorosBlock.Contents.EMPTY}) {
+                Items.DEBUG_STICK.useOnBlock(new ItemUsageContext(player, Hand.MAIN_HAND, hit));
+                var changed = world.getBlockState(anchor);
+                context.assertTrue(changed.get(AnthophorosBlock.CONTENTS) == contents, "Contents must cycle Empty, Earth, Water");
+                context.assertTrue(changed.get(AnthophorosBlock.WIDTH) == 2 && changed.get(AnthophorosBlock.FACING) == Direction.WEST,
+                        "Changing contents must preserve width and facing");
+            }
         }
         for (BlockPos pos : BlockPos.iterate(anchor.add(-2,0,-2),anchor.add(2,0,2))) {
             if (!pos.equals(anchor)) context.assertTrue(world.getBlockState(pos).isAir(), "No hidden neighbour writes");
+        }
+        world.setBlockState(anchor, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void bucketAndEarthInteractionsKeepContentsExclusive(TestContext context) {
+        var world = context.getWorld();
+        var anchor = context.getAbsolutePos(new BlockPos(3, 2, 3));
+        var player = context.createMockCreativeServerPlayerInWorld();
+        var hit = new BlockHitResult(Vec3d.ofCenter(anchor), Direction.UP, anchor, false);
+        var planter = (AnthophorosBlock) ModBlocks.blocks().stream()
+                .filter(block -> block instanceof AnthophorosBlock).findFirst().orElseThrow();
+        for (int width = 2; width <= 4; width++) {
+            for (var facing : new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
+                var empty = planter.getDefaultState().with(AnthophorosBlock.WIDTH, width).with(AnthophorosBlock.FACING, facing);
+                world.setBlockState(anchor, empty, Block.NOTIFY_ALL);
+                context.assertTrue(planter.tryDrainFluid(world, anchor, empty).isEmpty(), "Empty planter must not supply a water bucket");
+                context.assertTrue(!planter.tryFillWithFluid(world, anchor, empty, Fluids.LAVA.getDefaultState()),
+                        "Only water can fill a planter");
+                context.assertTrue(planter.tryFillWithFluid(world, anchor, empty, Fluids.WATER.getStill(false)),
+                        "Water bucket path must fill the empty planter");
+                var water = world.getBlockState(anchor);
+                context.assertTrue(water.get(AnthophorosBlock.CONTENTS) == AnthophorosBlock.Contents.WATER,
+                        "Water fill must select exactly the water contents");
+                context.assertTrue(!planter.tryFillWithFluid(world, anchor, water, Fluids.WATER.getStill(false)),
+                        "Already filled planter must reject another bucket");
+                player.setStackInHand(Hand.MAIN_HAND, Items.DIRT.getDefaultStack());
+                context.assertTrue(!planter.onUse(water, world, anchor, player, Hand.MAIN_HAND, hit).isAccepted(),
+                        "Earth must not replace contained water");
+                context.assertTrue(world.getBlockState(anchor).equals(water), "Rejected earth must preserve water");
+                context.assertTrue(planter.tryDrainFluid(world, anchor, water).isOf(Items.WATER_BUCKET),
+                        "Bucket drain must return the water bucket");
+                context.assertTrue(world.getBlockState(anchor).equals(empty), "Draining must preserve width and facing");
+                context.assertTrue(planter.tryDrainFluid(world, anchor, world.getBlockState(anchor)).isEmpty(),
+                        "The drained planter must not supply a second bucket");
+
+                for (var dirt : new net.minecraft.item.Item[]{Items.DIRT, Items.COARSE_DIRT, Items.ROOTED_DIRT}) {
+                    player.setStackInHand(Hand.MAIN_HAND, dirt.getDefaultStack());
+                    context.assertTrue(planter.onUse(world.getBlockState(anchor), world, anchor, player, Hand.MAIN_HAND, hit).isAccepted(),
+                            "Supported earth items must fill an empty planter");
+                    var earth = world.getBlockState(anchor);
+                    context.assertTrue(earth.get(AnthophorosBlock.CONTENTS) == AnthophorosBlock.Contents.EARTH,
+                            "Earth fill must select exactly the earth contents");
+                    context.assertTrue(!planter.tryFillWithFluid(world, anchor, earth, Fluids.WATER.getStill(false)),
+                            "Water must not replace earth");
+                    context.assertTrue(planter.tryDrainFluid(world, anchor, earth).isEmpty(), "Earth must not yield a water bucket");
+                    context.assertTrue(world.getBlockState(anchor).equals(earth), "Rejected fluid actions must preserve earth");
+                    player.setStackInHand(Hand.MAIN_HAND, Items.IRON_SHOVEL.getDefaultStack());
+                    context.assertTrue(planter.onUse(earth, world, anchor, player, Hand.MAIN_HAND, hit).isAccepted(),
+                            "A shovel must remove earth");
+                    context.assertTrue(world.getBlockState(anchor).equals(empty), "Removing earth must preserve width and facing");
+                }
+                context.assertTrue(world.getFluidState(anchor).isEmpty(), "Contents must never expose a world fluid");
+                context.assertTrue(world.getBlockEntity(anchor) == null, "Contents must not allocate a controller");
+            }
+        }
+        for (BlockPos pos : BlockPos.iterate(anchor.add(-2,0,-2), anchor.add(2,0,2))) {
+            if (!pos.equals(anchor)) context.assertTrue(world.getBlockState(pos).isAir(), "Contained fills must not write neighbours");
         }
         world.setBlockState(anchor, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         context.complete();

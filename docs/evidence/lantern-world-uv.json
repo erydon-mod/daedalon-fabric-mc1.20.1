@@ -1,0 +1,168 @@
+{
+  "schema": 1,
+  "scope": "Placed opaque lantern world surfaces and the narrow Astragalos projection correction",
+  "source_obj_geometry_changed_by_uv_mapping": false,
+  "runtime_surface_tessellation": "Only seam-crossing polygons are clipped; source surface footprint and winding are retained",
+  "texture_sources_modified": false,
+  "density": {
+    "world_metres_per_texture_tile": 1,
+    "projection_stage": "After size, mount, facing and support offset",
+    "coordinate_precision": "Double world S/T coordinates; float local mesh positions",
+    "axis_choice": "Dominant X/Y/Z component of the placed geometric triangle normal, with stable axis ties",
+    "triangle_centroid_selects_axis": false,
+    "smoothed_corner_normals_select_axis": false
+  },
+  "shallow_surface_regression": {
+    "review_date": "2026-11-15",
+    "former_y_projection_threshold": "ny squared / normal length squared >= 0.9998, about 0.81 degrees from horizontal",
+    "failure": "Side projection compressed shallow roof and underside texture coordinates into narrow rows",
+    "correction": "Select the projection with the largest geometric normal component, including Y",
+    "theoretical_maximum_stretch_with_tie_tolerance": 1.733,
+    "source_stone_body_audit": {
+      "body_count": 9,
+      "mounts_per_style": ["pier", "wall", "hanging"],
+      "maximum_stretch_before": {"georgian": 29.022446, "gothic": 26.29871, "byzantine": 45.25416},
+      "maximum_stretch_after": {"georgian": 1.709239, "gothic": 1.730034, "byzantine": 1.732044},
+      "triangles_over_2x_after": 0
+    },
+    "production_projector_regression": {
+      "test": "LanternSurfaceProjectionTest",
+      "source_opaque_triangles": 310516,
+      "sizes_metres": [0.75, 1.25],
+      "horizontal_facings": 4,
+      "includes_suspension_hardware": true,
+      "checks_actual_world_st_coordinates": true
+    }
+  },
+  "world_face_coordinates": {
+    "UP": ["X", "Z"],
+    "DOWN": ["X", "-Z"],
+    "NORTH": ["-X", "1-Y"],
+    "SOUTH": ["X", "1-Y"],
+    "WEST": ["Z", "1-Y"],
+    "EAST": ["-Z", "1-Y"]
+  },
+  "repeat_sheet_mapping": {
+    "columns": 12,
+    "rows": 6,
+    "period_metres": 6,
+    "horizontal_period_copies": 2,
+    "vertical_period_copies": 1,
+    "u": "(S-uOrigin)/12",
+    "v": "(T-vOrigin)/6",
+    "origin": "6*floor(minimum/6), common to each unbroken fragment",
+    "clipped_planes": "T=6k; duplicated U period accommodates lantern primitive widths below6m",
+    "atlas_guard": "A common U shift of0.5 may select the identical interior horizontal period"
+  },
+  "plain_metal_mapping": {
+    "materials": ["lead", "bronze", "silver"],
+    "columns": 1,
+    "rows": 1,
+    "period_metres": 1,
+    "clipped_planes": "S=k and T=k",
+    "u": "S-cellS",
+    "v": "T-cellT"
+  },
+  "clipping_contract": {
+    "individual_vertices_wrapped": false,
+    "source_winding_retained": true,
+    "polygon_footprint_preserved_with_float_intersection_precision": true,
+    "interpolated_normals_normalized": true,
+    "zero_area_fragments_discarded": true
+  },
+  "authored_sprite_exceptions": {
+    "glass": "Full authored UV span retained at both sizes",
+    "flame": "Full authored UV span retained at both sizes; ON/OFF and emissive handling unchanged"
+  },
+  "repeat_sheet_sources": {
+    "texture": "assets/daedalon/textures/block/statue_spartan_promachos_aganite.png",
+    "file_pattern_checked": "statue_spartan_promachos_*.png",
+    "native": {
+      "resource_root": "src/main/resources",
+      "sheet_size_px": [192, 96],
+      "tile_size_px": 16,
+      "sheet_files_checked": 108,
+      "invalid_shape_count": 0,
+      "mismatched_horizontal_period_count": 0,
+      "aganite_colour_sha256": "a2a83ff0a21019729166a75d5d1e8aeef6be4ed7834cbb96748cfca4bb3a4f46"
+    },
+    "collection_source": {
+      "repository": "erydon-collection-resource-packs",
+      "version": "1.6.0",
+      "source_read_only": true,
+      "32x": {
+        "resource_root": "packs/32x",
+        "sheet_size_px": [384, 192],
+        "tile_size_px": 32,
+        "sheet_files_checked": 135,
+        "invalid_shape_count": 0,
+        "mismatched_horizontal_period_count": 0,
+        "aganite_colour_sha256": "9e940e2f657c9ae048385b610f853558a4b0593b35e87081bfe922bc5e2b8e47",
+        "aganite_sheet_cells_matching_row_major_ctm_tiles": 36
+      },
+      "64x": {
+        "resource_root": "packs/64x",
+        "sheet_size_px": [768, 384],
+        "tile_size_px": 64,
+        "sheet_files_checked": 135,
+        "invalid_shape_count": 0,
+        "mismatched_horizontal_period_count": 0,
+        "aganite_colour_sha256": "308340ef8607e245e145b5aa854b1ab63baf9cc3abe7b75f46557fb4a2d05dc6",
+        "aganite_sheet_cells_matching_row_major_ctm_tiles": 36
+      },
+      "ctm_rule": "assets/minecraft/optifine/ctm/aganite/a_aganite_base.properties",
+      "ctm_colour_tiles": "assets/minecraft/textures/optifine/ctm/aganite/{index}.png",
+      "ctm_method": "repeat",
+      "ctm_width": 6,
+      "ctm_height": 6
+    }
+  },
+  "native_repeat_reference": {
+    "repository": "erydon-public",
+    "source_classes": [
+      "com.oliver.erydon.client.model.ErydonCtmService.repeatTileIndex",
+      "com.oliver.erydon.client.model.SynapheiaCellGeometry",
+      "com.oliver.erydon.client.model.SpiralStairCtmGeometry"
+    ],
+    "installed_continuity_reference": {
+      "artifact": "continuity-3.0.0+1.20.1.jar",
+      "class": "me.pepperbell.continuity.client.processor.simple.RepeatSpriteProvider",
+      "inspection": "Read-only local bytecode; matching face-dependent tile-column/tile-row formula"
+    }
+  },
+  "astragalos_diagonal_reproducer": {
+    "mesh": "models/mesh/plinth_astragalos.obj",
+    "mesh_sha256_unchanged": "0a9e29e05d932bcc58937d701f422376a5a8e5c33807403e72ca6e716c5c0408",
+    "base_y_max_m": 0.217,
+    "source_base_quad_pairs_checked": 288,
+    "former_axial_pairs_with_conflicting_bases": 60,
+    "broad_base_planes_with_conflicting_bases": 0,
+    "obj_triangle_indices_zero_based": [34, 35],
+    "source_polygon_index_zero_based": 17,
+    "shared_geometric_normal": [0.707010805606842, 0.0, -0.7072027325630188],
+    "first_triangle_centroid": [0.3009873628616333, 0.03133333474397659, -0.3010910749435425],
+    "second_triangle_centroid": [0.30117034912109375, 0.0611666664481163, -0.30090808868408203],
+    "former_axial_bases": ["NORTH", "EAST"],
+    "definition": "models/mesh/plinth_astragalos.json",
+    "narrow_override": {"material_uv_projections": {"none": "box"}},
+    "geometry_and_authored_normals_modified": false,
+    "other_families_projection_policy_modified": false
+  },
+  "implementation": {
+    "helper": "src/main/java/com/oliver/daedalon/client/model/obj/LanternWorldUv.java",
+    "world_emitter": "src/main/java/com/oliver/daedalon/client/model/obj/LanternSurfaceEmitter.java",
+    "focused_test": "src/test/java/com/oliver/daedalon/client/model/obj/LanternWorldUvTest.java",
+    "covered_world_components": ["pier body", "wall body", "hanging body", "half chain", "full chain", "ceiling canopy", "standalone chain cells"],
+    "suspension_route": "LanternMeshParts.emitWorldSuspension through LanternSurfaceEmitter after its half/full/canopy pose at the physical BlockPos",
+    "hanging_child_lead_material_index": "Retagged to the parent lead index after baking the hardware lead sprite; standalone hardware keeps its own index",
+    "old_obj_phase_applied_to_world_mapped_surfaces": false,
+    "world_or_support_queries_inside_face_loop": false,
+    "scratch_arrays_reused_within_emission_pass": true,
+    "clipping_lists_allocated_only_for_crossing_polygons": true
+  },
+  "verification_boundary": {
+    "source_and_pack_layout_inspection": "Verified read-only",
+    "focused_unit_coverage": "Six faces; negative and distant positions; repeat and plain seams; area; normals; actual opaque triangles from all three styles and suspension; current two sizes; three mounts; four horizontal facings",
+    "native_collection_and_shader_visual_acceptance": "Separate in-game validation required; this evidence does not claim live visual proof"
+  }
+}

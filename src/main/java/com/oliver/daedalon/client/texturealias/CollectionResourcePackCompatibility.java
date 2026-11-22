@@ -33,140 +33,116 @@ public final class CollectionResourcePackCompatibility {
     private static final String OWNER_MOD_ID = "daedalon";
     private static final int CURRENT_FAMILY_ASSET_GENERATION = 2;
     private static final Pattern FULL_SEMANTIC_VERSION =
-            Pattern.compile("[0-9]+\\.[0-9]+\\.[0-9]+");
-    private static final Pattern RELEASE_NUMBER =
-            Pattern.compile("(?<![0-9])(?:v)?[0-9]+\\.[0-9]+\\.[0-9]+(?![0-9])");
+            Pattern.compile("(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)");
+    private static final Pattern OFFICIAL_COLLECTION_NAME = Pattern.compile(
+            "erydoncollection(?:32x|64x)(?:compat[0-9]+)?(?:v?[0-9]+\\.[0-9]+\\.[0-9]+)?");
+    private static final Pattern OFFICIAL_LEGACY_NAME = Pattern.compile(
+            "(?:erydon(?:rp|family)?(?:16xlite|64xpbr)(?:v?[0-9]+\\.[0-9]+\\.[0-9]+)?"
+                    + "|erydonv?[0-9]+\\.[0-9]+\\.[0-9]+(?:16xlite|64xpbr|64xresourcepack(?:ctm)?))");
 
     private CollectionResourcePackCompatibility() {
     }
 
-    public static boolean shouldMarkTooOld(String profileId, String description) {
-        return shouldMarkTooOld(
-                profileId,
-                description,
-                currentCompatibilityGeneration()
-        );
-    }
+    public enum Reason {
+        NOT_COLLECTION, COMPATIBLE, MISSING_MARKER, UNREADABLE_MARKER, MALFORMED_MARKER,
+        UNSUPPORTED_SCHEMA, WRONG_ASSET_GENERATION, WRONG_FAMILY_GENERATION, INVALID_RELEASE, INVALID_RESOLUTION;
 
-    static boolean shouldMarkTooOld(
-            String profileId,
-            String description,
-            int expectedGeneration
-    ) {
-        return looksLikeOfficialCollectionPack(profileId, description)
-                && !declaresCompatibilityGeneration(
-                        profileId,
-                        description,
-                        expectedGeneration
-                );
-    }
-
-    public static ResourcePack disableIfLegacy(
-            String profileId,
-            String description,
-            ResourcePack pack
-    ) {
-        return disableIfLegacy(
-                profileId,
-                description,
-                pack,
-                currentCompatibilityGeneration()
-        );
-    }
-
-    static ResourcePack disableIfLegacy(
-            String profileId,
-            String description,
-            ResourcePack pack,
-            int expectedGeneration
-    ) {
-        if (!looksLikeOfficialCollectionPack(profileId, description)) {
-            return pack;
+        public String translationKey() {
+            return "message.erydon_family.pack.reason." + name().toLowerCase(Locale.ROOT);
         }
+    }
 
+    /** One immutable marker decision shared by the pack list, diagnostics and asset gate. */
+    public record Report(Reason reason, Integer assetGeneration, Integer familyGeneration,
+                         String release, Integer resolution) {
+        public boolean isCollection() { return reason != Reason.NOT_COLLECTION; }
+        public boolean compatible() { return reason == Reason.COMPATIBLE; }
+        public boolean rejected() { return isCollection() && !compatible(); }
+    }
+
+    public static Report inspect(String profileId, String description, ResourcePack pack) {
+        return inspect(profileId, description, pack, currentCompatibilityGeneration());
+    }
+
+    static Report inspect(String profileId, String description, ResourcePack pack, int expectedGeneration) {
+        boolean namedCollection = looksLikeOfficialCollectionPack(profileId, description);
+        boolean identifiedCollection = namedCollection;
         try {
-            if (hasCurrentMarker(pack, expectedGeneration)) {
-                return pack;
+            InputSupplier<InputStream> supplier = pack.open(ResourceType.CLIENT_RESOURCES, COLLECTION_MARKER_ID);
+            if (supplier == null) return report(namedCollection ? Reason.MISSING_MARKER : Reason.NOT_COLLECTION);
+            identifiedCollection = true;
+            // A marker identifies a renamed official pack too; filenames never establish compatibility.
+            try (InputStream input = supplier.get();
+                 InputStreamReader reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+                JsonObject marker = JsonParser.parseReader(reader).getAsJsonObject();
+                Integer schema = integer(marker, "schema");
+                Integer assets = integer(marker, "family_asset_generation");
+                Integer family = integer(marker, "family_compatibility_generation");
+                Integer resolution = integer(marker, "resolution");
+                String release = marker.has("release") && marker.get("release").isJsonPrimitive()
+                        && marker.getAsJsonPrimitive("release").isString() ? marker.get("release").getAsString() : null;
+                Reason reason;
+                if (schema == null || assets == null || family == null) reason = Reason.MALFORMED_MARKER;
+                else if (schema != 1) reason = Reason.UNSUPPORTED_SCHEMA;
+                else if (assets != CURRENT_FAMILY_ASSET_GENERATION) reason = Reason.WRONG_ASSET_GENERATION;
+                else if (family != expectedGeneration) reason = Reason.WRONG_FAMILY_GENERATION;
+                else if (release == null || !FULL_SEMANTIC_VERSION.matcher(release).matches()) reason = Reason.INVALID_RELEASE;
+                else if (resolution == null || resolution != 32 && resolution != 64) reason = Reason.INVALID_RESOLUTION;
+                else reason = Reason.COMPATIBLE;
+                return new Report(reason, assets, family, release, resolution);
+            } catch (RuntimeException exception) {
+                return report(Reason.MALFORMED_MARKER);
             }
         } catch (IOException | RuntimeException exception) {
-            LOGGER.warn("Could not read the ERYDON Collection compatibility marker from '{}'.",
-                    profileId, exception);
+            return report(identifiedCollection ? Reason.UNREADABLE_MARKER : Reason.NOT_COLLECTION);
         }
+    }
 
-        LOGGER.warn("Ignoring assets from incompatible ERYDON Collection pack '{}'.",
-                profileId);
+    /** A raw profile factory can fail before it supplies a resource pack. */
+    public static Report unavailable(String profileId, String description) {
+        return report(looksLikeOfficialCollectionPack(profileId, description)
+                ? Reason.UNREADABLE_MARKER : Reason.NOT_COLLECTION);
+    }
+
+    private static Report report(Reason reason) { return new Report(reason, null, null, null, null); }
+
+    private static Integer integer(JsonObject marker, String key) {
+        if (!marker.has(key) || !marker.get(key).isJsonPrimitive()
+                || !marker.getAsJsonPrimitive(key).isNumber()) return null;
+        try {
+            return marker.get(key).getAsBigDecimal().toBigIntegerExact().intValueExact();
+        } catch (ArithmeticException | NumberFormatException exception) {
+            return null;
+        }
+    }
+
+    public static ResourcePack disableIfLegacy(String profileId, String description, ResourcePack pack) {
+        return disableIfLegacy(profileId, description, pack, currentCompatibilityGeneration());
+    }
+
+    static ResourcePack disableIfLegacy(String profileId, String description, ResourcePack pack, int expectedGeneration) {
+        return disableIfLegacy(profileId, pack, inspect(profileId, description, pack, expectedGeneration));
+    }
+
+    /** Apply the already inspected decision so asset loading and profile diagnostics cannot disagree. */
+    public static ResourcePack disableIfLegacy(String profileId, ResourcePack pack, Report status) {
+        if (!status.rejected()) return pack;
+        LOGGER.warn("Ignoring assets from incompatible ERYDON Collection pack '{}': {}.", profileId, status.reason());
         return new DisabledIncompatibleCollectionPack(pack);
     }
 
-    static boolean looksLikeOfficialCollectionPack(String profileId, String description) {
-        String signal = (profileId + " " + description).toLowerCase(Locale.ROOT);
-        if (!signal.contains("erydon")) {
-            return false;
-        }
-
-        String compact = signal.replaceAll("[^a-z0-9]+", "");
-        boolean knownFamilyName = signal.contains("erydon collection 32x")
-                || signal.contains("erydon collection 64x")
-                || signal.contains("erydon family") && (
-                signal.contains("16x lite") || signal.contains("64x pbr"))
-                || compact.contains("erydoncollection32x")
-                || compact.contains("erydoncollection64x")
-                || compact.contains("erydonrp16xlite")
-                || compact.contains("erydonrp64xpbr");
-        boolean versionedOfficialShape = signal.contains("erydon")
-                && RELEASE_NUMBER.matcher(signal).find()
-                && (signal.contains("16x lite")
-                || signal.contains("32x")
-                || signal.contains("64x pbr")
-                || signal.contains("64x resource pack")
-                || compact.contains("16xlite")
-                || compact.contains("32x")
-                || compact.contains("64xpbr")
-                || compact.contains("64xrp"));
-        return knownFamilyName || versionedOfficialShape;
+    public static boolean looksLikeOfficialCollectionPack(String profileId, String description) {
+        // Recognize complete official titles, never arbitrary mentions of ERYDON/resolution/version.
+        // In particular, a small "ERYDON-Stone-Fix-32x-v1.0.0" override is not an official pack.
+        int separator = Math.max(profileId.lastIndexOf('/'), profileId.lastIndexOf('\\'));
+        return isOfficialTitle(profileId.substring(separator + 1)) || isOfficialTitle(description);
     }
 
-    private static boolean declaresCompatibilityGeneration(
-            String profileId,
-            String description,
-            int expectedGeneration
-    ) {
-        String signal = (profileId + " " + description).toLowerCase(Locale.ROOT);
-        Pattern expected = Pattern.compile(
-                "(?<![a-z0-9])compat" + expectedGeneration + "(?![0-9])"
-        );
-        return expected.matcher(signal).find();
-    }
-
-    private static boolean hasCurrentMarker(
-            ResourcePack pack,
-            int expectedGeneration
-    ) throws IOException {
-        InputSupplier<InputStream> supplier =
-                pack.open(ResourceType.CLIENT_RESOURCES, COLLECTION_MARKER_ID);
-        if (supplier == null) {
-            return false;
-        }
-
-        try (InputStream input = supplier.get();
-             InputStreamReader reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
-            JsonObject marker = JsonParser.parseReader(reader).getAsJsonObject();
-            return marker.has("schema")
-                    && marker.get("schema").getAsInt() == 1
-                    && marker.has("family_asset_generation")
-                    && marker.get("family_asset_generation").getAsInt()
-                    == CURRENT_FAMILY_ASSET_GENERATION
-                    && marker.has("family_compatibility_generation")
-                    && marker.get("family_compatibility_generation").getAsInt()
-                    == expectedGeneration
-                    && marker.has("release")
-                    && FULL_SEMANTIC_VERSION.matcher(
-                            marker.get("release").getAsString()
-                    ).matches()
-                    && marker.has("resolution")
-                    && (marker.get("resolution").getAsInt() == 32
-                    || marker.get("resolution").getAsInt() == 64);
-        }
+    private static boolean isOfficialTitle(String value) {
+        String compact = value.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9.]", "");
+        if (compact.endsWith(".zip")) compact = compact.substring(0, compact.length() - 4);
+        return OFFICIAL_COLLECTION_NAME.matcher(compact).matches()
+                || OFFICIAL_LEGACY_NAME.matcher(compact).matches();
     }
 
     private static int currentCompatibilityGeneration() {

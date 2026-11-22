@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "#daedalon:georgian_corbel",
+    "#daedalon:georgian_lantern",
+    "#daedalon:georgian_wall_panel",
     "#daedalon:georgian_fountain_basin"
   ]
 }

@@ -4,9 +4,11 @@ import org.junit.jupiter.api.Test;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CapitalOrientation;
 import com.oliver.daedalon.block.DecorOrientation;
+import com.oliver.daedalon.block.HedraOrientation;
 import com.oliver.daedalon.block.FriezeBlock;
 import com.oliver.daedalon.block.FountainBowlModel;
 import com.oliver.daedalon.block.UrnBlock;
+import com.oliver.daedalon.block.LanternBlock;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -87,6 +89,12 @@ final class DaedalonDebugPropertiesTest {
     }
 
     @Test void actualSizeRotationJoinAndNumericValuesFollowOnePredictableOrder() {
+        var hedraOrientation = EnumProperty.of("orientation", HedraOrientation.class);
+        assertEquals(List.of(HedraOrientation.STRAIGHT, HedraOrientation.DIAGONAL,
+                        HedraOrientation.STRAIGHT_90, HedraOrientation.DIAGONAL_135),
+                DaedalonDebugProperties.orderedValues(hedraOrientation));
+        assertSame(hedraOrientation, DaedalonDebugProperties.remembered(
+                List.of(IntProperty.of("width", 2, 4), hedraOrientation), "facing"));
         assertEquals(List.of(UrnBlock.UrnSize.SMALL, UrnBlock.UrnSize.MEDIUM, UrnBlock.UrnSize.LARGE),
                 DaedalonDebugProperties.orderedValues(EnumProperty.of("size", UrnBlock.UrnSize.class)));
         assertEquals(List.of(CapitalBlock.Size.STANDARD, CapitalBlock.Size.DOUBLE),
@@ -128,6 +136,18 @@ final class DaedalonDebugPropertiesTest {
                 new String("removed_control"), false, false));
         assertEquals("raised_base", DaedalonDebugProperties.selectControl(DaedalonDebugProperties.fountainControls(true),
                 new String("basin_size"), false, false));
+    }
+
+    @Test void lanternMountAndLightHaveStablePlayerCycles() {
+        var size=EnumProperty.of("size",LanternBlock.Size.class);
+        var mount=EnumProperty.of("mount",LanternBlock.Mount.class);
+        var light=EnumProperty.of("light",LanternBlock.Light.class);
+        assertEquals(List.of("size","mount","facing","light"),
+                DaedalonDebugProperties.ordered(List.of(light,FACING,mount,size)).stream().map(Property::getName).toList());
+        assertEquals(List.of(LanternBlock.Mount.PIER,LanternBlock.Mount.WALL,LanternBlock.Mount.HANGING),DaedalonDebugProperties.orderedValues(mount));
+        assertEquals(List.of(LanternBlock.Light.LOW,LanternBlock.Light.BRIGHT,LanternBlock.Light.OFF),DaedalonDebugProperties.orderedValues(light));
+        assertEquals(15,LanternBlock.Brightness.FULL.lightLevel);
+        assertEquals(10,LanternBlock.Brightness.LOW.lightLevel);
     }
 
     private enum Numbered implements StringIdentifiable {

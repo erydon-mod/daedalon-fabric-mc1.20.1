@@ -1,9 +1,12 @@
 package com.oliver.daedalon.registry;
 
+import com.oliver.daedalon.block.LouterionBasinBlock;
+import com.oliver.daedalon.item.LouterionBasinItem;
 import com.oliver.daedalon.item.OlympianGodItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -28,11 +31,14 @@ public final class ModItems {
     }
 
     static Item registerBlockItem(Identifier id, Block block) {
-        Item item = Registry.register(
-                Registries.ITEM,
-                id,
-                new BlockItem(block, new Item.Settings())
-        );
+        Item.Settings settings = new Item.Settings();
+        return registerBlockItem(id, block instanceof LouterionBasinBlock basin
+                ? new LouterionBasinItem(basin, settings) : new BlockItem(block, settings));
+    }
+
+    /** Shared registration for block items with their own interaction or tooltip. */
+    public static BlockItem registerBlockItem(Identifier id, BlockItem item) {
+        Registry.register(Registries.ITEM, id, item);
         BLOCK_ITEMS.add(item);
         CATALOGUE_ITEMS.add(item);
         return item;
@@ -45,6 +51,11 @@ public final class ModItems {
     /** Block items plus placement selectors, in their registration order. */
     public static List<Item> catalogueItems() {
         return Collections.unmodifiableList(CATALOGUE_ITEMS);
+    }
+
+    public static List<ItemStack> catalogueStacks(Item item) {
+        ItemStack normal = item.getDefaultStack();
+        return item instanceof LouterionBasinItem basin ? List.of(normal, basin.largeStack()) : List.of(normal);
     }
 
     public static List<Item> olympianGodItems() {

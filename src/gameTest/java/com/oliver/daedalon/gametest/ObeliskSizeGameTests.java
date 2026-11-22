@@ -1,6 +1,8 @@
 package com.oliver.daedalon.gametest;
 
 import com.oliver.daedalon.block.DecorAssemblySelection;
+import com.oliver.daedalon.block.DecorPreviewBounds;
+import com.oliver.daedalon.block.DecorShapeTransforms;
 import com.oliver.daedalon.block.ObeliskPartBlock;
 import com.oliver.daedalon.block.ObeliskPartsGeometry;
 import com.oliver.daedalon.block.SizedDecorBlock;
@@ -23,6 +25,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.Hand;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -41,7 +45,7 @@ public final class ObeliskSizeGameTests {
             if (!(block instanceof SizedDecorBlock)) continue;
             context.assertTrue(block.getDefaultState().get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.MEDIUM,
                     "Obelisks must default to the three-block Medium size");
-            context.assertTrue(block.getStateManager().getStates().size() == 3, "Every finish needs exactly three sizes");
+            context.assertTrue(block.getStateManager().getStates().size() == 24, "Every finish needs three sizes, two offsets and four directions");
             var saved = NbtHelper.fromBlockState(block.getDefaultState());
             saved.getCompound("Properties").putString("size", "extra_large");
             var migrated = NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), saved);
@@ -208,6 +212,139 @@ public final class ObeliskSizeGameTests {
         context.complete();
     }
 
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void alcoveOffsetMatchesPlinthDistanceAndLargeCellsFollowEveryDirection(TestContext context) {
+        ServerWorld world = context.getWorld();
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(3, 2, 3));
+        SizedDecorBlock block = requireObelisk("aganite_obeliskos_monument");
+        for (var size : SizedDecorBlock.Size.values()) for (Direction facing : Direction.Type.HORIZONTAL) {
+            BlockState state = block.getDefaultState().with(SizedDecorBlock.SIZE, size)
+                    .with(SizedDecorBlock.OFFSET, true).with(SizedDecorBlock.FACING, facing);
+            var centred = SizedDecorBlock.fullShape(size).getBoundingBox();
+            var moved = SizedDecorBlock.fullShape(state).getBoundingBox();
+            double distance = DecorShapeTransforms.OFFSET_DISTANCE;
+            context.assertTrue(Math.abs(moved.minX - centred.minX - facing.getOffsetX() * distance) < 1e-9
+                            && Math.abs(moved.minZ - centred.minZ - facing.getOffsetZ() * distance) < 1e-9
+                            && moved.minY == centred.minY && moved.maxY == centred.maxY,
+                    "Every size must use the same horizontal alcove offset as statues and plinths without changing height");
+            context.assertTrue(DecorPreviewBounds.bounds(state).equals(moved), "Axiom's preview must include the full displaced monument");
+            context.assertTrue(state.rotate(BlockRotation.CLOCKWISE_90).get(SizedDecorBlock.FACING) == facing.rotateYClockwise()
+                            && state.mirror(BlockMirror.LEFT_RIGHT).get(SizedDecorBlock.FACING)
+                            == (facing.getAxis() == Direction.Axis.Z ? facing.getOpposite() : facing),
+                    "Rotation and mirroring must carry the offset direction");
+            context.assertTrue(NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), NbtHelper.fromBlockState(state)) == state,
+                    "Saved offset/size/facing must round-trip exactly");
+            clear(world, anchor);
+            world.setBlockState(anchor, state, Block.NOTIFY_ALL);
+            if (size != SizedDecorBlock.Size.LARGE) continue;
+            context.assertTrue(DecorAssemblySelection.cells(world, anchor).size() == 30,
+                    "Large alcove placement must reserve only its thirty occupied cells");
+            double volume = 0;
+            for (BlockPos offset : ObeliskPartsGeometry.offsets()) {
+                BlockPos pos = anchor.add(offset);
+                BlockState found = world.getBlockState(pos);
+                var collision = ObeliskPartsGeometry.collision(state, offset.getX(), offset.getY(), offset.getZ());
+                if (collision.isEmpty()) {
+                    context.assertTrue(found.isAir(), "Offset must leave unoccupied alcove cells free");
+                    continue;
+                }
+                context.assertTrue(pos.equals(anchor) || ObeliskPartBlock.isOwnedBy(found, pos, anchor),
+                        "Every displaced collision cell must belong to the one owner");
+                context.assertTrue(found.getCollisionShape(world, pos) == collision,
+                        "Owner and helpers must reuse the correct directional collision cache");
+                var box = collision.getBoundingBox();
+                context.assertTrue(box.minX >= 0 && box.maxX <= 1 && box.minZ >= 0 && box.maxZ <= 1,
+                        "Displaced collision must stay local to its actual helper cell");
+                volume += box.getXLength() * box.getYLength() * box.getZLength();
+            }
+            context.assertTrue(Math.abs(volume - moved.getXLength() * moved.getZLength() * 5) < 1e-9,
+                    "The shifted helper cells must cover the whole mesh footprint exactly once");
+        }
+        clear(world, anchor);
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void blockedOffsetDirectionPreservesNeighboursAndSuccessfulEditsRestoreOldWetCells(TestContext context) {
+        ServerWorld world = context.getWorld();
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(3, 2, 3));
+        clear(world, anchor);
+        BlockPos wet = anchor.add(-1, 0, -1);
+        world.setBlockState(wet, Blocks.WATER.getDefaultState(), Block.NOTIFY_ALL);
+        BlockState north = requireObelisk("aganite_obeliskos_monument").getDefaultState()
+                .with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.LARGE).with(SizedDecorBlock.OFFSET, true)
+                .with(SizedDecorBlock.FACING, Direction.NORTH);
+        world.setBlockState(anchor, north, Block.NOTIFY_ALL);
+        ServerPlayerEntity player = operator(context);
+        player.setStackInHand(Hand.MAIN_HAND, Items.DEBUG_STICK.getDefaultStack());
+        BlockPos obstruction = anchor.add(0, 4, 1);
+        world.setBlockState(obstruction, Blocks.STONE.getDefaultState(), Block.NOTIFY_ALL);
+        editControl(player, anchor, "facing");
+        context.assertTrue(world.getBlockState(anchor) == north && world.getBlockState(obstruction).isOf(Blocks.STONE),
+                "A blocked direction edit must preserve the old state and all neighbouring construction");
+        world.setBlockState(obstruction, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+        editControl(player, anchor, "facing");
+        BlockState east = world.getBlockState(anchor);
+        context.assertTrue(east.isOf(north.getBlock()) && east.get(SizedDecorBlock.FACING) == Direction.EAST
+                        && east.get(SizedDecorBlock.OFFSET) && DecorAssemblySelection.cells(world, anchor).size() == 30,
+                "A clear direction edit must move the complete thirty-cell assembly without breaking its owner");
+        context.assertTrue(world.getBlockState(wet).isOf(Blocks.WATER), "Vacated wet edge cells must restore their water");
+        for (BlockPos offset : ObeliskPartsGeometry.offsets()) {
+            if (ObeliskPartsGeometry.contains(east, offset)) continue;
+            context.assertTrue(!(world.getBlockState(anchor.add(offset)).getBlock() instanceof ObeliskPartBlock),
+                    "Moving an offset must not leave old helper cells behind");
+        }
+        editControl(player, anchor, "offset");
+        context.assertTrue(!world.getBlockState(anchor).get(SizedDecorBlock.OFFSET)
+                        && DecorAssemblySelection.cells(world, anchor).size() == 45,
+                "Turning offset off must rebuild the complete centred footprint");
+        editSize(player, anchor);
+        context.assertTrue(world.getBlockState(anchor).get(SizedDecorBlock.SIZE) == SizedDecorBlock.Size.SMALL,
+                "Shrinking must retain the selected size and clear every no-longer-needed helper");
+        for (BlockPos offset : ObeliskPartsGeometry.offsets()) context.assertTrue(
+                !(world.getBlockState(anchor.add(offset)).getBlock() instanceof ObeliskPartBlock),
+                "Shrinking must remove all owned helper cells");
+        clear(world, anchor);
+        context.complete();
+    }
+
+    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
+    public void centringOffsetClearsWaterOnlyFromRetainedCellsThatBecomeSolid(TestContext context) {
+        ServerWorld world = context.getWorld();
+        BlockPos anchor = context.getAbsolutePos(new BlockPos(3, 2, 3));
+        ServerPlayerEntity player = operator(context);
+        player.setStackInHand(Hand.MAIN_HAND, Items.DEBUG_STICK.getDefaultStack());
+        for (Direction facing : Direction.Type.HORIZONTAL) {
+            clear(world, anchor);
+            BlockPos central = anchor.up(2);
+            BlockPos edge = central.offset(facing);
+            world.setBlockState(central, Blocks.WATER.getDefaultState(), Block.NOTIFY_ALL);
+            world.setBlockState(edge, Blocks.WATER.getDefaultState(), Block.NOTIFY_ALL);
+            BlockState offset = requireObelisk("aganite_obeliskos_monument").getDefaultState()
+                    .with(SizedDecorBlock.SIZE, SizedDecorBlock.Size.LARGE).with(SizedDecorBlock.OFFSET, true)
+                    .with(SizedDecorBlock.FACING, facing);
+            world.setBlockState(anchor, offset, Block.NOTIFY_ALL);
+            context.assertTrue(world.getBlockState(central).get(ObeliskPartBlock.WATERLOGGED)
+                            && world.getBlockState(edge).get(ObeliskPartBlock.WATERLOGGED),
+                    "The offset footprint must preserve water in both partial helper cells");
+            editControl(player, anchor, "offset");
+            context.assertTrue(world.getBlockState(anchor) == offset.with(SizedDecorBlock.OFFSET, false),
+                    "Water normalization must not break or alter the centred monument");
+            context.assertTrue(ObeliskPartBlock.isOwnedBy(world.getBlockState(central), central, anchor)
+                            && !world.getBlockState(central).get(ObeliskPartBlock.WATERLOGGED)
+                            && world.getFluidState(central).isEmpty(),
+                    "A retained helper that becomes completely solid must lose its water");
+            context.assertTrue(ObeliskPartBlock.isOwnedBy(world.getBlockState(edge), edge, anchor)
+                            && world.getBlockState(edge).get(ObeliskPartBlock.WATERLOGGED),
+                    "A retained partial edge must keep its surrounding water");
+            world.breakBlock(anchor, false);
+            context.assertTrue(world.getBlockState(central).isAir() && world.getBlockState(edge).isOf(Blocks.WATER),
+                    "Removal must restore retained edge water without creating water in the solid column");
+        }
+        clear(world, anchor);
+        context.complete();
+    }
+
     private static SizedDecorBlock requireObelisk(String path) {
         return (SizedDecorBlock) ModBlocks.blocksById().get(new net.minecraft.util.Identifier("daedalon", path));
     }
@@ -218,7 +355,10 @@ public final class ObeliskSizeGameTests {
         return player;
     }
     private static void editSize(ServerPlayerEntity player, BlockPos pos) {
-        player.getMainHandStack().getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT, "size");
+        editControl(player, pos, "size");
+    }
+    private static void editControl(ServerPlayerEntity player, BlockPos pos, String name) {
+        player.getMainHandStack().getOrCreateNbt().putString(DaedalonDebugProperties.REMEMBERED_PROPERTY_NBT, name);
         Items.DEBUG_STICK.useOnBlock(new ItemUsageContext(player, Hand.MAIN_HAND,
                 new BlockHitResult(Vec3d.ofCenter(pos), Direction.UP, pos, false)));
     }

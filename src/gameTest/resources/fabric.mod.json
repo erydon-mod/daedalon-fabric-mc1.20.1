@@ -7,9 +7,11 @@
   "entrypoints": {
     "main": [
       "com.oliver.daedalon.gametest.LargeColumnFixture",
-      "com.oliver.daedalon.gametest.FinialCopingFixture"
+      "com.oliver.daedalon.gametest.FinialCopingFixture",
+      "com.oliver.daedalon.gametest.LanternLayerFixture"
     ],
     "fabric-gametest": [
+      "com.oliver.daedalon.gametest.GlauxGameTests",
       "com.oliver.daedalon.gametest.OlympianCompletionGameTests",
       "com.oliver.daedalon.gametest.OlympianGodItemGameTests",
       "com.oliver.daedalon.gametest.ObeliskSizeGameTests",
@@ -31,7 +33,8 @@
       "com.oliver.daedalon.gametest.IonicFriezeGameTests",
       "com.oliver.daedalon.gametest.GothicFriezeGameTests",
       "com.oliver.daedalon.gametest.ByzantineFriezeGameTests",
-      "com.oliver.daedalon.gametest.PanelGameTests"
+      "com.oliver.daedalon.gametest.PanelGameTests",
+      "com.oliver.daedalon.gametest.LanternGameTests"
     ]
   },
   "depends": {

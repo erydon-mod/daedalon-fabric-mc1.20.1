@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=north,half=lower": {
+      "model": "daedalon:block/glaux/glaux_body_lower"
+    },
+    "facing=north,half=upper": {
+      "model": "daedalon:block/glaux/glaux_body_upper"
+    },
+    "facing=east,half=lower": {
+      "model": "daedalon:block/glaux/glaux_body_lower"
+    },
+    "facing=east,half=upper": {
+      "model": "daedalon:block/glaux/glaux_body_upper"
+    },
+    "facing=south,half=lower": {
+      "model": "daedalon:block/glaux/glaux_body_lower"
+    },
+    "facing=south,half=upper": {
+      "model": "daedalon:block/glaux/glaux_body_upper"
+    },
+    "facing=west,half=lower": {
+      "model": "daedalon:block/glaux/glaux_body_lower"
+    },
+    "facing=west,half=upper": {
+      "model": "daedalon:block/glaux/glaux_body_upper"
+    }
+  }
+}

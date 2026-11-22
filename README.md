@@ -5,7 +5,7 @@
 ERYDON Daedalon is ERYDON's standalone collection of detailed OBJ decor for
 Minecraft 1.20.1.
 
-Version 1.0.0 uses native 16x textures. The unified ERYDON Collection 32x and
+Daedalon uses native 16x textures. The unified ERYDON Collection 32x and
 64x resource packs support Daedalon, ERYDON, and ERYDON Themelios together.
 Daedalon does not require or bundle Continuity: its detailed OBJ models already
 use a built-in world-aligned repeat-phase renderer.
@@ -15,9 +15,8 @@ also install a compatible Indium release so Daedalon's models can render.
 Without Sodium, Fabric API's bundled renderer provides that support.
 
 This repository is source-available under Oliver's restricted licence. It is
-not open-source software; see `LICENSE`. Third-party asset credits are retained
-under `src/main/resources/META-INF/THIRD_PARTY_NOTICES.md`. Build-tool licences
-and attributions for the source repository are listed in
+not open-source software; see `LICENSE`. Build-tool licences and branding
+attributions for the source repository are listed in
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Fountain droplets
@@ -34,8 +33,8 @@ Dome-breaking particles are disabled.
 
 Creative search, REI, JEI and EMI share Daedalon's material, style and shape
 keywords. For example, search for `vase`, `sculpture`, `bench`, `pedestal`,
-`column capital`, `marble` or `weathered`; German and Spanish keywords work
-alongside English. Fountain searches include stone plinths that can build
+`column capital`, `marble` or `weathered`; German, Spanish, French and Japanese
+keywords work alongside English. Fountain searches include stone plinths that can build
 tiered fountains; decorative metal plinths remain outside that group.
 
 Matching block and item tags also support tools and browser tag searches.
@@ -46,7 +45,7 @@ ordinary search works before joining a server. REI, JEI and EMI are optional.
 
 ## Development validation
 
-The current publication checkpoint is recorded in
+The initial publication checkpoint is recorded in
 [the Daedalon 1.0.0 audit](docs/PREPUBLICATION_AUDIT.md).
 
 Daedalon requires Java 17 and Python 3.13. Run the complete compilation, test,

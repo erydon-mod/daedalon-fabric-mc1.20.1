@@ -31,6 +31,20 @@ final class DaedalonSearchIndexTest {
             """));
 
     @Test
+    void glauxIsSearchableAsOneBronzeStatueWithoutInventedFinishes() throws Exception {
+        try (var input = getClass().getResourceAsStream("/assets/daedalon/search_vocabulary.json")) {
+            assertNotNull(input);
+            var bundled = DaedalonSearchIndex.read(new InputStreamReader(input, StandardCharsets.UTF_8));
+            assertEquals(new DaedalonSearchIndex.Entry("bronze", "glaux", false), bundled.entry("glaux"));
+            assertEquals("statues", DaedalonCatalogue.form("glaux"));
+            assertTrue(bundled.terms("glaux").containsAll(List.of("bronze", "owl", "oracle", "assistant", "statue")));
+            assertFalse(bundled.isStandardStone("glaux"));
+            for (String invented : List.of("bronze_glaux", "silver_glaux", "glacium_glaux", "bronze_aged_glaux", "glaux_small"))
+                assertTrue(bundled.terms(invented).isEmpty(), invented);
+        }
+    }
+
+    @Test
     void stoneDecorCombinesMaterialAndPracticalFamilyTerms() {
         List<String> terms = INDEX.terms("aganite_exedra");
         assertTrue(terms.containsAll(List.of("daedalon", "aganite", "gemstone", "agate", "bench", "seat")));
@@ -207,6 +221,31 @@ final class DaedalonSearchIndexTest {
                     assertFalse(terms.contains("daedalon blocks"), path);
                 }
             }
+        }
+    }
+
+    @Test
+    void plainBlackFriezesKeepTheirDesignSearchWithoutClaimingStoneFinishControls() throws Exception {
+        try (var input = getClass().getResourceAsStream("/assets/daedalon/search_vocabulary.json")) {
+            assertNotNull(input);
+            var bundled = DaedalonSearchIndex.read(new InputStreamReader(input, StandardCharsets.UTF_8));
+            for (String family : List.of("byzantine_frieze", "gothic_frieze", "corinthian_frieze", "ionic_frieze")) {
+                String path = "black_" + family;
+                var entry = bundled.entry(path);
+                assertNotNull(entry, path);
+                assertEquals(family, entry.family());
+                assertEquals("black", entry.material());
+                assertFalse(entry.aged());
+                assertFalse(bundled.isStandardStone(path));
+                List<String> terms = bundled.terms(path);
+                assertTrue(terms.containsAll(List.of("black", "frieze", "entablature", "wall relief")), path);
+                for (String unavailable : List.of("metal", "metallic", "aged", "weathered", "honed", "polished", "ganosis", "mirror")) {
+                    assertFalse(terms.contains(unavailable), path + ": " + unavailable);
+                }
+            }
+            assertTrue(bundled.terms("black_byzantine_frieze").containsAll(List.of("byzantine", "guilloche")));
+            assertTrue(bundled.terms("black_gothic_frieze").containsAll(List.of("gothic", "quatrefoil", "tracery", "lancet")));
+            assertFalse(bundled.terms("black_gothic_frieze").contains("gothic ornate"));
         }
     }
 }

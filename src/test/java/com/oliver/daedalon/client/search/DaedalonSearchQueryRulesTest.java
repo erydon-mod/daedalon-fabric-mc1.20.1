@@ -10,13 +10,49 @@ import static org.junit.jupiter.api.Assertions.*;
 final class DaedalonSearchQueryRulesTest {
     @Test
     void plainBlockTermsDoNotClaimSpecificNamesTagsIdsOrRegexes() {
-        for (String term : List.of("block", "BLOCKS", " full block ", "full blocks", "Blöcke", "bloques")) {
+        for (String term : List.of("block", "BLOCKS", " full block ", "full blocks", "Blöcke", "bloques",
+                "bloc", "BLOCS", " ブロック ")) {
             assertTrue(DaedalonSearchQueryRules.isGenericBlockTerm(term), term);
         }
         for (String term : List.of("blocky", "block bench", "daedalon_blocks", "#block", "$block",
                 "@block", "&block", "/block/", "daedalon:aganite_exedra", "byzantine capital")) {
             assertFalse(DaedalonSearchQueryRules.isGenericBlockTerm(term), term);
         }
+    }
+
+    @Test
+    void frenchAndJapanesePlainBlockTermsPreserveNativeExplicitAndNegatedSearches() {
+        Object decor = new Object();
+        Object foreignBlock = new Object();
+        Set<Object> cached = Set.of(decor, foreignBlock);
+        for (String term : List.of("bloc", "blocs", "ブロック")) {
+            // These nouns occur in the bundled French/Japanese placement text.
+            boolean generic = DaedalonSearchQueryRules.isGenericBlockTerm(term);
+            assertTrue(generic, term);
+            var positive = new CachedReiArgument(generic, true);
+            var negative = new CachedReiArgument(generic, false);
+            assertEquals(false, DaedalonSearchQueryRules.reiPlainBlockResult(List.of(positive), true), term);
+            assertEquals(true, DaedalonSearchQueryRules.reiPlainBlockResult(List.of(negative), true), term);
+            assertNull(DaedalonSearchQueryRules.reiPlainBlockResult(List.of(positive), false), term);
+
+            assertEquals(Set.of(foreignBlock), DaedalonSearchQueryRules.jeiPlainBlockResults(
+                    term, true, cached, item -> item == decor), term);
+            assertEquals(Set.of(decor, foreignBlock), cached, "The native search cache must remain intact");
+            assertSame(cached, DaedalonSearchQueryRules.jeiPlainBlockResults(
+                    term, false, cached, item -> item == decor), term);
+
+            DaedalonSearchQueryRules.beginEmiToken('"' + term + '"');
+            assertTrue(DaedalonSearchQueryRules.consumeEmiBlockToken(), term);
+            assertFalse(DaedalonSearchQueryRules.consumeEmiBlockToken(), "Consume each parsed token once");
+            for (String explicit : List.of('#' + term, '$' + term, '@' + term, '&' + term,
+                    '/' + term + '/', '-' + term, term + " bench", "daedalon:" + term)) {
+                assertFalse(DaedalonSearchQueryRules.isGenericBlockTerm(explicit), explicit);
+                DaedalonSearchQueryRules.beginEmiToken(explicit);
+                assertFalse(DaedalonSearchQueryRules.consumeEmiBlockToken(), explicit);
+            }
+        }
+        assertFalse(DaedalonSearchQueryRules.isGenericBlockTerm("bloc-notes"));
+        assertFalse(DaedalonSearchQueryRules.isGenericBlockTerm("ブロック彫刻"));
     }
 
     @Test

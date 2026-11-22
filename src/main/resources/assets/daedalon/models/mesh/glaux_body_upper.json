@@ -1,0 +1,25 @@
+{
+  "obj": "daedalon:models/mesh/glaux_body_upper.obj",
+  "flip_v": true,
+  "repair_degenerate_uvs": false,
+  "force_uv_projection": false,
+  "uv_projection": "axis_stabilized_box",
+  "box_projection_span": 2.000001,
+  "face_oriented_uvs": true,
+  "smooth_normals": false,
+  "fit_to_block": false,
+  "scale": [
+    1,
+    1,
+    1
+  ],
+  "translate": [
+    0,
+    0,
+    0
+  ],
+  "particle": "daedalon:block/bronze",
+  "materials": {
+    "bronze": "daedalon:block/bronze"
+  }
+}

@@ -67,7 +67,8 @@ public final class FountainAssemblyPlacement {
             return pos.toImmutable();
         }
         if (state.getBlock() instanceof FountainBasinPartBlock) {
-            return FountainBasinPartBlock.resolveAnchorPos(world, pos, state);
+            BlockPos anchor = FountainBasinPartBlock.resolveAnchorPos(world, pos, state);
+            if (anchor != null && world.getBlockState(anchor).getBlock() instanceof FountainBasinBlock) return anchor;
         }
         return null;
     }

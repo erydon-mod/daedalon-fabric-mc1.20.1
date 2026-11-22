@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +33,14 @@ final class DaedalonGroupRepresentativeTest {
             assertNotNull(entry, path);
             designs.computeIfAbsent(entry.family(), ignored -> new ArrayList<>()).add(path);
         }
-        assertEquals(85, designs.size());
+        assertEquals(index.families().size(), designs.size(), "Every indexed design must be represented");
         for (var design : designs.entrySet()) {
             List<String> source = List.copyOf(design.getValue());
+            if (design.getKey().equals("glaux")) {
+                assertEquals(List.of("glaux"), source, "The oracle has one fixed bronze entry");
+                assertEquals("bronze", index.entry("glaux").material());
+                continue;
+            }
             List<String> preferred = source.stream().filter(path -> {
                 var entry = index.entry(path);
                 return entry.material().equals("glacium") && !entry.aged();
@@ -58,7 +64,7 @@ final class DaedalonGroupRepresentativeTest {
             }
         }
         assertEquals(originalRegistryOrder, registryOrder);
-        assertEquals(4734, registryOrder.size());
+        assertEquals(registryOrder.size(), new HashSet<>(registryOrder).size(), "Catalogue IDs must be unique");
     }
 
     @Test

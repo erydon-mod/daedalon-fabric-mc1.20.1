@@ -125,14 +125,16 @@ MESH_EXPECTATIONS = {
         "obj": "urn_diota.obj",
         "mtl": "urn_diota.mtl",
         "display": "urn_diota_display.json",
-        "vertices": 1983,
-        "uvs": 7912,
-        "normals": 1991,
-        "faces": 1991,
-        "face_sizes": {3, 4},
-        "face_index_styles": {"v/vt/vn"},
-        "obj_sha256": "056f640c64745f69ab144c77cf196234016df40bde1c44e0afb311b48eb45c01",
-        "mtl_sha256": "a81950d4f4e5e154e0d361ad7a01c75dfa25dab38e2de43657df0bad6672ad28",
+        "vertices": 2994,
+        "uvs": 0,
+        "normals": 12160,
+        "faces": 5948,
+        "face_sizes": {3},
+        "face_index_styles": {"v//vn"},
+        "bounds": ((-0.291116902, 0.0, -0.273990069),
+                   (0.291116902, 1.0, 0.273990069)),
+        "obj_sha256": "9420e4067593175b80c761e9aeb03a46a4648b8d17481e2ce6a615d9bb15722e",
+        "mtl_sha256": "75618096def99806b8165aae7e6f39c75f8842caa39857b55a950476abfa9799",
     },
     "kylix": {
         "definition": "urn_kylix.json",
@@ -549,11 +551,11 @@ for _stem, _mesh in OLYMPIAN_COMPLETION_MESHES.items():
     }
 
 DECOR_MESHES = {
-    "finial_balanos": (2992, 2992, 6000, ((-0.471109, -0.950291, -0.471031), (0.470664, 0.952781, 0.470937)), "5d2eb9ee0bcc05a465fdaede5bbc52cc019be410a54e7986c65dcfb3a109b52c", "finial_display.json"),
-    "finial_kynara": (3002, 3002, 6000, ((-0.49611, -0.95121, -0.552465), (0.495942, 0.950493, 0.550597)), "bc871e48c1d3f99aea154792d5696fdd42507439efafb20ad728eeb95488afc8", "finial_display.json"),
-    "finial_phlox": (3002, 3002, 6000, ((-0.508766, -0.950932, -0.505926), (0.508071, 0.948998, 0.503935)), "4fb4d5616a4f4829a9dea84e1e4ad4d09ca2a4621497a00c291d640a14907250", "finial_display.json"),
-    "finial_sphaira": (3002, 3002, 6000, ((-0.628295, -0.95047, -0.630944), (0.628855, 0.950091, 0.628846)), "26703cfa4369a6c113a568884ab980e28d350a4dca99df20eb2cce92b6e775d0", "finial_display.json"),
-    "finial_strobilos": (3000, 3000, 5999, ((-0.486649, -0.951152, -0.492061), (0.485498, 0.951982, 0.485381)), "8de7cdde89f8801876d7558c7245c76c52fc61157877cfc3afb8e15c2f510032", "finial_display.json"),
+    "finial_balanos": (4021, 19240, 8044, ((-0.247434869, 0.0, -0.247486025), (0.247434869, 1.0, 0.247486025)), "4dd62f48fc7a614e7d6c6bacac3a8d72df20b97f19530e1d08f9cf5ac094b326", "finial_display.json"),
+    "finial_kynara": (6140, 24096, 12132, ((-0.260832429, 0.0, -0.290019393), (0.260832429, 1.0, 0.290019393)), "0a8473403d56c494b1016594922b660a0863eee57bfc597ae7ad0d2401a45623", "finial_display.json"),
+    "finial_phlox": (4970, 19992, 9928, ((-0.267598301, 0.0, -0.265762806), (0.267598301, 1.0, 0.265762806)), "b1e298f4bb31cb89212ec8d5902ba5ac57375f43d9f8077e314fe92b81daca5b", "finial_display.json"),
+    "finial_sphaira": (2930, 11696, 5848, ((-0.330731243, 0.0, -0.331425816), (0.330731243, 1.0, 0.331425816)), "bf763cac032e0c8df8939838d964ccff084405ca83ac3fa5b06ff7b9b2f08e5b", "finial_display.json"),
+    "finial_strobilos": (5398, 20584, 9944, ((-0.255406976, 0.0, -0.256798178), (0.255406976, 1.0, 0.256798178)), "c9f74f4820bbb16a4e5a805df0b11ca835391a9dd0a6c088c87db996c9194b82", "finial_display.json"),
     "basin_louterion": (3002, 3002, 6000, ((-0.95149, -0.91206, -0.949226), (0.950185, 0.911247, 0.950938)), "5aeb049ff2827a053cb4e9491da60d5c6d7b60e496d609a5eab64f626a37d0d9", "decor_display.json"),
     "fountain_krene": (2993, 2993, 5999, ((-0.503117, -0.951196, -0.372632), (0.503461, 0.950475, 0.372531)), "746624bd8a541b56d0594b1dbce883d0bc5a89f8d2d372a60ee8d798b0bc2016", "krene_display.json"),
     "fountain_pege": (2707, 2707, 6000, ((-0.95222, -0.92886, -0.949882), (0.95496, 0.930623, 0.946094)), "c77bd3bb0fd4ae31e02dee40ba61386224209a4f1e013b69a8aa893ea6bdc1b1", "decor_display.json"),
@@ -692,11 +694,11 @@ MESH_EXPECTATIONS["fountain_greek_bowl"] = {
 }
 
 PLINTH_MESHES = {
-    "plinth_astragalos": (3000, 3000, 6000, ((-0.573742, -0.951135, -0.573777), (0.572926, 0.950127, 0.572588)), "4a705d84abd3704f9248f2e051255841a82c26f1603411205fc38afd7ff360c5"),
-    "plinth_bathron": (3002, 2996, 6000, ((-0.772151, -0.951058, -0.772285), (0.771277, 0.950213, 0.771612)), "2543b6f83228c87f69bb106a86441813dc2e76d5910468baa8bea025d9c3824e"),
-    "plinth_kion": (3002, 3002, 6000, ((-0.951526, -0.912782, -0.951733), (0.948068, 0.911534, 0.94985)), "04f426f5a9d161eaf78f6aa35eb6babd7c284620047f39aa35f337e4196bd6a8"),
-    "plinth_stephanos": (2937, 2937, 6000, ((-0.789804, -0.950898, -0.789703), (0.789154, 0.947018, 0.789239)), "d21862cd4d56b3809737d1b8dc6b5426acc1e33714ecc94aa70617e5abc9fc14"),
-    "plinth_triphyllon": (2986, 2986, 6000, ((-0.910882, -0.949999, -0.926197), (0.907355, 0.949729, 0.924002)), "9f18250c28fcb761de10d529f03b25bc5d598a4d5c6f970b53a99cf3c7cd160c"),
+    "plinth_astragalos": (3410, 13664, 5856, ((-0.301554322, 0.0, -0.301474929), (0.301554322, 1.0, 0.301474929)), '0a9e29e05d932bcc58937d701f422376a5a8e5c33807403e72ca6e716c5c0408'),
+    "plinth_bathron": (1024, 4064, 2044, ((-0.405893654, 0.0, -0.406017125), (0.405893654, 1.0, 0.406017125)), 'f1d03fd8dd489da678b11c0c41ab5434fef862ea09c5c28453f38b38bb9899ae'),
+    "plinth_kion": (2870, 11976, 5736, ((-0.499477178, 0.0, -0.5), (0.499477178, 1.0, 0.5)), '674f26a9cb06dd994f5654c9ed51f499f7d420ed517de23b6037e82e8488c225'),
+    "plinth_stephanos": (7994, 47997, 15999, ((-0.415971518, 0.0, -0.415967375), (0.415971518, 1.0, 0.415967375)), 'c772ccba681b1e1b8d11dec46e78d2c972b978f77de2ff26bf58590795254995'),
+    "plinth_triphyllon": (11802, 55600, 23472, ((-0.478551775, 0.0, -0.486964047), (0.478551775, 1.0, 0.486964047)), '07dd6c76a3a350a21071d934e8f48307574d9a9db781ce76239200f96c1d3eed'),
 }
 
 for _stem, (_vertices, _normals, _faces, _bounds, _obj_sha256) in PLINTH_MESHES.items():
@@ -802,7 +804,7 @@ def all_block_ids() -> list[str]:
         block_id
         for family in GENERATOR.ALL_FAMILIES
         for block_id in GENERATOR.family_block_ids(family)
-    ]
+    ] + list(GENERATOR.ADDITIONAL_BLOCK_IDS)
 
 
 def parse_obj(path: Path) -> dict[str, object]:
@@ -1000,3 +1002,117 @@ def expected_material_texture_names(
     return names
 
 MESH_EXPECTATIONS["gothic_panel"] = {'vertices': 6985, 'uvs': 0, 'normals': 26644, 'faces': 15510, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((0.0, 0.0, 0.0), (1.0, 1.0, 0.0902173)), 'definition': 'gothic_panel.json', 'obj': 'gothic_panel.obj', 'mtl': 'gothic_panel.mtl', 'display': 'gothic_panel_display.json', 'obj_sha256': 'a4ffa391c5db984aa44c3f163c8fb25c3c423768b26f4ea55722cb8279c7b11a', 'mtl_sha256': '6440a6b04ede85ee1b6226258debb33ccec536d86aa2f3bcdbac1180a597ea2e'}
+
+# Full approved lantern bodies: all three mounts share one OBJ per design.
+# The fourth OBJ supplies both stock sizes of the reusable suspension.
+MESH_EXPECTATIONS['lantern_georgian'] = {'vertices': 17390, 'uvs': 51, 'normals': 14023, 'faces': 34550, 'face_sizes': {3}, 'face_index_styles': {'v/vt/vn', 'v//vn'}, 'bounds': ((-0.321240813, 0.0, -0.278202713), (0.321240813, 1.0, 0.319776624)), 'definition': 'lantern_georgian.json', 'obj': 'lantern_georgian.obj', 'mtl': None, 'display': 'lantern_display.json', 'obj_sha256': 'c5545e6d86f1fa2f96ca30696d1b5040c7ba9b71e1259e6f427e78aec2f5fdef', 'mtl_sha256': None}
+MESH_EXPECTATIONS['lantern_gothic'] = {'vertices': 57788, 'uvs': 65, 'normals': 62183, 'faces': 95998, 'face_sizes': {3}, 'face_index_styles': {'v/vt/vn', 'v//vn'}, 'bounds': ((-0.192500651, 0.0, -0.222045302), (0.192500651, 1.0, 0.32060051)), 'definition': 'lantern_gothic.json', 'obj': 'lantern_gothic.obj', 'mtl': None, 'display': 'lantern_display.json', 'obj_sha256': 'e127a7893d4823326107b20933c9f9ef2444332c89dc38823b87efefb5c61772', 'mtl_sha256': None}
+MESH_EXPECTATIONS['lantern_byzantine'] = {'vertices': 49982, 'uvs': 49, 'normals': 54773, 'faces': 99604, 'face_sizes': {3}, 'face_index_styles': {'v/vt/vn', 'v//vn'}, 'bounds': ((-0.262054712, 0.0, -0.227206454), (0.262054712, 1.0, 0.386550039)), 'definition': 'lantern_byzantine.json', 'obj': 'lantern_byzantine.obj', 'mtl': None, 'display': 'lantern_display.json', 'obj_sha256': '906d79994e0fa2730aa4ef72ad864af08a6128dbddb6a6df246559f3364e1d4a', 'mtl_sha256': None}
+MESH_EXPECTATIONS['lantern_suspension'] = {'vertices': 42943, 'uvs': 0, 'normals': 29211, 'faces': 86384, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((-0.070452154, -0.05152471, -0.070452154), (0.070452154, 1.014458418, 0.070452154)), 'definition': 'lantern_suspension.json', 'obj': 'lantern_suspension.obj', 'mtl': None, 'display': 'lantern_display.json', 'obj_sha256': 'e22306a47b622b51adc92aad6e77361c98c9fe400e6020bf96ccc1c2bbcf4006', 'mtl_sha256': None}
+
+# Face-efficient coffered panels authored from Oliver's four approved references.
+MESH_EXPECTATIONS['corinthian_panel'] = {'vertices': 4687, 'uvs': 0, 'normals': 8570, 'faces': 5996, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((0.0, 0.0, 0.0), (1.0, 1.0, 0.0874)), 'definition': 'corinthian_panel.json', 'obj': 'corinthian_panel.obj', 'mtl': 'corinthian_panel.mtl', 'display': 'gothic_panel_display.json', 'obj_sha256': 'fb57a7e8a0e725b1bacaa4fad290c2b0949e120c0bb8300a3fa8874e0b23c2d2', 'mtl_sha256': '6440a6b04ede85ee1b6226258debb33ccec536d86aa2f3bcdbac1180a597ea2e'}
+MESH_EXPECTATIONS['byzantine_panel'] = {'vertices': 4019, 'uvs': 0, 'normals': 4834, 'faces': 6000, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((0.0, 0.0, 0.0), (1.0, 1.0, 0.075)), 'definition': 'byzantine_panel.json', 'obj': 'byzantine_panel.obj', 'mtl': 'byzantine_panel.mtl', 'display': 'gothic_panel_display.json', 'obj_sha256': 'acdf79a87b6ee73e64c504a9f32a1de4fff5ff3031d77bb26b174fb509299229', 'mtl_sha256': '6440a6b04ede85ee1b6226258debb33ccec536d86aa2f3bcdbac1180a597ea2e'}
+MESH_EXPECTATIONS['georgian_panel'] = {'vertices': 4441, 'uvs': 0, 'normals': 17464, 'faces': 5984, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((0.0, 0.0, 0.0), (1.0, 1.0, 0.055)), 'definition': 'georgian_panel.json', 'obj': 'georgian_panel.obj', 'mtl': 'georgian_panel.mtl', 'display': 'gothic_panel_display.json', 'obj_sha256': '05e7e1095ffe1b528dd45bbc11994046de1bc188f963685061f065473f125184', 'mtl_sha256': '6440a6b04ede85ee1b6226258debb33ccec536d86aa2f3bcdbac1180a597ea2e'}
+MESH_EXPECTATIONS['renaissance_panel'] = {'vertices': 3136, 'uvs': 0, 'normals': 10725, 'faces': 5988, 'face_sizes': {3}, 'face_index_styles': {'v//vn'}, 'bounds': ((0.0, 0.0049467, 0.0), (1.0, 0.9950533, 0.0885)), 'definition': 'renaissance_panel.json', 'obj': 'renaissance_panel.obj', 'mtl': 'renaissance_panel.mtl', 'display': 'gothic_panel_display.json', 'obj_sha256': 'cc011b9127b395e72aece117c5a5f97418f85182041605faf2d1ee7ced48404e', 'mtl_sha256': '6440a6b04ede85ee1b6226258debb33ccec536d86aa2f3bcdbac1180a597ea2e'}
+
+
+# Final Glaux pilot outputs, independently parsed and checked against
+# docs/evidence/glaux-source.json. All six share the authored whole-owl UV
+# space and one display model; animation/LOD does not create material variants.
+MESH_EXPECTATIONS["glaux_body_lower"] = {
+    "definition": "glaux_body_lower.json",
+    "obj": "glaux_body_lower.obj",
+    "mtl": None,
+    "display": "glaux_display.json",
+    "vertices": 32813,
+    "uvs": 32813,
+    "normals": 32813,
+    "faces": 34982,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "authored_uvs": True,
+    "bounds": ((-0.1749856, 0.0012146, -0.124536), (1.1738403, 1.0, 1.118035)),
+    "obj_sha256": "78dbe740123be0516f80dd9bdb91ddfae8d079ffd77d7cbdc20a988fba2c0de8",
+    "mtl_sha256": None,
+}
+MESH_EXPECTATIONS["glaux_body_upper"] = {
+    "definition": "glaux_body_upper.json",
+    "obj": "glaux_body_upper.obj",
+    "mtl": None,
+    "display": "glaux_display.json",
+    "vertices": 21343,
+    "uvs": 21343,
+    "normals": 21343,
+    "faces": 23386,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "authored_uvs": True,
+    "bounds": ((-0.0102617, 0.0, -0.0363333), (1.1762764, 0.450979, 1.124536)),
+    "obj_sha256": "28ee03ad5209a062e7505af89a1b5547d78245f87d769a0b0a52fa42f878b258",
+    "mtl_sha256": None,
+}
+MESH_EXPECTATIONS["glaux_head_near"] = {
+    "definition": "glaux_head_near.json",
+    "obj": "glaux_head_near.obj",
+    "mtl": None,
+    "display": "glaux_display.json",
+    "vertices": 15709,
+    "uvs": 15709,
+    "normals": 15709,
+    "faces": 16725,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "authored_uvs": True,
+    "bounds": ((-0.4700021, -0.0929303, -0.4332758), (0.4440047, 0.5997568, 0.4871089)),
+    "obj_sha256": "75a2e1d561d4879f447c1f8e2aace6695bf43c2c8b582238679121d8357f5aa5",
+    "mtl_sha256": None,
+}
+MESH_EXPECTATIONS["glaux_head_mid"] = {
+    "definition": "glaux_head_mid.json",
+    "obj": "glaux_head_mid.obj",
+    "mtl": None,
+    "display": "glaux_display.json",
+    "vertices": 3701,
+    "uvs": 3701,
+    "normals": 3701,
+    "faces": 2940,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "authored_uvs": True,
+    "bounds": ((-0.4700021, -0.0929303, -0.4313763), (0.4419951, 0.596108, 0.4809293)),
+    "obj_sha256": "7383a6075a024aa853064591263632d3efdf94931c0f8553908edafd5782d6de",
+    "mtl_sha256": None,
+}
+MESH_EXPECTATIONS["glaux_head_far"] = {
+    "definition": "glaux_head_far.json",
+    "obj": "glaux_head_far.obj",
+    "mtl": None,
+    "display": "glaux_display.json",
+    "vertices": 607,
+    "uvs": 607,
+    "normals": 607,
+    "faces": 438,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "authored_uvs": True,
+    "bounds": ((-0.4671907, -0.09293, -0.3638345), (0.4348003, 0.5917102, 0.4744196)),
+    "obj_sha256": "076563bda601a03cb2cf36d6e15616b1d3a9bea926ccd229a96ff04ec12c9573",
+    "mtl_sha256": None,
+}
+MESH_EXPECTATIONS["glaux_item"] = {
+    "definition": "glaux_item.json",
+    "obj": "glaux_item.obj",
+    "mtl": None,
+    "display": "glaux_display.json",
+    "vertices": 7041,
+    "uvs": 7041,
+    "normals": 7041,
+    "faces": 5979,
+    "face_sizes": {3},
+    "face_index_styles": {"v/vt/vn"},
+    "authored_uvs": True,
+    "bounds": ((-0.1720335, 0.0120896, -0.1090289), (1.1708516, 1.997478, 1.1164491)),
+    "obj_sha256": "3529fa7c13b7aecab38a87bc6d907df6cbc4004aea240e1e65fb668b7e52779f",
+    "mtl_sha256": None,
+}

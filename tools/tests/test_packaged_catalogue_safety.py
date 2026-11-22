@@ -24,7 +24,7 @@ class PackagedCatalogueSafetyTests(unittest.TestCase):
 
     def test_real_catalogue_includes_item_only_selectors_and_all_assembly_parts(self) -> None:
         actual = audit.validate_catalogue_resources(self.entries)
-        self.assertEqual((4682, 4737, 4516), tuple(len(actual[key]) for key in ("blockstates", "items", "loot")))
+        self.assertEqual((5090, 5143, 4922), tuple(len(actual[key]) for key in ("blockstates", "items", "loot")))
         self.assertIn("bronze_olympian_god_statue.json", actual["items"])
         self.assertIn("olympian_god_display.json", actual["items"])
         self.assertIn("obeliskos_part.json", actual["blockstates"])
@@ -45,12 +45,12 @@ class PackagedCatalogueSafetyTests(unittest.TestCase):
 
     def test_internal_allowlist_matches_the_canonical_registry(self) -> None:
         registry = (JAVA_ROOT / "registry/ModBlocks.java").read_text(encoding="utf-8")
-        internal = set(re.findall(r'id\("([a-z0-9_]+_part)"\)', registry))
+        internal = set(re.findall(r'id\("([a-z0-9_]+_(?:part|chain))"\)', registry))
         self.assertEqual(audit.INTERNAL_BLOCK_IDS, internal)
 
     def test_item_only_medallion_is_hash_locked_without_changing_world_mesh_manifest(self) -> None:
         combined = audit.MESH_EXPECTATIONS | audit.ITEM_ONLY_MESH_EXPECTATIONS
-        self.assertEqual(99, len(audit.MESH_EXPECTATIONS))
+        self.assertEqual(113, len(audit.MESH_EXPECTATIONS))
         self.assertEqual({"olympian_god_medallion"}, set(audit.ITEM_ONLY_MESH_EXPECTATIONS))
         self.assertEqual({value["obj"] for value in combined.values()}, {path.name for path in MESH_ROOT.glob("*.obj")})
         self.assertEqual({value["definition"] for value in combined.values()}, {path.name for path in MESH_ROOT.glob("*.json")})

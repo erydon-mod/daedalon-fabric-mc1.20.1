@@ -8,12 +8,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Carries Daedalon quad metadata across Indium's compact terrain vertex staging
  * objects into Iris's extended shader vertex encoder. This preserves OBJ normals
- * and lets deliberately contained basin surfaces use Iris's water classification
- * without exposing a world fluid that could flow outside the model.
+ * and gives contained basin water, lantern panes and flames their own shader identity,
+ * without changing the surrounding solid block's material or world fluids.
  */
 public final class ShaderTerrainNormalBridge {
     private static final int OBJ_TAG_SIGNATURE = 0x0DAE0000;
     private static final int CONTAINED_WATER_TAG = 0x0DAF0000;
+    private static final int STATIONARY_WATER_TAG = CONTAINED_WATER_TAG | 1;
+    private static final int GLAZING_OBJ_TAG_SIGNATURE = 0x0DB00000;
+    private static final int FLAME_OBJ_TAG_SIGNATURE = 0x0DB10000;
     private static final int OBJ_TAG_SIGNATURE_MASK = 0xFFFF0000;
     private static final int OBJ_MATERIAL_TAG_MASK = 0x0000FFFF;
     private static final Logger LOGGER = LoggerFactory.getLogger("Daedalon/ObjShaderNormals");
@@ -31,15 +34,37 @@ public final class ShaderTerrainNormalBridge {
     }
 
     public static boolean isObjQuad(int tag) {
-        return (tag & OBJ_TAG_SIGNATURE_MASK) == OBJ_TAG_SIGNATURE;
+        int signature = tag & OBJ_TAG_SIGNATURE_MASK;
+        return signature == OBJ_TAG_SIGNATURE || signature == GLAZING_OBJ_TAG_SIGNATURE || signature == FLAME_OBJ_TAG_SIGNATURE;
+    }
+
+    public static int encodeGlazingObjTag(int materialTag) {
+        // Reuse the same bounds check as ordinary OBJ material tags.
+        return GLAZING_OBJ_TAG_SIGNATURE | (encodeObjTag(materialTag) & OBJ_MATERIAL_TAG_MASK);
+    }
+
+    public static boolean isGlazingObjQuad(int tag) {
+        return (tag & OBJ_TAG_SIGNATURE_MASK) == GLAZING_OBJ_TAG_SIGNATURE;
+    }
+
+    public static int encodeFlameObjTag(int materialTag) {
+        return FLAME_OBJ_TAG_SIGNATURE | (encodeObjTag(materialTag) & OBJ_MATERIAL_TAG_MASK);
+    }
+
+    public static boolean isFlameObjQuad(int tag) {
+        return (tag & OBJ_TAG_SIGNATURE_MASK) == FLAME_OBJ_TAG_SIGNATURE;
     }
 
     public static int containedWaterTag() {
         return CONTAINED_WATER_TAG;
     }
 
+    public static int stationaryWaterTag() {
+        return STATIONARY_WATER_TAG;
+    }
+
     public static boolean isContainedWaterQuad(int tag) {
-        return tag == CONTAINED_WATER_TAG;
+        return tag == CONTAINED_WATER_TAG || tag == STATIONARY_WATER_TAG;
     }
 
     public static int decodeObjMaterialTag(int tag) {
@@ -54,7 +79,7 @@ public final class ShaderTerrainNormalBridge {
                                float x1, float y1, float z1,
                                float x2, float y2, float z2,
                                float x3, float y3, float z3) {
-        publish(false, vertexArray,
+        publish(0, false, false, vertexArray,
                 x0, y0, z0,
                 x1, y1, z1,
                 x2, y2, z2,
@@ -66,14 +91,46 @@ public final class ShaderTerrainNormalBridge {
                                              float x1, float y1, float z1,
                                              float x2, float y2, float z2,
                                              float x3, float y3, float z3) {
-        publish(true, vertexArray,
+        publishContainedWater(CONTAINED_WATER_TAG, vertexArray,
+                x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3);
+    }
+
+    public static void publishContainedWater(int waterTag, Object vertexArray,
+                                             float x0, float y0, float z0,
+                                             float x1, float y1, float z1,
+                                             float x2, float y2, float z2,
+                                             float x3, float y3, float z3) {
+        publish(waterTag, false, false, vertexArray,
                 x0, y0, z0,
                 x1, y1, z1,
                 x2, y2, z2,
                 x3, y3, z3);
     }
 
-    private static void publish(boolean containedWater,
+    public static void publishGlazing(Object vertexArray,
+                                      float x0, float y0, float z0,
+                                      float x1, float y1, float z1,
+                                      float x2, float y2, float z2,
+                                      float x3, float y3, float z3) {
+        publish(0, true, false, vertexArray,
+                x0, y0, z0,
+                x1, y1, z1,
+                x2, y2, z2,
+                x3, y3, z3);
+    }
+
+    public static void publishFlame(Object vertexArray,
+                                    float x0, float y0, float z0,
+                                    float x1, float y1, float z1,
+                                    float x2, float y2, float z2,
+                                    float x3, float y3, float z3) {
+        publish(0, false, true, vertexArray,
+                x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3);
+    }
+
+    private static void publish(int waterTag,
+                                boolean glazing,
+                                boolean flame,
                                 Object vertexArray,
                                 float x0, float y0, float z0,
                                 float x1, float y1, float z1,
@@ -87,8 +144,12 @@ public final class ShaderTerrainNormalBridge {
         pending.packed[3] = pack(x3, y3, z3);
         pending.published = true;
         pending.claimed = false;
-        pending.containedWater = containedWater;
-        pending.claimedContainedWater = false;
+        pending.waterTag = waterTag;
+        pending.claimedWaterTag = 0;
+        pending.glazing = glazing;
+        pending.claimedGlazing = false;
+        pending.flame = flame;
+        pending.claimedFlame = false;
         pending.nextIndex = 0;
     }
 
@@ -97,8 +158,12 @@ public final class ShaderTerrainNormalBridge {
         pending.vertexArray = null;
         pending.published = false;
         pending.claimed = false;
-        pending.containedWater = false;
-        pending.claimedContainedWater = false;
+        pending.waterTag = 0;
+        pending.claimedWaterTag = 0;
+        pending.glazing = false;
+        pending.claimedGlazing = false;
+        pending.flame = false;
+        pending.claimedFlame = false;
         pending.nextIndex = 0;
     }
 
@@ -108,8 +173,12 @@ public final class ShaderTerrainNormalBridge {
         pending.vertexArray = null;
         pending.published = false;
         pending.claimed = matches;
-        pending.claimedContainedWater = matches && pending.containedWater;
-        pending.containedWater = false;
+        pending.claimedWaterTag = matches ? pending.waterTag : 0;
+        pending.claimedGlazing = matches && pending.glazing;
+        pending.claimedFlame = matches && pending.flame;
+        pending.waterTag = 0;
+        pending.glazing = false;
+        pending.flame = false;
         pending.nextIndex = 0;
         if (matches && !LOGGED_ACTIVE.get() && LOGGED_ACTIVE.compareAndSet(false, true)) {
             LOGGER.info("Iris terrain normal bridge active; preserving Fabric per-vertex normals");
@@ -118,7 +187,19 @@ public final class ShaderTerrainNormalBridge {
     }
 
     public static boolean isClaimedContainedWater() {
-        return PENDING.get().claimedContainedWater;
+        return isContainedWaterQuad(PENDING.get().claimedWaterTag);
+    }
+
+    public static boolean isClaimedStationaryWater() {
+        return PENDING.get().claimedWaterTag == STATIONARY_WATER_TAG;
+    }
+
+    public static boolean isClaimedGlazing() {
+        return PENDING.get().claimedGlazing;
+    }
+
+    public static boolean isClaimedFlame() {
+        return PENDING.get().claimedFlame;
     }
 
     public static int nextNormal(int fallback) {
@@ -132,7 +213,9 @@ public final class ShaderTerrainNormalBridge {
     public static void release() {
         PendingNormals pending = PENDING.get();
         pending.claimed = false;
-        pending.claimedContainedWater = false;
+        pending.claimedWaterTag = 0;
+        pending.claimedGlazing = false;
+        pending.claimedFlame = false;
         pending.nextIndex = 0;
     }
 
@@ -147,8 +230,12 @@ public final class ShaderTerrainNormalBridge {
         private Object vertexArray;
         private boolean published;
         private boolean claimed;
-        private boolean containedWater;
-        private boolean claimedContainedWater;
+        private int waterTag;
+        private int claimedWaterTag;
+        private boolean glazing;
+        private boolean claimedGlazing;
+        private boolean flame;
+        private boolean claimedFlame;
         private int nextIndex;
     }
 }

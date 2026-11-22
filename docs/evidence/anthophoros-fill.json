@@ -1,0 +1,311 @@
+{
+  "measurement": "Actual authored OBJ triangle intersections at Y=0.900m, before unchanged [.5,0,.5] owner translation and facing rotation.",
+  "unchanged_shell_height_m": 1.0,
+  "unchanged_shell_depth_m": 1.188486,
+  "surface": "A flat rectangular top 10cm below the rim; boundary overlaps the hidden inner wall by less than 2.1mm and stays inside every sampled outer-wall section.",
+  "uv_policy": "Each width owns one literal 64x64 seamless tile, repeated once per metre. Source-centred phase is U=localX+.5 modulo 1, V=localZ+.5. Split actual geometry at localX=n+.5; emit each strip with bounded 0..1 UVs before facing rotation. Never wrap an out-of-range atlas UV or shrink the periodic field with a texel inset.",
+  "profiles": [
+    {
+      "width_m": 2,
+      "mesh": "anthophoros_2m.obj",
+      "mesh_sha256": "c73712cab451b094645becd17af07468b941c01e1035f24d7e29887b6ccd1f6a",
+      "half_width_m": 0.8260000000000001,
+      "half_depth_m": 0.42,
+      "surface_y_m": 0.9,
+      "interior_probes": [
+        {
+          "direction_xz": [
+            1,
+            0
+          ],
+          "nearest_wall_m": 0.825331384,
+          "outer_wall_m": 0.983151301
+        },
+        {
+          "direction_xz": [
+            -1,
+            0
+          ],
+          "nearest_wall_m": 0.825606023,
+          "outer_wall_m": 0.984336625
+        },
+        {
+          "direction_xz": [
+            0,
+            1
+          ],
+          "nearest_wall_m": 0.41906031,
+          "outer_wall_m": 0.580297274
+        },
+        {
+          "direction_xz": [
+            0,
+            -1
+          ],
+          "nearest_wall_m": 0.419019118,
+          "outer_wall_m": 0.578941727
+        }
+      ],
+      "texture_pixels": [
+        64,
+        64
+      ],
+      "soil_texture": "daedalon:block/anthophoros_earth_2m",
+      "fill_footprint_aspect": 1.966666666666667,
+      "tile_strips": [
+        {
+          "tile_index": -1,
+          "x_bounds_m": [
+            -0.8260000000000001,
+            -0.5
+          ],
+          "uv_bounds": [
+            0.6739999999999999,
+            0.08000000000000002,
+            1.0,
+            0.9199999999999999
+          ]
+        },
+        {
+          "tile_index": 0,
+          "x_bounds_m": [
+            -0.5,
+            0.5
+          ],
+          "uv_bounds": [
+            0.0,
+            0.08000000000000002,
+            1.0,
+            0.9199999999999999
+          ]
+        },
+        {
+          "tile_index": 1,
+          "x_bounds_m": [
+            0.5,
+            0.8260000000000001
+          ],
+          "uv_bounds": [
+            0.0,
+            0.08000000000000002,
+            0.32600000000000007,
+            0.9199999999999999
+          ]
+        }
+      ]
+    },
+    {
+      "width_m": 3,
+      "mesh": "anthophoros_3m.obj",
+      "mesh_sha256": "9c9ae9ae075db638d860d19965152d8bef0cb5a27085086c416beddf8fcc795c",
+      "half_width_m": 1.326,
+      "half_depth_m": 0.42,
+      "surface_y_m": 0.9,
+      "interior_probes": [
+        {
+          "direction_xz": [
+            1,
+            0
+          ],
+          "nearest_wall_m": 1.325318264,
+          "outer_wall_m": 1.483149573
+        },
+        {
+          "direction_xz": [
+            -1,
+            0
+          ],
+          "nearest_wall_m": 1.325606482,
+          "outer_wall_m": 1.484334446
+        },
+        {
+          "direction_xz": [
+            0,
+            1
+          ],
+          "nearest_wall_m": 0.419064879,
+          "outer_wall_m": 0.579291201
+        },
+        {
+          "direction_xz": [
+            0,
+            -1
+          ],
+          "nearest_wall_m": 0.41902345,
+          "outer_wall_m": 0.578621393
+        }
+      ],
+      "texture_pixels": [
+        64,
+        64
+      ],
+      "soil_texture": "daedalon:block/anthophoros_earth_3m",
+      "fill_footprint_aspect": 3.1571428571428575,
+      "tile_strips": [
+        {
+          "tile_index": -1,
+          "x_bounds_m": [
+            -1.326,
+            -0.5
+          ],
+          "uv_bounds": [
+            0.17399999999999993,
+            0.08000000000000002,
+            1.0,
+            0.9199999999999999
+          ]
+        },
+        {
+          "tile_index": 0,
+          "x_bounds_m": [
+            -0.5,
+            0.5
+          ],
+          "uv_bounds": [
+            0.0,
+            0.08000000000000002,
+            1.0,
+            0.9199999999999999
+          ]
+        },
+        {
+          "tile_index": 1,
+          "x_bounds_m": [
+            0.5,
+            1.326
+          ],
+          "uv_bounds": [
+            0.0,
+            0.08000000000000002,
+            0.8260000000000001,
+            0.9199999999999999
+          ]
+        }
+      ]
+    },
+    {
+      "width_m": 4,
+      "mesh": "anthophoros_4m.obj",
+      "mesh_sha256": "2679d4de3f05f09fa53c91028d3adaf37a6cd318ac9fd112cff50e898a4972f4",
+      "half_width_m": 1.826,
+      "half_depth_m": 0.42,
+      "surface_y_m": 0.9,
+      "interior_probes": [
+        {
+          "direction_xz": [
+            1,
+            0
+          ],
+          "nearest_wall_m": 1.825309212,
+          "outer_wall_m": 1.983616042
+        },
+        {
+          "direction_xz": [
+            -1,
+            0
+          ],
+          "nearest_wall_m": 1.825621994,
+          "outer_wall_m": 1.9845547
+        },
+        {
+          "direction_xz": [
+            0,
+            1
+          ],
+          "nearest_wall_m": 0.419086283,
+          "outer_wall_m": 0.580854025
+        },
+        {
+          "direction_xz": [
+            0,
+            -1
+          ],
+          "nearest_wall_m": 0.419035973,
+          "outer_wall_m": 0.579549116
+        }
+      ],
+      "texture_pixels": [
+        64,
+        64
+      ],
+      "soil_texture": "daedalon:block/anthophoros_earth_4m",
+      "fill_footprint_aspect": 4.347619047619048,
+      "tile_strips": [
+        {
+          "tile_index": -2,
+          "x_bounds_m": [
+            -1.826,
+            -1.5
+          ],
+          "uv_bounds": [
+            0.6739999999999999,
+            0.08000000000000002,
+            1.0,
+            0.9199999999999999
+          ]
+        },
+        {
+          "tile_index": -1,
+          "x_bounds_m": [
+            -1.5,
+            -0.5
+          ],
+          "uv_bounds": [
+            0.0,
+            0.08000000000000002,
+            1.0,
+            0.9199999999999999
+          ]
+        },
+        {
+          "tile_index": 0,
+          "x_bounds_m": [
+            -0.5,
+            0.5
+          ],
+          "uv_bounds": [
+            0.0,
+            0.08000000000000002,
+            1.0,
+            0.9199999999999999
+          ]
+        },
+        {
+          "tile_index": 1,
+          "x_bounds_m": [
+            0.5,
+            1.5
+          ],
+          "uv_bounds": [
+            0.0,
+            0.08000000000000002,
+            1.0,
+            0.9199999999999999
+          ]
+        },
+        {
+          "tile_index": 2,
+          "x_bounds_m": [
+            1.5,
+            1.826
+          ],
+          "uv_bounds": [
+            0.0,
+            0.08000000000000002,
+            0.32600000000000007,
+            0.9199999999999999
+          ]
+        }
+      ]
+    }
+  ],
+  "texels_per_metre": 64,
+  "atlas_mip_levels": 4,
+  "tile_pixels": 64,
+  "tile_repeat_m": 1.0,
+  "phase_origin_xz": [
+    0.5,
+    0.5
+  ],
+  "sampling_policy": "Albedo, packed normal/height and roughness use the same periodic 64x64 tile layout. Exact 0/1 internal repeat edges preserve phase and density, using the existing normalized sprite-bake path. No padded images or inferred canvas crops. Atlas filtering and shader relief still require later in-game visual verification."
+}

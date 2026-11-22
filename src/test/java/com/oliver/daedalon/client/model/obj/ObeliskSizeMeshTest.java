@@ -1,6 +1,7 @@
 package com.oliver.daedalon.client.model.obj;
 
 import com.oliver.daedalon.block.SizedDecorBlock;
+import com.oliver.daedalon.block.DecorShapeTransforms;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,27 @@ final class ObeliskSizeMeshTest {
                 assertEquals(.5F + (Quad.XYZ[i][2] - .5F) * size.scale(), quad.xyz[i][2]);
                 assertEquals(.5F + (Quad.UV[i][0] - .5F) * size.scale(), quad.uv[i][0]);
                 assertEquals(.5F + (Quad.UV[i][1] - .5F) * size.scale(), quad.uv[i][1]);
+            }
+        }
+    }
+
+    @Test void alcoveTranslationPreservesHeightAndUvDensityIncludingThePreScaledLargeMesh() throws Exception {
+        var type = Class.forName(ObjMeshBakedModel.class.getName() + "$SizedDecorTransform");
+        var constructor = type.getDeclaredConstructor(float.class, float.class, float.class);
+        constructor.setAccessible(true);
+        float distance = DecorShapeTransforms.OFFSET_DISTANCE;
+        for (var size : SizedDecorBlock.Size.values()) for (float[] offset : new float[][]{
+                {0, -distance}, {distance, 0}, {0, distance}, {-distance, 0}}) {
+            // Large's source has already passed through the existing repeat-safe clipping/scaling path.
+            float scale = size == SizedDecorBlock.Size.LARGE ? 1 : size.scale();
+            Quad quad = new Quad();
+            ((RenderContext.QuadTransform) constructor.newInstance(scale, offset[0], offset[1])).transform(quad.view);
+            for (int i = 0; i < 4; i++) {
+                assertEquals(.5F + (Quad.XYZ[i][0] - .5F) * scale + offset[0], quad.xyz[i][0]);
+                assertEquals(Quad.XYZ[i][1] * scale, quad.xyz[i][1]);
+                assertEquals(.5F + (Quad.XYZ[i][2] - .5F) * scale + offset[1], quad.xyz[i][2]);
+                assertEquals(.5F + (Quad.UV[i][0] - .5F) * scale, quad.uv[i][0]);
+                assertEquals(.5F + (Quad.UV[i][1] - .5F) * scale, quad.uv[i][1]);
             }
         }
     }

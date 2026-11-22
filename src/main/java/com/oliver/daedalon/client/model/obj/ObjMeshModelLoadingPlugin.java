@@ -6,8 +6,13 @@ import com.oliver.daedalon.block.BustBlock;
 import com.oliver.daedalon.block.CapitalBlock;
 import com.oliver.daedalon.block.CorbelBlock;
 import com.oliver.daedalon.block.BenchBlock;
+import com.oliver.daedalon.block.AnthophorosBlock;
+import com.oliver.daedalon.block.AnthophorosFillProfile;
 import com.oliver.daedalon.block.FriezeBlock;
+import com.oliver.daedalon.block.PanelBlock;
 import com.oliver.daedalon.block.FixedDecorBlock;
+import com.oliver.daedalon.block.LouterionBasinBlock;
+import com.oliver.daedalon.block.LanternBlock;
 import com.oliver.daedalon.block.FountainBasinBlock;
 import com.oliver.daedalon.block.FountainBowlModel;
 import com.oliver.daedalon.block.PlinthBlock;
@@ -142,6 +147,7 @@ public final class ObjMeshModelLoadingPlugin {
                 .filter(family -> family.variants().stream()
                         .anyMatch(variant -> ModBlocks.blocksById()
                                 .containsKey(id(variant.sourceBlockId()))
+                                || variant.sourceBlockId().equals("lantern_chain") && ModBlocks.lanternChain()!=null
                                 || variant.inventoryModelId() != null
                                 && Registries.ITEM.containsId(id(variant.sourceBlockId()))))
                 .toList();
@@ -364,9 +370,9 @@ public final class ObjMeshModelLoadingPlugin {
                 ));
             }
         }
-        for (String form : List.of("gothic_wall_panel")) {
-            families.add(new MeshFamily(form,id("models/mesh/gothic_panel.json"),
-                    id("block/mesh/gothic_panel_display"),createCarvedArchitecturalVariants(form)));
+        for (PanelBlock.Style style : PanelBlock.Style.values()) {
+            families.add(new MeshFamily(style.id(),id("models/mesh/"+style.meshName()+".json"),
+                    id("block/mesh/gothic_panel_display"),createCarvedArchitecturalVariants(style.id())));
         }
         for (FriezeBlock.Style style : FriezeBlock.Style.values()) {
             String family=style.id()+"_frieze";
@@ -375,6 +381,16 @@ public final class ObjMeshModelLoadingPlugin {
                     id("block/mesh/"+family+"_display"),
                     createCarvedArchitecturalVariants(family)));
         }
+        for (LanternBlock.Style style : LanternBlock.Style.values()) {
+            families.add(new MeshFamily(style.id()+" lantern",
+                    id("models/mesh/lantern_"+style.id()+".json"),id("block/mesh/lantern_display"),
+                    createLanternVariants(style.id()+"_lantern")));
+        }
+        Identifier lead=id("block/lantern_lead");
+        families.add(new MeshFamily("shared lantern suspension",id("models/mesh/lantern_suspension.json"),
+                id("block/mesh/lantern_display"),List.of(new MeshVariant(
+                id("mesh/internal/lantern_suspension"),null,null,null,lead,lead,
+                WorldTexturePhase.blockSurface(),"lantern_chain",false,false))));
         return List.copyOf(families);
     }
 
@@ -560,9 +576,17 @@ public final class ObjMeshModelLoadingPlugin {
         return List.copyOf(variants);
     }
 
+    private static List<MeshVariant> createLanternVariants(String suffix) {
+        return withMetals(createDetailedVariants(suffix), suffix, WorldTexturePhase.blockSurface()).stream().map(v -> new MeshVariant(
+                v.modelId(),v.inventoryModelId(),v.itemFileModelId(),v.plainItemModelId(),
+                v.textureId(),v.particleTextureId(),WorldTexturePhase.blockSurface(),
+                v.sourceBlockId(),v.publicBlockModel(),v.containedWater())).toList();
+    }
+
     private static List<MeshVariant> createCarvedArchitecturalVariants(String suffix) {
         List<MeshVariant> variants = new ArrayList<>(createDetailedVariants(suffix));
         for (ArchitecturalFinish finish : ArchitecturalFinish.values()) {
+            if (suffix.endsWith("_wall_panel") && !finish.supportsPanel()) continue;
             String blockId = finish.id() + "_" + suffix;
             Identifier texture = id("block/" + finish.id());
             variants.add(new MeshVariant(
@@ -797,10 +821,12 @@ public final class ObjMeshModelLoadingPlugin {
             }
             guiTransformation = requestedGuiTransformation;
             try {
+                Mesh iconMesh=baked.lanternParts()==null?baked.mesh():baked.lanternParts().iconMesh();
+                int[] iconCount={0};iconMesh.forEach(q->iconCount[0]++);
                 guiIconTemplate = ObjGuiIconTemplate.create(
-                        baked.mesh(),
+                        iconMesh,
                         guiTransformation,
-                        baked.emittedQuadCount(),
+                        iconCount[0],
                         // Keep the frieze's authored size relative to its original
                         // 0.6 GUI scale; automatic framing otherwise cancels it.
                         FriezeBlock.isMeshPath(sourceData.objId().getPath())
@@ -865,6 +891,19 @@ public final class ObjMeshModelLoadingPlugin {
             return guiIconTemplate;
         }
 
+        private PlanterContentsSurface planterSurface;
+
+        private synchronized PlanterContentsSurface planterSurface(Function<SpriteIdentifier, Sprite> textureGetter) {
+            if (planterSurface == null) {
+                String path = definition.objId().getPath();
+                int width = Integer.parseInt(path.substring(path.lastIndexOf('_') + 1, path.length() - "m.obj".length()));
+                Sprite sprite = textureGetter.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
+                        id("block/anthophoros_earth_" + width + "m")));
+                planterSurface = new PlanterContentsSurface(AnthophorosFillProfile.forWidth(width), sprite);
+            }
+            return planterSurface;
+        }
+
         private ResolvedMaterials resolveMaterials(ObjMeshBakedModel.GeometryBakeResult geometry,
                                                    Function<SpriteIdentifier, Sprite> textureGetter,
                                                    Identifier variantTextureId,
@@ -872,10 +911,12 @@ public final class ObjMeshModelLoadingPlugin {
             List<Sprite> sprites = new ArrayList<>(geometry.materialNames().size());
             List<Identifier> textureIds = new ArrayList<>(geometry.materialNames().size());
             List<Boolean> worldPhaseMaterials = new ArrayList<>(geometry.materialNames().size());
+            boolean lantern = LanternMeshParts.isPath(definition.objId().getPath());
             for (String materialName : geometry.materialNames()) {
                 // Whole-metal variants include named components such as Diota's handles.
                 // Stone variants retain their separately authored bronze handle texture.
-                Identifier textureId = usesMetalTexture(variantTextureId) ? null : materialTexture(materialName);
+                // A metal lantern still has clear glass, flame cards, lead frames and its bronze burner.
+                Identifier textureId = usesMetalTexture(variantTextureId) && !lantern ? null : materialTexture(materialName);
                 Identifier resolvedTextureId = textureId == null ? variantTextureId : textureId;
                 Sprite sprite = textureId == null
                         ? variantSprite
@@ -887,7 +928,7 @@ public final class ObjMeshModelLoadingPlugin {
                 textureIds.add(resolvedTextureId);
                 // Only the variant sheet is guaranteed to follow the definition's tile layout.
                 // Dedicated material sprites such as Diota's 16x16 bronze handles remain fixed.
-                worldPhaseMaterials.add(textureId == null);
+                worldPhaseMaterials.add(textureId == null && !(lantern && usesMetalTexture(variantTextureId)));
             }
             return new ResolvedMaterials(sprites, textureIds, worldPhaseMaterials);
         }
@@ -940,7 +981,9 @@ public final class ObjMeshModelLoadingPlugin {
             ));
             Block waterBlock = ModBlocks.blocksById().get(id(variant.sourceBlockId()));
             boolean containsWater = variant.containedWater()
-                    || waterBlock instanceof FountainBasinBlock;
+                    || waterBlock instanceof FountainBasinBlock
+                    || waterBlock instanceof LouterionBasinBlock
+                    || waterBlock instanceof AnthophorosBlock;
             Sprite containedWaterSprite = containsWater
                     ? textureGetter.apply(new SpriteIdentifier(
                             PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
@@ -965,7 +1008,8 @@ public final class ObjMeshModelLoadingPlugin {
                     geometry.guiIconTemplate(),
                     materials.textureIds(),
                     variant.modelId(),
-                    containedWaterSprite
+                    containedWaterSprite,
+                    waterBlock instanceof AnthophorosBlock ? geometry.planterSurface(textureGetter) : null
             );
             return bakedModel;
         }

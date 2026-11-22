@@ -42,6 +42,7 @@ public final class MetalDecorGameTests {
             if (!path.startsWith("aganite_") || path.startsWith("aganite_aged_")) continue;
             String suffix = path.substring("aganite_".length());
             for (ArchitecturalFinish finish : ArchitecturalFinish.values()) {
+                if (stone instanceof PanelBlock && !finish.supportsPanel()) continue;
                 Identifier id = new Identifier("daedalon", finish.id() + "_" + suffix);
                 Block block = Registries.BLOCK.get(id);
                 context.assertTrue(stone.getClass() == block.getClass(), "Finish changed block type: " + id);
@@ -54,11 +55,11 @@ public final class MetalDecorGameTests {
                         new Identifier("daedalon", finish.id()))), "Missing finish search tag: " + id);
                 boolean metal = block.getDefaultState().isIn(TagKey.of(RegistryKeys.BLOCK,
                         new Identifier("material", "metal")));
-                context.assertTrue(metal == (finish != ArchitecturalFinish.WHITE), "Wrong finish material: " + id);
+                context.assertTrue(metal == (finish == ArchitecturalFinish.BRONZE || finish == ArchitecturalFinish.SILVER), "Wrong finish material: " + id);
                 count++;
             }
         }
-        context.assertTrue(count == 15, "Expected 15 carved finishes, found " + count);
+        context.assertTrue(count == 36, "Expected 36 carved finishes, found " + count);
         context.complete();
     }
 

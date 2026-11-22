@@ -34,17 +34,21 @@ public final class DebugControlGameTests {
             List<String> actual = controls(state);
             List<String> expected;
             if (block instanceof CapitalPartBlock || block instanceof FountainBasinPartBlock
-                    || block instanceof MonopterosPartBlock) expected = List.of();
+                    || block instanceof MonopterosPartBlock || block instanceof ObeliskPartBlock || block instanceof LanternPartBlock
+                    || block instanceof LanternChainBlock) expected = List.of();
             else if (block instanceof CapitalBlock) expected = List.of("size", "capital_orientation");
-            else if (block instanceof FinialBlock || block instanceof SizedDecorBlock
+            else if (block instanceof FinialBlock
                     || block instanceof TwoSizeDecorBlock) expected = List.of("size");
+            else if (block instanceof SizedDecorBlock) expected = List.of("size", "offset", "facing");
             else if (block instanceof StatueBlock || block instanceof UrnBlock) expected = List.of("size", "offset", "facing");
             else if (block instanceof PlinthBlock) expected = List.of("size", "offset", "facing", "waterlogged");
             else if (block instanceof FountainBasinBlock) expected = List.of("size", "raised_base", "waterlogged");
+            else if (block instanceof HedraBlock) expected = List.of("width", "orientation");
             else if (block instanceof BenchBlock) expected = List.of("width", "facing");
             else if (block instanceof MonopterosBlock) expected = List.of("diameter");
             else if (block instanceof CorbelBlock) expected = List.of("size", "facing");
             else if (block instanceof PanelBlock) expected = List.of("size", "ceiling", "facing");
+            else if (block instanceof LanternBlock) expected = List.of("size", "mount", "facing", "light");
             else if (block instanceof FriezeBlock frieze) {
                 expected = frieze.style().sections() > 1 ? List.of("facing", "pattern", "manual_corner") : List.of("facing", "manual_corner");
                 List<String> manual = frieze.style().sections() > 1

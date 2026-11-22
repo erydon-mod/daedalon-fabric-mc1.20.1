@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,7 +43,7 @@ final class DaedalonSearchTextTest {
         var vocabulary = DaedalonSearchVocabulary.index();
         SuffixArray<String> index = new SuffixArray<>();
         for (String path : List.of("glacium_hedra", "statue_spartan_promachos_glacium",
-                "glacium_aged_hedra", "white_gothic_wall_panel", "bronze_zeus_statue", "silver_gothic_frieze")) {
+                "glacium_aged_hedra", "white_gothic_wall_panel", "black_gothic_frieze", "bronze_zeus_statue", "silver_gothic_frieze")) {
             index.add(path, DaedalonSearchVocabulary.appendTerms("", vocabulary.terms(path)));
         }
         index.build();
@@ -62,5 +63,38 @@ final class DaedalonSearchTextTest {
         assertTrue(result.contains("jupiter"));
         assertFalse(result.contains("block"));
         assertEquals(delegated, DaedalonSearchVocabulary.appendTerms(delegated, List.of()));
+    }
+
+    @Test
+    void sculptureSearchFindsFullStatuesBustsAndPlacersWithUsefulOlympianSubjectMatching() {
+        var vocabulary = DaedalonSearchVocabulary.index();
+        SuffixArray<String> index = new SuffixArray<>();
+        Set<String> sculptures = new HashSet<>();
+        Set<String> olympians = new HashSet<>();
+        for (String material : List.of("glacium", "glacium_aged", "bronze", "silver")) {
+            for (String family : List.of("zeus_statue", "zeus_bust", "hestia_bust", "olympian_god_statue",
+                    "heracles_statue", "lion_couchant_statue")) {
+                String path = material + "_" + family;
+                sculptures.add(path);
+                if (!family.equals("heracles_statue") && !family.equals("lion_couchant_statue")) olympians.add(path);
+                index.add(path, DaedalonSearchVocabulary.appendTerms("", vocabulary.terms(path)));
+            }
+        }
+        for (String path : List.of("statue_spartan_promachos_glacium", "statue_spartan_promachos_glacium_aged")) {
+            sculptures.add(path);
+            index.add(path, DaedalonSearchVocabulary.appendTerms("", vocabulary.terms(path)));
+        }
+        for (String path : List.of("glacium_diota_urn", "bronze_astragalos_plinth", "silver_gothic_lantern")) {
+            index.add(path, DaedalonSearchVocabulary.appendTerms("", vocabulary.terms(path)));
+        }
+        index.build();
+        // The existing practical "statue base" alias intentionally also finds a plinth.
+        Set<String> statueResults = new HashSet<>(sculptures);
+        statueResults.add("bronze_astragalos_plinth");
+        assertEquals(statueResults, Set.copyOf(index.findAll("statue")));
+        assertEquals(List.of("bronze_astragalos_plinth"), index.findAll("statue base"));
+        assertEquals(sculptures, Set.copyOf(index.findAll("sculpture")));
+        assertEquals(olympians, Set.copyOf(index.findAll("olympian")));
+        assertTrue(index.findAll("bust").contains("silver_zeus_bust"));
     }
 }

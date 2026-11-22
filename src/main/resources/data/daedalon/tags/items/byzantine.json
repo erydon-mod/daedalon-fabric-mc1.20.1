@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "#daedalon:byzantine_capital",
-    "#daedalon:byzantine_frieze"
+    "#daedalon:byzantine_lantern",
+    "#daedalon:byzantine_frieze",
+    "#daedalon:byzantine_wall_panel"
   ]
 }

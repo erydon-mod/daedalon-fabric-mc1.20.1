@@ -67,10 +67,10 @@ final class FinialTexturePipelineTest {
 
     private static RenderContext.QuadTransform transform(List<Sprite> sprites, List<Boolean> worldPhase, int phase) throws Exception {
         Class<?> type = Class.forName(ObjMeshBakedModel.class.getName() + "$TextureTransform");
-        Constructor<?> constructor = type.getDeclaredConstructor(List.class, List.class, WorldTexturePhase.Layout.class, int.class, boolean.class);
+        Constructor<?> constructor = type.getDeclaredConstructor(List.class, List.class, WorldTexturePhase.Layout.class, int.class, boolean.class, List.class);
         constructor.setAccessible(true);
         return (RenderContext.QuadTransform) constructor.newInstance(sprites, worldPhase,
-                WorldTexturePhase.detailedSurface(), phase, false);
+                WorldTexturePhase.detailedSurface(), phase, false, java.util.Collections.nCopies(sprites.size(), new net.minecraft.util.Identifier("daedalon", "block/test_stone")));
     }
 
     private static float[][] cloneRows(float[][] values) {
