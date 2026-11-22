@@ -188,12 +188,18 @@ class FinialRefinementSafetyTests(unittest.TestCase):
                                              for a, b in zip(segment, segment[1:] + segment[:1])),
                                          (leaf_index, first_ids, second_ids))
 
-    def test_sphaira_base_geometry_is_preserved_exactly(self):
+    def test_sphaira_base_geometry_and_face_order_are_preserved(self):
         builder = AUTHOR.Builder()
         BASES.build_base(builder, "sphaira", *AUTHOR.DIMENSIONS["sphaira"])
-        payload = json.dumps([builder.vertices, builder.faces], separators=(",", ":")).encode()
+        # Compare coordinates at the builder's vertex-welding precision so
+        # platform rounding in the trigonometry does not change the digest.
+        vertices = [
+            [round(coordinate * 10**10) for coordinate in vertex]
+            for vertex in builder.vertices
+        ]
+        payload = json.dumps([vertices, builder.faces], separators=(",", ":")).encode()
         # Recorded from the established Sphaira builder before base extraction.
-        self.assertEqual("5354fc7da0f540ec32d225816b9ca31bb7d6f82a6b33b0f08045b4ca17d02a30",
+        self.assertEqual("5cbfba2af536c9162be88c7f4b618ad0c48fa44aa9c4bb4d1ae125bfafef94df",
                          hashlib.sha256(payload).hexdigest())
 
     def test_other_bases_share_three_steps_and_curved_mouldings_without_changing_supports(self):
